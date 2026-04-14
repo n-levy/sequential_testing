@@ -313,11 +313,11 @@ export function ComparisonSim() {
       { data: csData, color: '#3b82f6', label: 'Conf. Sequences' },
     ]
 
-    allSeries.forEach(s => {
+    allSeries.forEach((s, sIdx) => {
       const line = d3.line<CritEntry>().x(d => x(d.k)).y(d => y(Math.min(d.z, yMax)))
       g.append('path').datum(s.data).attr('d', line)
         .attr('fill', 'none').attr('stroke', s.color).attr('stroke-width', 2)
-      g.selectAll(`.dot-${s.label}`)
+      g.selectAll(`.dot-${sIdx}`)
         .data(s.data)
         .enter().append('circle')
         .attr('cx', d => x(d.k))
