@@ -1,0 +1,1620 @@
+\documentclass[12pt, a4paper]{article}
+
+% ── Packages ──────────────────────────────────────────────────────────────────
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage{amsmath, amssymb, amsthm}
+\usepackage{mathtools}          % for \coloneqq, \DeclarePairedDelimiter, etc.
+\usepackage{booktabs}           % nicer tables
+\usepackage{enumitem}           % custom list formatting
+\usepackage{hyperref}           % clickable cross-references
+\usepackage[margin=2.5cm]{geometry}
+\usepackage{parskip}            % blank lines between paragraphs, no indent
+\usepackage{xcolor}
+\usepackage{tcolorbox}          % coloured boxes for "intuitive explanation" etc.
+\usepackage{titlesec}           % section formatting
+
+% ── Colours ───────────────────────────────────────────────────────────────────
+\definecolor{intuitionbg}{RGB}{240,248,255}   % pale blue
+\definecolor{simulationbg}{RGB}{255,250,240}  % pale orange
+\definecolor{keybox}{RGB}{245,245,220}        % pale yellow
+
+% ── Environments ──────────────────────────────────────────────────────────────
+\newtcolorbox{intuition}{
+  colback=intuitionbg, colframe=blue!40!black,
+  title={\textbf{Intuitive Explanation}}, fonttitle=\bfseries
+}
+\newtcolorbox{simulation}{
+  colback=simulationbg, colframe=orange!60!black,
+  title={\textbf{Simulation}}, fonttitle=\bfseries
+}
+\newtcolorbox{keytakeaway}{
+  colback=keybox, colframe=olive!60!black,
+  title={\textbf{Key Takeaway}}, fonttitle=\bfseries
+}
+\newtcolorbox{plainlanguage}{
+  colback=white, colframe=gray!50,
+  left=6pt, right=6pt, top=4pt, bottom=4pt
+}
+
+\newtheorem{theorem}{Theorem}
+\newtheorem{definition}{Definition}
+
+% ── Notation shorthand ────────────────────────────────────────────────────────
+\newcommand{\E}{\mathbb{E}}            % expected value
+\newcommand{\Prob}{\mathbb{P}}         % probability
+\newcommand{\Var}{\operatorname{Var}}
+\newcommand{\Cov}{\operatorname{Cov}}
+\newcommand{\SD}{\operatorname{SD}}
+\newcommand{\given}{\,\vert\,}         % conditional bar with spacing
+\newcommand{\LR}{\Lambda}              % likelihood ratio
+
+
+% ══════════════════════════════════════════════════════════════════════════════
+\title{\textbf{Presentation Plan: From Random Walks to Sequential Testing}\\[6pt]
+       \large Version~3 — \LaTeX{} Edition}
+\author{}
+\date{March 2026}
+
+\begin{document}
+\maketitle
+\tableofcontents
+\newpage
+
+% ══════════════════════════════════════════════════════════════════════════════
+\section*{About This Document}
+\addcontentsline{toc}{section}{About This Document}
+
+\textbf{Target audience.}
+People comfortable with algebra and basic probability (e.g.\ a 12th-grade
+math background).  No calculus is required to follow the main ideas, though
+some calculus notation (integrals) appears in later acts for completeness ---
+always with plain-language translations.
+
+\textbf{Format.}
+Eight interactive acts --- deliberately small steps.  Each act has a
+simulation, an intuitive explanation, and a mathematical section.  The math
+sections always define every symbol before using it.  Every formula is
+accompanied by a plain-language translation immediately below it.
+
+\textbf{Design philosophy.}
+Better to over-explain than under-explain.  When in doubt, slow down.
+
+% ══════════════════════════════════════════════════════════════════════════════
+\section{Notation Cheat Sheet}
+\label{sec:notation}
+
+This cheat sheet should appear as a collapsible sidebar in the actual
+webpage, accessible from every act.
+
+\begin{center}
+\begin{tabular}{@{} l l p{8.5cm} @{}}
+\toprule
+\textbf{Symbol}       & \textbf{Name}                  & \textbf{What it means} \\
+\midrule
+$X,\,M,\,Y$          & Capital letters                & Quantities that are random \\
+$X_1, X_2, X_n$      & Subscript numbers              & ``The value of $X$ at step 1, 2, $n$'' \\
+$\E[\cdot]$           & Expected value                 & Long-run average if you repeated the process many times \\
+$\E[\cdot \given \cdot]$ & Conditional expectation     & Long-run average, \emph{given that you already know} whatever appears after the $\vert$ \\
+$\Prob(\cdot)$        & Probability                    & A number between 0 and 1 \\
+$\displaystyle\sum$   & Summation ($\Sigma$)           & ``Add all of these up'' \\
+$\displaystyle\prod$  & Product ($\Pi$)                & ``Multiply all of these together'' \\
+$\displaystyle\int$   & Integral                       & Continuous version of summation --- a smooth $\sum$ \\
+$\geq,\;\leq$        & Greater/less than or equal to   & \\
+$\infty$              & Infinity                       & A process that goes on forever \\
+$\sqrt{\cdot}$        & Square root                    & $\sqrt{9}=3$, $\sqrt{100}=10$ \\
+$\exp(x)$            & Exponential function            & $e\approx 2.718$ raised to the power $x$ \\
+$\sup$                & Supremum                       & The highest value something ever reaches \\
+$\alpha$              & Alpha                          & False positive rate \\
+$\beta$               & Beta                           & False negative rate \\
+$\delta$              & Delta                          & Effect size \\
+$\sigma$              & Sigma (lowercase)              & Standard deviation of individual observations \\
+$\tau$                & Tau                            & In mSPRT: width of the prior over effect sizes \\
+$\theta$              & Theta                          & In CUPED: variance reduction coefficient \\
+$\rho$                & Rho                            & Correlation coefficient ($-1$ to $+1$) \\
+$\LR$                 & Lambda (uppercase)             & Likelihood ratio --- a running score of evidence \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+
+% ══════════════════════════════════════════════════════════════════════════════
+% ACT 0
+% ══════════════════════════════════════════════════════════════════════════════
+\newpage
+\section{Act~0 --- Why Should You Care?  The Peeking Problem}
+
+\subsection{The Motivation}
+
+\begin{intuition}
+You work at a company running an A/B test.  Half your users see the old
+website, half see a new design.  Every day, you check the dashboard:
+``Is the new design better?''  After a week, the dashboard shows $p=0.03$ ---
+that looks significant!  You call it: the new design wins.
+
+But here is the dirty secret of traditional statistics: \textbf{the more often
+you check, the more likely you are to see a false positive.}  A test designed
+to have a 5\% false positive rate can easily reach 20--30\% if you peek at it
+repeatedly.  One in four or five ``winning'' experiments might actually be noise.
+
+This is not a theoretical concern.  It is the single most common statistical
+mistake in online experimentation.
+\end{intuition}
+
+\subsection{The Simulation}
+
+\begin{simulation}
+Two groups of observations (control and treatment) are generated from
+\emph{identical} distributions --- there is no real effect.  A standard
+$t$-test is computed after every new observation arrives.
+
+A counter shows: ``Number of times $p<0.05$ so far.''  The user watches the
+$p$-value bounce around.  Every time it dips below $0.05$, it lights up red ---
+a false positive.
+
+\textbf{Users can control:}
+\begin{itemize}[nosep]
+  \item How many total observations to simulate
+  \item How many independent experiments to run in parallel
+\end{itemize}
+
+A bar chart accumulates: ``Fraction of experiments that showed $p<0.05$ at
+\emph{some} point during peeking.''  For 1,000 simulated experiments with
+regular peeking, this fraction climbs well above 5\% --- often to 20--30\%.
+
+A second mode checks only once, at the very end.  That fraction stays near 5\%.
+\end{simulation}
+
+\subsection{Intuitive Explanation}
+
+\begin{intuition}
+Traditional statistical tests promise: ``If there is no real effect, I will
+falsely cry wolf at most 5\% of the time.''  But this promise comes with fine
+print: \textbf{you may only look at the result once, at a pre-determined time.}
+
+Every time you peek, you get another chance for randomness to fool you.  It is
+like rolling a die repeatedly --- the more rolls, the more likely you are to
+get a six eventually, even though any single roll has only a $1/6$ chance.
+
+The rest of this presentation builds a test that does not have this problem:
+a test where you can peek as often as you like and the false positive guarantee
+still holds.
+
+That promise has a name: \textbf{anytime-valid inference}.  Getting there
+requires some beautiful mathematics, which we will build up one step at a
+time.
+\end{intuition}
+
+\begin{keytakeaway}
+\textbf{The peeking problem:} Checking a traditional test repeatedly inflates
+the false positive rate far beyond its nominal level.  We need a fundamentally
+different kind of test --- one that remains valid no matter when or how often
+we look.
+\end{keytakeaway}
+
+
+% ══════════════════════════════════════════════════════════════════════════════
+% ACT 1
+% ══════════════════════════════════════════════════════════════════════════════
+\newpage
+\section{Act~1 --- The Random Walk}
+
+\subsection{The Simulation}
+
+\begin{simulation}
+A vertical number line appears on screen.  A dot starts at position~0.  Each
+step, a coin is flipped.  Heads: the dot moves up one step.  Tails: down one
+step.  The path is drawn as a graph (position vs.\ step number).
+
+\textbf{User controls:} speed, number of steps, probability of going up
+(initially fixed at $50/50$; later a slider), number of simultaneous paths.
+\end{simulation}
+
+\subsection{Intuitive Explanation}
+
+\begin{intuition}
+Imagine you are standing in the middle of a long hallway.  Flip a coin.
+Heads --- step forward.  Tails --- step back.  Repeat hundreds of times.
+
+Where will you end up?  We don't know exactly, but we can say something
+precise about the \emph{range} of likely outcomes.  Most of the time you won't
+wander far.  Occasionally, a long streak of heads or tails carries you far in
+one direction.  The longer you walk, the wider the range of possible positions
+--- but the centre of that range stays at zero.
+
+When we run many people simultaneously, they fan out over time --- like ink
+dropped into water.  This spreading has a precise mathematical shape.
+\end{intuition}
+
+\subsection{Mathematical Formulation}
+
+\subsubsection*{Setting up the notation}
+
+Let $X_i$ represent the outcome of the $i$th coin flip:
+\[
+  X_i =
+  \begin{cases}
+    +1 & \text{if heads (step forward),} \\
+    -1 & \text{if tails (step backward).}
+  \end{cases}
+\]
+The probability of heads is written $p$.  For a fair coin, $p = 0.5$.
+
+\subsubsection*{Position after $n$ steps}
+
+\[
+  \boxed{S_n = \sum_{i=1}^{n} X_i = X_1 + X_2 + \cdots + X_n}
+\]
+
+\begin{plainlanguage}
+Read as: ``$S$ sub $n$ equals the sum of all $X_i$, starting from $i=1$ up to
+$i=n$.''
+\end{plainlanguage}
+
+\textbf{Worked example.}  First 5 flips: H, T, H, H, T, so
+$X_1\!=\!+1,\; X_2\!=\!-1,\; X_3\!=\!+1,\; X_4\!=\!+1,\; X_5\!=\!-1$.
+\[
+  S_1=1,\quad S_2=0,\quad S_3=1,\quad S_4=2,\quad S_5=1.
+\]
+
+\subsubsection*{The average outcome (expected value)}
+
+When $p = 0.5$, each flip has expected value zero:
+\[
+  \E[X_i]
+    = \underbrace{0.5}_{P(\text{heads})} \times (+1)
+    + \underbrace{0.5}_{P(\text{tails})} \times (-1)
+    = 0.
+\]
+Because each step averages to zero:
+\[
+  \boxed{\E[S_n] = \E[X_1] + \E[X_2] + \cdots + \E[X_n] = 0}
+\]
+
+\begin{plainlanguage}
+On average, across many trials, you end up back where you started.
+\end{plainlanguage}
+
+\subsubsection*{How spread out the outcomes are --- variance \& standard deviation}
+
+\textbf{Variance} measures the average squared distance from the mean.
+For a single fair coin flip:
+\[
+  \Var(X_i) = \E\bigl[(X_i - 0)^2\bigr]
+  = 0.5 \times (+1)^2 + 0.5 \times (-1)^2
+  = 1.
+\]
+Because flips are independent, the variance of the sum is the sum of
+the variances:
+\[
+  \Var(S_n) = \Var(X_1) + \Var(X_2) + \cdots + \Var(X_n)
+  = \underbrace{1 + 1 + \cdots + 1}_{n\text{ terms}} = n.
+\]
+The \textbf{standard deviation} is the square root of the variance ---
+same units as the position:
+\[
+  \boxed{\SD(S_n) = \sqrt{\Var(S_n)} = \sqrt{n}}
+\]
+
+\begin{plainlanguage}
+After 100 steps, the typical distance from zero is $\sqrt{100}=10$.
+After 10,000 steps, it is $\sqrt{10{,}000}=100$.  The spread grows with the
+\emph{square root} of the number of steps, not the number itself.
+\end{plainlanguage}
+
+The simulation shows the $\pm\sqrt{n}$ envelope as two curved lines.
+
+\subsubsection*{What if the coin is not fair?}
+
+When $p \neq 0.5$, each step has a non-zero average:
+\[
+  \E[X_i] = p \times (+1) + (1-p) \times (-1) = 2p - 1.
+\]
+For $p = 0.6$: $\E[X_i] = 0.2$.  After $n$ steps:
+\[
+  \E[S_n] = n(2p-1).
+\]
+This is a systematic \emph{drift} --- the random walk now has a trend.
+
+\begin{keytakeaway}
+\textbf{Key concepts:} stochastic process, expected value, variance, standard
+deviation, the $\sqrt{n}$ growth of randomness.
+\end{keytakeaway}
+
+
+% ══════════════════════════════════════════════════════════════════════════════
+% ACT 2
+% ══════════════════════════════════════════════════════════════════════════════
+\newpage
+\section{Act~2 --- The Gambling Game and the Martingale}
+
+\subsection{The Simulation}
+
+\begin{simulation}
+The same random walk, relabelled.  The vertical axis now shows
+``\texteuro{} profit or loss.''  A bold horizontal line marks zero ---
+break-even.
+
+\textbf{Probability slider:} $p > 0.5$ gives the player an edge;
+$p < 0.5$ gives the house an edge.
+
+\textbf{Doubling strategy mode:} Runs 10,000~gamblers using the martingale
+betting strategy.  A histogram shows the distribution of final wealth --- many
+small winners, a few catastrophic losers.  A counter shows average profit
+converging to zero.
+
+\textbf{Build your own stopping rule:} Users define a rule (``Stop when ahead
+by \texteuro$K$'').  The simulation runs 10,000~gamblers.  Average winnings at
+stopping converge to zero.
+\end{simulation}
+
+\subsection{Intuitive Explanation}
+
+\begin{intuition}
+Win \texteuro1 for heads, lose \texteuro1 for tails.  Cumulative winnings
+trace the same random walk from Act~1.
+
+The gambler's temptation: ``I'll keep playing until I'm ahead, then quit.''
+Sounds foolproof --- surely a run of luck will eventually put you in the green?
+
+Mathematically, a fair random walk does eventually return to positive territory.
+But the time it takes can be astronomically long, and while you wait you might
+lose everything.
+
+\textbf{Central insight:} There is no strategy that improves your expected
+outcome in a fair game.  This is a proven mathematical theorem.  Try any
+stopping rule in the simulation --- the average winnings always converge to
+zero.
+\end{intuition}
+
+\begin{intuition}
+\textbf{The doubling strategy (Martingale betting), exposed.}
+
+Lose, double the bet, repeat until you win back your losses plus \texteuro1.
+It works --- most of the time.
+
+But a long losing streak forces bets of
+\texteuro1, 2, 4, 8, 16, 32, 64, \ldots\
+After just 10 consecutive losses, you must bet \texteuro1,024 to win back
+\texteuro1.  The histogram makes it vivid: a tall bar of people who won
+\texteuro1, and a barely visible bar at the far left of people who lost
+thousands.  Multiply heights by positions and sum: the average is zero.
+\end{intuition}
+
+\subsection{Mathematical Formulation}
+
+\begin{definition}[Martingale]
+A sequence $M_0, M_1, M_2, \ldots$ is a \textbf{martingale} if, at every
+step, the best prediction of the next value is the current value:
+\[
+  \boxed{\E\bigl[M_n \given M_0, M_1, \ldots, M_{n-1}\bigr] = M_{n-1}}
+\]
+\end{definition}
+
+\textbf{Reading the notation carefully:}
+\begin{itemize}[nosep]
+  \item $\E[\cdot]$ = ``the expected value of\ldots'' (long-run average).
+  \item The vertical bar ``$\given$'' = ``given that we know.''
+        Everything after the bar is information we have.
+  \item $M_0, M_1, \ldots, M_{n-1}$ = the full history up to step $n-1$.
+  \item Full sentence: ``The expected value of $M_n$, given that we know
+        everything up to step $n-1$, equals $M_{n-1}$.''
+\end{itemize}
+
+\begin{plainlanguage}
+Knowing the entire history, your best guess for the next value is just the
+current value.  The past gives no useful information about the future direction.
+\end{plainlanguage}
+
+\subsubsection*{Verifying: the coin-flip game is a martingale}
+
+Let $M_n = S_n$ (cumulative winnings).  Then $M_n = M_{n-1} + X_n$.
+\begin{align*}
+  \E[M_n \given M_0,\ldots,M_{n-1}]
+  &= \E[M_{n-1} + X_n \given M_0,\ldots,M_{n-1}] \\
+  &= M_{n-1} + \E[X_n \given M_0,\ldots,M_{n-1}]
+     & &\text{($M_{n-1}$ is known, passes through $\E$)} \\
+  &= M_{n-1} + 0
+     & &\text{(next flip is independent; $\E[X_n]=0$)} \\
+  &= M_{n-1}. \qquad\checkmark
+\end{align*}
+
+\subsubsection*{Doob's Optional Stopping Theorem (1953)}
+
+\begin{theorem}[Doob's Optional Stopping Theorem]
+Let $\{M_n\}$ be a martingale and $\tau$ a \textbf{stopping time} --- a rule
+for when to quit that uses only information accumulated so far (no looking into
+the future).  Then, under reasonable conditions:
+\[
+  \boxed{\E[M_\tau] = \E[M_0]}
+\]
+\end{theorem}
+
+\begin{plainlanguage}
+For a gambler starting with $M_0 = 0$: expected winnings at stopping $= 0$,
+always, for any strategy.  \textbf{You cannot beat a fair game by choosing
+when to quit.}
+\end{plainlanguage}
+
+\subsubsection*{What is a stopping time?}
+
+$\tau$ is a decision rule of the form: ``Stop after step $n$ if [condition
+based only on what happened so far].''
+
+\begin{center}
+\begin{tabular}{@{} l c @{}}
+\toprule
+\textbf{Rule} & \textbf{Valid?} \\
+\midrule
+Stop after exactly 100 flips & \checkmark \\
+Stop the first time I am ahead by \texteuro10 & \checkmark \\
+Stop when I have lost \texteuro50 & \checkmark \\
+Stop after 1000 flips \emph{or} when ahead by \texteuro5, whichever first & \checkmark \\
+Stop right before the next loss & $\times$ (requires the future!) \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\subsubsection*{The ``reasonable conditions'' for Doob's theorem}
+
+Doob's theorem requires at least one of:
+\begin{enumerate}[nosep]
+  \item $\tau \leq N$ for some fixed $N$ (bounded stopping time), \textbf{or}
+  \item $|M_n| \leq C$ for some fixed $C$ (bounded martingale), \textbf{or}
+  \item $\E[\tau] < \infty$ (finite expected stopping time).
+\end{enumerate}
+
+When \emph{none} hold --- as with the doubling strategy --- the guarantee
+breaks down.
+
+\subsubsection*{Why the doubling strategy fails}
+
+The doubling strategy guarantees eventual profit \emph{only if} you have
+infinite money and infinite time.  In practice:
+\begin{itemize}[nosep]
+  \item Finite budget $\Rightarrow$ real probability of ruin before recovery.
+  \item Expected time to recovery is infinite: $\E[\tau] = \infty$.
+  \item Doob's theorem gives $\E[M_\tau] \leq 0$, not $= 0$.
+\end{itemize}
+
+\subsubsection*{Why this matters for what is coming}
+
+The martingale concept reappears in every subsequent act.  The likelihood
+ratio (Act~4) is a martingale.  The mSPRT statistic (Act~7) is a martingale.
+The reason sequential tests control false positives --- even with peeking ---
+is that they exploit the same structure: \textbf{a fair game cannot be beaten
+by choosing when to stop.}
+
+\begin{keytakeaway}
+\textbf{Key concepts:} martingale, conditional expectation, stopping time,
+Doob's Optional Stopping Theorem, the ``reasonable conditions.''
+\end{keytakeaway}
+
+
+% ══════════════════════════════════════════════════════════════════════════════
+% ACT 3
+% ══════════════════════════════════════════════════════════════════════════════
+\newpage
+\section{Act~3 --- Hypothesis Testing: Telling Two Coins Apart}
+
+\subsection{The Simulation}
+
+\begin{simulation}
+The user is presented with a coin and must decide: fair or biased?
+
+Two panels run side by side:
+\begin{itemize}[nosep]
+  \item \textbf{Left:} Coin is actually fair ($p=0.5$).
+  \item \textbf{Right:} Coin is actually biased ($p=0.5+\delta$).
+\end{itemize}
+After each flip, a running tally shows heads/tails and current proportion.
+For small $\delta$, the sequences look nearly identical for many flips.
+
+\textbf{User controls:} true bias $\delta$; number of flips before deciding.
+\end{simulation}
+
+\subsection{Intuitive Explanation}
+
+\begin{intuition}
+You suspect a coin might be unfair.  Flip it many times and look at the
+results.  10~flips with 6~heads?  Could be luck.  1,000~flips with 600~heads?
+Strong evidence.
+
+Statisticians frame this as two competing stories:
+\begin{itemize}[nosep]
+  \item \textbf{Null hypothesis $H_0$:} ``The coin is fair.  Nothing is happening.''
+  \item \textbf{Alternative hypothesis $H_1$:} ``The coin is biased.  Something real is going on.''
+\end{itemize}
+
+Two types of mistakes:
+\begin{enumerate}[nosep]
+  \item \textbf{False positive} (Type~I): conclude biased when it is fair.
+  \item \textbf{False negative} (Type~II): conclude fair when it is biased.
+\end{enumerate}
+Traditionally: $\alpha = 0.05$ (max false positive rate),
+$\beta = 0.20$ (max false negative rate).
+\textbf{Power} $= 1 - \beta = 0.80$.
+\end{intuition}
+
+\subsection{Mathematical Formulation}
+
+\subsubsection*{The likelihood}
+
+Suppose $n$ flips produce $k$ heads.
+
+Under $H_0$ (fair coin, $p = 0.5$):
+\[
+  \mathcal{L}_0
+  = (0.5)^k \times (0.5)^{n-k}
+  = (0.5)^n.
+\]
+
+Under $H_1$ (biased coin, $p = 0.5 + \delta$):
+\[
+  \mathcal{L}_1
+  = (0.5 + \delta)^k \times (0.5 - \delta)^{n-k}.
+\]
+
+\subsubsection*{The likelihood ratio}
+
+\[
+  \boxed{\LR_n
+  = \frac{\mathcal{L}_1}{\mathcal{L}_0}
+  = \frac{(0.5+\delta)^k \;(0.5-\delta)^{n-k}}{(0.5)^n}}
+\]
+
+\begin{plainlanguage}
+``How many times more likely is our observed data under the biased-coin story
+compared to the fair-coin story?''
+\end{plainlanguage}
+
+\textbf{Worked example.}
+$\delta = 0.1$ (biased coin has $p=0.6$); $n=10$ flips, $k=7$ heads.
+\begin{align*}
+  \mathcal{L}_1 &= (0.6)^7 \times (0.4)^3 = 0.0280 \times 0.064 \approx 0.001792, \\
+  \mathcal{L}_0 &= (0.5)^{10} \approx 0.000977, \\
+  \LR_{10} &= \frac{0.001792}{0.000977} \approx 1.83.
+\end{align*}
+The data is $\approx\!1.83$ times more likely if the coin is biased.
+Evidence, but not overwhelming.
+
+\subsubsection*{Interpreting $\LR_n$}
+
+\begin{center}
+\begin{tabular}{@{} r l @{}}
+\toprule
+$\LR_n = 1$   & Data equally consistent with both hypotheses \\
+$\LR_n = 10$  & 10$\times$ more likely under $H_1$ --- moderate evidence \\
+$\LR_n = 100$ & 100$\times$ more likely under $H_1$ --- strong evidence \\
+$\LR_n = 0.1$ & 10$\times$ more likely under $H_0$ --- evidence for fairness \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\subsubsection*{Incremental updating}
+
+$\LR_n$ can be computed one flip at a time:
+\[
+  \boxed{\LR_n = \LR_{n-1} \times \frac{f_1(x_n)}{f_0(x_n)}}
+\]
+where $f_j(x_n)$ is the probability of the $n$th flip's outcome under $H_j$.
+\begin{itemize}[nosep]
+  \item Heads: multiply by $\dfrac{0.5+\delta}{0.5}$.
+  \item Tails: multiply by $\dfrac{0.5-\delta}{0.5}$.
+\end{itemize}
+This incremental structure is what makes \emph{sequential} testing possible.
+
+\subsubsection*{Starting value}
+
+Before any data:
+\[
+  \LR_0 = 1.
+\]
+Neither hypothesis is favoured.  This will be important for Ville's inequality
+(which requires the starting value to equal~1).
+
+\begin{keytakeaway}
+\textbf{Key concepts:} null hypothesis, alternative hypothesis, likelihood,
+likelihood ratio, false positive, false negative, power, incremental updating.
+\end{keytakeaway}
+
+
+% ══════════════════════════════════════════════════════════════════════════════
+% ACT 4
+% ══════════════════════════════════════════════════════════════════════════════
+\newpage
+\section{Act~4 --- The Likelihood Ratio Is a Martingale}
+
+\subsection{The Simulation}
+
+\begin{simulation}
+The likelihood ratio $\LR_n$ is now plotted as a path over time --- like the
+random walk from Act~1.
+
+\textbf{Left panel:} 100 paths of $\LR_n$ when the coin is truly \emph{fair}
+($H_0$ true).  Paths wander with no systematic trend.
+
+\textbf{Right panel:} 100 paths when the coin is truly \emph{biased}
+($H_1$ true).  Paths drift upward.
+\end{simulation}
+
+\subsection{Intuitive Explanation}
+
+\begin{intuition}
+Under $H_0$, the likelihood ratio wanders up and down but never develops a
+consistent trend.  On average, it stays at~1.
+
+This \emph{is} a martingale --- exactly like the gambler's cumulative winnings.
+Everything from Act~2 applies: Doob's theorem says you cannot systematically
+make $\LR_n$ large by choosing clever peeking times.
+\end{intuition}
+
+\subsection{Mathematical Formulation}
+
+\subsubsection*{Proof that $\LR_n$ is a martingale under $H_0$}
+
+We must show:
+$\E[\LR_n \given \LR_0, \ldots, \LR_{n-1}] = \LR_{n-1}$.
+
+From Act~3, $\LR_n = \LR_{n-1} \times \dfrac{f_1(x_n)}{f_0(x_n)}$.
+Therefore:
+\begin{align}
+  \E\bigl[\LR_n \given \text{past}\bigr]
+  &= \E\!\left[\LR_{n-1} \cdot \frac{f_1(x_n)}{f_0(x_n)} \;\bigg\vert\; \text{past}\right]
+     \nonumber \\
+  &= \LR_{n-1} \cdot \E\!\left[\frac{f_1(x_n)}{f_0(x_n)}\right]
+     & &\text{($\LR_{n-1}$ is known)}
+     \label{eq:lr-mart-step1}
+\end{align}
+
+Now the key step.  Under $H_0$, $x_n$ is drawn from $f_0$.  So:
+\begin{align}
+  \E\!\left[\frac{f_1(x_n)}{f_0(x_n)}\right]
+  &= \sum_{\text{all outcomes } x} f_0(x) \cdot \frac{f_1(x)}{f_0(x)}
+     \nonumber \\[6pt]
+  &= \sum_x \cancel{f_0(x)} \cdot \frac{f_1(x)}{\cancel{f_0(x)}}
+     & &\text{\textbf{(the cancellation!)}}
+     \nonumber \\[6pt]
+  &= \sum_x f_1(x)
+     \nonumber \\[4pt]
+  &= 1.
+     & &\text{($f_1$ is a probability distribution; probabilities sum to~1)}
+     \label{eq:lr-mart-cancel}
+\end{align}
+
+Therefore:
+\[
+  \E\bigl[\LR_n \given \text{past}\bigr]
+  = \LR_{n-1} \times 1
+  = \LR_{n-1}. \qquad\checkmark
+\]
+
+\subsubsection*{The cancellation with actual numbers}
+
+For $\delta = 0.1$ (biased coin $p=0.6$):
+
+\medskip
+\begin{center}
+\begin{tabular}{@{} l c c c @{}}
+\toprule
+\textbf{Outcome} & $f_0(x)$ & $f_1(x)/f_0(x)$ & $f_0(x)\times\bigl[f_1(x)/f_0(x)\bigr]$ \\
+\midrule
+Heads & 0.5 & $0.6/0.5 = 1.2$ & $0.5 \times 1.2 = 0.6$ \\
+Tails & 0.5 & $0.4/0.5 = 0.8$ & $0.5 \times 0.8 = 0.4$ \\
+\midrule
+\multicolumn{3}{r}{\textbf{Total:}} & $\mathbf{1.0}$ \checkmark \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\begin{plainlanguage}
+When we compute the expected ratio under $H_0$, the $H_0$ probabilities
+cancel out, and we are just left summing $H_1$ probabilities --- which must
+add to~1.  This is the ``aha'' moment of the proof.
+\end{plainlanguage}
+
+\subsubsection*{Two additional properties}
+
+\begin{enumerate}[nosep]
+  \item \textbf{$\LR_n$ is non-negative:} It is a product of non-negative
+        ratios (probabilities divided by probabilities), so $\LR_n \geq 0$.
+  \item \textbf{$\LR_0 = 1$:} Before any data, neither hypothesis is favoured.
+\end{enumerate}
+
+So $\LR_n$ is a \textbf{non-negative martingale starting at~1}.  Remember
+these properties --- they are exactly what Ville's inequality needs.
+
+\subsubsection*{Under $H_1$, $\LR_n$ drifts upward}
+
+When the coin really is biased:
+\[
+  \E\!\left[\frac{f_1(x_n)}{f_0(x_n)}\right]_{\!H_1}
+  = \sum_x f_1(x) \cdot \frac{f_1(x)}{f_0(x)}
+  > 1.
+\]
+So $\LR_n$ tends to grow --- this upward drift is the signal the test detects.
+
+\begin{keytakeaway}
+\textbf{Key concepts:} the likelihood ratio is a martingale under~$H_0$;
+the cancellation that makes it work; non-negative martingale; drift under~$H_1$.
+\end{keytakeaway}
+
+
+% ══════════════════════════════════════════════════════════════════════════════
+% ACT 5
+% ══════════════════════════════════════════════════════════════════════════════
+\newpage
+\section{Act~5 --- Markov, Ville, and the Anytime-Valid Guarantee}
+
+\subsection{The Simulation}
+
+\begin{simulation}
+This is the pivotal simulation of the entire presentation.
+
+\textbf{Panel~1 --- Markov (single time):}
+10,000 fair-coin paths of $\LR_n$.  A vertical line at $n=200$.
+A threshold at $\LR = 1/\alpha = 20$ (for $\alpha = 0.05$).
+Count: how many paths are above the threshold \emph{at step~200}?
+Fraction $\leq 5\%$.
+
+\textbf{Panel~2 --- Ville (any time):}
+Same 10,000 paths.  Count: how many \emph{ever} crossed the threshold at
+\emph{any} step?  Also $\leq 5\%$ --- but requires a stronger theorem.
+
+\textbf{Panel~3 --- Comparison:}
+10,000 paths of a standard $z$-score checked at every step.  Count how many
+ever show significance.  Much higher than 5\% --- the peeking problem.
+
+Summary:
+\begin{itemize}[nosep]
+  \item Markov: controls false positives at a single time \checkmark
+  \item Ville: controls across all times simultaneously \checkmark
+  \item Standard test with peeking: does NOT control $\times$
+\end{itemize}
+\end{simulation}
+
+\subsection{Intuitive Explanation}
+
+\begin{intuition}
+We are about to prove the most important result in this entire presentation:
+the \textbf{anytime-valid guarantee}.
+
+Two steps:
+\begin{enumerate}[nosep]
+  \item \textbf{Markov's inequality} --- a simple bound at one point in time.
+  \item \textbf{Ville's inequality} --- extends the bound to all points in
+        time simultaneously.
+\end{enumerate}
+Ville's inequality is \emph{the reason} sequential testing works.
+\end{intuition}
+
+\subsection{Mathematical Formulation}
+
+% ── Markov ─────────────────
+\subsubsection*{Step 1: Markov's Inequality}
+
+\begin{theorem}[Markov's Inequality]
+For any non-negative random variable $X$ with finite $\E[X]$:
+\[
+  \boxed{\Prob(X \geq c) \;\leq\; \frac{\E[X]}{c}}
+\]
+\end{theorem}
+
+\begin{plainlanguage}
+``The probability that $X$ is at least $c$ cannot exceed the average of $X$
+divided by $c$.''
+\end{plainlanguage}
+
+\textbf{Why is this true?  An intuitive proof.}
+
+Suppose $X \geq 0$ always.  Let $q = \Prob(X \geq c)$ be the fraction of
+outcomes at or above $c$.  Those outcomes contribute \emph{at least}
+$q \times c$ to the average (each is $\geq c$).  The rest contribute $\geq 0$
+(since $X \geq 0$):
+\[
+  \E[X] \;\geq\; q \cdot c + (1-q)\cdot 0 = q \cdot c
+  \qquad\Longrightarrow\qquad
+  q \leq \frac{\E[X]}{c}. \qquad\checkmark
+\]
+
+\textbf{Concrete example.}
+Average income in a town is \texteuro50,000.
+\[
+  \Prob(\text{income} \geq \text{\texteuro}500{,}000)
+  \;\leq\;
+  \frac{50{,}000}{500{,}000} = 0.10 = 10\%.
+\]
+At most 10\% of people can earn \texteuro500,000+.
+
+\textbf{Applying Markov to the likelihood ratio.}
+
+Under $H_0$, $\LR_n$ is a martingale with $\E[\LR_n] = \LR_0 = 1$ and
+$\LR_n \geq 0$.  Markov gives:
+\[
+  \Prob\!\left(\LR_n \geq \frac{1}{\alpha}\right)
+  \leq \frac{\E[\LR_n]}{1/\alpha}
+  = 1 \cdot \alpha
+  = \alpha.
+\]
+
+\begin{plainlanguage}
+At any single, pre-specified step $n$, the false positive probability
+is at most $\alpha$.  Reassuring --- but only for \emph{one} moment.
+\end{plainlanguage}
+
+% ── Ville ──────────────────
+\subsubsection*{Step 2: Ville's Inequality (1939)}
+
+\begin{theorem}[Ville's Inequality]
+For any \textbf{non-negative martingale} $\{M_n\}_{n \geq 0}$ with
+$M_0 = m_0$:
+\[
+  \boxed{\Prob\!\left(\sup_{n \geq 0}\, M_n \;\geq\; c\right)
+         \;\leq\; \frac{m_0}{c}}
+\]
+where $\sup_{n\geq 0} M_n$ is the highest value $M_n$ \emph{ever} reaches.
+\end{theorem}
+
+\textbf{Why this is remarkable:}
+
+\begin{center}
+\renewcommand{\arraystretch}{1.3}
+\begin{tabular}{@{} l p{9cm} @{}}
+\toprule
+\textbf{Markov} & At any single \emph{fixed} moment, $\Prob(M_n \geq c)$ is small. \\
+\textbf{Ville}  & $\Prob(M_n$ \textbf{ever} $\geq c$, at \textbf{any} moment$)$ is \emph{also} small. \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+Markov would allow the process to spike above~$c$ at various times, as long as
+it is rarely there at any single pre-specified time.  Ville says even those
+spikes are collectively rare.
+
+\textbf{The intuition behind Ville.}
+For a non-negative martingale, reaching a high value ``uses up'' the available
+expected value.  Once high, it must stay high on average (martingale property),
+yet it cannot go below zero (non-negativity).  These two constraints together
+limit how often it can ever be high.
+
+\subsubsection*{Applying Ville to the likelihood ratio}
+
+Set $M_n = \LR_n$, $m_0 = \LR_0 = 1$, $c = 1/\alpha$:
+\[
+  \boxed{\Prob\!\left(\LR_n \text{ ever reaches } \frac{1}{\alpha}
+         \text{ or higher}\right) \;\leq\; \alpha}
+\]
+
+\begin{plainlanguage}
+The probability that the likelihood ratio ever crosses our rejection
+threshold --- at any point, across all flips, even if you run forever ---
+is at most $\alpha$.
+
+\textbf{This is the anytime-valid guarantee.}  You can peek after every
+observation.  The false positive rate, across all checks combined, stays
+$\leq \alpha$.
+\end{plainlanguage}
+
+\subsubsection*{Connecting back to Act~0}
+
+Standard test statistics (like $p$-values from a $t$-test) are \emph{not}
+martingales.  Checking repeatedly gives many independent chances to be fooled.
+
+The likelihood ratio \emph{is} a martingale under~$H_0$.  Ville's inequality
+converts this into a practical guarantee: \textbf{peeking is safe.}
+
+\begin{keytakeaway}
+\textbf{Key concepts:} Markov's inequality (with proof), Ville's inequality,
+the anytime-valid guarantee, martingale + non-negative = peek-safe.
+\end{keytakeaway}
+
+
+% ══════════════════════════════════════════════════════════════════════════════
+% ACT 6
+% ══════════════════════════════════════════════════════════════════════════════
+\newpage
+\section{Act~6 --- SPRT: Wald's Sequential Probability Ratio Test (1945)}
+
+\subsection{The Simulation}
+
+\begin{simulation}
+Two coins: one fair ($H_0$), one biased ($H_1$).  The user does not know
+which they have.
+
+$\LR_n$ is plotted as a path.  Two thresholds:
+\begin{itemize}[nosep]
+  \item \textbf{Upper} at $\LR_n = B$: cross this $\Rightarrow$ ``coin is biased.''
+  \item \textbf{Lower} at $\LR_n = A$: fall below this $\Rightarrow$
+        ``coin is fair.''
+\end{itemize}
+The path drifts toward one boundary and eventually crosses.
+
+\textbf{User controls:} which coin is used, $\alpha$, $\beta$, $\delta$.
+\end{simulation}
+
+\subsection{Intuitive Explanation}
+
+\begin{intuition}
+Abraham Wald (1943, published 1945) asked: given that we can peek at the data
+anytime, what is the most \emph{efficient} way to decide between two
+hypotheses?
+
+His answer: compute $\LR_n$ after each observation.  If it gets high enough,
+conclude $H_1$.  Low enough, conclude $H_0$.  Otherwise, keep collecting.
+
+Wald proved this is \textbf{optimal}: no other sequential test with the same
+error guarantees needs fewer observations on average.
+\end{intuition}
+
+\subsection{Mathematical Formulation}
+
+\subsubsection*{Decision rule}
+
+Choose error tolerances $\alpha$ and $\beta$.
+Compute two thresholds (\textbf{Wald's approximations} --- see note below):
+\[
+  \boxed{B = \frac{1-\beta}{\alpha}}, \qquad
+  \boxed{A = \frac{\beta}{1-\alpha}}.
+\]
+
+\textbf{Example} ($\alpha = 0.05$, $\beta = 0.20$):
+\[
+  B = \frac{0.80}{0.05} = 16, \qquad
+  A = \frac{0.20}{0.95} \approx 0.211.
+\]
+
+\begin{center}
+\begin{tabular}{@{} l l l @{}}
+\toprule
+\textbf{Condition} & \textbf{Decision} & \textbf{Meaning} \\
+\midrule
+$\LR_n \geq B = 16$        & Reject $H_0$  & ``Coin is biased'' \\
+$\LR_n \leq A \approx 0.21$  & Accept $H_0$  & ``Coin is fair'' \\
+$A < \LR_n < B$            & Keep flipping & ``Not enough evidence yet'' \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\subsubsection*{A note on the thresholds}
+
+The thresholds $B = (1-\beta)/\alpha$ and $A = \beta/(1-\alpha)$ are
+\textbf{Wald's approximations}, not exact values.  Wald showed they are very
+close to the true optimal boundaries and slightly conservative (actual error
+rates are at or below nominal $\alpha$ and $\beta$).  Exact boundaries can be
+computed numerically but rarely differ meaningfully.
+
+\subsubsection*{Optimality of SPRT}
+
+Wald \& Wolfowitz (1948) proved: among all sequential tests achieving error
+rates $\leq \alpha$ and $\leq \beta$, the SPRT minimises the expected number
+of observations under both $H_0$ and $H_1$.
+
+\subsubsection*{The critical weakness}
+
+SPRT requires specifying $\delta$ in advance.  If you set $\delta = 0.1$ but
+the true bias is $0.03$, the likelihood ratio is computed against the wrong
+alternative.  The test may take much longer, or fail to detect the effect.
+
+In A/B testing --- where the effect size is typically unknown --- this is a
+serious limitation.
+
+\begin{keytakeaway}
+\textbf{Key concepts:} SPRT decision rule, Wald's approximations, optimality,
+critical dependence on a pre-specified effect size.
+\end{keytakeaway}
+
+
+% ══════════════════════════════════════════════════════════════════════════════
+% ACT 7
+% ══════════════════════════════════════════════════════════════════════════════
+\newpage
+\section{Act~7 --- mSPRT: The Mixture Sequential Probability Ratio Test}
+
+\subsection{The Simulation}
+
+\begin{simulation}
+Like Act~6, but the user no longer specifies $\delta$.  A new slider
+controls $\tau$ (width of a ``prior belief'' over effect sizes).
+
+$\LR_n^{H}$ is plotted.  Only the \emph{upper} threshold $1/\alpha$ is
+shown (no lower boundary).  Some runs cross early; some never cross.
+
+\textbf{Comparison mode:} SPRT with wrong $\delta$ alongside mSPRT,
+plus a \textbf{power curve} and \textbf{average stopping time chart}.
+\end{simulation}
+
+\subsection{Intuitive Explanation}
+
+\begin{intuition}
+SPRT's fatal flaw: you must know $\delta$ in advance.  The mSPRT's fix:
+\textbf{bet on all effect sizes at once.}
+
+Imagine a panel of experts, each with a different guess for $\delta$.  Each
+runs their own SPRT.  You take a weighted average of their likelihood ratios.
+
+Remarkably, this average is still a martingale under~$H_0$.  Ville's
+inequality still applies.  You gain robustness without losing protection.
+\end{intuition}
+
+\subsection{Mathematical Formulation}
+
+\subsubsection*{Why the average of martingales is a martingale}
+
+If $\{A_n\}$ and $\{B_n\}$ are both martingales and $w \in [0,1]$ is a fixed
+weight, let $C_n = w A_n + (1-w)B_n$.  Then:
+\begin{align*}
+  \E[C_n \given \text{past}]
+  &= w\,\E[A_n \given \text{past}] + (1-w)\,\E[B_n \given \text{past}]
+     & &\text{(linearity of $\E$)} \\
+  &= w\,A_{n-1} + (1-w)\,B_{n-1}
+     & &\text{(martingale property)} \\
+  &= C_{n-1}. \qquad\checkmark
+\end{align*}
+
+\begin{plainlanguage}
+The average of ``no trends'' is still ``no trend.''  Averaging does not break
+the martingale property.
+\end{plainlanguage}
+
+\subsubsection*{The mixing idea}
+
+Let $H$ be a \textbf{prior distribution} over effect sizes: a probability
+distribution describing how plausible each $\delta$ is.  The mSPRT statistic
+averages the SPRT likelihood ratio over all $\delta$ according to~$H$:
+\[
+  \boxed{\LR_n^{H} = \int \LR_n^{\delta} \, dH(\delta)}
+\]
+
+\begin{plainlanguage}
+Symbol by symbol:
+\begin{itemize}[nosep]
+  \item $\LR_n^{\delta}$ = the likelihood ratio we would have computed
+        assuming effect size $\delta$.
+  \item $dH(\delta)$ = weighted by how probable $\delta$ is according to $H$.
+  \item $\int$ = continuous version of summation --- averages over all
+        possible $\delta$.
+\end{itemize}
+Think: ``average likelihood ratio across an infinitely large expert panel,
+weighted by credibility.''
+\end{plainlanguage}
+
+\subsubsection*{Closed form for Normal observations}
+
+Assumptions (used in practice by Eppo):
+\begin{itemize}[nosep]
+  \item Observations $x_i \sim \mathcal{N}(\mu, \sigma^2)$
+        (Normal with mean $\mu$, known variance $\sigma^2$).
+  \item Prior $H = \mathcal{N}(0, \tau^2)$ (Normal centred at~0,
+        standard deviation $\tau$).
+\end{itemize}
+
+The integral has an exact algebraic solution:
+\[
+  \boxed{\LR_n^{H}
+  = \sqrt{\frac{\sigma^2}{\sigma^2 + n\tau^2}}
+    \;\exp\!\left(
+      \frac{\tau^2\, n^2 \bar{x}_n^2}
+           {2\,\sigma^2\,(\sigma^2 + n\tau^2)}
+    \right)}
+\]
+
+\textbf{Unpacking every piece:}
+
+\begin{center}
+\renewcommand{\arraystretch}{1.4}
+\begin{tabular}{@{} >{\raggedright}p{3cm} p{9cm} @{}}
+\toprule
+\textbf{Symbol} & \textbf{Meaning} \\
+\midrule
+$\sigma^2$ & Variance of individual observations (how noisy the data is).
+  $\sigma$ is the standard deviation. \\
+$n$ & Number of observations so far. \\
+$\tau^2$ & Variance of the prior $H$.  Controls how wide a range of
+  effect sizes we consider plausible. \\
+$\bar{x}_n$ & Sample mean after $n$ observations:
+  $\bar{x}_n = \frac{1}{n}\sum_{i=1}^n x_i$. \\
+$n^2 \bar{x}_n^2$ & Equals $\left(\sum_{i=1}^n x_i\right)^2$: the square of
+  the total sum.  Large when the cumulative signal is strong. \\
+$\sigma^2 + n\tau^2$ & Combined scale.  As $n$ grows, $n\tau^2$ dominates. \\
+$\sqrt{\frac{\sigma^2}{\sigma^2+n\tau^2}}$ & Shrinkage factor.  Slowly
+  decreases as $n$ grows; prevents the statistic from growing merely because
+  more data arrived. \\
+$\exp(\cdot)$ & $e \approx 2.718$ raised to the argument.  Grows rapidly
+  when $\bar{x}_n$ is far from zero. \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\begin{plainlanguage}
+``The mSPRT score is large when the observed average is far from zero (strong
+signal), when there are many observations, and when the noise is low relative
+to the prior width.''
+\end{plainlanguage}
+
+\textbf{Practical note on $\sigma^2$:} The formula assumes $\sigma^2$ is
+known.  In practice it is estimated from the data.  For $n \geq 100$ (almost
+always true in A/B testing), estimation uncertainty is negligible.
+
+\subsubsection*{Decision rule}
+
+\[
+  \text{Stop and reject } H_0 \text{ when:} \quad
+  \boxed{\LR_n^{H} \;\geq\; \frac{1}{\alpha}}
+\]
+
+For $\alpha = 0.05$: stop when $\LR_n^{H} \geq 20$.
+
+\textbf{No lower boundary.}
+Unlike SPRT, mSPRT cannot definitively confirm $H_0$.  The mixture over all
+effect sizes, including very small ones, means the statistic hovers near~1
+indefinitely under $H_0$.  In practice, experiments run for a fixed maximum
+duration; if the threshold is never crossed, conclude: ``No significant effect
+detected.''
+
+\subsubsection*{The role of $\tau$}
+
+\begin{center}
+\begin{tabular}{@{} l l l @{}}
+\toprule
+$\tau$ is\ldots & \textbf{Effect} & \textbf{Best for} \\
+\midrule
+Small ($\sim\!0.01$) & Conservative, slow to reject & Very small effects \\
+Large ($\sim\!0.5$)  & Aggressive, fast for large effects & Large effects \\
+Matched to true $\delta$ & Near-optimal & Good prior knowledge \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+No universally optimal $\tau$ exists.  Calibrating $\tau$ from historical data
+(GAVI, Act~8) gives a principled answer.
+
+\subsubsection*{Ville's inequality still applies}
+
+$\LR_n^{H}$ is a non-negative martingale under $H_0$ (mixture of
+martingales), with $\LR_0^{H} = 1$.  Ville:
+\[
+  \boxed{\Prob\bigl(\LR_n^{H} \text{ ever reaches } 1/\alpha\bigr) \leq \alpha}
+\]
+The anytime-valid guarantee carries through unchanged.
+
+\begin{keytakeaway}
+\textbf{Key concepts:} mixture distribution, prior distribution, the role of
+$\tau$, robustness to effect-size uncertainty, the closed-form formula,
+practical notes ($\hat\sigma^2$, no lower boundary).
+\end{keytakeaway}
+
+
+% ══════════════════════════════════════════════════════════════════════════════
+% ACT 8
+% ══════════════════════════════════════════════════════════════════════════════
+\newpage
+\section{Act~8 --- Eppo's Implementation: CUPED, GAVI, \&\ Confidence
+         Sequences}
+
+This act has three independent sections, each addressing a different practical
+concern: reducing noise (CUPED), calibrating the prior (GAVI), and reporting
+results (confidence sequences).
+
+\subsection{The Simulation}
+
+\begin{simulation}
+A full A/B test simulation.  Two groups (control / treatment), observations
+arriving over time.
+
+\textbf{Panel~1 --- CUPED toggle:}
+mSPRT path with a toggle for variance reduction.  With CUPED on, the path is
+less noisy and reaches the threshold sooner.
+
+\textbf{Panel~2 --- Confidence sequence:}
+A confidence band around the estimated treatment effect.  Starts wide, narrows
+over time.  CUPED tightens it further.
+
+\textbf{Panel~3 --- $\tau$ calibration:}
+Average stopping time and power as functions of $\tau$.  A ``GAVI'' button
+auto-calibrates from simulated historical experiments.
+
+\textbf{User controls:} sample size, true effect size, $\tau$, correlation
+$\rho$ (controls CUPED effectiveness).
+\end{simulation}
+
+% ── 8A: CUPED ──────────────
+\subsection{Section 8A --- CUPED: Variance Reduction}
+
+\subsubsection*{Intuitive Explanation}
+
+\begin{intuition}
+Testing whether a new feature increases purchases?  Pre-experiment data tells
+you some users are heavy purchasers regardless.  That pre-existing variation is
+noise.
+
+CUPED (Controlled-experiment Using Pre-Experiment Data) removes this noise
+before the test runs.  Like weighing yourself before and after a meal --- you
+care about the change, not the baseline.
+
+Less noise $\Rightarrow$ fewer observations needed.
+\end{intuition}
+
+\subsubsection*{Mathematical Formulation}
+
+\textbf{Variables:}
+\begin{itemize}[nosep]
+  \item $Y$ = outcome during the experiment (e.g.\ purchase amount).
+  \item $X$ = pre-experiment covariate (e.g.\ last month's purchases).
+  \item $\E[X]$ = population average of $X$.
+\end{itemize}
+
+\textbf{CUPED-adjusted outcome:}
+\[
+  \boxed{Y^{*} = Y - \theta\,(X - \E[X])}
+\]
+
+\begin{plainlanguage}
+\begin{itemize}[nosep]
+  \item $\theta$: a coefficient chosen to remove as much noise as possible.
+  \item $(X - \E[X])$: the centred pre-experiment variable (average = 0).
+  \item $Y - \theta(X - \E[X])$: the outcome with the predictable component
+        subtracted out.
+\end{itemize}
+\end{plainlanguage}
+
+\textbf{Worked example.}
+User purchased \texteuro80 during experiment ($Y=80$), \texteuro100 last
+month ($X=100$), average is \texteuro70 ($\E[X]=70$), $\theta = 0.5$:
+\[
+  Y^* = 80 - 0.5 \times (100 - 70) = 80 - 15 = 65.
+\]
+
+\textbf{Optimal $\theta$:}
+\[
+  \boxed{\theta = \frac{\Cov(Y,X)}{\Var(X)}}
+\]
+
+\begin{plainlanguage}
+This is the slope of a linear regression of $Y$ on $X$.
+$\Cov(Y,X)$ measures how strongly $Y$ and $X$ move together.
+$\Var(X)$ measures how spread out $X$ is.
+\end{plainlanguage}
+
+\textbf{Practical note:} $\theta$ is estimated from \emph{pre-experiment}
+data, independent of treatment assignment.  This independence is why CUPED
+does not compromise the test's validity.
+
+\textbf{Variance reduction:}
+\[
+  \boxed{\Var(Y^*) = \Var(Y)\,(1 - \rho^2)}
+\]
+where $\rho = \Cov(Y,X) / \bigl(\SD(Y)\cdot\SD(X)\bigr)$ is the correlation
+between $Y$ and~$X$.
+
+\begin{center}
+\begin{tabular}{@{} c c c r l @{}}
+\toprule
+$\rho$ & $\rho^2$ & $1-\rho^2$
+       & \textbf{Variance remaining} & \textbf{Interpretation} \\
+\midrule
+0   & 0    & 1.00 & 100\% & No reduction \\
+0.3 & 0.09 & 0.91 & 91\%  & Modest \\
+0.5 & 0.25 & 0.75 & 75\%  & 25\% reduction \\
+0.7 & 0.49 & 0.51 & 51\%  & Nearly half removed \\
+0.9 & 0.81 & 0.19 & 19\%  & 81\% reduction --- dramatic \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\textbf{Derivation.}
+$\Var(Y^*) = \Var(Y) + \theta^2\Var(X) - 2\theta\Cov(Y,X)$.
+Substituting $\theta = \Cov(Y,X)/\Var(X)$ and simplifying yields
+$\Var(Y)(1-\rho^2)$.
+
+% ── 8B: GAVI ──────────────
+\subsection{Section 8B --- GAVI: Calibrating $\tau$ from History}
+
+\subsubsection*{Intuitive Explanation}
+
+\begin{intuition}
+How to choose $\tau$?  Look at past experiments.  If 100 previous A/B tests
+showed effects in the range $\delta = 0.005$ to $0.10$, mostly around $0.02$,
+set $\tau$ to match.
+
+This is \textbf{GAVI} (Generalized Adjusted Variance Inflation): calibrate the
+prior from empirical data. Near-optimal power for your platform's typical
+effects.
+\end{intuition}
+
+\subsubsection*{Mathematical Formulation}
+
+GAVI sets $H$ (the prior in the mSPRT integral) to match the empirical
+distribution of past effect sizes:
+\begin{enumerate}[nosep]
+  \item Collect estimated effects $\delta_1, \ldots, \delta_k$ from $k$
+        past experiments.
+  \item Compute their standard deviation.
+  \item Set $\tau$ equal (or proportional) to this standard deviation.
+\end{enumerate}
+
+% ── 8C: Confidence Sequences ──────────────
+\subsection{Section 8C --- Confidence Sequences}
+
+\subsubsection*{Intuitive Explanation}
+
+\begin{intuition}
+Standard tests report a \textbf{confidence interval}: a range of plausible
+values for the effect (e.g.\ ``$+3\% \pm 2\%$'').
+
+mSPRT gives something better: a \textbf{confidence sequence} --- a band that
+updates after every observation and is valid at \emph{every} point in time.
+It starts wide, narrows as data accumulates, and at any moment covers the true
+effect with probability $\geq 1-\alpha$.
+\end{intuition}
+
+\subsubsection*{Mathematical Formulation}
+
+The confidence sequence is obtained by \emph{inverting} the mSPRT rejection
+rule.  At time $n$:
+\[
+  C(n) = \bigl\{\mu : \LR_n^{H}(\mu) < 1/\alpha \bigr\}
+\]
+\begin{plainlanguage}
+$C(n)$ is the set of all parameter values $\mu$ for which the mSPRT,
+computed as if $\mu$ were the null, does not exceed the threshold.
+\end{plainlanguage}
+
+For the Normal case, this yields an interval:
+\[
+  \bar{x}_n \;\pm\; \text{margin}(n, \sigma^2, \tau^2, \alpha)
+\]
+The margin shrinks as $n$ grows.
+
+The guarantee:
+\[
+  \boxed{\Prob\!\bigl(\text{true } \mu \in C(n) \text{ for all } n
+         \text{ simultaneously}\bigr) \geq 1-\alpha}
+\]
+
+\begin{plainlanguage}
+The band covers the true parameter at all times --- not just at one
+pre-specified moment.  This is the confidence-sequence counterpart of Ville's
+inequality.
+\end{plainlanguage}
+
+% ── 8D: Full Pipeline ──────────────
+\subsection{Section 8D --- The Full Pipeline}
+
+\begin{enumerate}
+  \item \textbf{Before the experiment:} Collect pre-experiment covariate $X$.
+        Estimate $\theta$ from historical data.
+  \item \textbf{During:} For each observation $Y$, compute
+        $Y^* = Y - \theta(X - \E[X])$.
+  \item \textbf{Calibrate $\tau$} from historical effect sizes (GAVI).
+  \item \textbf{Run mSPRT} on $Y^*$ with parameter $\tau$, threshold
+        $1/\alpha$.
+  \item \textbf{Monitor} the confidence sequence.
+  \item \textbf{Decide:} If $\LR_n^{H} \geq 1/\alpha$, reject~$H_0$.
+        Otherwise, at maximum planned sample size, conclude ``no significant
+        effect detected.''
+\end{enumerate}
+
+\subsubsection*{Why CUPED does not break the mSPRT guarantee}
+
+The mSPRT is applied to $Y^*$ instead of~$Y$.  Same formulas, smaller
+$\sigma^2$.  Crucially:
+\begin{enumerate}[nosep]
+  \item $\theta$ is estimated from \emph{pre-experiment} data (independent
+        of treatment).
+  \item CUPED is applied \emph{before} the mSPRT statistic is computed.
+  \item The martingale property depends only on correct modelling of the
+        observations, which holds for the reduced-variance $Y^*$.
+\end{enumerate}
+Ville's inequality still holds.  The test is still anytime-valid.
+
+\begin{keytakeaway}
+\textbf{Key concepts:} CUPED, pre-experiment covariate, variance reduction,
+correlation, GAVI, $\tau$ calibration, confidence sequences, the full Eppo
+pipeline.
+
+The test is \textbf{anytime-valid}, \textbf{variance-reduced}, and
+\textbf{robust to effect-size uncertainty}.
+\end{keytakeaway}
+
+
+% ══════════════════════════════════════════════════════════════════════════════
+\newpage
+\section{Navigation and UX Design}
+
+\subsection{Between Acts --- Transition Cards}
+
+Each transition features a brief interstitial card with a bridge sentence and
+a ``Key insight so far'' box.
+
+\begin{center}
+\renewcommand{\arraystretch}{1.3}
+\begin{tabular}{@{} l p{9cm} @{}}
+\toprule
+\textbf{Transition} & \textbf{Bridge sentence} \\
+\midrule
+Act~0 $\to$ 1 & ``To build a peek-safe test, we first need the right
+  building block.  It starts with a coin flip.'' \\
+Act~1 $\to$ 2 & ``Now let's put money on each step --- and learn why no
+  strategy can beat a fair game.'' \\
+Act~2 $\to$ 3 & ``Fair games can't be beaten.  Now let's build a detective
+  --- a tool for telling two coins apart.'' \\
+Act~3 $\to$ 4 & ``We can measure evidence with a likelihood ratio.  But
+  here's the surprise: that evidence score is itself a martingale.'' \\
+Act~4 $\to$ 5 & ``The likelihood ratio is a martingale.  Now let's see why
+  that single fact gives us the peeking guarantee.'' \\
+Act~5 $\to$ 6 & ``We have the theory: peeking is safe.  Now let's turn it
+  into a practical decision procedure.'' \\
+Act~6 $\to$ 7 & ``SPRT is optimal but inflexible.  What if we don't know the
+  effect size?'' \\
+Act~7 $\to$ 8 & ``mSPRT gives a robust, peek-safe test.  Now let's add
+  Eppo's practical enhancements.'' \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\subsection{Persistent Controls}
+
+A slider panel available throughout all acts:
+\begin{itemize}[nosep]
+  \item Probability $p$ (or effect size $\delta$ from Act~3 onward)
+  \item Significance level $\alpha$
+  \item Number of steps / observations $n$
+  \item Simulation speed
+  \item Number of simultaneous runs
+\end{itemize}
+
+\subsection{Persistent Sidebar}
+
+The notation cheat sheet (Section~\ref{sec:notation}) should be accessible as a
+collapsible sidebar from every act.
+
+\subsection{Visual Design Principles}
+
+\begin{itemize}[nosep]
+  \item The same visual object (path / process) carries through all eight
+        acts, relabelled at each stage.
+  \item Threshold lines appear gradually: none in Acts~0--1; $\pm\sqrt{n}$
+        envelope in Act~1; both SPRT thresholds in Act~6; only the upper
+        threshold from Act~7; confidence bands in Act~8.
+  \item Formula panels slide in/out; not shown by default on first reading.
+  \item Every formula has a plain-language translation directly below it.
+  \item Key terms on first use are bolded and defined in-line.
+\end{itemize}
+
+
+% ══════════════════════════════════════════════════════════════════════════════
+\newpage
+\section{Summary: The Through-Line}
+
+\begin{center}
+\renewcommand{\arraystretch}{1.3}
+\begin{tabular}{@{} c l l l @{}}
+\toprule
+\textbf{Act} & \textbf{Object} & \textbf{Represents} & \textbf{Key idea} \\
+\midrule
+0 & Repeated $p$-values
+  & The peeking problem
+  & Checking repeatedly inflates FP \\
+1 & Random walk $S_n$
+  & Position
+  & $\SD$ grows as $\sqrt{n}$ \\
+2 & Winnings $M_n$
+  & Gambler's fortune
+  & Martingale; Doob: $\E[M_\tau]=M_0$ \\
+3 & Likelihood ratio $\LR_n$
+  & Evidence against $H_0$
+  & Comparing hypotheses flip by flip \\
+4 & $\LR_n$ under $H_0$
+  & LR is a martingale
+  & The cancellation proof; $\LR_0{=}1$, $\LR_n{\geq}0$ \\
+5 & Markov $+$ Ville
+  & Anytime-valid guarantee
+  & $\Prob(\LR_n \text{ ever}{\geq}1/\alpha)\leq\alpha$ \\
+6 & SPRT
+  & Wald's decision rule
+  & Optimal but requires known $\delta$ \\
+7 & $\LR_n^{H}$
+  & Robust evidence
+  & Mixture of martingales is a martingale \\
+8 & CUPED + CS
+  & Less noisy, fully reported
+  & Same guarantee, faster detection \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\bigskip
+\textbf{The core message:} All eight acts build on the same mathematical
+object --- a non-negative martingale --- viewed through increasingly powerful
+lenses.  The anytime-valid guarantee flows from a single elegant fact:
+\[
+  \textit{A fair game cannot be beaten by choosing when to quit.}
+\]
+
+
+% ══════════════════════════════════════════════════════════════════════════════
+\newpage
+\section{References}
+\label{sec:references}
+
+\begin{enumerate}
+  \item \textbf{Ville, J.} (1939).
+        \textit{\'Etude critique de la notion de collectif}.
+        Gauthier-Villars, Paris.
+        --- Original proof of Ville's inequality for non-negative
+        supermartingales.
+
+  \item \textbf{Wald, A.} (1945).
+        Sequential tests of statistical hypotheses.
+        \textit{Annals of Mathematical Statistics}, 16(2), 117--186.
+        \url{https://doi.org/10.1214/aoms/1177731118}
+        --- Foundational paper on the SPRT.
+
+  \item \textbf{Wald, A.\ \& Wolfowitz, J.} (1948).
+        Optimum character of the sequential probability ratio test.
+        \textit{Annals of Mathematical Statistics}, 19(3), 326--339.
+        \url{https://doi.org/10.1214/aoms/1177730197}
+        --- Proof that SPRT minimises expected sample size.
+
+  \item \textbf{Doob, J.\,L.} (1953).
+        \textit{Stochastic Processes}.
+        Wiley, New York.
+        --- Definitive treatment of martingale theory including the
+        Optional Stopping Theorem.
+
+  \item \textbf{Robbins, H.} (1970).
+        Statistical methods related to the law of the iterated logarithm.
+        \textit{Annals of Mathematical Statistics}, 41(5), 1397--1409.
+        \url{https://doi.org/10.1214/aoms/1177696786}
+        --- Early work on mixture sequential tests.
+
+  \item \textbf{Deng, A., Xu, Y., Kohavi, R., \& Walker, T.} (2013).
+        Improving the sensitivity of online controlled experiments by
+        utilizing pre-experiment data.
+        \textit{Proc.\ WSDM}, 123--132.
+        \url{https://doi.org/10.1145/2433396.2433413}
+        --- The original CUPED paper.
+
+  \item \textbf{Johari, R., Pekelis, L., \& Walsh, D.J.} (2017).
+        Always valid inference: Continuous monitoring of A/B tests.
+        \textit{Operations Research}, 65(6), 1651--1667.
+        \url{https://doi.org/10.1287/opre.2017.1607}
+        --- mSPRT for A/B testing.
+
+  \item \textbf{Howard, S.\,R., Ramdas, A., McAuliffe, J., \& Sekhon, J.}
+        (2021).
+        Time-uniform, nonparametric, nonasymptotic confidence sequences.
+        \textit{Annals of Statistics}, 49(2), 1055--1080.
+        \url{https://doi.org/10.1214/20-AOS1991}
+        --- Theory of confidence sequences and anytime-valid inference.
+
+  \item \textbf{Schmit, M.\ \& Miller, T.} (2024).
+        Sequential confidence intervals for comparing two proportions with
+        variance reduction.
+        Eppo (available in \texttt{literature/} folder).
+        --- Eppo's implementation: CUPED-based variance reduction, confidence
+        sequences, and GAVI.
+\end{enumerate}
+
+
+% ══════════════════════════════════════════════════════════════════════════════
+\newpage
+\section*{Appendix: What Changed from v2}
+\addcontentsline{toc}{section}{Appendix: What Changed from v2}
+
+\begin{enumerate}[nosep]
+  \item Converted from Markdown to \LaTeX{} for proper mathematical
+        typesetting: fractions, summation limits, aligned derivations,
+        boxed key formulas, cancel notation in the martingale proof, etc.
+  \item All formulas now use standard \LaTeX{} math mode instead of Unicode
+        approximations.
+  \item Added coloured boxes to visually distinguish simulations, intuitive
+        explanations, and key takeaways.
+  \item Added a table of contents for easy navigation.
+  \item References now include DOI links where available.
+  \item No content changes --- the pedagogical structure and all text are
+        preserved from v2.
+\end{enumerate}
+
+\end{document}

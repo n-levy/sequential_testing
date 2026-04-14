@@ -1,0 +1,3145 @@
+\documentclass[12pt, a4paper]{article}
+
+% ── Packages ──────────────────────────────────────────────────────────────────
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage{amsmath, amssymb, amsthm}
+\usepackage{mathtools}          % for \coloneqq, \DeclarePairedDelimiter, etc.
+\usepackage{booktabs}           % nicer tables
+\usepackage{array}              % extended column types (>{\raggedright} etc.)
+\usepackage{enumitem}           % custom list formatting
+\usepackage{hyperref}           % clickable cross-references
+\usepackage[margin=2.5cm]{geometry}
+\usepackage{parskip}            % blank lines between paragraphs, no indent
+\usepackage{xcolor}
+\usepackage{tcolorbox}          % coloured boxes for "intuitive explanation" etc.
+\usepackage{titlesec}           % section formatting
+\usepackage{cancel}             % for cancel notation in proofs
+
+% ── Colours ───────────────────────────────────────────────────────────────────
+\definecolor{intuitionbg}{RGB}{240,248,255}   % pale blue
+\definecolor{simulationbg}{RGB}{255,250,240}  % pale orange
+\definecolor{keybox}{RGB}{245,245,220}        % pale yellow
+\definecolor{historybg}{RGB}{245,240,250}     % pale purple
+
+% ── Environments ──────────────────────────────────────────────────────────────
+\newtcolorbox{intuition}{
+  colback=intuitionbg, colframe=blue!40!black,
+  title={\textbf{Intuitive Explanation}}, fonttitle=\bfseries
+}
+\newtcolorbox{simulation}{
+  colback=simulationbg, colframe=orange!60!black,
+  title={\textbf{Simulation}}, fonttitle=\bfseries
+}
+\newtcolorbox{keytakeaway}{
+  colback=keybox, colframe=olive!60!black,
+  title={\textbf{Key Takeaway}}, fonttitle=\bfseries
+}
+\newtcolorbox{plainlanguage}{
+  colback=white, colframe=gray!50,
+  left=6pt, right=6pt, top=4pt, bottom=4pt
+}
+\newtcolorbox{historynote}{
+  colback=historybg, colframe=purple!40!black,
+  title={\textbf{Historical Note}}, fonttitle=\bfseries
+}
+
+\newtheorem{theorem}{Theorem}
+\newtheorem{definition}{Definition}
+\newtheorem{proposition}{Proposition}
+
+% ── Notation shorthand ────────────────────────────────────────────────────────
+\newcommand{\E}{\mathbb{E}}            % expected value
+\newcommand{\Prob}{\mathbb{P}}         % probability
+\newcommand{\Var}{\operatorname{Var}}
+\newcommand{\Cov}{\operatorname{Cov}}
+\newcommand{\Cor}{\operatorname{Cor}}
+\newcommand{\SD}{\operatorname{SD}}
+\newcommand{\given}{\,\vert\,}         % conditional bar with spacing
+\newcommand{\LR}{\Lambda}              % likelihood ratio
+\newcommand{\R}{\mathbb{R}}
+
+
+% ══════════════════════════════════════════════════════════════════════════════
+\title{\textbf{Presentation Plan: From Random Walks to Sequential Testing}\\[6pt]
+       \large Version~5}
+\author{}
+\date{April 2026}
+
+\begin{document}
+\maketitle
+\tableofcontents
+\newpage
+
+% ══════════════════════════════════════════════════════════════════════════════
+\section*{About This Document}
+\addcontentsline{toc}{section}{About This Document}
+
+\textbf{Target audience.}
+People comfortable with algebra and basic probability (e.g.\ a 12th-grade
+math background).  No calculus is required to follow the main ideas, though
+some calculus notation (integrals) appears in later acts for completeness ---
+always with plain-language translations.
+
+\textbf{Format.}
+Fourteen interactive acts (Acts~0--13) --- deliberately small steps.  Each act
+has a simulation, an intuitive explanation, and a mathematical section.  The
+math sections always define every symbol before using it.  Every formula is
+accompanied by a plain-language translation immediately below it.
+
+\textbf{Design philosophy.}
+Better to over-explain than under-explain.  When in doubt, slow down.
+
+\textbf{What changed from v4.}
+Structural enhancements, UX design specifications, and Act~13 added.
+See the appendix for full details.
+
+
+% ══════════════════════════════════════════════════════════════════════════════
+% ACT 0
+% ══════════════════════════════════════════════════════════════════════════════
+\newpage
+\section{Act~0 --- Why Should You Care?  The Peeking Problem}
+
+\subsection{The Motivation}
+
+\begin{intuition}
+You work at a company running an A/B test.  Half your users see the old
+website, half see a new design.  Every day, you check the dashboard:
+``Is the new design better?''  After a week, the dashboard shows $p=0.03$ ---
+that looks significant!  You call it: the new design wins.
+
+But here is the dirty secret of traditional statistics: \textbf{the more often
+you check, the more likely you are to see a false positive.}  A test designed
+to have a 5\% false positive rate can easily reach 20--30\% if you peek at it
+repeatedly.  One in four or five ``winning'' experiments might actually be noise.
+
+This is not a theoretical concern.  It is the single most common statistical
+mistake in online experimentation.
+\end{intuition}
+
+\subsection{The Simulation}
+
+\begin{simulation}
+Two groups of observations (control and treatment) are generated from
+\emph{identical} distributions --- there is no real effect.  A standard
+$t$-test is computed after every new observation arrives.
+
+A counter shows: ``Number of times $p<0.05$ so far.''  The user watches the
+$p$-value bounce around.  Every time it dips below $0.05$, it lights up red ---
+a false positive.
+
+\textbf{Users can control:}
+\begin{itemize}[nosep]
+  \item How many total observations to simulate
+  \item How many independent experiments to run in parallel
+\end{itemize}
+
+A bar chart accumulates: ``Fraction of experiments that showed $p<0.05$ at
+\emph{some} point during peeking.''  For 1,000 simulated experiments with
+regular peeking, this fraction climbs well above 5\% --- often to 20--30\%.
+
+A second mode checks only once, at the very end.  That fraction stays near 5\%.
+\end{simulation}
+
+\subsection{Intuitive Explanation}
+
+\begin{intuition}
+Traditional statistical tests promise: ``If there is no real effect, I will
+falsely cry wolf at most 5\% of the time.''  But this promise comes with fine
+print: \textbf{you may only look at the result once, at a pre-determined time.}
+
+Every time you peek, you get another chance for randomness to fool you.  It is
+like rolling a die repeatedly --- the more rolls, the more likely you are to
+get a six eventually, even though any single roll has only a $1/6$ chance.
+
+The rest of this presentation builds a test that does not have this problem:
+a test where you can peek as often as you like and the false positive guarantee
+still holds.
+
+That promise has a name: \textbf{anytime-valid inference}.  Getting there
+requires some beautiful mathematics, which we will build up one step at a
+time.
+\end{intuition}
+
+\begin{keytakeaway}
+\textbf{The peeking problem:} Checking a traditional test repeatedly inflates
+the false positive rate far beyond its nominal level.  We need a fundamentally
+different kind of test --- one that remains valid no matter when or how often
+we look.
+\end{keytakeaway}
+
+
+% ══════════════════════════════════════════════════════════════════════════════
+% ACT 1
+% ══════════════════════════════════════════════════════════════════════════════
+\newpage
+\section{Act~1 --- The Random Walk}
+
+\subsection{The Simulation}
+
+\begin{simulation}
+A vertical number line appears on screen.  A dot starts at position~0.  Each
+step, a coin is flipped.  Heads: the dot moves up one step.  Tails: down one
+step.  The path is drawn as a graph (position vs.\ step number).
+
+\textbf{User controls:} speed, number of steps, probability of going up
+(initially fixed at $50/50$; later a slider), number of simultaneous paths.
+\end{simulation}
+
+\subsection{Intuitive Explanation}
+
+\begin{intuition}
+Imagine you are standing in the middle of a long hallway.  Flip a coin.
+Heads --- step forward.  Tails --- step back.  Repeat hundreds of times.
+
+Where will you end up?  We don't know exactly, but we can say something
+precise about the \emph{range} of likely outcomes.  Most of the time you won't
+wander far.  Occasionally, a long streak of heads or tails carries you far in
+one direction.  The longer you walk, the wider the range of possible positions
+--- but the centre of that range stays at zero.
+
+When we run many people simultaneously, they fan out over time --- like ink
+dropped into water.  This spreading has a precise mathematical shape.
+\end{intuition}
+
+\subsection{Mathematical Formulation}
+
+\subsubsection*{Setting up the notation}
+
+Let $X_i$ represent the outcome of the $i$th coin flip:
+\[
+  X_i =
+  \begin{cases}
+    +1 & \text{if heads (step forward),} \\
+    -1 & \text{if tails (step backward).}
+  \end{cases}
+\]
+The probability of heads is written $p$.  For a fair coin, $p = 0.5$.
+
+\subsubsection*{Position after $n$ steps}
+
+\[
+  \boxed{S_n = \sum_{i=1}^{n} X_i = X_1 + X_2 + \cdots + X_n}
+\]
+
+\begin{plainlanguage}
+Read as: ``$S$ sub $n$ equals the sum of all $X_i$, starting from $i=1$ up to
+$i=n$.''
+\end{plainlanguage}
+
+\textbf{Worked example.}  First 5 flips: H, T, H, H, T, so
+$X_1\!=\!+1,\; X_2\!=\!-1,\; X_3\!=\!+1,\; X_4\!=\!+1,\; X_5\!=\!-1$.
+\[
+  S_1=1,\quad S_2=0,\quad S_3=1,\quad S_4=2,\quad S_5=1.
+\]
+
+\subsubsection*{The average outcome (expected value)}
+
+When $p = 0.5$, each flip has expected value zero:
+\[
+  \E[X_i]
+    = \underbrace{0.5}_{P(\text{heads})} \times (+1)
+    + \underbrace{0.5}_{P(\text{tails})} \times (-1)
+    = 0.
+\]
+Because each step averages to zero:
+\[
+  \boxed{\E[S_n] = \E[X_1] + \E[X_2] + \cdots + \E[X_n] = 0}
+\]
+
+\begin{plainlanguage}
+On average, across many trials, you end up back where you started.
+\end{plainlanguage}
+
+\subsubsection*{How spread out the outcomes are --- variance \& standard deviation}
+
+\textbf{Variance} measures the average squared distance from the mean.
+For a single fair coin flip:
+\[
+  \Var(X_i) = \E\bigl[(X_i - 0)^2\bigr]
+  = 0.5 \times (+1)^2 + 0.5 \times (-1)^2
+  = 1.
+\]
+Because flips are independent, the variance of the sum is the sum of
+the variances:
+\[
+  \Var(S_n) = \Var(X_1) + \Var(X_2) + \cdots + \Var(X_n)
+  = \underbrace{1 + 1 + \cdots + 1}_{n\text{ terms}} = n.
+\]
+The \textbf{standard deviation} is the square root of the variance ---
+same units as the position:
+\[
+  \boxed{\SD(S_n) = \sqrt{\Var(S_n)} = \sqrt{n}}
+\]
+
+\begin{plainlanguage}
+After 100 steps, the typical distance from zero is $\sqrt{100}=10$.
+After 10,000 steps, it is $\sqrt{10{,}000}=100$.  The spread grows with the
+\emph{square root} of the number of steps, not the number itself.
+\end{plainlanguage}
+
+The simulation shows the $\pm\sqrt{n}$ envelope as two curved lines.
+
+\subsubsection*{What if the coin is not fair?}
+
+When $p \neq 0.5$, each step has a non-zero average:
+\[
+  \E[X_i] = p \times (+1) + (1-p) \times (-1) = 2p - 1.
+\]
+For $p = 0.6$: $\E[X_i] = 0.2$.  After $n$ steps:
+\[
+  \E[S_n] = n(2p-1).
+\]
+This is a systematic \emph{drift} --- the random walk now has a trend.
+
+\begin{keytakeaway}
+\textbf{Key concepts:} stochastic process, expected value, variance, standard
+deviation, the $\sqrt{n}$ growth of randomness.
+\end{keytakeaway}
+
+
+% ══════════════════════════════════════════════════════════════════════════════
+% ACT 2
+% ══════════════════════════════════════════════════════════════════════════════
+\newpage
+\section{Act~2 --- The Gambling Game and the Martingale}
+
+\subsection{The Simulation}
+
+\begin{simulation}
+The same random walk, relabelled.  The vertical axis now shows
+``\texteuro{} profit or loss.''  A bold horizontal line marks zero ---
+break-even.
+
+\textbf{Probability slider:} $p > 0.5$ gives the player an edge;
+$p < 0.5$ gives the house an edge.
+
+\textbf{Doubling strategy mode:} Runs 10,000~gamblers using the martingale
+betting strategy.  A histogram shows the distribution of final wealth --- many
+small winners, a few catastrophic losers.  A counter shows average profit
+converging to zero.
+
+\textbf{Build your own stopping rule:} Users define a rule (``Stop when ahead
+by \texteuro$K$'').  The simulation runs 10,000~gamblers.  Average winnings at
+stopping converge to zero.
+\end{simulation}
+
+\subsection{Intuitive Explanation}
+
+\begin{intuition}
+Win \texteuro1 for heads, lose \texteuro1 for tails.  Cumulative winnings
+trace the same random walk from Act~1.
+
+The gambler's temptation: ``I'll keep playing until I'm ahead, then quit.''
+Sounds foolproof --- surely a run of luck will eventually put you in the green?
+
+Mathematically, a fair random walk does eventually return to positive territory.
+But the time it takes can be astronomically long, and while you wait you might
+lose everything.
+
+\textbf{Central insight:} There is no strategy that improves your expected
+outcome in a fair game.  This is a proven mathematical theorem.  Try any
+stopping rule in the simulation --- the average winnings always converge to
+zero.
+\end{intuition}
+
+\begin{intuition}
+\textbf{The doubling strategy (Martingale betting), exposed.}
+
+Lose, double the bet, repeat until you win back your losses plus \texteuro1.
+It works --- most of the time.
+
+But a long losing streak forces bets of
+\texteuro1, 2, 4, 8, 16, 32, 64, \ldots\
+After just 10 consecutive losses, you must bet \texteuro1,024 to win back
+\texteuro1.  The histogram makes it vivid: a tall bar of people who won
+\texteuro1, and a barely visible bar at the far left of people who lost
+thousands.  Multiply heights by positions and sum: the average is zero.
+\end{intuition}
+
+\subsection{Mathematical Formulation}
+
+\begin{definition}[Martingale]
+A sequence $M_0, M_1, M_2, \ldots$ is a \textbf{martingale} if, at every
+step, the best prediction of the next value is the current value:
+\[
+  \boxed{\E\bigl[M_n \given M_0, M_1, \ldots, M_{n-1}\bigr] = M_{n-1}}
+\]
+\end{definition}
+
+\textbf{Reading the notation carefully:}
+\begin{itemize}[nosep]
+  \item $\E[\cdot]$ = ``the expected value of\ldots'' (long-run average).
+  \item The vertical bar ``$\given$'' = ``given that we know.''
+        Everything after the bar is information we have.
+  \item $M_0, M_1, \ldots, M_{n-1}$ = the full history up to step $n-1$.
+  \item Full sentence: ``The expected value of $M_n$, given that we know
+        everything up to step $n-1$, equals $M_{n-1}$.''
+\end{itemize}
+
+\begin{plainlanguage}
+Knowing the entire history, your best guess for the next value is just the
+current value.  The past gives no useful information about the future direction.
+\end{plainlanguage}
+
+\subsubsection*{Verifying: the coin-flip game is a martingale}
+
+Let $M_n = S_n$ (cumulative winnings).  Then $M_n = M_{n-1} + X_n$.
+\begin{align*}
+  \E[M_n \given M_0,\ldots,M_{n-1}]
+  &= \E[M_{n-1} + X_n \given M_0,\ldots,M_{n-1}] \\
+  &= M_{n-1} + \E[X_n \given M_0,\ldots,M_{n-1}]
+     & &\text{($M_{n-1}$ is known, passes through $\E$)} \\
+  &= M_{n-1} + 0
+     & &\text{(next flip is independent; $\E[X_n]=0$)} \\
+  &= M_{n-1}. \qquad\checkmark
+\end{align*}
+
+\subsubsection*{Doob's Optional Stopping Theorem (1953)}
+
+\begin{theorem}[Doob's Optional Stopping Theorem]
+Let $\{M_n\}$ be a martingale and $\tau$ a \textbf{stopping time} --- a rule
+for when to quit that uses only information accumulated so far (no looking into
+the future).  Then, under reasonable conditions:
+\[
+  \boxed{\E[M_\tau] = \E[M_0]}
+\]
+\end{theorem}
+
+\begin{plainlanguage}
+For a gambler starting with $M_0 = 0$: expected winnings at stopping $= 0$,
+always, for any strategy.  \textbf{You cannot beat a fair game by choosing
+when to quit.}
+\end{plainlanguage}
+
+\subsubsection*{What is a stopping time?}
+
+$\tau$ is a decision rule of the form: ``Stop after step $n$ if [condition
+based only on what happened so far].''
+
+\begin{center}
+\begin{tabular}{@{} l c @{}}
+\toprule
+\textbf{Rule} & \textbf{Valid?} \\
+\midrule
+Stop after exactly 100 flips & \checkmark \\
+Stop the first time I am ahead by \texteuro10 & \checkmark \\
+Stop when I have lost \texteuro50 & \checkmark \\
+Stop after 1000 flips \emph{or} when ahead by \texteuro5, whichever first & \checkmark \\
+Stop right before the next loss & $\times$ (requires the future!) \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\subsubsection*{The ``reasonable conditions'' for Doob's theorem}
+
+Doob's theorem requires at least one of:
+\begin{enumerate}[nosep]
+  \item $\tau \leq N$ for some fixed $N$ (bounded stopping time), \textbf{or}
+  \item $|M_n| \leq C$ for some fixed $C$ (bounded martingale), \textbf{or}
+  \item $\E[\tau] < \infty$ \emph{and} certain integrability
+        conditions (finite expected stopping time).
+\end{enumerate}
+
+When \emph{none} hold --- as with the doubling strategy --- the guarantee
+breaks down.
+
+\subsubsection*{Why the doubling strategy fails}
+
+The doubling strategy guarantees eventual profit \emph{only if} you have
+infinite money and infinite time.  In practice:
+\begin{itemize}[nosep]
+  \item Finite budget $\Rightarrow$ real probability of ruin before recovery.
+  \item Expected time to recovery is infinite: $\E[\tau] = \infty$.
+  \item Doob's theorem gives $\E[M_\tau] \leq 0$, not $= 0$.
+\end{itemize}
+
+\subsubsection*{Why this matters for what is coming}
+
+The martingale concept reappears in every subsequent act.  The likelihood
+ratio (Act~4) is a martingale.  The mixture likelihood ratio (Act~7) is a
+martingale.  The reason sequential tests control false positives --- even
+with peeking --- is that they exploit the same structure: \textbf{a fair game
+cannot be beaten by choosing when to stop.}
+
+\begin{keytakeaway}
+\textbf{Key concepts:} martingale, conditional expectation, stopping time,
+Doob's Optional Stopping Theorem, the ``reasonable conditions.''
+\end{keytakeaway}
+
+
+% ══════════════════════════════════════════════════════════════════════════════
+% ACT 3
+% ══════════════════════════════════════════════════════════════════════════════
+\newpage
+\section{Act~3 --- Hypothesis Testing: Telling Two Coins Apart}
+
+\subsection{The Simulation}
+
+\begin{simulation}
+The user is presented with a coin and must decide: fair or biased?
+
+Two panels run side by side:
+\begin{itemize}[nosep]
+  \item \textbf{Left:} Coin is actually fair ($p=0.5$).
+  \item \textbf{Right:} Coin is actually biased ($p=0.5+\delta$).
+\end{itemize}
+After each flip, a running tally shows heads/tails and current proportion.
+For small $\delta$, the sequences look nearly identical for many flips.
+
+\textbf{User controls:} true bias $\delta$; number of flips before deciding.
+\end{simulation}
+
+\subsection{Intuitive Explanation}
+
+\begin{intuition}
+You suspect a coin might be unfair.  Flip it many times and look at the
+results.  10~flips with 6~heads?  Could be luck.  1,000~flips with 600~heads?
+Strong evidence.
+
+Statisticians frame this as two competing stories:
+\begin{itemize}[nosep]
+  \item \textbf{Null hypothesis $H_0$:} ``The coin is fair.  Nothing is happening.''
+  \item \textbf{Alternative hypothesis $H_1$:} ``The coin is biased.  Something real is going on.''
+\end{itemize}
+
+Two types of mistakes:
+\begin{enumerate}[nosep]
+  \item \textbf{False positive} (Type~I): conclude biased when it is fair.
+  \item \textbf{False negative} (Type~II): conclude fair when it is biased.
+\end{enumerate}
+Traditionally: $\alpha = 0.05$ (max false positive rate),
+$\beta = 0.20$ (max false negative rate).
+\textbf{Power} $= 1 - \beta = 0.80$.
+\end{intuition}
+
+\subsection{Mathematical Formulation}
+
+\subsubsection*{The likelihood}
+
+Suppose $n$ flips produce $k$ heads.
+
+Under $H_0$ (fair coin, $p = 0.5$):
+\[
+  \mathcal{L}_0
+  = (0.5)^k \times (0.5)^{n-k}
+  = (0.5)^n.
+\]
+
+Under $H_1$ (biased coin, $p = 0.5 + \delta$):
+\[
+  \mathcal{L}_1
+  = (0.5 + \delta)^k \times (0.5 - \delta)^{n-k}.
+\]
+
+\subsubsection*{The likelihood ratio}
+
+\[
+  \boxed{\LR_n
+  = \frac{\mathcal{L}_1}{\mathcal{L}_0}
+  = \frac{(0.5+\delta)^k \;(0.5-\delta)^{n-k}}{(0.5)^n}}
+\]
+
+\begin{plainlanguage}
+``How many times more likely is our observed data under the biased-coin story
+compared to the fair-coin story?''
+\end{plainlanguage}
+
+\textbf{Worked example.}
+$\delta = 0.1$ (biased coin has $p=0.6$); $n=10$ flips, $k=7$ heads.
+\begin{align*}
+  \mathcal{L}_1 &= (0.6)^7 \times (0.4)^3 = 0.0280 \times 0.064 \approx 0.001792, \\
+  \mathcal{L}_0 &= (0.5)^{10} \approx 0.000977, \\
+  \LR_{10} &= \frac{0.001792}{0.000977} \approx 1.83.
+\end{align*}
+The data is $\approx\!1.83$ times more likely if the coin is biased.
+Evidence, but not overwhelming.
+
+\subsubsection*{Interpreting $\LR_n$}
+
+\begin{center}
+\begin{tabular}{@{} r l @{}}
+\toprule
+$\LR_n = 1$   & Data equally consistent with both hypotheses \\
+$\LR_n = 10$  & 10$\times$ more likely under $H_1$ --- moderate evidence \\
+$\LR_n = 100$ & 100$\times$ more likely under $H_1$ --- strong evidence \\
+$\LR_n = 0.1$ & 10$\times$ more likely under $H_0$ --- evidence for fairness \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\subsubsection*{Incremental updating}
+
+$\LR_n$ can be computed one flip at a time:
+\[
+  \boxed{\LR_n = \LR_{n-1} \times \frac{f_1(x_n)}{f_0(x_n)}}
+\]
+where $f_j(x_n)$ is the probability of the $n$th flip's outcome under $H_j$.
+\begin{itemize}[nosep]
+  \item Heads: multiply by $\dfrac{0.5+\delta}{0.5}$.
+  \item Tails: multiply by $\dfrac{0.5-\delta}{0.5}$.
+\end{itemize}
+This incremental structure is what makes \emph{sequential} testing possible.
+
+\subsubsection*{Starting value}
+
+Before any data:
+\[
+  \LR_0 = 1.
+\]
+Neither hypothesis is favoured.  This will be important for Ville's inequality
+(which requires the starting value to equal~1).
+
+\begin{keytakeaway}
+\textbf{Key concepts:} null hypothesis, alternative hypothesis, likelihood,
+likelihood ratio, false positive, false negative, power, incremental updating.
+\end{keytakeaway}
+
+
+% ══════════════════════════════════════════════════════════════════════════════
+% ACT 4
+% ══════════════════════════════════════════════════════════════════════════════
+\newpage
+\section{Act~4 --- The Likelihood Ratio Is a Martingale}
+
+\subsection{The Simulation}
+
+\begin{simulation}
+The likelihood ratio $\LR_n$ is now plotted as a path over time --- like the
+random walk from Act~1.
+
+\textbf{Left panel:} 100 paths of $\LR_n$ when the coin is truly \emph{fair}
+($H_0$ true).  Paths wander with no systematic trend.
+
+\textbf{Right panel:} 100 paths when the coin is truly \emph{biased}
+($H_1$ true).  Paths drift upward.
+\end{simulation}
+
+\subsection{Intuitive Explanation}
+
+\begin{intuition}
+Under $H_0$, the likelihood ratio wanders up and down but never develops a
+consistent trend.  On average, it stays at~1.
+
+This \emph{is} a martingale --- exactly like the gambler's cumulative winnings.
+Everything from Act~2 applies: Doob's theorem says you cannot systematically
+make $\LR_n$ large by choosing clever peeking times.
+\end{intuition}
+
+\subsection{Mathematical Formulation}
+
+\subsubsection*{Proof that $\LR_n$ is a martingale under $H_0$}
+
+We must show:
+$\E[\LR_n \given \LR_0, \ldots, \LR_{n-1}] = \LR_{n-1}$.
+
+From Act~3, $\LR_n = \LR_{n-1} \times \dfrac{f_1(x_n)}{f_0(x_n)}$.
+Therefore:
+\begin{align}
+  \E\bigl[\LR_n \given \text{past}\bigr]
+  &= \E\!\left[\LR_{n-1} \cdot \frac{f_1(x_n)}{f_0(x_n)} \;\bigg\vert\; \text{past}\right]
+     \nonumber \\
+  &= \LR_{n-1} \cdot \E\!\left[\frac{f_1(x_n)}{f_0(x_n)}\right]
+     & &\text{($\LR_{n-1}$ is known)}
+     \label{eq:lr-mart-step1}
+\end{align}
+
+Now the key step.  Under $H_0$, $x_n$ is drawn from $f_0$.  So:
+\begin{align}
+  \E\!\left[\frac{f_1(x_n)}{f_0(x_n)}\right]
+  &= \sum_{\text{all outcomes } x} f_0(x) \cdot \frac{f_1(x)}{f_0(x)}
+     \nonumber \\[6pt]
+  &= \sum_x \cancel{f_0(x)} \cdot \frac{f_1(x)}{\cancel{f_0(x)}}
+     & &\text{\textbf{(the cancellation!)}}
+     \nonumber \\[6pt]
+  &= \sum_x f_1(x)
+     \nonumber \\[4pt]
+  &= 1.
+     & &\text{($f_1$ is a probability distribution; probabilities sum to~1)}
+     \label{eq:lr-mart-cancel}
+\end{align}
+
+Therefore:
+\[
+  \E\bigl[\LR_n \given \text{past}\bigr]
+  = \LR_{n-1} \times 1
+  = \LR_{n-1}. \qquad\checkmark
+\]
+
+\subsubsection*{The cancellation with actual numbers}
+
+For $\delta = 0.1$ (biased coin $p=0.6$):
+
+\medskip
+\begin{center}
+\begin{tabular}{@{} l c c c @{}}
+\toprule
+\textbf{Outcome} & $f_0(x)$ & $f_1(x)/f_0(x)$ & $f_0(x)\times\bigl[f_1(x)/f_0(x)\bigr]$ \\
+\midrule
+Heads & 0.5 & $0.6/0.5 = 1.2$ & $0.5 \times 1.2 = 0.6$ \\
+Tails & 0.5 & $0.4/0.5 = 0.8$ & $0.5 \times 0.8 = 0.4$ \\
+\midrule
+\multicolumn{3}{r}{\textbf{Total:}} & $\mathbf{1.0}$ \checkmark \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\begin{plainlanguage}
+When we compute the expected ratio under $H_0$, the $H_0$ probabilities
+cancel out, and we are just left summing $H_1$ probabilities --- which must
+add to~1.  This is the ``aha'' moment of the proof.
+\end{plainlanguage}
+
+\subsubsection*{Two additional properties}
+
+\begin{enumerate}[nosep]
+  \item \textbf{$\LR_n$ is non-negative:} It is a product of non-negative
+        ratios (probabilities divided by probabilities), so $\LR_n \geq 0$.
+  \item \textbf{$\LR_0 = 1$:} Before any data, neither hypothesis is favoured.
+\end{enumerate}
+
+So $\LR_n$ is a \textbf{non-negative martingale starting at~1}.  Remember
+these properties --- they are exactly what Ville's inequality needs.
+
+\subsubsection*{Under $H_1$, $\LR_n$ drifts upward}
+
+When the coin really is biased:
+\[
+  \E\!\left[\frac{f_1(x_n)}{f_0(x_n)}\right]_{\!H_1}
+  = \sum_x f_1(x) \cdot \frac{f_1(x)}{f_0(x)}
+  > 1.
+\]
+So $\LR_n$ tends to grow --- this upward drift is the signal the test detects.
+
+\begin{keytakeaway}
+\textbf{Key concepts:} the likelihood ratio is a martingale under~$H_0$;
+the cancellation that makes it work; non-negative martingale; drift under~$H_1$.
+\end{keytakeaway}
+
+
+% ══════════════════════════════════════════════════════════════════════════════
+% ACT 5
+% ══════════════════════════════════════════════════════════════════════════════
+\newpage
+\section{Act~5 --- Markov, Ville, and the Anytime-Valid Guarantee}
+
+\subsection{The Simulation}
+
+\begin{simulation}
+This is the pivotal simulation of the entire presentation.
+
+\textbf{Panel~1 --- Markov (single time):}
+10,000 fair-coin paths of $\LR_n$.  A vertical line at $n=200$.
+A threshold at $\LR = 1/\alpha = 20$ (for $\alpha = 0.05$).
+Count: how many paths are above the threshold \emph{at step~200}?
+Fraction $\leq 5\%$.
+
+\textbf{Panel~2 --- Ville (any time):}
+Same 10,000 paths.  Count: how many \emph{ever} crossed the threshold at
+\emph{any} step?  Also $\leq 5\%$ --- but requires a stronger theorem.
+
+\textbf{Panel~3 --- Comparison:}
+10,000 paths of a standard $z$-score checked at every step.  Count how many
+ever show significance.  Much higher than 5\% --- the peeking problem.
+
+Summary:
+\begin{itemize}[nosep]
+  \item Markov: controls false positives at a single time \checkmark
+  \item Ville: controls across all times simultaneously \checkmark
+  \item Standard test with peeking: does NOT control $\times$
+\end{itemize}
+\end{simulation}
+
+\subsection{Intuitive Explanation}
+
+\begin{intuition}
+We are about to prove the most important result in this entire presentation:
+the \textbf{anytime-valid guarantee}.
+
+Two steps:
+\begin{enumerate}[nosep]
+  \item \textbf{Markov's inequality} --- a simple bound at one point in time.
+  \item \textbf{Ville's inequality} --- extends the bound to all points in
+        time simultaneously.
+\end{enumerate}
+Ville's inequality is \emph{the reason} sequential testing works.
+\end{intuition}
+
+\subsection{Mathematical Formulation}
+
+% ── Markov ─────────────────
+\subsubsection*{Step 1: Markov's Inequality}
+
+\begin{theorem}[Markov's Inequality]
+For any non-negative random variable $X$ with finite $\E[X]$:
+\[
+  \boxed{\Prob(X \geq c) \;\leq\; \frac{\E[X]}{c}}
+\]
+\end{theorem}
+
+\begin{plainlanguage}
+$\Prob(\cdot)$ denotes probability --- a number between 0 and~1 measuring how
+likely an event is.  So ``the probability that $X$ is at least $c$ cannot
+exceed the average of $X$ divided by $c$.''
+\end{plainlanguage}
+
+\textbf{Why is this true?  An intuitive proof.}
+
+Suppose $X \geq 0$ always.  Let $q = \Prob(X \geq c)$ be the fraction of
+outcomes at or above $c$.  Those outcomes contribute \emph{at least}
+$q \times c$ to the average (each is $\geq c$).  The rest contribute $\geq 0$
+(since $X \geq 0$):
+\[
+  \E[X] \;\geq\; q \cdot c + (1-q)\cdot 0 = q \cdot c
+  \qquad\Longrightarrow\qquad
+  q \leq \frac{\E[X]}{c}. \qquad\checkmark
+\]
+
+\textbf{Concrete example.}
+Average income in a town is \texteuro50,000.
+\[
+  \Prob(\text{income} \geq \text{\texteuro}500{,}000)
+  \;\leq\;
+  \frac{50{,}000}{500{,}000} = 0.10 = 10\%.
+\]
+At most 10\% of people can earn \texteuro500,000+.
+
+\textbf{Applying Markov to the likelihood ratio.}
+
+Under $H_0$, $\LR_n$ is a martingale with $\E[\LR_n] = \LR_0 = 1$ and
+$\LR_n \geq 0$.  Markov gives:
+\[
+  \Prob\!\left(\LR_n \geq \frac{1}{\alpha}\right)
+  \leq \frac{\E[\LR_n]}{1/\alpha}
+  = 1 \cdot \alpha
+  = \alpha.
+\]
+
+\begin{plainlanguage}
+At any single, pre-specified step $n$, the false positive probability
+is at most $\alpha$.  Reassuring --- but only for \emph{one} moment.
+\end{plainlanguage}
+
+% ── Ville ──────────────────
+\subsubsection*{Step 2: Ville's Inequality (1939)}
+
+\begin{theorem}[Ville's Inequality]
+For any \textbf{non-negative martingale} $\{M_n\}_{n \geq 0}$ with
+$M_0 = m_0$:
+\[
+  \boxed{\Prob\!\left(\sup_{n \geq 0}\, M_n \;\geq\; c\right)
+         \;\leq\; \frac{m_0}{c}}
+\]
+where $\sup_{n\geq 0} M_n$ is the highest value $M_n$ \emph{ever} reaches.
+\end{theorem}
+
+\textbf{Why this is remarkable:}
+
+\begin{center}
+\renewcommand{\arraystretch}{1.3}
+\begin{tabular}{@{} l p{9cm} @{}}
+\toprule
+\textbf{Markov} & At any single \emph{fixed} moment, $\Prob(M_n \geq c)$ is small. \\
+\textbf{Ville}  & $\Prob(M_n$ \textbf{ever} $\geq c$, at \textbf{any} moment$)$ is \emph{also} small. \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+Markov would allow the process to spike above~$c$ at various times, as long as
+it is rarely there at any single pre-specified time.  Ville says even those
+spikes are collectively rare.
+
+\textbf{The intuition behind Ville.}
+For a non-negative martingale, reaching a high value ``uses up'' the available
+expected value.  Once high, it must stay high on average (martingale property),
+yet it cannot go below zero (non-negativity).  These two constraints together
+limit how often it can ever be high.
+
+\subsubsection*{Applying Ville to the likelihood ratio}
+
+Set $M_n = \LR_n$, $m_0 = \LR_0 = 1$, $c = 1/\alpha$:
+\[
+  \boxed{\Prob\!\left(\LR_n \text{ ever reaches } \frac{1}{\alpha}
+         \text{ or higher}\right) \;\leq\; \alpha}
+\]
+
+\begin{plainlanguage}
+The probability that the likelihood ratio ever crosses our rejection
+threshold --- at any point, across all flips, even if you run forever ---
+is at most $\alpha$.
+
+\textbf{This is the anytime-valid guarantee.}  You can peek after every
+observation.  The false positive rate, across all checks combined, stays
+$\leq \alpha$.
+\end{plainlanguage}
+
+\subsubsection*{Connecting back to Act~0}
+
+Standard test statistics (like $p$-values from a $t$-test) are \emph{not}
+martingales.  Checking repeatedly gives many independent chances to be fooled.
+
+The likelihood ratio \emph{is} a martingale under~$H_0$.  Ville's inequality
+converts this into a practical guarantee: \textbf{peeking is safe.}
+
+\begin{historynote}
+Jean Ville proved this inequality in his 1939 doctoral thesis,
+\textit{\'Etude critique de la notion de collectif}.  It predated the formal
+development of martingale theory by Doob (1953) and was largely overlooked
+for decades.  Robbins (1970) was among the first to recognise its practical
+importance for sequential testing --- a connection we explore in Act~7.
+\end{historynote}
+
+\begin{keytakeaway}
+\textbf{Key concepts:} Markov's inequality (with proof), Ville's inequality,
+the anytime-valid guarantee, martingale + non-negative = peek-safe.
+\end{keytakeaway}
+
+
+% ══════════════════════════════════════════════════════════════════════════════
+% ACT 6
+% ══════════════════════════════════════════════════════════════════════════════
+\newpage
+\section{Act~6 --- SPRT: Wald's Sequential Probability Ratio Test (1945)}
+
+\subsection{The Simulation}
+
+\begin{simulation}
+Two coins: one fair ($H_0$), one biased ($H_1$).  The user does not know
+which they have.
+
+$\LR_n$ is plotted as a path.  Two thresholds:
+\begin{itemize}[nosep]
+  \item \textbf{Upper} at $\LR_n = B$: cross this $\Rightarrow$ ``coin is biased.''
+  \item \textbf{Lower} at $\LR_n = A$: fall below this $\Rightarrow$
+        ``coin is fair.''
+\end{itemize}
+The path drifts toward one boundary and eventually crosses.
+
+\textbf{User controls:} which coin is used, $\alpha$, $\beta$, $\delta$.
+
+\textbf{Additional panel:} Distribution of stopping times across 10,000
+simulated experiments, alongside the fixed-sample size required for the same
+$\alpha$ and $\beta$.  The average SPRT stopping time is visibly less.
+\end{simulation}
+
+\subsection{Intuitive Explanation}
+
+\begin{intuition}
+Abraham Wald (1943, published 1945) asked: given that we can peek at the data
+anytime, what is the most \emph{efficient} way to decide between two
+hypotheses?
+
+His answer: compute $\LR_n$ after each observation.  If it gets high enough,
+conclude $H_1$.  Low enough, conclude $H_0$.  Otherwise, keep collecting.
+
+Wald proved this is \textbf{optimal}: no other sequential test with the same
+error guarantees needs fewer observations on average.  In fact, the SPRT
+typically requires \textbf{47--63\% fewer observations} than the best
+fixed-sample test with the same error rates.
+\end{intuition}
+
+\subsection{Mathematical Formulation}
+
+\subsubsection*{Decision rule}
+
+Choose error tolerances $\alpha$ (false positive rate) and $\beta$ (false
+negative rate).  Compute two thresholds:
+\[
+  \boxed{B = \frac{1-\beta}{\alpha}}, \qquad
+  \boxed{A = \frac{\beta}{1-\alpha}}.
+\]
+
+\textbf{Example} ($\alpha = 0.05$, $\beta = 0.20$):
+\[
+  B = \frac{0.80}{0.05} = 16, \qquad
+  A = \frac{0.20}{0.95} \approx 0.211.
+\]
+
+\begin{center}
+\begin{tabular}{@{} l l l @{}}
+\toprule
+\textbf{Condition} & \textbf{Decision} & \textbf{Meaning} \\
+\midrule
+$\LR_n \geq B = 16$        & Reject $H_0$  & ``Coin is biased'' \\
+$\LR_n \leq A \approx 0.21$  & Accept $H_0$  & ``Coin is fair'' \\
+$A < \LR_n < B$            & Keep flipping & ``Not enough evidence yet'' \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\subsubsection*{Where the thresholds come from (Wald's inequalities)}
+
+These are \textbf{Wald's approximations}, derived from fundamental
+inequalities he proved in his 1945 paper.  Let $\alpha' = \Prob_{H_0}(\text{reject } H_0)$
+be the actual Type~I error and $\beta' = \Prob_{H_1}(\text{accept } H_0)$ the
+actual Type~II error.  Wald showed:
+\begin{align*}
+  \alpha' &\leq \frac{1}{B}, \\
+  \beta' &\leq A.
+\end{align*}
+
+Setting $B = (1-\beta)/\alpha$ and $A = \beta/(1-\alpha)$ guarantees
+$\alpha' \leq \alpha/(1-\beta)$ and $\beta' \leq \beta/(1-\alpha)$.  When
+$\alpha$ and $\beta$ are small (the typical case), these are very close to
+$\alpha$ and $\beta$ themselves.
+
+\begin{plainlanguage}
+The thresholds are set so that if the likelihood ratio ever climbs to $B$ or
+drops to $A$, we can be confident in our decision.  The approximation is
+slightly conservative --- actual error rates are at or below the targets.
+\end{plainlanguage}
+
+\subsubsection*{The random walk view}
+
+Equivalently, define the log-likelihood ratio $Z_n = \log \LR_n =
+\sum_{i=1}^n \log \frac{f_1(x_i)}{f_0(x_i)}$, where $\log$ denotes the
+natural logarithm (the inverse of the exponential function: if $e^y = x$
+then $\log x = y$).  The SPRT becomes a random
+walk between two barriers: stop at the first $n$ such that $Z_n \geq \log B$
+or $Z_n \leq \log A$.
+
+\subsubsection*{Expected sample size (Wald's ASN formula)}
+
+Using what is now called \textbf{Wald's equation} --- $\E[Z_n] = \E[n]
+\cdot \E[z]$, where $z = \log \frac{f_1(x)}{f_0(x)}$ is the single-observation
+log-likelihood ratio --- Wald derived:
+\[
+  \boxed{E_0[n] \approx \frac{(1-\alpha)\log A + \alpha \log B}{\E_0[z]}}
+\]
+under $H_0$, and
+\[
+  \boxed{E_1[n] \approx \frac{\beta \log A + (1-\beta)\log B}{\E_1[z]}}
+\]
+under $H_1$.
+
+\begin{plainlanguage}
+The expected number of observations depends on the log-thresholds ($\log A$
+and $\log B$) and how much information each observation provides (measured by
+$\E[z]$, which depends on how different $H_0$ and $H_1$ are).
+\end{plainlanguage}
+
+\subsubsection*{Savings over fixed-sample tests}
+
+Wald computed the fixed-sample size needed for the same $\alpha$ and $\beta$,
+and compared it to the SPRT's expected sample size.  His results (Table~1 in
+the 1945 paper):
+
+\begin{center}
+\begin{tabular}{@{} c c c @{}}
+\toprule
+$\alpha$ & $\beta$ & \textbf{Saving in expected observations} \\
+\midrule
+0.05 & 0.05 & $\approx 53\%$ \\
+0.05 & 0.01 & $\approx 47\%$ \\
+0.01 & 0.01 & $\approx 63\%$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\begin{plainlanguage}
+The SPRT needs, on average, only about \textbf{half as many observations} as a
+traditional fixed-sample test.  This was a remarkable result in 1945 and
+remains one of the main motivations for sequential testing.
+\end{plainlanguage}
+
+\subsubsection*{Optimality of the SPRT}
+
+\begin{historynote}
+Wald conjectured in his 1945 paper (footnote~12, p.~157) that the SPRT is
+\emph{exactly} optimal, not merely approximately so.  He proved it only for
+the special case where the log-likelihood ratio jumps in fixed increments
+(zero overshoot).  Three years later, Wald \& Wolfowitz
+(1948) proved the general result: among \textbf{all} sequential tests
+(not just SPRTs) with the same or smaller error probabilities $(\alpha, \beta)$,
+the SPRT minimises the expected sample size under both $H_0$ and~$H_1$
+simultaneously.
+\end{historynote}
+
+\subsubsection*{Truncation}
+
+In practice, experiments cannot run forever.  Wald showed that truncating the
+SPRT at a maximum number of observations $n_0$ barely affects error rates.
+For example, with $n_0 = 2N$ (where $N$ is the fixed-sample size), the
+increase in $\alpha$ and $\beta$ is negligible.
+
+\subsubsection*{The critical weakness}
+
+SPRT requires specifying $\delta$ in advance --- the exact alternative
+hypothesis $H_1$.  If you set $\delta = 0.1$ but
+the true bias is $0.03$, the likelihood ratio is computed against the wrong
+alternative.  The test may take much longer, or the test may still determine
+the correct answer but far less efficiently.
+
+In A/B testing --- where the effect size is typically unknown --- this is a
+serious limitation.  The next two acts address this.
+
+\begin{keytakeaway}
+\textbf{Key concepts:} SPRT decision rule, Wald's boundary approximations,
+Wald's equation for expected sample size, 47--63\% saving over fixed-sample
+tests, optimality (Wald \& Wolfowitz 1948), the critical dependence on a
+pre-specified effect size.
+\end{keytakeaway}
+
+
+% ══════════════════════════════════════════════════════════════════════════════
+% ACT 7
+% ══════════════════════════════════════════════════════════════════════════════
+\newpage
+\section{Act~7 --- The Mixture Approach: From Robbins (1970) to the mSPRT}
+
+This act has two parts.  First, the key idea: mixing over effect sizes.
+Second, the application to A/B testing by Johari et al.\ (2017).
+
+\subsection{The Simulation}
+
+\begin{simulation}
+\textbf{Panel~1 --- The problem with wrong $\delta$:}
+Three simultaneous paths: SPRT with the correct $\delta$, SPRT with a
+$\delta$ that is too large, and SPRT with a $\delta$ that is too small.
+The correct one is fastest; the wrong ones are slow or stuck.
+
+\textbf{Panel~2 --- The mixture idea:}
+Like Act~6, but the user no longer specifies $\delta$.  A new slider
+controls $\tau$ (width of a ``prior belief'' over effect sizes).
+$\LR_n^{H}$ is plotted.  Only the \emph{upper} threshold $1/\alpha$ is
+shown (no lower boundary).
+
+\textbf{Panel~3 --- Comparison:}
+A power curve and average stopping time chart comparing SPRT (with correct
+$\delta$) to the mSPRT across a range of true effect sizes.  The mSPRT is
+slightly less efficient at any single $\delta$ but much more robust overall.
+\end{simulation}
+
+\subsection{Part A: Robbins' Mixture Approach (1970)}
+
+\subsubsection*{Intuitive Explanation}
+
+\begin{intuition}
+Wald's SPRT is like betting everything on one horse: you pick a specific
+effect size $\delta$ and compute evidence based on that choice.  If the horse
+wins (the true effect is near $\delta$), you are fast.  Otherwise, slow.
+
+Herbert Robbins proposed a radical alternative in 1970: \textbf{bet on all
+horses simultaneously.}  Instead of choosing one $\delta$, spread your
+``evidence budget'' across many possible effect sizes using a weighting
+scheme (a mixing distribution $H$).
+
+The key insight: this average likelihood ratio is \emph{still} a non-negative
+martingale under $H_0$.  Ville's inequality still applies.  The anytime-valid
+guarantee is preserved.
+\end{intuition}
+
+\subsubsection*{The fundamental result}
+
+Robbins built on Ville's inequality directly.  He observed that if $\LR_n^\delta$
+is the likelihood ratio for a specific effect size $\delta$, then the
+\textbf{mixture likelihood ratio}
+\[
+  \boxed{\LR_n^{H} = \int \LR_n^{\delta} \, dH(\delta)}
+\]
+is also a non-negative martingale starting at~1 under $H_0$, because:
+\begin{enumerate}[nosep]
+  \item Each $\LR_n^\delta$ is a non-negative martingale under $H_0$ (Act~4).
+  \item A weighted average (integral) of martingales is a martingale
+        (linearity of conditional expectation).
+\end{enumerate}
+
+Therefore Ville's inequality gives:
+\[
+  \Prob\!\left(\LR_n^{H} \text{ ever} \geq \frac{1}{\alpha}\right) \leq \alpha.
+\]
+
+\begin{plainlanguage}
+Symbol by symbol:
+\begin{itemize}[nosep]
+  \item $\LR_n^{\delta}$ = the likelihood ratio assuming effect size $\delta$.
+  \item $dH(\delta)$ = how much weight to give effect size $\delta$.
+  \item $\int$ = continuous version of summation --- averages over all
+        possible $\delta$.
+\end{itemize}
+Think: ``average likelihood ratio across an infinitely large expert panel,
+weighted by credibility.''
+\end{plainlanguage}
+
+\subsubsection*{Robbins' confidence sequences}
+
+Robbins went further.  He showed that inverting the mixture test gives a
+\textbf{confidence sequence} --- a sequence of intervals $I_n$ that covers
+the true parameter at \emph{all} sample sizes simultaneously:
+\[
+  \Prob\!\bigl(\mu \in I_n \text{ for every } n \geq 1\bigr) \geq 1 - \alpha.
+\]
+
+For the normal case with observations $x_i \sim \mathcal{N}(\mu, 1)$ and
+$S_n = \sum_{i=1}^n x_i$, he derived the two-sided confidence sequence:
+\[
+  \boxed{I_n = \left(\frac{S_n - c_n}{n},\; \frac{S_n + c_n}{n}\right)}
+\]
+where
+\[
+  c_n = \sqrt{(n+m)\!\left(a^2 + \log\!\left(\frac{n}{m}+1\right)\right)}
+\]
+and $\Prob(\mu \notin I_n \text{ for some } n) \leq e^{-a^2}$.
+Here $m > 0$ is a free parameter and $a^2$ controls the coverage (e.g.\
+$a^2 = 6$ gives $\geq 95\%$ simultaneous coverage).
+
+\begin{plainlanguage}
+Unlike a standard confidence interval (valid at one pre-specified time),
+a confidence sequence is valid at every time simultaneously.  You can peek
+as often as you want.  Robbins proved this using exactly the mixture
+likelihood approach --- Ville's inequality does the heavy lifting.
+\end{plainlanguage}
+
+\subsubsection*{Connection to the law of the iterated logarithm}
+
+\begin{historynote}
+Robbins showed that the \emph{tightest possible} confidence sequence boundary
+grows as $\sqrt{2n \log \log n}$ --- exactly the rate of the \textbf{law of
+the iterated logarithm} (LIL), which describes the furthest excursions of
+a random walk.  Wider boundaries (like the $\sqrt{n \log n}$ rate from the
+Normal mixing distribution) give tighter probability bounds but larger
+intervals at any finite $n$.  The practical tradeoff: LIL-rate boundaries are
+asymptotically optimal but wider for moderate $n$; the Normal mixture boundaries
+are slightly wider asymptotically but tighter over the 2--3 orders of
+magnitude of sample sizes relevant to A/B testing.
+\end{historynote}
+
+
+\subsection{Part B: The mSPRT for A/B Testing (Johari et al., 2017)}
+
+\subsubsection*{Intuitive Explanation}
+
+\begin{intuition}
+Johari, Pekelis, and Walsh (2017) applied Robbins' idea to the specific
+setting of A/B tests.  They chose the Normal distribution as the mixing
+distribution $H$ and derived a closed-form formula for the mixture likelihood
+ratio.  They called it the \textbf{mixture Sequential Probability Ratio Test
+(mSPRT)}.
+
+Their key contribution: making the theory practical.  They gave explicit
+formulas, calibration guidance for $\tau$, and proved that being within
+an order of magnitude of the true effect-size variance is sufficient for
+near-optimal power.
+\end{intuition}
+
+\subsubsection*{Closed form for Normal observations}
+
+Assumptions:
+\begin{itemize}[nosep]
+  \item Observations $x_i \sim \mathcal{N}(\mu, \sigma^2)$
+        (Normal with mean $\mu$, \textbf{known} variance $\sigma^2$).
+  \item Mixing distribution $H = \mathcal{N}(0, \tau^2\sigma^2)$
+        (Normal centred at~0, variance proportional to $\sigma^2$).
+\end{itemize}
+
+The mixture likelihood ratio has an exact closed form (Johari et al.,
+Proposition~1):
+\[
+  \boxed{\LR_n^{H}
+  = \frac{1}{\sqrt{1 + n\tau^2}}
+    \;\exp\!\left(
+      \frac{n\tau^2\, \bar{x}_n^2}
+           {2\,(\sigma^2/n)\,(1 + n\tau^2)}
+    \right)}
+\]
+
+\textbf{Unpacking every piece:}
+
+\begin{center}
+\renewcommand{\arraystretch}{1.4}
+\begin{tabular}{@{} >{\raggedright}p{3cm} p{9cm} @{}}
+\toprule
+\textbf{Symbol} & \textbf{Meaning} \\
+\midrule
+$\sigma^2$ & Variance of individual observations (how noisy the data is). \\
+$n$ & Number of observations so far. \\
+$\tau^2$ & Variance of the mixing distribution $H$, expressed as a multiple
+  of $\sigma^2$.  Controls how wide a range of effect sizes we consider
+  plausible. \\
+$\bar{x}_n$ & Sample mean after $n$ observations:
+  $\bar{x}_n = \frac{1}{n}\sum_{i=1}^n x_i$. \\
+$1/\sqrt{1 + n\tau^2}$ & Shrinkage factor.  Slowly decreases as $n$ grows;
+  prevents the statistic from growing merely because more data arrived. \\
+$\exp(\cdot)$ & $e \approx 2.718$ raised to the argument.  Grows rapidly
+  when $\bar{x}_n$ is far from zero. \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\begin{plainlanguage}
+``The mSPRT score is large when the observed average is far from zero (strong
+signal), there are many observations, and the noise is low relative to the
+prior width.''
+\end{plainlanguage}
+
+\subsubsection*{Decision rule}
+
+\[
+  \text{Stop and reject } H_0 \text{ when:} \quad
+  \boxed{\LR_n^{H} \;\geq\; \frac{1}{\alpha}}
+\]
+
+For $\alpha = 0.05$: stop when $\LR_n^{H} \geq 20$.
+
+\textbf{No lower boundary.}
+Unlike the SPRT, the mSPRT cannot definitively confirm $H_0$.  The mixture
+over all effect sizes, including very small ones, means the statistic hovers
+near~1 indefinitely under $H_0$.  In practice, experiments run for a fixed
+maximum duration; if the threshold is never crossed, conclude: ``No significant
+effect detected.''
+
+\subsubsection*{The role of $\tau$}
+
+\begin{center}
+\begin{tabular}{@{} l l l @{}}
+\toprule
+$\tau$ is\ldots & \textbf{Effect} & \textbf{Best for} \\
+\midrule
+Small ($\sim\!0.01$) & Conservative, slow to reject & Very small effects \\
+Large ($\sim\!0.5$)  & Aggressive, fast for large effects & Large effects \\
+Matched to true $\delta$ & Near-optimal & Good prior knowledge \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+Johari et al.\ (Theorem~3) proved that the optimal $\tau$ is chosen to
+minimise the expected stopping time for a given true effect size.  In practice,
+getting \emph{within an order of magnitude} of the true effect-size variance
+suffices for near-optimal power.
+
+\subsubsection*{Key assumption: known variance}
+
+The mSPRT formula assumes $\sigma^2$ is known.  For continuous data this is
+typically estimated; for binary data (e.g.\ click/no-click), Johari et al.\
+note that the exact mSPRT results hold only approximately via the Central Limit
+Theorem.  For large samples ($n \geq 100$, nearly always
+true in A/B testing), the approximation is excellent.
+
+\subsubsection*{Always-valid $p$-values and confidence intervals}
+
+Johari et al.\ also defined \textbf{always-valid $p$-values}:
+\[
+  p_n = \min\!\left(1,\; \frac{1}{\LR_n^{H}}\right)
+\]
+and \textbf{always-valid confidence intervals} by inverting $\LR_n^H$:
+\[
+  C_n = \bigl\{\mu : \LR_n^{H}(\mu) < 1/\alpha \bigr\}.
+\]
+These enjoy the usual sequential guarantee: at any stopping time $\tau$,
+the Type~I error and coverage are controlled.
+
+\begin{keytakeaway}
+\textbf{Key concepts:} Robbins' mixture idea, the mSPRT as a weighted average
+of likelihood ratios, the closed-form Normal formula, the role of $\tau$,
+no lower boundary, the known-variance assumption.
+
+\textbf{What's next:}  The mSPRT was a landmark --- but it is not what Eppo
+uses.  The next act introduces \textbf{confidence sequences} from
+Howard et al.\ (2021), a more general framework that Eppo adopted instead.
+\end{keytakeaway}
+
+
+% ══════════════════════════════════════════════════════════════════════════════
+% ACT 8
+% ══════════════════════════════════════════════════════════════════════════════
+\newpage
+\section{Act~8 --- Confidence Sequences: The Modern Framework\\ (Howard et al., 2021)}
+
+\subsection{The Simulation}
+
+\begin{simulation}
+\textbf{Panel~1 --- Confidence Sequence vs.\ Fixed CI:}
+Data arrives one observation at a time.  Two bands track the estimated mean:
+\begin{itemize}[nosep]
+  \item A \textbf{fixed 95\% CI} (recomputed at each step) --- shrinks as
+        $1/\sqrt{n}$, but invalidated by peeking.
+  \item A \textbf{confidence sequence} --- wider at first, but valid at
+        \emph{all} times simultaneously.
+\end{itemize}
+A counter shows how often the true mean escapes each band (across 10,000
+runs).  For the fixed CI with peeking: $\gg 5\%$.  For the CS: $\leq 5\%$.
+
+\textbf{Panel~2 --- The Normal mixture boundary:}
+The boundary function $u(v)$ plotted against the variance $v = n\sigma^2$.
+A slider for $\nu$ shows how changing $\nu$ shifts the ``sweet spot'' ---
+the sample size where the boundary is tightest relative to the fixed-sample
+CI.
+\end{simulation}
+
+\subsection{Intuitive Explanation}
+
+\begin{intuition}
+A confidence sequence is the natural answer to the peeking problem for
+estimation (not just testing).
+
+A standard 95\% confidence interval says: ``We are 95\% confident the true
+value is in this range \emph{right now}.''  But if you check again tomorrow
+with new data, the guarantee resets.  Check 100 times and you are almost
+guaranteed to be wrong at least once.
+
+A confidence sequence says: ``We are 95\% confident the true value has been
+in this range \emph{at every single time we have ever checked, and at every
+time we will ever check in the future}.''
+
+This is a strictly stronger guarantee.  The price: the band is wider than a
+fixed CI at any single time.  But in exchange, you are free to monitor
+continuously, stop whenever you want, and report at any time.
+\end{intuition}
+
+\subsection{Mathematical Formulation}
+
+\subsubsection*{Definition}
+
+\begin{definition}[Confidence Sequence]
+A sequence of intervals $(C_t)_{t \geq 1}$ is a $(1-\alpha)$-\textbf{confidence
+sequence} (CS) for a parameter $\mu$ if:
+\[
+  \boxed{\Prob\!\bigl(\mu \in C_t \text{ for all } t \geq 1\bigr) \;\geq\; 1-\alpha}
+\]
+\end{definition}
+
+\begin{plainlanguage}
+The \textbf{entire sequence} of intervals simultaneously covers the true
+parameter with probability at least $1-\alpha$.  Not just at one time ---
+at every time.
+\end{plainlanguage}
+
+Compare with a standard CI, which only guarantees $\Prob(\mu \in C_n) \geq
+1-\alpha$ for a single fixed~$n$.
+
+\subsubsection*{The sub-$\psi$ framework}
+
+Howard et al.\ build confidence sequences from \textbf{sub-$\psi$ processes},
+which generalise the concept of ``observations bounded by a moment generating
+function.''  The key idea:
+
+\begin{enumerate}[nosep]
+  \item Define a process $S_t$ (e.g.\ the running sum of centred observations).
+  \item Verify that the process satisfies a \textbf{sub-$\psi$ condition}:
+        the moment generating function of $S_t - S_{t-1}$, conditional on the
+        past, is bounded by a known function $\psi$.
+  \item Construct a \textbf{supermartingale} from this bound.
+  \item Apply Ville's inequality to get the anytime-valid guarantee.
+\end{enumerate}
+
+For sub-Gaussian observations (which includes all bounded random variables
+and all Normal random variables), the relevant condition is:
+\[
+  \E\!\bigl[e^{\lambda(X_t - \mu)} \given \text{past}\bigr]
+  \;\leq\;
+  e^{\lambda^2 \sigma^2 / 2}
+  \qquad \text{for all } \lambda \in \R.
+\]
+This says: the tails of each observation are no heavier than those of a Normal
+distribution with variance $\sigma^2$.
+
+\begin{plainlanguage}
+The sub-$\psi$ condition is a way of saying ``the data is not too wild.''
+For Normal data or bounded data (like click rates), this condition is
+automatically satisfied.  It allows the theory to work \emph{without}
+assuming the data is exactly Normal --- making it \textbf{nonparametric}.
+\end{plainlanguage}
+
+\subsubsection*{The Normal Mixture Boundary (the key formula)}
+
+The centrepiece of Howard et al.\ is the \textbf{Normal mixture confidence
+sequence} (Proposition~5, equation~14 in their paper).  For sub-Gaussian
+observations with intrinsic time (cumulative variance) $v_t = \sum_{i=1}^t
+\sigma_i^2$:
+
+\[
+  \boxed{u(v) = \sqrt{(v + \nu) \cdot \log\!\frac{v + \nu}{\nu \alpha^2}}}
+\]
+
+The $(1-\alpha)$-confidence sequence is:
+\[
+  C_t = \left(\bar{x}_t - \frac{u(v_t)}{t},\; \bar{x}_t + \frac{u(v_t)}{t}
+        \right)
+\]
+
+where $v_t = t\sigma^2$ for i.i.d.\ observations with variance $\sigma^2$.
+
+\textbf{Unpacking the boundary:}
+
+\begin{center}
+\renewcommand{\arraystretch}{1.4}
+\begin{tabular}{@{} >{\raggedright}p{2.5cm} p{9.5cm} @{}}
+\toprule
+\textbf{Symbol} & \textbf{Meaning} \\
+\midrule
+$v$ & \textbf{Intrinsic time}: the cumulative variance of observations so far.
+  For i.i.d.\ data: $v_t = t\sigma^2$.  For heterogeneous data: $v_t =
+  \sum_{i=1}^t \sigma_i^2$. \\
+$\nu > 0$ & \textbf{Tuning parameter}: controls \emph{which sample sizes} the
+  boundary is tightest for.  Specifically, the boundary is approximately
+  optimised for $v \approx \nu$.  Larger $\nu$ = tighter for larger samples,
+  wider for smaller samples. \\
+$\alpha$ & Significance level (e.g.\ 0.05). \\
+$\log(\cdot)$ & Natural logarithm. \\
+$\sqrt{(v+\nu) \cdot \log\frac{v+\nu}{\nu\alpha^2}}$
+  & The boundary grows roughly as $\sqrt{v \log v}$ for large $v$.  This is
+  slightly wider than the $\sqrt{v}$ growth of a fixed-sample CI, but the
+  extra $\sqrt{\log v}$ is the ``price of peeking.'' \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\begin{plainlanguage}
+The boundary $u(v)$ tells you how far from zero the running sum $S_t$ can
+drift before you can reject $H_0$.  The parameter $\nu$ lets you tune where
+the boundary is tightest.  If you expect to collect $N$ observations total with
+variance $\sigma^2$, setting $\nu \approx N\sigma^2$ makes the boundary
+tightest around $n = N$.
+\end{plainlanguage}
+
+\subsubsection*{How $\nu$ works}
+
+\begin{center}
+\begin{tabular}{@{} l l l @{}}
+\toprule
+$\nu$ is\ldots & \textbf{Effect} & \textbf{Best for} \\
+\midrule
+Small & Tight for small samples, wide for large & Early stopping \\
+Large & Wide for small samples, tight for large & Long experiments \\
+$\approx N\sigma^2$ & Near-optimal at sample size $N$ & Known experiment length \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\subsubsection*{Connection to Robbins and the mSPRT}
+
+Howard et al.\ explicitly credit Robbins (1970) as their starting point.
+Their Normal mixture boundary comes from choosing a \emph{Normal mixing
+distribution} over the mean parameter --- exactly Robbins' approach.  The
+connection:
+\begin{itemize}[nosep]
+  \item Robbins (1970): introduced the mixture approach and confidence
+        sequences, but only for known-variance Normal data.
+  \item Johari et al.\ (2017): made it practical for A/B testing via the
+        mSPRT, but still assumed known variance and parametric (Normal) data.
+  \item \textbf{Howard et al.\ (2021): extended to nonparametric settings}
+        via the sub-$\psi$ framework.  The boundary works for \emph{any}
+        sub-Gaussian data (not just Normal), the variance can be unknown
+        (estimated from data), and the coverage guarantee is exact
+        (non-asymptotic).
+\end{itemize}
+
+\subsubsection*{Growth rate comparison}
+
+\begin{center}
+\begin{tabular}{@{} l l l @{}}
+\toprule
+\textbf{Method} & \textbf{Half-width rate} & \textbf{Source} \\
+\midrule
+Fixed-sample CI & $\displaystyle\frac{\sigma}{\sqrt{n}} \cdot z_{\alpha/2}$
+  & Central Limit Theorem \\
+Normal mixture CS & $\displaystyle\frac{1}{n}\sqrt{(n\sigma^2 + \nu)
+  \log\frac{n\sigma^2 + \nu}{\nu\alpha^2}}$ & Howard et al.\ (2021) \\
+LIL-rate CS & $\displaystyle\frac{\sigma}{\sqrt{n}} \cdot
+  \sqrt{2\log\log(n\sigma^2)}$ & Law of iterated logarithm \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+The Normal mixture CS is wider than the fixed CI by a factor of
+$\approx\!\sqrt{\log n}$ (the price of peeking).  It is slightly wider than the
+LIL-rate CS asymptotically, but \textbf{tighter in practice} over the 2--3
+orders of magnitude of sample sizes relevant to A/B testing.
+
+\subsubsection*{Why Eppo chose this framework}
+
+The Normal mixture boundary is the formula at the heart of Eppo's sequential
+testing system (Schmit \& Miller, 2024).  To see why, consider what an A/B
+testing platform needs:
+
+\begin{enumerate}[nosep]
+  \item \textbf{Anytime-valid:} Experimenters will peek --- the guarantee must
+        hold at every moment.  \checkmark\ (Ville's inequality via the
+        sub-$\psi$ supermartingale.)
+  \item \textbf{No known variance required:} Real experiments have unknown,
+        potentially changing variance.  \checkmark\ (The sub-$\psi$ framework
+        permits estimated variance; Eppo plugs in $\hat{\sigma}^2(t)$ at each
+        time step.)
+  \item \textbf{No distributional assumption:} Metrics like revenue or session
+        length are far from Normal.  \checkmark\ (Sub-Gaussian condition is
+        satisfied by all bounded data and approximately by most practical
+        metrics at scale.)
+  \item \textbf{Tunable tightness:} Different experiments have different
+        expected durations.  \checkmark\ (The parameter $\nu$ lets Eppo set
+        $\nu = M \hat{\sigma}^2$, where $M$ is the expected total sample size,
+        making the boundary tightest around the planned analysis time.)
+  \item \textbf{Produces a confidence interval:} Experimenters need to report
+        ``the lift is $+3\% \pm 1.5\%$,'' not just ``significant / not
+        significant.''  \checkmark\ (The CS directly gives an interval
+        $\bar{x}_t \pm u(v_t)/t$ at every time.)
+\end{enumerate}
+
+In Acts~9--12, we will see how Eppo wraps this boundary into a complete
+pipeline: the confidence sequence is applied to \emph{regression-adjusted}
+observations (generalised CUPED) and reported as a confidence interval around
+the \textbf{relative lift} $\mu_1/\mu_0 - 1$.  The key formula in Act~10 ---
+\[
+  \text{CI}(t) = \hat{\tau}(t) \;\pm\; \hat{\sigma}_{\hat{\tau}}(t) \cdot
+  \sqrt{\frac{n + \nu}{n} \cdot \log\frac{n + \nu}{\nu \alpha^2}}
+\]
+--- is just the Normal mixture boundary $u(v)$ from this act, with $v$
+replaced by the estimated cumulative variance $n \hat{\sigma}_{\hat{\tau}}^2(t)$
+and the boundary divided by $n$ to convert from the sum scale to the mean
+scale.
+
+\begin{keytakeaway}
+\textbf{Key concepts:} confidence sequences (uniform coverage over all times),
+the Normal mixture boundary $u(v) = \sqrt{(v+\nu)\log\frac{v+\nu}{\nu\alpha^2}}$,
+the tuning parameter $\nu$, the sub-$\psi$ framework, nonparametric validity,
+the $\sqrt{\log n}$ ``price of peeking.''
+
+\textbf{This is the framework Eppo uses.}  The boundary formula from this act
+is the engine inside Eppo's confidence interval.
+\end{keytakeaway}
+
+
+% ══════════════════════════════════════════════════════════════════════════════
+% ACT 9
+% ══════════════════════════════════════════════════════════════════════════════
+\newpage
+\section{Act~9 --- The Problem Eppo Solves}
+
+\subsection{The Simulation}
+
+\begin{simulation}
+\textbf{What is being simulated:}
+10,000 parallel A/B experiments, each with a small true treatment effect,
+comparing classical and sequential approaches.
+
+\textbf{Panel~1 --- Classical A/B test with peeking (failure case):}
+Two groups (control / treatment) drawn from distributions with a small true
+difference.  A classical 95\% CI is recomputed at each time step.
+
+10,000 parallel experiments.  Counters show:
+\begin{itemize}[nosep]
+  \item ``False conclusions if you stop when CI excludes 0'': far above 5\%.
+  \item ``Experiments still running after planned duration'': many finish
+        early with a wrong answer.
+\end{itemize}
+
+\textbf{False decision visualisation:}
+Experiments that stop early with the \emph{wrong} conclusion are highlighted
+in red.  A running counter displays \textbf{``Wrong winners: $k$ / $N$''}
+--- making it viscerally clear how many experiments would ship the wrong
+feature.
+
+\textbf{Panel~2 --- Sequential CI (preview):}
+Same experiments, but now using a sequential confidence interval (from Act~8).
+The band is wider at first, but the false conclusion rate stays $\leq 5\%$
+regardless of when you peek.  Incorrectly-stopped experiments are again
+highlighted, but the count stays near the $\alpha$ level.
+
+\textbf{Panel~3 --- Time-to-detection comparison:}
+Two versions of the same experiment side-by-side:
+\begin{itemize}[nosep]
+  \item \textbf{Without variance reduction (red):} Raw outcomes.  CI is wide.
+        Takes many observations to detect a real effect.
+  \item \textbf{With variance reduction (blue):} Adjusted outcomes (noise
+        removed).  CI is narrow.  Same effect detected much sooner.
+\end{itemize}
+A counter displays: \textbf{``Average samples to detect effect: $n_{\text{raw}}$
+vs.\ $n_{\text{adjusted}}$''} --- quantifying the speed-up.
+
+\textbf{Controls:}
+\begin{itemize}[nosep]
+  \item Effect size slider $\delta$ (0 to 10\%).
+  \item Variance level slider (low / medium / high).
+  \item Number of parallel experiments (100 / 1,000 / 10,000).
+  \item Fixed seed toggle (deterministic replay).
+\end{itemize}
+
+\textbf{Key takeaway:}
+Classical CIs break under peeking; sequential CIs stay valid.  Variance
+reduction dramatically speeds up detection.
+\end{simulation}
+
+\subsection{Intuitive Explanation}
+
+\begin{intuition}
+A real A/B testing platform faces three problems simultaneously:
+
+\begin{enumerate}
+  \item \textbf{The peeking problem} (Act~0): Product managers check results
+        daily.  Classical tests break under repeated checking.
+
+  \item \textbf{High variance:} Users are wildly different.  Some buy
+        \texteuro0, others buy \texteuro500.  This noise drowns out the
+        signal --- a 2\% lift buried under 200\% noise.  Experiments take
+        weeks to reach significance.
+
+  \item \textbf{Heterogeneous users:} Not all users respond the same way.
+        Heavy spenders, occasional browsers, mobile vs.\ desktop --- all
+        mixed together.  Covariates (pre-experiment behaviour, device type,
+        country) carry information that can separate signal from noise.
+\end{enumerate}
+
+\textbf{What Eppo wants:}
+\begin{itemize}[nosep]
+  \item \textbf{Anytime-valid inference:} Peek as often as you like;
+        the error guarantee holds.
+  \item \textbf{Faster experiments:} Use pre-experiment data to reduce noise,
+        shrinking the confidence interval.
+  \item \textbf{Simple outputs:} Report a confidence interval for the
+        \emph{relative lift} (``$+3\% \pm 1.5\%$'') that experimenters can
+        act on immediately.
+\end{itemize}
+
+Acts~0--8 built each ingredient.  The next three acts show how Eppo assembles
+them into one pipeline.
+\end{intuition}
+
+\begin{keytakeaway}
+\textbf{Three problems, three solutions:}
+\begin{center}
+\renewcommand{\arraystretch}{1.3}
+\begin{tabular}{@{} l l l @{}}
+\toprule
+\textbf{Problem} & \textbf{Solution} & \textbf{Where we learned it} \\
+\midrule
+Peeking inflates errors & Sequential CI (Howard et al.) & Acts~5, 8 \\
+High variance / slow experiments & Regression adjustment (CUPED) & Act~11 \\
+Need interpretable output & Relative lift with CI & Act~12 \\
+\bottomrule
+\end{tabular}
+\end{center}
+\end{keytakeaway}
+
+
+% ══════════════════════════════════════════════════════════════════════════════
+% ACT 10
+% ══════════════════════════════════════════════════════════════════════════════
+\newpage
+\section{Act~10 --- The Eppo Pipeline, Step by Step\\
+         (Schmit \& Miller, 2024)}
+
+This is the central act of the Eppo section.  It walks through the entire
+pipeline from data collection to decision, one step at a time.
+
+\subsection{The Simulation}
+
+\begin{simulation}
+\textbf{What is being simulated:}
+A single A/B experiment flowing through Eppo's pipeline, stage by stage.
+
+\textbf{Animated pipeline diagram.}  Data flows left-to-right through
+labelled stages.  Each stage lights up as it is explained.
+
+\textbf{Stages (rendered as connected boxes):}
+\[
+  \fbox{Randomise}
+  \;\to\;
+  \fbox{Collect}
+  \;\to\;
+  \fbox{Adjust}
+  \;\to\;
+  \fbox{Estimate}
+  \;\to\;
+  \fbox{CI}
+  \;\to\;
+  \fbox{Decide}
+\]
+
+\textbf{Step-by-step mode:}
+A button labelled \textbf{``Step through pipeline''} pauses at each stage.
+At each stage, a distinct visual state is shown:
+
+\begin{center}
+\renewcommand{\arraystretch}{1.3}
+\begin{tabular}{@{} l p{9cm} @{}}
+\toprule
+\textbf{Stage} & \textbf{Visual state} \\
+\midrule
+Randomise & Users appear as dots, randomly coloured blue (control) or
+  green (treatment). \\
+Collect & Each dot acquires labels: a pre-experiment value $X$ and an
+  outcome $Y$.  Tooltip on hover shows both values. \\
+Adjust & Dots animate: $Y \to Y^*$.  A regression line overlays each group.
+  Dots shift vertically to their residual position.  Spread visibly
+  decreases. \\
+Estimate & Group means appear as horizontal lines.  The lift calculation
+  ($\hat{\tau}_{\text{rel}}$) displays as a labelled gap between lines. \\
+CI & A confidence interval band draws around the estimated lift.
+  The band narrows as more data arrives. \\
+Decide & The CI is colour-coded:
+  \textcolor{green!60!black}{\textbf{green}} (entirely above 0),
+  \textcolor{red}{\textbf{red}} (entirely below 0), or
+  \textcolor{gray}{\textbf{grey}} (crosses 0).  A verdict label appears. \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\textbf{Toggle: ``With regression adjustment'' / ``Without regression
+adjustment.''}
+When toggled off, the ``Adjust'' box is greyed out, dots do not shift,
+and the CI is visibly wider.
+
+\textbf{Side-by-side comparison mode:}
+An optional button labelled \textbf{``Compare with / without adjustment''}
+splits the display into two panels:
+\begin{itemize}[nosep]
+  \item \textbf{Left panel:} no regression adjustment (raw outcomes).
+  \item \textbf{Right panel:} with regression adjustment (residuals).
+\end{itemize}
+Both panels use the \emph{same underlying data} --- only the adjustment
+differs.  The CI width difference is immediately visible, making the
+benefit of variance reduction obvious at a glance.
+
+\textbf{Stage highlights (step-by-step mode):}
+When stepping through the pipeline, each stage displays a
+\textbf{``Before / After''} mini-panel showing the data state entering and
+leaving that stage.  Key changes are highlighted:
+\begin{itemize}[nosep]
+  \item \textbf{Adjust stage:} scatter shifts from raw to residual; variance
+        annotation updates.
+  \item \textbf{Estimate stage:} group means and lift label appear.
+  \item \textbf{CI stage:} band draws with colour coding (green / red / grey).
+\end{itemize}
+
+\textbf{Controls:}
+\begin{itemize}[nosep]
+  \item True effect size $\delta$ (0 to 10\%).
+  \item Sample size $n$ (100 to 100,000).
+  \item Pre-experiment correlation $\rho$ (0 to 0.95): controls how much
+        noise the adjustment removes.
+  \item Fixed seed toggle (deterministic replay).
+  \item ``Run 1,000 experiments'' mode (batch statistics).
+\end{itemize}
+
+\textbf{Key takeaway:}
+Each pipeline stage transforms the data in a specific, visible way.
+Regression adjustment visibly tightens the CI; removing it shows the cost.
+\end{simulation}
+
+\subsection{Intuitive Explanation}
+
+\begin{intuition}
+Think of Eppo's pipeline as a factory with six stations.  Each station does
+one job.  Data enters raw and exits as a trustworthy confidence interval.
+\end{intuition}
+
+\subsection{The Pipeline}
+
+\subsubsection*{Step 1: Randomise}
+
+Each user arriving at the website is randomly assigned to \textbf{control}
+(existing experience) or \textbf{treatment} (new feature).  Randomisation
+ensures the groups are comparable --- any difference in outcomes is caused by
+the treatment, not by pre-existing differences.
+
+\subsubsection*{Step 2: Collect data over time}
+
+As users interact with the product, two quantities are recorded for each user:
+\begin{itemize}[nosep]
+  \item $Y_i$: the \textbf{outcome} during the experiment (e.g.\ purchase
+        amount, clicks, session length).
+  \item $X_i$: a \textbf{pre-experiment covariate} --- the same metric from
+        before the experiment started (e.g.\ purchases in the prior 2 weeks),
+        plus optionally other covariates (country, device type, etc.).
+\end{itemize}
+
+Data arrives continuously.  The pipeline processes it in batches or
+continuously as it flows in.
+
+\subsubsection*{Step 3: Regression adjustment (noise removal)}
+
+This is where Eppo \emph{generalises} the CUPED idea from Deng et al.\ (2013).
+
+For each group \textbf{separately}:
+\begin{enumerate}[nosep]
+  \item Fit a regression model predicting $Y$ from the pre-experiment
+        covariates $X$:
+        \[
+          \hat{f}_{\text{control}}(X), \qquad \hat{f}_{\text{treatment}}(X)
+        \]
+  \item Compute the \textbf{adjusted outcome} (residual) for each user:
+        \[
+          Y^*_i = Y_i - \hat{f}_g(X_i)
+        \]
+        where $g$ is the user's group.
+\end{enumerate}
+
+\begin{plainlanguage}
+``Predict what each user would have done based on their history, then subtract
+that prediction.  What's left is the part you \emph{couldn't} have predicted
+--- and that's where the treatment effect hides.''
+\end{plainlanguage}
+
+\textbf{Why separate models?}  The relationship between covariates and outcome
+might differ between groups (e.g.\ heavy users may respond more to the
+treatment).  Fitting separately captures this.
+
+\textbf{Why this generalises CUPED:}  Classic CUPED uses a single linear
+coefficient $\theta$ applied identically to both groups.  Eppo's approach
+allows nonlinear models and group-specific coefficients --- strictly more
+general.
+
+\subsubsection*{Step 4: Estimate the treatment effect}
+
+Compute the adjusted group means:
+\[
+  \hat{\mu}_0(t) = \frac{1}{n_0(t)} \sum_{i \in \text{control}} Y^*_i, \qquad
+  \hat{\mu}_1(t) = \frac{1}{n_1(t)} \sum_{i \in \text{treatment}} Y^*_i
+\]
+
+The estimated treatment effect:
+\[
+  \hat{\tau}(t) = \hat{\mu}_1(t) - \hat{\mu}_0(t)
+\]
+
+And the \textbf{relative lift} (dividing by the control mean):
+\[
+  \boxed{\text{Relative lift}(t) = \frac{\hat{\tau}(t)}{\hat{\mu}_0(t)}
+  = \frac{\hat{\mu}_1(t)}{\hat{\mu}_0(t)} - 1}
+\]
+
+\begin{plainlanguage}
+If control averages \texteuro100 and treatment averages \texteuro103, the
+relative lift is $103/100 - 1 = 0.03 = +3\%$.
+\end{plainlanguage}
+
+\subsubsection*{Why relative lift?}
+
+Eppo reports the \textbf{relative} lift $\hat{\tau}(t)/\hat{\mu}_0(t)$
+rather than the absolute difference $\hat{\tau}(t)$.  Why?
+
+\begin{center}
+\renewcommand{\arraystretch}{1.3}
+\begin{tabular}{@{} l c c c @{}}
+\toprule
+\textbf{Scenario} & \textbf{Control mean} & \textbf{Treatment mean}
+  & \textbf{Lift} \\
+\midrule
+High-value metric   & \texteuro100 & \texteuro103 & $+3\%$ \\
+Low-value metric    & \texteuro10  & \texteuro13  & $+30\%$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+Both scenarios have the same absolute difference (\texteuro3), but the
+business impact is very different.  Relative lift captures this:
+
+\begin{itemize}[nosep]
+  \item \textbf{Scale invariance:} A 3\% lift means the same thing whether
+        the baseline is \texteuro10 or \texteuro10{,}000.
+  \item \textbf{Comparability:} You can compare lift across experiments on
+        different metrics (clicks, revenue, sessions) because the denominator
+        normalises the scale.
+  \item \textbf{Business alignment:} Product teams think in percentages ---
+        ``this feature increased conversion by 2\%'' --- not in raw units.
+\end{itemize}
+
+\textbf{UI toggle:} The dashboard supports a toggle between
+\textbf{``Show absolute difference''} and \textbf{``Show relative lift.''}
+Both are derived from $\hat{\tau}(t)$; relative lift simply divides by the
+control mean.
+
+\subsubsection*{Step 5: Estimate the variance}
+
+Compute the standard error of $\hat{\tau}(t)$ from the \textbf{residuals}
+$Y^*_i$:
+\[
+  \hat{\sigma}_{\hat{\tau}}^2(t) = \frac{s_0^2(t)}{n_0(t)} + \frac{s_1^2(t)}{n_1(t)}
+\]
+where $s_g^2(t)$ is the sample variance of the adjusted outcomes in group~$g$.
+
+\begin{plainlanguage}
+The variance is estimated from the data --- not assumed known.  This is a key
+difference from the mSPRT (Act~7), which required known variance.  Howard et
+al.'s framework (Act~8) permits this.
+\end{plainlanguage}
+
+\subsubsection*{Step 6: Construct the sequential confidence interval}
+
+Plug the estimated treatment effect and its standard error into the Normal
+mixture boundary from Act~8:
+\[
+  \boxed{\text{CI}(t) = \hat{\tau}(t) \;\pm\;
+  \hat{\sigma}_{\hat{\tau}}(t) \cdot
+  \sqrt{\frac{n + \nu}{n} \cdot \log\!\frac{n + \nu}{\nu \alpha^2}}}
+\]
+
+where $n = n_0(t) + n_1(t)$ is the total sample size and $\nu = M \cdot
+\hat{\sigma}^2$ is the tuning parameter (set from the expected total sample
+size $M$).
+
+\subsubsection*{Step 7: Decide}
+
+\begin{center}
+\renewcommand{\arraystretch}{1.3}
+\begin{tabular}{@{} l l p{6.5cm} @{}}
+\toprule
+\textbf{What you see} & \textbf{Colour} & \textbf{Action} \\
+\midrule
+CI entirely above 0
+  & \textcolor{green!60!black}{\rule{1em}{1em}} Green
+  & Positive effect.  Ship the feature. \\
+CI entirely below 0
+  & \textcolor{red}{\rule{1em}{1em}} Red
+  & Negative effect.  Revert. \\
+CI crosses 0, experiment ongoing
+  & \textcolor{gray}{\rule{1em}{1em}} Grey
+  & Inconclusive.  Keep collecting. \\
+CI crosses 0, experiment ended
+  & \textcolor{gray}{\rule{1em}{1em}} Grey
+  & No significant effect.  Decide pragmatically. \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+Because the CI is a confidence sequence (Act~8), \textbf{this decision is
+valid at whatever time it is made.}  No need to pre-specify an analysis time.
+
+\begin{keytakeaway}
+\textbf{The Eppo pipeline in one sentence:}
+Randomise $\to$ collect $Y$ and covariates $X$ $\to$ regression-adjust
+(remove predictable noise) $\to$ estimate lift and variance $\to$ wrap in
+a sequential CI $\to$ decide when CI excludes zero.
+
+Every step matters.  The regression removes noise (Act~11 dives deeper).
+The sequential CI guarantees validity (Act~8).  The relative lift provides
+the business answer.
+\end{keytakeaway}
+
+
+% ══════════════════════════════════════════════════════════════════════════════
+% ACT 11
+% ══════════════════════════════════════════════════════════════════════════════
+\newpage
+\section{Act~11 --- Variance Reduction via Regression Adjustment}
+
+\subsection{The Simulation}
+
+\begin{simulation}
+\textbf{What is being simulated:}
+The effect of regression adjustment on variance and confidence interval width,
+comparing raw outcomes with adjusted outcomes.
+
+\textbf{Panel~1 --- Why raw averages are noisy:}
+Scatter plot of 1,000 users: $x$-axis = pre-experiment purchases,
+$y$-axis = experiment purchases.  Strong positive correlation visible.
+Two horizontal lines show the raw group means (control in blue, treatment
+in green).  The gap between them \emph{is} the treatment effect --- but the
+scatter around each line is enormous.
+
+\textbf{Panel~2 --- Regression adjustment:}
+Same scatter plot, but now a regression line is fitted per group.  Each dot
+is replaced by its \textbf{residual} (vertical distance from the regression
+line).  The residuals have much less spread.  The adjusted group means are
+shown --- same gap, much less scatter.
+
+\textbf{Panel~3 --- Effect on the confidence interval:}
+Two confidence bands evolving over time:
+\begin{itemize}[nosep]
+  \item \textbf{Red (raw):} Wide band.  Slowly narrows.
+  \item \textbf{Blue (adjusted):} Narrow band.  Reaches significance much
+        sooner.
+\end{itemize}
+A counter shows: ``Observations saved: $X\%$'' --- how many fewer
+observations the adjusted version needs to reach the same width.
+
+\textbf{Controls:}
+\begin{itemize}[nosep]
+  \item Correlation slider $\rho$ (0 to 0.95): controls how predictable
+        users are from their pre-experiment behaviour.
+  \item True effect size $\delta$ (0 to 10\%).
+  \item Toggle: with/without adjustment.
+  \item Fixed seed toggle (deterministic replay).
+  \item ``Run 1,000 experiments'' mode (batch statistics).
+\end{itemize}
+
+\textbf{Key takeaway:}
+The higher the correlation $\rho$ between pre-experiment and experiment data,
+the more variance is removed.  At $\rho = 0.7$, the experiment runs
+$\approx 2\times$ faster.
+\end{simulation}
+
+\subsection{Intuitive Explanation}
+
+\begin{intuition}
+Imagine weighing yourself before and after a meal.  If every person in the
+study has a different baseline weight (50\,kg to 120\,kg), the raw
+``post-meal weight'' is extremely variable.  But the \emph{change} (before
+$\to$ after) is much more consistent --- a meal adds roughly the same weight
+regardless of the person.
+
+Regression adjustment does the same thing.  Each user's outcome $Y$ is
+partly explained by their pre-experiment behaviour $X$ (their ``baseline
+weight'').  The regression model predicts that baseline.  Subtracting the
+prediction leaves the \emph{change} --- the part due to the treatment, not
+the person.
+
+\textbf{The result:} less noise, same signal, tighter confidence intervals,
+faster decisions.
+\end{intuition}
+
+\subsection{Mathematical Formulation}
+
+\subsubsection*{From CUPED to generalised regression adjustment}
+
+Recall CUPED (Deng et al., 2013) from the notation in Act~10, Step~3:
+\[
+  Y^* = Y - \theta(X - \E[X])
+\]
+with optimal $\theta = \Cov(Y,X)/\Var(X)$ and variance reduction
+$\Var(Y^*) = \Var(Y)(1 - \rho^2)$, where $\rho = \Cor(Y,X)$ is the
+\textbf{correlation coefficient} between the outcome and the covariate
+(a number between $-1$ and $+1$ measuring how strongly they move together).
+
+Eppo generalises this in two ways:
+\begin{enumerate}[nosep]
+  \item \textbf{Nonlinear models:}  Instead of a single linear coefficient
+        $\theta$, fit a full regression model $\hat{f}(X)$ that can capture
+        nonlinear relationships (e.g.\ random forests, gradient boosting).
+  \item \textbf{Separate models per group:}  Fit $\hat{f}_{\text{control}}(X)$
+        and $\hat{f}_{\text{treatment}}(X)$ independently.  This allows the
+        treatment to change how covariates relate to outcomes.
+\end{enumerate}
+
+The adjusted outcome for user~$i$ in group~$g$:
+\[
+  \boxed{Y^*_i = Y_i - \hat{f}_g(X_i)}
+\]
+
+\begin{plainlanguage}
+``Take what user~$i$ actually did.  Subtract what the model predicted they
+would do based on their history.  What's left is the residual --- the
+\emph{unpredictable} part.''
+\end{plainlanguage}
+
+\subsubsection*{Why this reduces variance}
+
+The variance of the residual $Y^*$ is:
+\[
+  \Var(Y^*) = \Var(Y - \hat{f}(X)) = \Var(Y)(1 - R^2)
+\]
+where $R^2$ is the coefficient of determination of the regression model ---
+the fraction of variance in $Y$ that is explained by $X$.
+
+\begin{center}
+\begin{tabular}{@{} c c r l @{}}
+\toprule
+$R^2$ & $1-R^2$
+       & \textbf{Variance remaining} & \textbf{Equivalent traffic multiplier} \\
+\midrule
+0.10  & 0.90 & 90\%  & $1.1\times$ \\
+0.25  & 0.75 & 75\%  & $1.3\times$ \\
+0.50  & 0.50 & 50\%  & $2\times$ \\
+0.60  & 0.40 & 40\%  & $2.5\times$ \\
+0.75  & 0.25 & 25\%  & $4\times$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\begin{plainlanguage}
+With $R^2 = 0.50$, the regression explains half the variance.  The
+remaining noise is halved --- equivalent to running the experiment with twice
+as many users.
+\end{plainlanguage}
+
+\subsubsection*{What covariate to use}
+
+Following Deng et al.\ (2013):
+\begin{enumerate}[nosep]
+  \item \textbf{The same metric from the pre-experiment period} is
+        consistently the most powerful covariate.
+  \item A pre-period of \textbf{$\sim\!2$ weeks} works well for experiments
+        lasting 1--3 weeks (longer pre-periods have diminishing returns).
+  \item Additional covariates (device type, country, day-of-week of first
+        visit) provide marginal gains.
+\end{enumerate}
+
+\textbf{Practical results} (Deng et al., 2013, at Microsoft Bing):
+\begin{itemize}[nosep]
+  \item Queries-per-user, clicks-per-user: \textbf{45--52\%} variance
+        reduction ($\Rightarrow$ roughly $2\times$ traffic multiplier).
+  \item Revenue-per-user: $< 5\%$ reduction (low temporal correlation).
+\end{itemize}
+
+\subsubsection*{The critical safety rule}
+
+\begin{keytakeaway}
+The covariate $X$ must satisfy $\E[X^{(\text{treatment})}] =
+\E[X^{(\text{control})}]$.  This is automatically guaranteed when $X$ comes
+from the \emph{pre-experiment} period (randomisation has not yet occurred).
+
+\textbf{NEVER use post-treatment covariates.}  Deng et al.\ demonstrated
+that using an in-experiment covariate (highly correlated with the outcome)
+produced \textbf{directionally opposite conclusions}, because the treatment
+itself changed $X$.
+\end{keytakeaway}
+
+\subsubsection*{Why adjustment does not break the sequential guarantee}
+
+The confidence sequence (Act~8) is applied to the adjusted outcomes $Y^*$,
+not the raw $Y$.  The guarantee holds because:
+\begin{enumerate}[nosep]
+  \item Covariates come from the pre-experiment period (independent of
+        treatment).
+  \item Regression adjustment changes only the variance, not the mean
+        treatment effect.
+  \item The sub-Gaussian condition (Act~8) is satisfied by the adjusted
+        residuals.
+  \item Ville's inequality applies to the resulting supermartingale.
+\end{enumerate}
+
+\begin{plainlanguage}
+The adjustment is like using a better measuring instrument --- more precise,
+but measuring the same thing.  The sequential guarantee depends on the
+structure of the martingale, which is preserved.
+\end{plainlanguage}
+
+\begin{keytakeaway}
+\textbf{Key concepts:} regression adjustment as generalised CUPED, separate
+models per group, variance reduction factor $1 - R^2$, the safety rule
+(pre-experiment covariates only), adjustment preserves the sequential
+guarantee.
+\end{keytakeaway}
+
+
+% ══════════════════════════════════════════════════════════════════════════════
+% ACT 12
+% ══════════════════════════════════════════════════════════════════════════════
+\newpage
+\section{Act~12 --- Sequential Confidence Intervals in Eppo}
+
+\subsection{The Simulation}
+
+\begin{simulation}
+\textbf{What is being simulated:}
+The behaviour of Eppo's sequential confidence interval versus a classical CI,
+with controls for the tuning parameter $\nu$ and regression adjustment.
+
+\textbf{Panel~1 --- Classical vs.\ sequential CI over time:}
+A single experiment with a true effect of $+3\%$.  Two bands evolve over time:
+\begin{itemize}[nosep]
+  \item \textbf{Dashed grey:} Classical 95\% CI (recomputed at each step).
+        Narrow but invalid under peeking.
+  \item \textbf{Solid blue:} Eppo's sequential CI.  Wider at first, then
+        approaches the classical CI as $n$ grows.
+\end{itemize}
+
+A counter shows the ``sequential multiplier'' --- the factor that replaces
+$z_{\alpha/2} \approx 1.96$ in the classical CI.  It starts high (e.g.\ 3.5)
+and slowly decreases.
+
+\textbf{Panel~2 --- $\nu$ tuning:}
+A slider for $\nu$ (or equivalently $M$, the expected total sample size).
+\begin{itemize}[nosep]
+  \item Small $\nu$ (small $M$): CI is tight early, wide late.
+  \item Large $\nu$ (large $M$): CI is wide early, tight late.
+  \item $\nu \approx M\hat{\sigma}^2$: sweet spot at the planned analysis
+        time.
+\end{itemize}
+
+An animation shows the boundary curve $u(v)$ reshaping as $\nu$ changes.
+
+\textbf{Panel~3 --- 10,000 experiments:}
+Run 10,000 parallel experiments.  Two counters:
+\begin{itemize}[nosep]
+  \item \textbf{Classical CI with peeking:} ``Fraction that ever falsely
+        excluded 0'': $\gg 5\%$.
+  \item \textbf{Sequential CI with peeking:} Same counter: $\leq 5\%$.
+\end{itemize}
+
+\textbf{Controls:}
+\begin{itemize}[nosep]
+  \item True effect size $\delta$ (0 for null, or a positive value).
+  \item Expected sample size $M$ (slider that sets $\nu$).
+  \item Significance level $\alpha$.
+  \item Toggle: with/without regression adjustment.
+  \item Fixed seed toggle (deterministic replay).
+  \item ``Run 1,000 experiments'' mode (batch statistics).
+\end{itemize}
+
+\textbf{Key takeaway:}
+The sequential CI is wider than the classical CI (the ``price of peeking'')
+but guarantees validity under continuous monitoring.  The tuning parameter
+$\nu$ controls where the CI is tightest.
+\end{simulation}
+
+\subsection{Intuitive Explanation}
+
+\begin{intuition}
+This act connects the pipeline from Act~10 to the final statistical output
+that an experimenter sees on their dashboard.
+
+A standard 95\% CI says: ``Right now, the lift is $+3\% \pm 1.5\%$.''  But
+that guarantee is only valid at this exact moment.  If you checked yesterday,
+and you check again tomorrow, the guarantee has already been violated.
+
+Eppo's sequential CI says: ``The lift is $+3\% \pm 2.1\%$, and this has been
+valid \emph{at every moment since the experiment started}.''
+
+The price: the interval is wider --- the ``$\pm 2.1\%$'' instead of
+``$\pm 1.5\%$''.  This is the \textbf{cost of peeking}.  But it is a small
+price for the freedom to check whenever you want and stop as soon as you are
+convinced.
+\end{intuition}
+
+\subsubsection*{Why the interval shrinks slower}
+
+A standard CI shrinks as $1/\sqrt{n}$: double your sample, the interval
+narrows by $\sqrt{2} \approx 1.41$.  Eppo's sequential CI shrinks slower ---
+roughly as $\sqrt{\log n / n}$ --- because it must remain valid across
+\emph{all} possible stopping times, not just the one you chose.
+
+\begin{plainlanguage}
+Think of a standard CI as a promise valid at one specific moment: ``At
+$n = 10{,}000$, I'm 95\% confident.''  A sequential CI makes a much
+stronger promise: ``At every $n$ from 1 to $\infty$, I'm 95\% confident.''
+
+The extra $\sqrt{\log n}$ factor is the price of that stronger promise.
+As data accumulates, the penalty grows so slowly that it barely matters ---
+$\sqrt{\log(10{,}000)} \approx 3.0$, while $\sqrt{\log(100{,}000)} \approx
+3.4$ --- but it never disappears entirely.
+\end{plainlanguage}
+
+\subsection{Mathematical Formulation}
+
+\subsubsection*{The formula, revisited}
+
+From the pipeline (Act~10, Step~6):
+\[
+  \boxed{\text{CI}(t) = \hat{\tau}(t) \;\pm\;
+  \hat{\sigma}_{\hat{\tau}}(t) \cdot
+  \underbrace{\sqrt{\frac{n + \nu}{n} \cdot
+  \log\!\frac{n + \nu}{\nu \alpha^2}}}_{\text{sequential multiplier}}}
+\]
+
+Compare with a standard CI:
+\[
+  \text{CI}_{\text{classical}}(t) = \hat{\tau}(t) \;\pm\;
+  \hat{\sigma}_{\hat{\tau}}(t) \cdot
+  \underbrace{z_{\alpha/2}}_{\approx\,1.96}
+\]
+
+The only difference is the \textbf{sequential multiplier} replacing the
+constant $1.96$.
+
+\subsubsection*{How the sequential multiplier behaves}
+
+Define:
+\[
+  m(n) = \sqrt{\frac{n + \nu}{n} \cdot \log\frac{n + \nu}{\nu \alpha^2}}
+\]
+
+\begin{center}
+\renewcommand{\arraystretch}{1.3}
+\begin{tabular}{@{} r c c l @{}}
+\toprule
+$n$ & $m(n)$ (example) & $z_{\alpha/2}$ & \textbf{Interpretation} \\
+\midrule
+100 & $\approx 3.8$ & 1.96 & Early: sequential CI is $\sim\!2\times$ wider \\
+1{,}000 & $\approx 2.8$ & 1.96 & Mid-experiment: gap narrowing \\
+10{,}000 & $\approx 2.3$ & 1.96 & Late: only $\sim\!17\%$ wider \\
+100{,}000 & $\approx 2.1$ & 1.96 & Approaching classical, never quite reaching it \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+(Exact values depend on $\nu$, $\alpha$; the above is illustrative for
+$\nu = 10{,}000$, $\alpha = 0.05$.)
+
+\begin{plainlanguage}
+The sequential multiplier starts high and shrinks toward $z_{\alpha/2}$ as
+more data arrives.  The gap --- the ``price of peeking'' --- decreases but
+never fully closes.  For most practical experiments (thousands to hundreds of
+thousands of observations), the price is modest: 10--40\% wider than a
+classical CI.
+\end{plainlanguage}
+
+\subsubsection*{The role of $\nu$ and $M$}
+
+Recall from Act~8: $\nu$ controls \emph{which sample size} the boundary is
+tightest for.  Schmit \& Miller set:
+\[
+  \nu = M \cdot \hat{\sigma}^2
+\]
+where $M$ is the \textbf{expected total sample size} (planned experiment
+duration $\times$ daily traffic).
+
+\begin{center}
+\begin{tabular}{@{} l l @{}}
+\toprule
+\textbf{If\ldots} & \textbf{Then\ldots} \\
+\midrule
+$M$ is too small (underestimate traffic) & CI is tight early but wide late \\
+$M$ is too large (overestimate traffic) & CI is wide early but tight late \\
+$M$ matches actual traffic & CI is tightest around the planned end date \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\begin{plainlanguage}
+Setting $M$ is like aiming a spotlight: you choose where the beam is brightest.
+Aim at the expected experiment end, and you get the tightest CI right when you
+need to make the decision.  If the experiment runs longer or shorter than
+planned, the CI is still valid --- just not optimally tight.
+\end{plainlanguage}
+
+\subsubsection*{Reporting: from treatment effect to relative lift}
+
+Eppo reports the relative lift and its CI:
+\[
+  \text{Relative lift}(t) = \frac{\hat{\tau}(t)}{\bar{Y}^*_{\text{control}}(t)},
+  \qquad
+  \text{CI}_{\text{lift}}(t) = \frac{\text{CI}(t)}{\bar{Y}^*_{\text{control}}(t)}
+\]
+
+\begin{plainlanguage}
+Dividing by the control mean converts the absolute difference into a
+percentage.  ``The treatment increased purchases by \texteuro3 per user''
+becomes ``the treatment increased purchases by $+3\%$.''
+\end{plainlanguage}
+
+\subsubsection*{Decision rule}
+
+\begin{center}
+\renewcommand{\arraystretch}{1.3}
+\begin{tabular}{@{} l l p{6.5cm} @{}}
+\toprule
+\textbf{What you see} & \textbf{Colour} & \textbf{What it means} \\
+\midrule
+CI entirely above 0
+  & \textcolor{green!60!black}{\rule{1em}{1em}} Green
+  & Positive effect.  Ship it. \\
+CI entirely below 0
+  & \textcolor{red}{\rule{1em}{1em}} Red
+  & Negative effect.  Revert. \\
+CI crosses 0, experiment ongoing
+  & \textcolor{gray}{\rule{1em}{1em}} Grey
+  & Inconclusive.  Keep collecting. \\
+CI crosses 0, experiment ended
+  & \textcolor{gray}{\rule{1em}{1em}} Grey
+  & No significant effect.  Decide pragmatically. \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\textbf{At any of these moments, the decision is valid.}  This is the payoff
+of the entire mathematical journey from Act~0: Ville's inequality, applied
+through eight acts of increasingly practical machinery, guarantees that the
+false positive rate stays $\leq \alpha$ no matter when you look.
+
+\begin{keytakeaway}
+\textbf{What Eppo actually uses (summary):}
+\begin{itemize}[nosep]
+  \item \textbf{Framework:} Howard et al.\ (2021) confidence sequences
+        (not the mSPRT of Johari et al.\ 2017).
+  \item \textbf{Boundary:} The Normal mixture boundary
+        $u(v) = \sqrt{(v+\nu)\log\frac{v+\nu}{\nu\alpha^2}}$.
+  \item \textbf{Tuning:} $\nu = M \hat{\sigma}^2$, where $M$ is the expected
+        total sample size.
+  \item \textbf{Variance:} Estimated from data (not assumed known).
+  \item \textbf{Noise reduction:} Generalised CUPED via per-group
+        regression adjustments.
+  \item \textbf{Estimand:} Relative lift $\mu_1/\mu_0 - 1$.
+  \item \textbf{Decision:} Stop when CI no longer crosses zero, valid at any
+        time.
+\end{itemize}
+\end{keytakeaway}
+
+
+% ══════════════════════════════════════════════════════════════════════════════
+% ACT 13
+% ══════════════════════════════════════════════════════════════════════════════
+\newpage
+\section{Act~13 --- What If You Don't Have Eppo?\\
+         (The Poor Man's Sequential Test)}
+
+Acts~9--12 described Eppo's sophisticated pipeline.  But many teams run
+experiments without a dedicated platform.  This act presents three
+progressively better approaches to peek-safe testing that anyone can implement
+with a spreadsheet or a few lines of code --- and compares them head-to-head
+with Eppo's confidence intervals.
+
+\subsection{The Simulation}
+
+\begin{simulation}
+\textbf{What is being simulated:}
+A single A/B experiment monitored at $K$ pre-planned analysis times, showing
+four methods side-by-side.
+
+\textbf{Panel~1 --- Four confidence bands:}
+The same experiment, with four CI bands evolving over time:
+\begin{itemize}[nosep]
+  \item \textcolor{red}{\textbf{Red (Bonferroni):}} Widest.  Simple but
+        conservative.
+  \item \textcolor{orange}{\textbf{Orange (Pocock):}} Constant threshold,
+        tighter than Bonferroni.
+  \item \textcolor{blue}{\textbf{Blue (O'Brien--Fleming):}} Starts very wide,
+        narrows to near-classical at the final analysis.
+  \item \textcolor{green!60!black}{\textbf{Green (Eppo / Howard):}}
+        Continuous monitoring.  No need to pre-specify $K$.
+\end{itemize}
+
+Vertical dashed lines mark the $K$ planned analysis times.  Between analyses,
+the group-sequential methods (Bonferroni, Pocock, OBF) have no valid CI ---
+only Eppo's band is defined everywhere.
+
+\textbf{Panel~2 --- 10{,}000 experiments:}
+Run 10{,}000 experiments under the null ($\delta = 0$).  Counters show the
+false positive rate for each method:
+\begin{itemize}[nosep]
+  \item Classical CI with $K$ peeks: $\gg 5\%$.
+  \item Bonferroni: $\leq 5\%$ (often well below).
+  \item Pocock: $\leq 5\%$ (closer to 5\%).
+  \item O'Brien--Fleming: $\leq 5\%$.
+  \item Eppo: $\leq 5\%$.
+\end{itemize}
+
+\textbf{Panel~3 --- Efficiency comparison:}
+Under a true effect ($\delta > 0$), show average stopping time (number of
+observations to reach significance) for each method.
+
+\textbf{Controls:}
+\begin{itemize}[nosep]
+  \item Number of planned peeks $K$ (2 to 20).
+  \item True effect size $\delta$ (0 to 10\%).
+  \item Significance level $\alpha$.
+  \item Fixed seed toggle (deterministic replay).
+  \item ``Run 1{,}000 experiments'' mode (batch statistics).
+\end{itemize}
+
+\textbf{Key takeaway:}
+All four methods control the false positive rate.  The price of simplicity
+is wider intervals (slower detection).  Eppo's approach is the most
+efficient, but even the simplest method (Bonferroni) is far better than
+naive peeking.
+\end{simulation}
+
+
+\subsection{Intuitive Explanation}
+
+\begin{intuition}
+You want to check your experiment every Monday.  If you use a standard
+95\% CI each time, you'll get false positives far too often (Act~0).
+
+The simplest fix: \textbf{be stricter at each check.}  If you plan to peek
+4~times, demand stronger evidence each time.  The three methods below
+differ in \emph{how} they distribute that strictness across the peeks.
+
+Think of it as a budget.  You have a total error budget of $\alpha = 5\%$.
+\begin{itemize}[nosep]
+  \item \textbf{Bonferroni} distributes the budget equally:
+        $\alpha/K$ per peek.
+  \item \textbf{Pocock} distributes it more cleverly (using the correlation
+        between test statistics at different peeks), but still equally across
+        peeks.
+  \item \textbf{O'Brien--Fleming} front-loads the budget: almost no spending
+        early, most of it saved for the final analysis.
+\end{itemize}
+
+Eppo's approach (Acts~8--12) doesn't need a fixed budget at all --- it works
+for \emph{any} number of peeks, continuously.
+\end{intuition}
+
+
+\subsection{Method 1: Bonferroni Correction (Simplest)}
+
+\subsubsection*{The idea}
+
+Before the experiment starts, commit to checking exactly $K$ times
+(e.g.\ every Monday for 4 weeks: $K = 4$).  At each check, use a
+significance level of $\alpha/K$ instead of $\alpha$.
+
+\subsubsection*{The recipe}
+
+\begin{enumerate}[nosep]
+  \item Choose $K$ (number of planned peeks) and $\alpha$ (e.g.\ 0.05).
+  \item At each peek $k = 1, \ldots, K$, compute the standard CI using
+        the adjusted significance level:
+        \[
+          \text{CI}_k = \hat{\tau}(t_k) \;\pm\;
+          \hat{\sigma}_{\hat{\tau}}(t_k) \cdot z_{\alpha/(2K)}
+        \]
+  \item If $0 \notin \text{CI}_k$: stop and declare significance.
+  \item If $k = K$ and $0 \in \text{CI}_K$: no significant effect.
+\end{enumerate}
+
+\begin{center}
+\renewcommand{\arraystretch}{1.3}
+\begin{tabular}{@{} c c c c @{}}
+\toprule
+$K$ (peeks) & $\alpha/K$ & $z_{\alpha/(2K)}$ & CI multiplier vs.\ 1.96 \\
+\midrule
+1  & 0.050  & 1.96 & $1.00\times$ (no correction) \\
+2  & 0.025  & 2.24 & $1.14\times$ \\
+4  & 0.0125 & 2.50 & $1.28\times$ \\
+8  & 0.00625 & 2.73 & $1.39\times$ \\
+12 & 0.00417 & 2.87 & $1.46\times$ \\
+20 & 0.0025  & 3.02 & $1.54\times$ \\
+52 & 0.00096 & 3.29 & $1.68\times$ (weekly for a year) \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\begin{plainlanguage}
+With 4 planned peeks, replace $z = 1.96$ with $z = 2.50$.  Your CI is
+28\% wider at each peek, but you can safely check 4 times without
+inflating errors.
+\end{plainlanguage}
+
+\subsubsection*{Pros and cons}
+
+\begin{itemize}[nosep]
+  \item[\textcolor{green!60!black}{+}] \textbf{Dead simple.}  One line of
+        code: change \texttt{1.96} to \texttt{z\_alpha/(2K)}.
+  \item[\textcolor{green!60!black}{+}] \textbf{Always valid.}  Works for
+        any test statistic, any distribution.
+  \item[\textcolor{red}{--}] \textbf{Conservative.}  The CI is wider than
+        necessary because Bonferroni ignores the correlation between test
+        statistics at successive peeks.
+  \item[\textcolor{red}{--}] \textbf{Scales poorly.}  As $K$ grows, the
+        correction becomes increasingly harsh.
+\end{itemize}
+
+
+\subsection{Method 2: Pocock Boundaries (1977)}
+
+\subsubsection*{The idea}
+
+Like Bonferroni, pre-specify $K$ equally-spaced analysis times.  But instead
+of Bonferroni's crude $\alpha/K$ split, use a constant critical value $c_P$
+that accounts for the correlation between test statistics at different peeks.
+
+Because the test statistics $Z_1, Z_2, \ldots, Z_K$ at successive analyses
+share overlapping data, they are positively correlated.  Pocock's method
+exploits this to derive a tighter threshold.
+
+\subsubsection*{The recipe}
+
+\begin{enumerate}[nosep]
+  \item Choose $K$ and $\alpha$.
+  \item Look up (or compute) the Pocock critical value $c_P(K, \alpha)$.
+  \item At each peek $k$, compute the $z$-statistic:
+        $Z_k = \hat{\tau}(t_k) / \hat{\sigma}_{\hat{\tau}}(t_k)$.
+  \item If $|Z_k| > c_P$: stop and declare significance.
+\end{enumerate}
+
+\begin{center}
+\renewcommand{\arraystretch}{1.3}
+\begin{tabular}{@{} c c c c @{}}
+\toprule
+$K$ & $c_P$ (Pocock) & $z_{\alpha/(2K)}$ (Bonf.) & Improvement \\
+\midrule
+2  & 2.18 & 2.24 & 3\% tighter \\
+4  & 2.36 & 2.50 & 6\% tighter \\
+8  & 2.51 & 2.73 & 8\% tighter \\
+12 & 2.60 & 2.87 & 9\% tighter \\
+20 & 2.69 & 3.02 & 11\% tighter \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\begin{plainlanguage}
+Pocock gives a constant threshold that is a few percent lower than
+Bonferroni's.  The saving is small when $K$ is small (3\% for 2 peeks)
+but grows as the number of peeks increases (11\% for 20 peeks).
+
+The key advantage: the threshold is the same at every peek, so it is
+almost as simple to use as Bonferroni.
+\end{plainlanguage}
+
+\subsubsection*{Pros and cons}
+
+\begin{itemize}[nosep]
+  \item[\textcolor{green!60!black}{+}] \textbf{Tighter than Bonferroni.}
+  \item[\textcolor{green!60!black}{+}] \textbf{Constant threshold} --- easy
+        to remember and apply.
+  \item[\textcolor{red}{--}] \textbf{Requires equally-spaced analyses.}
+  \item[\textcolor{red}{--}] \textbf{Spends too much $\alpha$ early.}
+        Because the same threshold is used early and late, it is harder to
+        reject at the planned final analysis than a classical test.
+\end{itemize}
+
+
+\subsection{Method 3: O'Brien--Fleming Boundaries (1979)}
+
+\subsubsection*{The idea}
+
+Instead of a constant threshold, use a threshold that \emph{decreases} over
+time.  At the first peek, demand very strong evidence; at the last peek,
+demand nearly the same evidence as a classical test.
+
+\subsubsection*{The recipe}
+
+\begin{enumerate}[nosep]
+  \item Choose $K$ and $\alpha$.
+  \item At peek $k$ (of $K$ total), use the critical value:
+        \[
+          c_k^{\text{OBF}} \;\approx\; z_{\alpha/2} \cdot \sqrt{K/k}
+        \]
+        (This is the asymptotic approximation.  Exact values are computed
+        numerically.)
+  \item If $|Z_k| > c_k^{\text{OBF}}$: stop and declare significance.
+\end{enumerate}
+
+\begin{center}
+\renewcommand{\arraystretch}{1.3}
+\begin{tabular}{@{} c c c c c @{}}
+\toprule
+Peek $k$ (of $K{=}4$) & $c_k^{\text{OBF}}$ & $c_P$ (Pocock) &
+  $z_{\alpha/(2K)}$ (Bonf.) & $z_{\alpha/2}$ (classical) \\
+\midrule
+1 (25\% of data) & 4.05 & 2.36 & 2.50 & 1.96 \\
+2 (50\% of data) & 2.86 & 2.36 & 2.50 & 1.96 \\
+3 (75\% of data) & 2.34 & 2.36 & 2.50 & 1.96 \\
+4 (100\% of data) & 2.02 & 2.36 & 2.50 & 1.96 \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\begin{plainlanguage}
+O'Brien--Fleming is extremely conservative early (threshold 4.05 at the
+first peek --- you'd almost never stop that early) but barely penalises
+the final analysis (2.02 vs.\ 1.96 --- only 3\% wider).
+
+This is the most efficient approach: if you run the experiment to completion,
+you pay almost nothing for the option to peek.  The cost is that early
+stopping is unlikely unless the effect is very large.
+\end{plainlanguage}
+
+\subsubsection*{Pros and cons}
+
+\begin{itemize}[nosep]
+  \item[\textcolor{green!60!black}{+}] \textbf{Most efficient} of the three
+        simple methods.  Final-analysis CI is barely wider than classical.
+  \item[\textcolor{green!60!black}{+}] \textbf{Catches large effects early}
+        (if the effect is huge, even the high early threshold is exceeded).
+  \item[\textcolor{red}{--}] \textbf{Varying threshold} --- slightly harder
+        to implement and communicate.
+  \item[\textcolor{red}{--}] \textbf{Requires equally-spaced analyses.}
+\end{itemize}
+
+
+\subsection{Head-to-Head Comparison}
+
+\begin{center}
+\renewcommand{\arraystretch}{1.3}
+\begin{tabular}{@{} l c c c c @{}}
+\toprule
+& \textbf{Bonferroni} & \textbf{Pocock} & \textbf{OBF} & \textbf{Eppo} \\
+\midrule
+Pre-specify $K$?
+  & Yes & Yes & Yes & No \\
+Threshold type
+  & Constant & Constant & Decreasing & Continuous \\
+CI at peek 1 ($K{=}4$)
+  & $2.50\times\hat{\sigma}$ & $2.36\times\hat{\sigma}$
+  & $4.05\times\hat{\sigma}$ & $\sim\!3.8\times\hat{\sigma}$ \\
+CI at final analysis ($K{=}4$)
+  & $2.50\times\hat{\sigma}$ & $2.36\times\hat{\sigma}$
+  & $2.02\times\hat{\sigma}$ & $\sim\!2.3\times\hat{\sigma}$ \\
+Valid between peeks?
+  & No & No & No & Yes \\
+Variance reduction?
+  & Manual & Manual & Manual & Built-in \\
+Implementation effort
+  & 1 line & Lookup table & Formula & Platform \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\begin{keytakeaway}
+\textbf{Which method should you use?}
+\begin{itemize}[nosep]
+  \item \textbf{No platform, minimal effort:} Bonferroni.  Commit to $K$
+        peeks.  Replace 1.96 with $z_{\alpha/(2K)}$.  Done.
+  \item \textbf{No platform, moderate effort:} O'Brien--Fleming.  Nearly as
+        efficient as Eppo at the final analysis, but requires pre-specifying
+        $K$ and cannot peek between scheduled analyses.
+  \item \textbf{Need continuous monitoring or variance reduction:} Use a
+        platform like Eppo.  The machinery of Acts~8--12 is what you're
+        paying for --- continuous validity, regression adjustment, and
+        no need to pre-commit to $K$.
+\end{itemize}
+
+\textbf{The bottom line:} even the crudest correction (Bonferroni) is
+\emph{vastly} better than naive peeking.  If you are checking results
+without any correction, you should start with Bonferroni \emph{today}.
+\end{keytakeaway}
+
+\begin{historynote}
+\textbf{Stuart Pocock} (1977) and \textbf{Peter O'Brien \& Thomas Fleming}
+(1979) developed these group sequential methods for clinical trials, where
+stopping a trial early can save lives.  Their work sits between Wald's SPRT
+(1945) and Howard et al.'s continuous framework (2021) in the historical
+timeline.  The key insight of all three: if you want to peek, you must pay
+--- but the price is negotiable.
+\end{historynote}
+
+\subsection{Between Acts --- Transition Cards}
+
+Each transition features a brief interstitial card with a bridge sentence and
+a ``Key insight so far'' box.
+
+\begin{center}
+\renewcommand{\arraystretch}{1.3}
+\begin{tabular}{@{} l p{9cm} @{}}
+\toprule
+\textbf{Transition} & \textbf{Bridge sentence} \\
+\midrule
+Act~0 $\to$ 1 & ``To build a peek-safe test, we first need the right
+  building block.  It starts with a coin flip.'' \\
+Act~1 $\to$ 2 & ``Now let's put money on each step --- and learn why no
+  strategy can beat a fair game.'' \\
+Act~2 $\to$ 3 & ``Fair games can't be beaten.  Now let's build a detective
+  --- a tool for telling two coins apart.'' \\
+Act~3 $\to$ 4 & ``We can measure evidence with a likelihood ratio.  But
+  here's the surprise: that evidence score is itself a martingale.'' \\
+Act~4 $\to$ 5 & ``The likelihood ratio is a martingale.  Now let's see why
+  that single fact gives us the peeking guarantee.'' \\
+Act~5 $\to$ 6 & ``We have the theory: peeking is safe.  Now let's turn it
+  into a practical decision procedure.'' \\
+Act~6 $\to$ 7 & ``SPRT is optimal but inflexible.  What if we don't know
+  the effect size?  Robbins had a radical idea.'' \\
+Act~7 $\to$ 8 & ``The mixture approach works, but can we make it
+  nonparametric?  Howard et al.\ found the answer.'' \\
+Act~8 $\to$ 9 & ``The theory is complete.  Now let's see what
+  problems a real A/B testing platform must solve.'' \\
+Act~9 $\to$ 10 & ``Three problems, three solutions.  Now let's walk through
+  Eppo's pipeline, step by step.'' \\
+Act~10 $\to$ 11 & ``The pipeline uses regression adjustment to remove noise.
+  Let's see exactly how and why that works.'' \\
+Act~11 $\to$ 12 & ``The noise is reduced.  Now let's wrap everything in a
+  sequential confidence interval and make the final decision.'' \\
+Act~12 $\to$ 13 & ``Eppo solves everything --- but what if you don't have
+  Eppo?  Three simple alternatives, from crude to clever.'' \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\subsection{Persistent Controls}
+
+A slider panel available throughout all acts:
+\begin{itemize}[nosep]
+  \item Probability $p$ (or effect size $\delta$ from Act~3 onward)
+  \item Significance level $\alpha$
+  \item Number of steps / observations $n$
+  \item Simulation speed
+  \item Number of simultaneous runs
+\end{itemize}
+
+\subsection{Persistent Sidebar}
+
+A collapsible sidebar shows the act list and current position, allowing
+quick navigation to any act.
+
+\subsection{Visual Design Principles}
+
+\begin{itemize}[nosep]
+  \item The same visual object (path / process) carries through all fourteen
+        acts, relabelled at each stage.
+  \item Threshold lines appear gradually: none in Acts~0--1; $\pm\sqrt{n}$
+        envelope in Act~1; both SPRT thresholds in Act~6; only the upper
+        threshold in Act~7; confidence bands from Act~8 onward.
+  \item Formula panels slide in/out; not shown by default on first reading.
+  \item Every formula has a plain-language translation directly below it.
+  \item Key terms on first use are bolded and defined in-line.
+\end{itemize}
+
+\subsection{Colour Scheme}
+
+A consistent colour palette is used across all acts:
+
+\begin{center}
+\renewcommand{\arraystretch}{1.3}
+\begin{tabular}{@{} l l l @{}}
+\toprule
+\textbf{Element} & \textbf{Colour} & \textbf{Usage} \\
+\midrule
+Control group & \textcolor{blue}{\rule{1em}{1em}} Blue
+  & Dots, means, CI bands for the control arm \\
+Treatment group & \textcolor{green!60!black}{\rule{1em}{1em}} Green
+  & Dots, means, CI bands for the treatment arm \\
+CI --- positive effect & \textcolor{green!60!black}{\rule{1em}{1em}} Green
+  & CI entirely above 0: ship the feature \\
+CI --- negative effect & \textcolor{red}{\rule{1em}{1em}} Red
+  & CI entirely below 0: revert \\
+CI --- inconclusive & \textcolor{gray}{\rule{1em}{1em}} Grey
+  & CI crosses 0: keep collecting \\
+Classical CI (invalid) & \textcolor{gray}{\rule{1em}{1em}} Dashed grey
+  & Shown for comparison; not valid under peeking \\
+Raw outcomes (unadjusted) & \textcolor{red!70!black}{\rule{1em}{1em}} Red
+  & Acts~11--12: unadjusted CI / scatter \\
+Adjusted outcomes & \textcolor{blue}{\rule{1em}{1em}} Blue
+  & Acts~11--12: regression-adjusted CI / scatter \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\subsection{Simulation Interaction Standards}
+
+Every simulation across all acts must follow a consistent structure:
+\begin{enumerate}[nosep]
+  \item \textbf{What is being simulated} --- one-sentence description.
+  \item \textbf{Controls} --- sliders, toggles, and buttons.
+  \item \textbf{Visual outputs} --- panels, charts, counters.
+  \item \textbf{Key takeaway} --- what the user should learn.
+\end{enumerate}
+
+All simulations must support:
+\begin{itemize}[nosep]
+  \item \textbf{Interactive controls:} sliders and toggles respond in
+        real time.
+  \item \textbf{Fixed seed toggle:} deterministic replay for reproducible
+        exploration.
+  \item \textbf{``Run 1,000 experiments'' mode:} batch mode showing
+        aggregate statistics (false positive rate, average stopping time,
+        power).
+  \item \textbf{``Reset simulation'' button:} returns all parameters and
+        visuals to their default state.
+\end{itemize}
+
+\subsection{Tooltips}
+
+Hoverable tooltips appear on key quantities throughout all acts:
+\begin{itemize}[nosep]
+  \item \textbf{CI:} ``A range of plausible values for the treatment effect,
+        valid at every moment since the experiment started.''
+  \item \textbf{Lift ($\hat{\tau}(t) / \hat{\mu}_0(t)$):} ``The percentage
+        change in the metric caused by the treatment, relative to control.''
+  \item \textbf{Variance:} ``How spread out individual outcomes are.  Higher
+        variance means more noise and slower experiments.''
+  \item \textbf{Sequential multiplier:} ``The factor that replaces 1.96 in a
+        classical CI to guarantee validity under continuous monitoring.''
+\end{itemize}
+
+\subsection{Transitions Between Acts}
+
+Acts transition with smooth scroll animations:
+\begin{itemize}[nosep]
+  \item Clicking ``Next act'' smoothly scrolls to the next section.
+  \item The persistent sidebar highlights the current act.
+  \item Simulation state from the previous act can optionally carry forward
+        (e.g.\ the same dataset used in Acts~10--12).
+\end{itemize}
+
+
+% ══════════════════════════════════════════════════════════════════════════════
+\newpage
+\section{Summary: The Through-Line}
+
+\begin{center}
+\renewcommand{\arraystretch}{1.3}
+\begin{tabular}{@{} c l l p{6.5cm} @{}}
+\toprule
+\textbf{Act} & \textbf{Object} & \textbf{Represents} & \textbf{Key idea} \\
+\midrule
+0 & Repeated $p$-values
+  & The peeking problem
+  & Checking repeatedly inflates FP \\
+1 & Random walk $S_n$
+  & Position
+  & $\SD$ grows as $\sqrt{n}$ \\
+2 & Winnings $M_n$
+  & Gambler's fortune
+  & Martingale; Doob: $\E[M_\tau]=M_0$ \\
+3 & Likelihood ratio $\LR_n$
+  & Evidence against $H_0$
+  & Comparing hypotheses flip by flip \\
+4 & $\LR_n$ under $H_0$
+  & LR is a martingale
+  & The cancellation proof; $\LR_0{=}1$, $\LR_n{\geq}0$ \\
+5 & Markov $+$ Ville
+  & Anytime-valid guarantee
+  & $\Prob(\LR_n \text{ ever}{\geq}1/\alpha)\leq\alpha$ \\
+6 & SPRT
+  & Wald's decision rule
+  & Optimal but requires known $\delta$ \\
+7 & $\LR_n^{H}$ (mixture LR)
+  & Robust evidence
+  & Robbins' mixtures $\to$ Johari's mSPRT \\
+8 & Confidence sequence
+  & Modern framework
+  & Howard: nonparametric, estimated $\sigma^2$ \\
+9 & Peeking vs.\ variance
+  & Three problems
+  & Peeking, high variance, heterogeneous users \\
+10 & Eppo pipeline
+  & Step-by-step factory
+  & Randomise $\to$ adjust $\to$ CI $\to$ decide \\
+11 & Regression adjustment
+  & Noise removal
+  & Generalised CUPED; $\Var(Y^*)=\Var(Y)(1-R^2)$ \\
+12 & Eppo's sequential CI
+  & Final output
+  & Sequential multiplier; $\nu=M\hat{\sigma}^2$; decide anytime \\
+13 & DIY alternatives
+  & Simple approximations
+  & Bonferroni, Pocock, OBF vs.\ Eppo \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\bigskip
+\textbf{The core message:} All fourteen acts build on the same mathematical
+structure --- non-negative (super)martingales and Ville's inequality.  The
+anytime-valid guarantee flows from a single elegant fact:
+\[
+  \textit{A fair game cannot be beaten by choosing when to quit.}
+\]
+
+The evolution across eight decades:
+\[
+  \underset{1939}{\text{Ville}}
+  \;\to\;
+  \underset{1945}{\text{Wald (SPRT)}}
+  \;\to\;
+  \underset{1970}{\text{Robbins (mixtures)}}
+  \;\to\;
+  \underset{2017}{\text{Johari (mSPRT)}}
+  \;\to\;
+  \underset{2021}{\text{Howard (CS)}}
+  \;\to\;
+  \underset{2024}{\text{Eppo}}
+\]
+
+
+% ══════════════════════════════════════════════════════════════════════════════
+\newpage
+\section{References}
+\label{sec:references}
+
+\begin{enumerate}
+  \item \textbf{Ville, J.} (1939).
+        \textit{\'Etude critique de la notion de collectif}.
+        Gauthier-Villars, Paris.
+        --- Original proof of Ville's inequality for non-negative
+        supermartingales.
+        \textit{[Used in Acts~5, 7, 8.]}
+
+  \item \textbf{Wald, A.} (1945).
+        Sequential tests of statistical hypotheses.
+        \textit{Annals of Mathematical Statistics}, 16(2), 117--186.
+        \url{https://doi.org/10.1214/aoms/1177731118}
+        --- Foundational 70-page monograph defining the SPRT, proving
+        the fundamental inequalities for error probabilities, deriving the
+        ASN formulas, and showing 47--63\% savings over fixed-sample tests.
+        \textit{[Used in Act~6.]}
+
+  \item \textbf{Wald, A.\ \& Wolfowitz, J.} (1948).
+        Optimum character of the sequential probability ratio test.
+        \textit{Annals of Mathematical Statistics}, 19(3), 326--339.
+        \url{https://doi.org/10.1214/aoms/1177730197}
+        --- Proof that the SPRT is exactly optimal: among all sequential tests
+        with the same error probabilities, it minimises expected sample size
+        under both $H_0$ and $H_1$.
+        \textit{[Used in Act~6.]}
+
+  \item \textbf{Doob, J.\,L.} (1953).
+        \textit{Stochastic Processes}.
+        Wiley, New York.
+        --- Definitive treatment of martingale theory including the
+        Optional Stopping Theorem.
+        \textit{[Used in Act~2.]}
+
+  \item \textbf{Robbins, H.} (1970).
+        Statistical methods related to the law of the iterated logarithm.
+        \textit{Annals of Mathematical Statistics}, 41(5), 1397--1409.
+        \url{https://doi.org/10.1214/aoms/1177696786}
+        --- Introduced the mixture likelihood ratio approach and confidence
+        sequences.  Showed that weighting over alternatives via a mixing
+        distribution produces a martingale amenable to Ville's inequality.
+        Derived closed-form boundaries for the Normal case (including the root
+        of the Normal mixture that Howard et al.\ later generalised) and
+        connected boundary growth rates to the law of the iterated logarithm.
+        \textit{[Used in Act~7.]}
+
+  \item \textbf{Deng, A., Xu, Y., Kohavi, R., \& Walker, T.} (2013).
+        Improving the sensitivity of online controlled experiments by
+        utilizing pre-experiment data.
+        \textit{Proc.\ WSDM}, 123--132.
+        \url{https://doi.org/10.1145/2433396.2433413}
+        --- The original CUPED paper.  Optimal adjustment coefficient is the
+        OLS slope $\theta^* = \Cov(Y,X)/\Var(X)$; variance is reduced by a
+        factor of $1-\rho^2$.  Practical results at Microsoft Bing: 45--52\%
+        variance reduction with 2-week pre-period.
+        \textit{[Used in Acts~9--11.]}
+
+  \item \textbf{Johari, R., Pekelis, L., \& Walsh, D.J.} (2017).
+        Always valid inference: Continuous monitoring of A/B tests.
+        \textit{Operations Research}, 65(6), 1651--1667.
+        \url{https://doi.org/10.1287/opre.2017.1607}
+        --- Applied the mixture SPRT to A/B testing.  Derived the closed-form
+        mSPRT for Normal observations, always-valid $p$-values and confidence
+        intervals, and guidance for calibrating $\tau$.  Assumes known
+        variance.
+        \textit{[Used in Act~7.]}
+
+  \item \textbf{Howard, S.\,R., Ramdas, A., McAuliffe, J., \& Sekhon, J.}
+        (2021).
+        Time-uniform, nonparametric, nonasymptotic confidence sequences.
+        \textit{Annals of Statistics}, 49(2), 1055--1080.
+        \url{https://doi.org/10.1214/20-AOS1991}
+        --- Developed the sub-$\psi$ framework for confidence sequences.
+        Key result: the Normal mixture boundary
+        $u(v) = \sqrt{(v+\nu)\log\frac{v+\nu}{\nu\alpha^2}}$.
+        Nonparametric (works beyond Normal data), nonasymptotic (finite-sample
+        guarantees), and allows estimated variance.  \textbf{This is the
+        framework Eppo adopted.}
+        \textit{[Used in Acts~8, 10, 12.]}
+
+  \item \textbf{Schmit, M.\ \& Miller, T.} (2024).
+        Sequential confidence intervals for comparing two proportions with
+        variance reduction.
+        \textit{Eppo Technical Report}.
+        --- Eppo's implementation.  Combines Howard et al.'s Normal mixture
+        confidence sequence with regression-adjusted variance reduction
+        (generalised CUPED).  Estimates variance (does not assume known
+        $\sigma^2$).  Tuning parameter is $\nu$ (set from expected sample
+        size $M$).  Reports relative lift with sequential confidence intervals.
+        \textit{[Used in Acts~9--12.]}
+\end{enumerate}
+
+
+% ══════════════════════════════════════════════════════════════════════════════
+\newpage
+\section*{Appendix: What Changed from v4}
+\addcontentsline{toc}{section}{Appendix: What Changed from v4}
+
+\begin{enumerate}[nosep]
+  \item \textbf{Major correction:} Eppo does \emph{not} use the mSPRT
+        (Johari et al.\ 2017).  They use the confidence sequence framework
+        of Howard et al.\ (2021), specifically the Normal mixture boundary.
+        Acts~8 and~9 completely rewritten.
+  \item \textbf{GAVI removed.}  The term ``GAVI'' does not appear in the
+        Schmit \& Miller paper.  The tuning parameter is $\nu$, set from the
+        expected sample size $M$, not from an empirical distribution of past
+        effect sizes.
+  \item \textbf{Robbins (1970) properly credited.}  His mixture approach and
+        confidence sequences are now covered in Act~7A, before Johari's mSPRT
+        (Act~7B).  This corrects the historical attribution.
+  \item \textbf{Act~6 enriched:} Added Wald's ASN formula, savings table
+        (47--63\%), the random walk view, truncation, and the optimality
+        conjecture resolved by Wald \& Wolfowitz (1948).
+  \item \textbf{CUPED corrected:} Added the validity condition
+        ($\E[X^{(t)}] = \E[X^{(c)}]$), the warning against post-treatment
+        covariates (from Deng et al.\ 2013), recommended pre-period length,
+        practical results from Bing.
+  \item \textbf{Notation cheat sheet removed:} All notation is now explained
+        inline at first use.
+  \item \textbf{Act numbering:}  Now 14 acts (0--13) instead of 10 (0--9).
+        Former Act~9 (Eppo, all-in-one) expanded into Acts~9--12 following
+        detailed guidance: Act~9 (problem Eppo solves), Act~10 (pipeline
+        step-by-step), Act~11 (variance reduction via regression), Act~12
+        (sequential CIs in Eppo).  Act~13 added: DIY alternatives
+        (Bonferroni, Pocock, O'Brien--Fleming) with head-to-head Eppo
+        comparison.
+  \item \textbf{References:}  Each reference now notes which acts use it and
+        describes the specific contribution more precisely.
+  \item \textbf{Historical notes} added throughout (Ville's 1939 thesis,
+        Wald's 1945 optimality conjecture, Wald--Wolfowitz 1948 resolution).
+  \item \textbf{Through-line updated:} Timeline from Ville (1939) through
+        Eppo (2024) added to the summary.
+\end{enumerate}
+
+\end{document}

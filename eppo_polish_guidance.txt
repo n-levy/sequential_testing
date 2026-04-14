@@ -1,0 +1,166 @@
+POLISH GUIDANCE FOR EPPO ACTS (FINAL REFINEMENTS)
+
+You are a coding/design agent working on an interactive educational webpage about sequential testing and EPPO.
+
+The current implementation (Acts 9–12) is strong and nearly complete. Your task is to apply final refinements that improve clarity, intuition, and user experience.
+
+---
+
+OVERALL GOAL
+
+Make the experience:
+- Intuitively clear
+- Visually compelling
+- Easy to interpret without statistical background
+
+These are small but high-impact improvements.
+
+---
+
+SECTION 1 — RELATIVE LIFT INTUITION (Act 10)
+
+Add a subsection titled:
+
+“Why relative lift?”
+
+Content requirements:
+- Explain difference vs relative lift:
+  Difference: μ1 − μ0
+  Relative lift: μ1 / μ0 − 1
+
+- Provide concrete examples:
+  Control = 100 → Treatment = 103 → +3%
+  Control = 10 → Treatment = 13 → +30%
+
+- Emphasize:
+  - Scale invariance
+  - Comparability across experiments
+  - Alignment with business metrics
+
+UI requirement:
+- Add a toggle:
+  “Show absolute difference” / “Show relative lift”
+- Update displayed metric dynamically
+
+---
+
+SECTION 2 — CONFIDENCE INTERVAL INTUITION (Act 12)
+
+Add a short explanation:
+
+“The interval shrinks slower than a standard confidence interval because it must remain valid across ALL possible stopping times, not just one.”
+
+Also explain:
+- The √log(n) penalty as the “price of peeking”
+
+No heavy math required.
+
+---
+
+SECTION 3 — DECISION RULE SIMPLIFICATION
+
+Ensure all user-facing language uses:
+
+- “Entirely above 0 → positive effect”
+- “Entirely below 0 → negative effect”
+- “Crosses 0 → inconclusive”
+
+UI requirements:
+- Color coding:
+  Green → positive
+  Red → negative
+  Grey → inconclusive
+
+Avoid symbolic notation (e.g., “0 ∈ CI”) in UI.
+
+---
+
+SECTION 4 — SIDE-BY-SIDE COMPARISON (Act 10)
+
+Add an optional comparison mode:
+
+“Compare with / without regression adjustment”
+
+Display:
+- Two panels side-by-side
+  Left: no adjustment
+  Right: with adjustment
+
+Show:
+- Same data
+- Different CI widths
+
+This should make the benefit immediately obvious.
+
+---
+
+SECTION 5 — TERMINOLOGY CONSISTENCY
+
+Ensure consistent notation throughout:
+
+- Use τ̂(t) for treatment effect / lift
+- Do NOT switch between symbols (Δ, etc.)
+
+---
+
+SECTION 6 — VISUAL CONSISTENCY
+
+Standardize across all acts:
+
+- Control group color: blue
+- Treatment group color: green
+- CI color:
+  - Neutral: grey
+  - Positive: green
+  - Negative: red
+
+Use same color scheme everywhere.
+
+---
+
+SECTION 7 — MICRO-UX IMPROVEMENTS
+
+Add:
+
+- “Reset simulation” button
+- Smooth transitions between stages
+- Tooltips for:
+  - lift
+  - variance
+  - confidence interval
+
+Optional:
+- Fixed seed toggle for reproducibility
+
+---
+
+SECTION 8 — PIPELINE INTERACTION ENHANCEMENT
+
+Enhance step-by-step mode:
+
+- Allow user to pause at each stage
+- Show transformation clearly:
+  - Before adjustment vs after adjustment
+- Highlight what changed at each step
+
+---
+
+ACCEPTANCE CRITERIA
+
+The implementation is successful if:
+
+1. A non-expert can explain:
+   - What lift means
+   - Why regression helps
+   - Why the CI is wider than usual
+2. The decision rule is immediately understandable
+3. Visual comparisons make benefits obvious
+4. No inconsistent terminology or symbols remain
+
+---
+
+DELIVERABLE
+
+Update the existing implementation with these refinements.
+
+Do NOT rewrite major structure — only polish and enhance.
