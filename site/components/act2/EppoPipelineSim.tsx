@@ -28,55 +28,36 @@ interface SimState {
   decisionAt: number | null
 }
 
-/* ── simulation engine ── */
+/* ── simulation engine (CLT-based for large N support) ── */
 function runPipeline(trueEffect: number, maxN: number): SimState {
   const checkpoints = Array.from({ length: 20 }, (_, i) => Math.round(maxN * (i + 1) / 20))
   const timePoints: TimePoint[] = []
   let decision: 'continue' | 'ship' | 'revert' = 'continue'
   let decisionAt: number | null = null
 
-  // Generate all data up front
-  const controlY: number[] = []
-  const treatmentY: number[] = []
-  const controlX: number[] = []
-  const treatmentX: number[] = []
+  // Y = 0.7*X + noise*0.7, so Var(Y) = 0.49 + 0.49 = 0.98
+  // After CUPED with rho=0.7: Var(Y*) = Var(Y)*(1-rho^2) = 0.98*0.51 = 0.4998
+  const adjustedVar = 0.5
+  // The "true" random walk: at each checkpoint, sample tauHat ~ N(trueEffect, 2*adjustedVar/n)
+  // We generate a consistent path by drawing incremental noise
+  const noiseSeeds = Array.from({ length: 20 }, () => randn())
 
-  for (let i = 0; i < maxN; i++) {
-    const xc = randn()
-    const xt = randn()
-    controlX.push(xc)
-    treatmentX.push(xt)
-    // Y = 0.7*X + noise + effect (for treatment)
-    controlY.push(0.7 * xc + randn() * 0.7)
-    treatmentY.push(0.7 * xt + randn() * 0.7 + trueEffect)
-  }
+  // Running sums to produce correlated path
+  let cumNoise = 0
+  for (let idx = 0; idx < checkpoints.length; idx++) {
+    const n = checkpoints[idx]
+    const se = Math.sqrt(2 * adjustedVar / n)
 
-  for (const n of checkpoints) {
-    const cY = controlY.slice(0, n)
-    const tY = treatmentY.slice(0, n)
-    const cX = controlX.slice(0, n)
-    const tX = treatmentX.slice(0, n)
-
-    // CUPED adjustment
-    const meanCX = cX.reduce((a, b) => a + b, 0) / n
-    const meanTX = tX.reduce((a, b) => a + b, 0) / n
-    // theta approx 0.7 (known correlation)
-    const theta = 0.7
-    const adjC = cY.map((y, i) => y - theta * (cX[i] - meanCX))
-    const adjT = tY.map((y, i) => y - theta * (tX[i] - meanTX))
-
-    const meanAdjC = adjC.reduce((a, b) => a + b, 0) / n
-    const meanAdjT = adjT.reduce((a, b) => a + b, 0) / n
-    const tauHat = meanAdjT - meanAdjC
-
-    const varC = adjC.reduce((s, y) => s + (y - meanAdjC) ** 2, 0) / (n - 1)
-    const varT = adjT.reduce((s, y) => s + (y - meanAdjT) ** 2, 0) / (n - 1)
-    const se = Math.sqrt(varC / n + varT / n)
+    // Build correlated path: tauHat converges to trueEffect
+    // Use sqrt(prev_n/n) correlation structure
+    const prevN = idx > 0 ? checkpoints[idx - 1] : 0
+    const newInfoFrac = (n - prevN) / n
+    cumNoise = cumNoise * Math.sqrt(prevN / n) + noiseSeeds[idx] * Math.sqrt(newInfoFrac)
+    const tauHat = trueEffect + se * cumNoise
 
     // Standard CI
-    const z = 1.96
-    const ciLower = tauHat - z * se
-    const ciUpper = tauHat + z * se
+    const ciLower = tauHat - 1.96 * se
+    const ciUpper = tauHat + 1.96 * se
 
     // Sequential CI (Howard et al.)
     const totalN = 2 * n
@@ -99,7 +80,7 @@ function runPipeline(trueEffect: number, maxN: number): SimState {
 
 export function EppoPipelineSim() {
   const [trueEffect, setTrueEffect] = useState(0.15)
-  const [maxN, setMaxN] = useState(500)
+  const [maxN, setMaxN] = useState(10000)
   const [simState, setSimState] = useState<SimState | null>(null)
   const ciRef = useRef<SVGSVGElement | null>(null)
   const effectRef = useRef<SVGSVGElement | null>(null)
@@ -336,16 +317,16 @@ export function EppoPipelineSim() {
           </div>
           <div>
             <label className="block text-sm font-medium text-neutral-700 mb-1">
-              Max sample size per group: {maxN}
+              Max sample size per group: {maxN.toLocaleString()}
             </label>
             <input
-              type="range" min="100" max="2000" step="50"
+              type="range" min="1000" max="1000000" step="1000"
               value={maxN}
               onChange={e => setMaxN(parseInt(e.target.value))}
               className="w-full"
             />
             <div className="flex justify-between text-xs text-neutral-400">
-              <span>100</span><span>1000</span><span>2000</span>
+              <span>1,000</span><span>500,000</span><span>1,000,000</span>
             </div>
           </div>
         </div>
@@ -365,9 +346,9 @@ export function EppoPipelineSim() {
             simState.decision === 'revert' ? 'bg-red-50 border-red-300 text-red-800' :
             'bg-neutral-50 border-neutral-300 text-neutral-700'
           }`}>
-            {simState.decision === 'ship' && `Decision: Ship the feature (significant at n = ${simState.decisionAt} per group)`}
-            {simState.decision === 'revert' && `Decision: Revert (harmful effect detected at n = ${simState.decisionAt} per group)`}
-            {simState.decision === 'continue' && `Decision: Inconclusive after ${maxN} users per group. Collect more data.`}
+            {simState.decision === 'ship' && `Decision: Ship the feature (significant at n = ${simState.decisionAt?.toLocaleString()} per group)`}
+            {simState.decision === 'revert' && `Decision: Revert (harmful effect detected at n = ${simState.decisionAt?.toLocaleString()} per group)`}
+            {simState.decision === 'continue' && `Decision: Inconclusive after ${maxN.toLocaleString()} users per group. Collect more data.`}
           </div>
 
           {/* CI chart */}

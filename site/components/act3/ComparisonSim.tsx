@@ -81,26 +81,20 @@ function runComparison(trueEffect: number, nPerGroup: number): {
 } {
   const checkN = Array.from({ length: K }, (_, i) => Math.round(nPerGroup * (i + 1) / K))
 
-  // Generate cumulative data
-  const cData: number[] = []
-  const tData: number[] = []
-  for (let i = 0; i < nPerGroup; i++) {
-    cData.push(randn())
-    tData.push(randn() + trueEffect)
-  }
-
+  // CLT-based: each group ~ N(0,1) for control, N(trueEffect,1) for treatment
+  // SE = sqrt(2/n), tauHat ~ N(trueEffect, 2/n)
+  const noiseSeeds = Array.from({ length: K }, () => randn())
   const tauPath: { n: number; tau: number; se: number }[] = []
 
-  // Precompute tau and SE at each checkpoint
-  for (const n of checkN) {
-    const cSlice = cData.slice(0, n)
-    const tSlice = tData.slice(0, n)
-    const mc = cSlice.reduce((a, b) => a + b, 0) / n
-    const mt = tSlice.reduce((a, b) => a + b, 0) / n
-    const vc = cSlice.reduce((s, x) => s + (x - mc) ** 2, 0) / (n - 1)
-    const vt = tSlice.reduce((s, x) => s + (x - mt) ** 2, 0) / (n - 1)
-    const se = Math.sqrt(vc / n + vt / n)
-    tauPath.push({ n, tau: mt - mc, se })
+  let cumNoise = 0
+  for (let idx = 0; idx < checkN.length; idx++) {
+    const n = checkN[idx]
+    const se = Math.sqrt(2 / n)
+    const prevN = idx > 0 ? checkN[idx - 1] : 0
+    const newInfoFrac = (n - prevN) / n
+    cumNoise = cumNoise * Math.sqrt(prevN / n) + noiseSeeds[idx] * Math.sqrt(newInfoFrac)
+    const tau = trueEffect + se * cumNoise
+    tauPath.push({ n, tau, se })
   }
 
   // Build methods
@@ -163,7 +157,7 @@ function runComparison(trueEffect: number, nPerGroup: number): {
 
 export function ComparisonSim() {
   const [trueEffect, setTrueEffect] = useState(0.2)
-  const [nPerGroup, setNPerGroup] = useState(500)
+  const [nPerGroup, setNPerGroup] = useState(10000)
   const [result, setResult] = useState<ReturnType<typeof runComparison> | null>(null)
   const chartRef = useRef<SVGSVGElement | null>(null)
   const boundaryRef = useRef<SVGSVGElement | null>(null)
@@ -365,9 +359,9 @@ export function ComparisonSim() {
           </div>
           <div>
             <label className="block text-sm font-medium text-neutral-700 mb-1">
-              Sample size per group: {nPerGroup}
+              Sample size per group: {nPerGroup.toLocaleString()}
             </label>
-            <input type="range" min="200" max="2000" step="50" value={nPerGroup}
+            <input type="range" min="1000" max="1000000" step="1000" value={nPerGroup}
               onChange={e => setNPerGroup(parseInt(e.target.value))} className="w-full" />
           </div>
         </div>
