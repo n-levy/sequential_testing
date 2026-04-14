@@ -3,90 +3,98 @@
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/Card'
 import { InlineMath, BlockMath } from '@/components/ui/Math'
 
-interface PocockImplProps {
-  k?: number
-  alpha?: number
-}
-
-export function PocockImpl({ k = 5, alpha = 0.05 }: PocockImplProps) {
-  // Pocock boundaries: constant critical value at each look
-  // For k=5, alpha=0.05 two-sided, the Pocock boundary is ~2.413
-  const pocockBoundaries: Record<number, number> = { 2: 2.178, 3: 2.289, 4: 2.361, 5: 2.413 }
-  const boundary = pocockBoundaries[k] || 2.413
-
+export function PocockImpl() {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Pocock Method</CardTitle>
+        <CardTitle className="text-orange-700">Method 2: Pocock Boundaries (1977)</CardTitle>
       </CardHeader>
       <CardContent>
-        <div className="space-y-4">
+        <div className="space-y-6">
+
           <div>
-            <h4 className="font-semibold mb-2">Recipe</h4>
-            <div className="bg-neutral-50 p-3 rounded border text-sm">
-              <p className="mb-2">For <InlineMath>{`K = ${k}`}</InlineMath> equally-spaced analyses:</p>
-              <BlockMath>{`z_{\\text{crit}} = c_P(K, \\alpha) = ${boundary.toFixed(3)}`}</BlockMath>
-              <p className="mt-2">Same boundary at every analysis — reject if <InlineMath>{`|Z_k| \\geq ${boundary.toFixed(3)}`}</InlineMath></p>
-            </div>
+            <h4 className="font-bold text-neutral-900 mb-2">The idea</h4>
+            <p className="text-neutral-700 mb-2">
+              Like Bonferroni, pre-specify <InlineMath>{`K`}</InlineMath> equally-spaced analysis
+              times. But instead of Bonferroni's crude <InlineMath>{`\\alpha/K`}</InlineMath> split,
+              use a constant critical value <InlineMath>{`c_P`}</InlineMath> that accounts for the
+              correlation between test statistics at different peeks.
+            </p>
+            <p className="text-neutral-700">
+              Because the test statistics <InlineMath>{`Z_1, Z_2, \\ldots, Z_K`}</InlineMath> at
+              successive analyses share overlapping data, they are positively correlated. Pocock's
+              method exploits this to derive a tighter threshold.
+            </p>
           </div>
 
           <div>
-            <h4 className="font-semibold mb-2">Critical Values</h4>
+            <h4 className="font-bold text-neutral-900 mb-2">The recipe</h4>
+            <ol className="list-decimal list-inside space-y-2 text-neutral-700 ml-4">
+              <li>Choose <InlineMath>{`K`}</InlineMath> and <InlineMath>{`\\alpha`}</InlineMath>.</li>
+              <li>Look up (or compute) the Pocock critical value <InlineMath>{`c_P(K, \\alpha)`}</InlineMath>.</li>
+              <li>At each peek <InlineMath>{`k`}</InlineMath>, compute the <InlineMath>{`z`}</InlineMath>-statistic: <InlineMath>{`Z_k = \\hat{\\tau}(t_k) / \\hat{\\sigma}_{\\hat{\\tau}}(t_k)`}</InlineMath>.</li>
+              <li>If <InlineMath>{`|Z_k| > c_P`}</InlineMath>: stop and declare significance.</li>
+            </ol>
+          </div>
+
+          <div>
+            <h4 className="font-bold text-neutral-900 mb-2">Pocock vs Bonferroni critical values</h4>
             <div className="overflow-x-auto">
               <table className="w-full text-sm border-collapse border border-neutral-300">
                 <thead>
                   <tr className="bg-neutral-100">
-                    <th className="border border-neutral-300 p-2">Analysis</th>
-                    <th className="border border-neutral-300 p-2">Information fraction</th>
-                    <th className="border border-neutral-300 p-2">Critical Value</th>
+                    <th className="border border-neutral-300 p-2"><InlineMath>{`K`}</InlineMath></th>
+                    <th className="border border-neutral-300 p-2"><InlineMath>{`c_P`}</InlineMath> (Pocock)</th>
+                    <th className="border border-neutral-300 p-2"><InlineMath>{`z_{\\alpha/(2K)}`}</InlineMath> (Bonf.)</th>
+                    <th className="border border-neutral-300 p-2">Improvement</th>
                   </tr>
                 </thead>
                 <tbody>
-                  {Array.from({ length: k }, (_, i) => {
-                    const analysis = i + 1
-                    return (
-                      <tr key={analysis}>
-                        <td className="border border-neutral-300 p-2 text-center">{analysis}</td>
-                        <td className="border border-neutral-300 p-2 text-center">{(analysis / k).toFixed(2)}</td>
-                        <td className="border border-neutral-300 p-2 text-center">{boundary.toFixed(3)}</td>
-                      </tr>
-                    )
-                  })}
+                  {[
+                    [2, '2.18', '2.24', '3% tighter'],
+                    [4, '2.36', '2.50', '6% tighter'],
+                    [8, '2.51', '2.73', '8% tighter'],
+                    [12, '2.60', '2.87', '9% tighter'],
+                    [20, '2.69', '3.02', '11% tighter'],
+                  ].map(([k, cp, zb, imp], i) => (
+                    <tr key={i} className={i % 2 === 1 ? 'bg-neutral-50' : ''}>
+                      <td className="border border-neutral-300 p-2 text-center">{k}</td>
+                      <td className="border border-neutral-300 p-2 text-center">{cp}</td>
+                      <td className="border border-neutral-300 p-2 text-center">{zb}</td>
+                      <td className="border border-neutral-300 p-2 text-center">{imp}</td>
+                    </tr>
+                  ))}
                 </tbody>
               </table>
             </div>
           </div>
 
-          <div>
-            <h4 className="font-semibold mb-2">Implementation</h4>
-            <div className="bg-gray-900 text-green-400 p-3 rounded text-sm font-mono overflow-x-auto">
-              <pre>{`def pocock_test(data, k, boundary=2.413):
-    z_stat = calculate_z_statistic(data)
-    return abs(z_stat) >= boundary`}</pre>
-            </div>
+          <div className="bg-white border border-neutral-400 rounded-lg p-4">
+            <p className="text-neutral-700">
+              Pocock gives a constant threshold that is a few percent lower than
+              Bonferroni's. The key advantage: the threshold is the same at every peek,
+              so it is almost as simple to use as Bonferroni.
+            </p>
           </div>
 
           <div>
-            <h4 className="font-semibold mb-2">Pros & Cons</h4>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div className="bg-green-50 p-3 rounded border border-green-200">
-                <h5 className="font-medium text-green-800 mb-1">Pros</h5>
-                <ul className="text-sm text-green-700 space-y-1">
-                  <li>Constant boundary (simple to implement)</li>
-                  <li>Good power for early effects</li>
-                  <li>Early stopping saves resources</li>
-                </ul>
-              </div>
-              <div className="bg-red-50 p-3 rounded border border-red-200">
-                <h5 className="font-medium text-red-800 mb-1">Cons</h5>
-                <ul className="text-sm text-red-700 space-y-1">
-                  <li>Less power at the final analysis than OBF</li>
-                  <li>May stop too early on noise</li>
-                  <li>Requires pre-specified number of looks</li>
-                </ul>
-              </div>
-            </div>
+            <h4 className="font-bold text-neutral-900 mb-2">How the boundary is computed</h4>
+            <p className="text-neutral-700 mb-2">
+              Under the null, the <InlineMath>{`z`}</InlineMath>-statistics at successive
+              analyses follow a multivariate Normal with correlation:
+            </p>
+            <BlockMath>{`\\operatorname{Cor}(Z_j, Z_k) = \\sqrt{\\frac{\\min(j,k)}{\\max(j,k)}} \\quad \\text{for } 1 \\leq j, k \\leq K`}</BlockMath>
+            <p className="text-neutral-700 mt-2">
+              The Pocock boundary <InlineMath>{`c_P`}</InlineMath> is the unique value satisfying:
+            </p>
+            <BlockMath>{`\\mathbb{P}\\!\\bigl(\\max_{1 \\leq k \\leq K} |Z_k| > c_P\\bigr) = \\alpha`}</BlockMath>
+            <p className="text-neutral-700 mt-2">
+              Once <InlineMath>{`c_P`}</InlineMath> is known, the decision rule at each peek is
+              identical to Bonferroni, but with <InlineMath>{`c_P`}</InlineMath> replacing{' '}
+              <InlineMath>{`z_{\\alpha/(2K)}`}</InlineMath>.
+            </p>
           </div>
+
         </div>
       </CardContent>
     </Card>
