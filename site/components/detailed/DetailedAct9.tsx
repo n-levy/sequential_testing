@@ -1,6 +1,7 @@
 'use client'
 
 import { InlineMath, BlockMath } from '@/components/ui/Math'
+import { NoiseDemoSim } from './sims/NoiseDemoSim'
 
 export function DetailedAct9() {
   return (
@@ -38,7 +39,10 @@ export function DetailedAct9() {
           </div>
         </div>
 
-        <div className="text-neutral-700 space-y-3 mb-8">
+        {/* Interactive Simulation */}
+        <NoiseDemoSim />
+
+        <div className="text-neutral-700 space-y-3 mb-8 mt-8">
           <p><strong>What Eppo wants:</strong></p>
           <ul className="list-disc ml-6 space-y-2">
             <li><strong>Anytime-valid inference:</strong> Peek as often as you like; the error guarantee holds.</li>

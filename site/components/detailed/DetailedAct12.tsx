@@ -1,6 +1,7 @@
 'use client'
 
 import { InlineMath, BlockMath } from '@/components/ui/Math'
+import { SequentialMultiplierSim } from './sims/SequentialMultiplierSim'
 
 export function DetailedAct12() {
   return (
@@ -82,8 +83,11 @@ export function DetailedAct12() {
           </p>
         </div>
 
+        {/* Interactive Simulation */}
+        <SequentialMultiplierSim />
+
         {/* Role of nu */}
-        <h4 className="text-lg font-semibold text-neutral-800 mb-3">
+        <h4 className="text-lg font-semibold text-neutral-800 mb-3 mt-8">
           The role of <InlineMath>{`\\nu`}</InlineMath> and <InlineMath>{`M`}</InlineMath>
         </h4>
         <div className="text-neutral-700 space-y-3 mb-6">
