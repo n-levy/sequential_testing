@@ -3,14 +3,31 @@
 import Link from 'next/link'
 import { useState } from 'react'
 
-export function Navigation() {
+interface NavigationProps {
+  variant?: 'landing' | 'short' | 'detailed'
+}
+
+export function Navigation({ variant = 'landing' }: NavigationProps) {
   const [isOpen, setIsOpen] = useState(false)
 
-  const acts = [
-    { id: 'act1', title: 'The Problem', href: '#act1' },
-    { id: 'act2', title: 'EPPO Solution', href: '#act2' },
-    { id: 'act3', title: 'DIY Implementation', href: '#act3' },
+  const shortActs = [
+    { id: 'act1', title: 'The Problem', href: '/short#act1' },
+    { id: 'act2', title: 'EPPO Solution', href: '/short#act2' },
+    { id: 'act3', title: 'DIY Implementation', href: '/short#act3' },
   ]
+
+  const detailedActs = [
+    { id: 'detailed', title: 'Coming Soon', href: '/detailed' },
+  ]
+
+  const landingLinks = [
+    { id: 'short', title: 'Short Version', href: '/short' },
+    { id: 'detailed', title: 'Detailed Version', href: '/detailed' },
+  ]
+
+  const links = variant === 'short' ? shortActs
+    : variant === 'detailed' ? detailedActs
+    : landingLinks
 
   return (
     <nav className="bg-white shadow-sm border-b border-neutral-200">
@@ -20,19 +37,36 @@ export function Navigation() {
             <Link href="/" className="text-xl font-bold text-primary-700">
               Sequential Testing
             </Link>
+            {variant !== 'landing' && (
+              <span className={`ml-3 text-xs font-semibold uppercase tracking-wide px-2 py-0.5 rounded ${
+                variant === 'short'
+                  ? 'bg-blue-100 text-blue-700'
+                  : 'bg-purple-100 text-purple-700'
+              }`}>
+                {variant === 'short' ? 'Short' : 'Detailed'}
+              </span>
+            )}
           </div>
 
           {/* Desktop navigation */}
           <div className="hidden md:flex items-center space-x-8">
-            {acts.map((act) => (
+            {links.map((link) => (
               <Link
-                key={act.id}
-                href={act.href}
+                key={link.id}
+                href={link.href}
                 className="text-neutral-600 hover:text-primary-600 transition-colors"
               >
-                {act.title}
+                {link.title}
               </Link>
             ))}
+            {variant !== 'landing' && (
+              <Link
+                href={variant === 'short' ? '/detailed' : '/short'}
+                className="text-neutral-400 hover:text-primary-600 transition-colors text-sm"
+              >
+                Switch to {variant === 'short' ? 'Detailed' : 'Short'} Version
+              </Link>
+            )}
           </div>
 
           {/* Mobile menu button */}
@@ -56,16 +90,25 @@ export function Navigation() {
         {isOpen && (
           <div className="md:hidden">
             <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3 bg-neutral-50">
-              {acts.map((act) => (
+              {links.map((link) => (
                 <Link
-                  key={act.id}
-                  href={act.href}
+                  key={link.id}
+                  href={link.href}
                   className="block px-3 py-2 text-neutral-600 hover:text-primary-600"
                   onClick={() => setIsOpen(false)}
                 >
-                  {act.title}
+                  {link.title}
                 </Link>
               ))}
+              {variant !== 'landing' && (
+                <Link
+                  href={variant === 'short' ? '/detailed' : '/short'}
+                  className="block px-3 py-2 text-neutral-400 hover:text-primary-600"
+                  onClick={() => setIsOpen(false)}
+                >
+                  Switch to {variant === 'short' ? 'Detailed' : 'Short'} Version
+                </Link>
+              )}
             </div>
           </div>
         )}
