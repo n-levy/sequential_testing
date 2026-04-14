@@ -1,6 +1,7 @@
 'use client'
 
 import { InlineMath, BlockMath } from '@/components/ui/Math'
+import { PeekingSimulation } from '@/components/act1/PeekingSimulation'
 
 export function DetailedAct0() {
   return (
@@ -62,6 +63,9 @@ export function DetailedAct0() {
             </p>
           </div>
         </div>
+
+        {/* Interactive Simulation */}
+        <PeekingSimulation />
 
         {/* Intuitive Explanation */}
         <h3 className="text-2xl font-bold text-neutral-900 mb-4">Why Does This Happen?</h3>

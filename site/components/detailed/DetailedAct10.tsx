@@ -1,6 +1,7 @@
 'use client'
 
 import { InlineMath, BlockMath } from '@/components/ui/Math'
+import { EppoPipelineSim } from '@/components/act2/EppoPipelineSim'
 
 export function DetailedAct10() {
   return (
@@ -157,6 +158,12 @@ export function DetailedAct10() {
             <strong>this decision is valid at whatever time it is made.</strong> No need to
             pre-specify an analysis time.
           </p>
+        </div>
+
+        {/* Interactive Pipeline Simulation */}
+        <h3 className="text-xl font-bold text-neutral-900 mb-3">Try It: Interactive Pipeline</h3>
+        <div className="mb-8">
+          <EppoPipelineSim />
         </div>
 
         {/* Key Takeaway */}

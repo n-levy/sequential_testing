@@ -1,6 +1,7 @@
 'use client'
 
 import { InlineMath, BlockMath } from '@/components/ui/Math'
+import { ComparisonSim } from '@/components/act3/ComparisonSim'
 
 export function DetailedAct13() {
   return (
@@ -180,6 +181,12 @@ export function DetailedAct13() {
               correction, you should start with Bonferroni <em>today</em>.
             </p>
           </div>
+        </div>
+
+        {/* Interactive Comparison Simulation */}
+        <h3 className="text-2xl font-bold text-neutral-900 mb-4">Try It: Compare Methods</h3>
+        <div className="mb-8">
+          <ComparisonSim />
         </div>
 
         {/* Historical Note */}

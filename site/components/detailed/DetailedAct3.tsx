@@ -1,6 +1,7 @@
 'use client'
 
 import { InlineMath, BlockMath } from '@/components/ui/Math'
+import { LikelihoodRatioSim } from './sims/LikelihoodRatioSim'
 
 export function DetailedAct3() {
   return (
@@ -25,8 +26,11 @@ export function DetailedAct3() {
           </div>
         </div>
 
+        {/* Interactive Simulation */}
+        <LikelihoodRatioSim />
+
         {/* Intuition */}
-        <h3 className="text-2xl font-bold text-neutral-900 mb-4">Intuitive Explanation</h3>
+        <h3 className="text-2xl font-bold text-neutral-900 mb-4 mt-8">Intuitive Explanation</h3>
         <div className="bg-blue-50 border border-blue-400 rounded-lg p-6 mb-8">
           <h4 className="font-bold text-blue-900 mb-3">Intuitive Explanation</h4>
           <div className="text-neutral-800 space-y-3">

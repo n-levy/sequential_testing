@@ -1,6 +1,7 @@
 'use client'
 
 import { InlineMath, BlockMath } from '@/components/ui/Math'
+import { MixtureSPRTSim } from './sims/MixtureSPRTSim'
 
 export function DetailedAct7() {
   return (
@@ -77,6 +78,9 @@ export function DetailedAct7() {
             weighted by credibility.&rdquo;
           </p>
         </div>
+
+        {/* Interactive Simulation */}
+        <MixtureSPRTSim />
 
         {/* Part B: mSPRT */}
         <h3 className="text-2xl font-bold text-neutral-900 mb-4">
