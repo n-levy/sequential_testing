@@ -1,5 +1,8 @@
 import { Navigation } from '@/components/Navigation'
 import { Hero } from '@/components/Hero'
+import { Act1 } from '@/components/act1/Act1'
+import { Act2 } from '@/components/act2/Act2'
+import { Act3 } from '@/components/act3/Act3'
 
 export default function Home() {
   return (
@@ -7,17 +10,9 @@ export default function Home() {
       <Navigation />
       <main>
         <Hero />
-        {/* Act components will be added here */}
-        <div className="max-w-4xl mx-auto px-4 py-8">
-          <div className="text-center">
-            <h2 className="text-2xl font-bold text-neutral-900 mb-4">
-              Sequential Testing Interactive Guide
-            </h2>
-            <p className="text-neutral-600">
-              Coming soon: Interactive simulations of sequential testing methods
-            </p>
-          </div>
-        </div>
+        <Act1 />
+        <Act2 />
+        <Act3 />
       </main>
     </div>
   )
