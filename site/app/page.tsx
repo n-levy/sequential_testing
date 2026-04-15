@@ -7,29 +7,19 @@ export default function Home() {
       <Navigation variant="landing" />
       <main>
         {/* Hero */}
-        <section className="py-20 bg-gradient-to-b from-white to-neutral-50">
+        <section className="py-10 bg-gradient-to-b from-white to-neutral-50">
           <div className="max-w-4xl mx-auto px-4 text-center">
             <h1 className="text-5xl font-bold text-neutral-900 mb-2">
               Sequential Testing
             </h1>
-            <p className="text-2xl text-neutral-600 mb-6">
+            <p className="text-2xl text-neutral-600">
               An interactive guide
-            </p>
-            <p className="text-xl text-neutral-600 mb-4 max-w-3xl mx-auto">
-              Sequential testing enables &lsquo;peeking&rsquo; at A/B test results, and making
-              decisions if they are clear before the test ends. This is done without increasing
-              the risk of false positives (type I error).
-            </p>
-            <p className="text-lg text-neutral-500 max-w-3xl mx-auto">
-              This interactive guide explains how, and provides intuition about the tradeoff
-              (wider confidence intervals). It includes simulations you can run yourself,
-              formulas with plain-language translations, and practical implementation advice.
             </p>
           </div>
         </section>
 
         {/* Version cards */}
-        <section className="py-16">
+        <section className="py-10">
           <div className="max-w-4xl mx-auto px-4">
             <h2 className="text-2xl font-bold text-neutral-900 mb-2 text-center">
               Choose Your Path
