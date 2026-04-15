@@ -2,6 +2,7 @@
 
 import { useState, useRef, useEffect, useCallback } from 'react'
 import * as d3 from 'd3'
+import katex from 'katex'
 import { InlineMath } from '@/components/ui/Math'
 
 const COLORS = ['#3b82f6', '#ef4444', '#22c55e', '#f59e0b', '#8b5cf6', '#ec4899', '#14b8a6', '#f97316']
@@ -77,20 +78,27 @@ export function RandomWalkSim() {
       .attr('d', envLine.y(d => y(-2 * Math.sqrt(d))))
       .attr('fill', 'none').attr('stroke', '#d1d5db').attr('stroke-dasharray', '3,3').attr('stroke-width', 1)
 
-    // Envelope labels
-    const mathFont = "'STIX Two Math', 'Times New Roman', Georgia, serif"
-    g.append('text')
-      .attr('x', x(nSteps) + 3).attr('y', y(Math.sqrt(nSteps)) - 4)
-      .text('+\u221An').attr('fill', '#6b7280').attr('font-size', '11px').attr('font-family', mathFont)
-    g.append('text')
-      .attr('x', x(nSteps) + 3).attr('y', y(-Math.sqrt(nSteps)) + 12)
-      .text('\u2212\u221An').attr('fill', '#6b7280').attr('font-size', '11px').attr('font-family', mathFont)
-    g.append('text')
-      .attr('x', x(nSteps) + 3).attr('y', y(2 * Math.sqrt(nSteps)) - 4)
-      .text('+2\u221An').attr('fill', '#9ca3af').attr('font-size', '11px').attr('font-family', mathFont)
-    g.append('text')
-      .attr('x', x(nSteps) + 3).attr('y', y(-2 * Math.sqrt(nSteps)) + 12)
-      .text('\u22122\u221An').attr('fill', '#9ca3af').attr('font-size', '11px').attr('font-family', mathFont)
+    // Envelope labels (KaTeX rendered via foreignObject)
+    const addMathLabel = (xPos: number, yPos: number, latex: string, color: string) => {
+      const html = katex.renderToString(latex, { throwOnError: false, displayMode: false })
+      const fo = g.append('foreignObject')
+        .attr('x', xPos)
+        .attr('y', yPos - 10)
+        .attr('width', 60)
+        .attr('height', 22)
+        .attr('style', 'overflow: visible')
+      fo.append('xhtml:div')
+        .style('font-size', '11px')
+        .style('color', color)
+        .style('line-height', '1')
+        .style('white-space', 'nowrap')
+        .html(html)
+    }
+
+    addMathLabel(x(nSteps) + 3, y(Math.sqrt(nSteps)) - 2, '+\\!\\sqrt{n}', '#6b7280')
+    addMathLabel(x(nSteps) + 3, y(-Math.sqrt(nSteps)) + 8, '-\\!\\sqrt{n}', '#6b7280')
+    addMathLabel(x(nSteps) + 3, y(2 * Math.sqrt(nSteps)) - 2, '+2\\!\\sqrt{n}', '#9ca3af')
+    addMathLabel(x(nSteps) + 3, y(-2 * Math.sqrt(nSteps)) + 8, '-2\\!\\sqrt{n}', '#9ca3af')
 
     // Zero line
     g.append('line')
