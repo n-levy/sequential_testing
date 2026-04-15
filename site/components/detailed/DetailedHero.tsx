@@ -40,20 +40,20 @@ export function DetailedHero() {
       <div className="max-w-4xl mx-auto px-4 mt-12">
         <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
           {[
-            { n: '0', t: 'The Peeking Problem', c: 'bg-amber-50 border-amber-200' },
+            { n: '0', t: 'The Peeking Problem', c: 'bg-blue-50 border-blue-200' },
             { n: '1', t: 'Random Walk', c: 'bg-blue-50 border-blue-200' },
             { n: '2', t: 'Martingale', c: 'bg-blue-50 border-blue-200' },
             { n: '3', t: 'Likelihood Ratio', c: 'bg-blue-50 border-blue-200' },
             { n: '4', t: 'LR is a Martingale', c: 'bg-blue-50 border-blue-200' },
-            { n: '5', t: 'Ville\'s Inequality', c: 'bg-green-50 border-green-200' },
+            { n: '5', t: 'Ville\'s Inequality', c: 'bg-blue-50 border-blue-200' },
             { n: '6', t: 'Wald\'s SPRT', c: 'bg-blue-50 border-blue-200' },
             { n: '7', t: 'Mixture / mSPRT', c: 'bg-blue-50 border-blue-200' },
-            { n: '8', t: 'Confidence Sequences', c: 'bg-green-50 border-green-200' },
-            { n: '9', t: 'Problem Eppo Solves', c: 'bg-purple-50 border-purple-200' },
-            { n: '10', t: 'Eppo Pipeline', c: 'bg-purple-50 border-purple-200' },
-            { n: '11', t: 'Variance Reduction', c: 'bg-purple-50 border-purple-200' },
-            { n: '12', t: 'Sequential CI', c: 'bg-purple-50 border-purple-200' },
-            { n: '13', t: 'DIY Alternatives', c: 'bg-orange-50 border-orange-200' },
+            { n: '8', t: 'Confidence Sequences', c: 'bg-blue-50 border-blue-200' },
+            { n: '9', t: 'Problem Eppo Solves', c: 'bg-blue-50 border-blue-200' },
+            { n: '10', t: 'Eppo Pipeline', c: 'bg-blue-50 border-blue-200' },
+            { n: '11', t: 'Variance Reduction', c: 'bg-blue-50 border-blue-200' },
+            { n: '12', t: 'Sequential CI', c: 'bg-blue-50 border-blue-200' },
+            { n: '13', t: 'DIY Alternatives', c: 'bg-blue-50 border-blue-200' },
           ].map(({ n, t, c }) => (
             <a
               key={n}
