@@ -284,7 +284,7 @@ export function PeekingSimulation() {
             disabled={isRunning}
             className="px-5 py-2.5 bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors whitespace-nowrap"
           >
-            {isRunning ? `Running... ${progress}%` : isDone ? 'Run Again' : 'Run Simulation'}
+            {isRunning ? `Running... ${progress}%` : 'Run simulation'}
           </button>
         </div>
 

@@ -156,7 +156,7 @@ export function MixtureSPRTSim() {
           </div>
           <button onClick={simulate}
             className="px-5 py-2.5 bg-purple-600 text-white rounded-lg font-medium hover:bg-purple-700 transition-colors whitespace-nowrap">
-            Re-run
+            Run simulation
           </button>
         </div>
 

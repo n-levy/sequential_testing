@@ -163,7 +163,7 @@ export function RandomWalkSim() {
             onClick={generate}
             className="px-5 py-2.5 bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700 transition-colors whitespace-nowrap"
           >
-            New Walks
+            Run simulation
           </button>
         </div>
 

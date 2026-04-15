@@ -166,7 +166,7 @@ export function MartingaleSim() {
             <svg ref={walkRef} viewBox="0 0 550 250" className="w-full" />
             <button onClick={generateWalk}
               className="mt-2 px-4 py-2 bg-blue-600 text-white rounded-lg text-sm font-medium hover:bg-blue-700 transition-colors">
-              New Walk
+              Run simulation
             </button>
           </div>
           <div>
@@ -176,7 +176,7 @@ export function MartingaleSim() {
             <svg ref={histRef} viewBox="0 0 550 250" className="w-full" />
             <button onClick={runDoublingStrategy}
               className="mt-2 px-4 py-2 bg-purple-600 text-white rounded-lg text-sm font-medium hover:bg-purple-700 transition-colors">
-              Re-run Doubling
+              Run simulation
             </button>
           </div>
         </div>

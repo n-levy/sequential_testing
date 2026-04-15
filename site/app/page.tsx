@@ -10,14 +10,16 @@ export default function Home() {
         <section className="py-20 bg-gradient-to-b from-white to-neutral-50">
           <div className="max-w-4xl mx-auto px-4 text-center">
             <h1 className="text-5xl font-bold text-neutral-900 mb-6">
-              Sequential Testing for A/B Experiments
+              Sequential Testing &mdash; an Interactive Guide
             </h1>
             <p className="text-xl text-neutral-600 mb-4 max-w-3xl mx-auto">
-              Every company running A/B tests faces the same temptation: peek at the results
-              early. Traditional statistics breaks when you do this. Sequential testing fixes it.
+              Sequential testing enables &lsquo;peeking&rsquo; at A/B test results, and making
+              decisions if they are clear before the test ends. This is done without increasing
+              the risk of false positives (type I error).
             </p>
             <p className="text-lg text-neutral-500 max-w-3xl mx-auto">
-              This interactive guide explains how &mdash; with simulations you can run yourself,
+              This interactive guide explains how, and provides intuition about the tradeoff
+              (wider confidence intervals). It includes simulations you can run yourself,
               formulas with plain-language translations, and practical implementation advice.
             </p>
           </div>
