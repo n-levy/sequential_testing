@@ -24,7 +24,9 @@ export function Hero() {
         <p>
           <strong>The solution.</strong>{' '}
           <em>Sequential testing</em> provides statistical methods whose error guarantees
-          hold regardless of the number or timing of analyses.
+          hold regardless of the number or timing of analyses. The confidence intervals
+          become wider, but it can still reduce overall runtime if effects become clear
+          at an early stage.
         </p>
         <p>
           <strong>This guide.</strong>{' '}
