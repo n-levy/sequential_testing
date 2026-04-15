@@ -123,7 +123,7 @@ export function DetailedAct10() {
             Plug the estimated treatment effect and its standard error into the Normal
             mixture boundary from Act 8:
           </p>
-          <div className="bg-white border-2 border-green-400 rounded-lg p-4">
+          <div className="bg-white border-2 border-green-200 rounded-lg p-4">
             <BlockMath>{`\\text{CI}(t) = \\hat{\\tau}(t) \\pm \\hat{\\sigma}_{\\hat{\\tau}}(t) \\cdot \\sqrt{\\frac{n + \\nu}{n} \\cdot \\log\\!\\frac{n + \\nu}{\\nu \\alpha^2}}`}</BlockMath>
           </div>
           <p className="mt-2">
@@ -145,7 +145,7 @@ export function DetailedAct10() {
             </thead>
             <tbody>
               <tr><td className="border border-neutral-300 p-3">CI entirely above 0</td><td className="border border-neutral-300 p-3"><span className="inline-block w-4 h-4 bg-green-500 rounded mr-1 align-middle"></span> Green</td><td className="border border-neutral-300 p-3">Positive effect. Ship the feature.</td></tr>
-              <tr className="bg-neutral-50"><td className="border border-neutral-300 p-3">CI entirely below 0</td><td className="border border-neutral-300 p-3"><span className="inline-block w-4 h-4 bg-red-500 rounded mr-1 align-middle"></span> Red</td><td className="border border-neutral-300 p-3">Negative effect. Revert.</td></tr>
+              <tr className="bg-neutral-50"><td className="border border-neutral-300 p-3">CI entirely below 0</td><td className="border border-neutral-300 p-3"><span className="inline-block w-4 h-4 bg-neutral-500 rounded mr-1 align-middle"></span> Dark grey</td><td className="border border-neutral-300 p-3">Negative effect. Revert.</td></tr>
               <tr><td className="border border-neutral-300 p-3">CI crosses 0, experiment ongoing</td><td className="border border-neutral-300 p-3"><span className="inline-block w-4 h-4 bg-neutral-400 rounded mr-1 align-middle"></span> Grey</td><td className="border border-neutral-300 p-3">Inconclusive. Keep collecting.</td></tr>
               <tr className="bg-neutral-50"><td className="border border-neutral-300 p-3">CI crosses 0, experiment ended</td><td className="border border-neutral-300 p-3"><span className="inline-block w-4 h-4 bg-neutral-400 rounded mr-1 align-middle"></span> Grey</td><td className="border border-neutral-300 p-3">No significant effect. Decide pragmatically.</td></tr>
             </tbody>
@@ -167,8 +167,8 @@ export function DetailedAct10() {
         </div>
 
         {/* Key Takeaway */}
-        <div className="bg-yellow-50 border border-yellow-600 rounded-lg p-6 mb-8">
-          <h4 className="font-bold text-yellow-900 mb-3">Key Takeaway</h4>
+        <div className="bg-green-50 border border-green-200 rounded-lg p-6 mb-8">
+          <h4 className="font-bold text-green-900 mb-3">Key Takeaway</h4>
           <div className="text-neutral-800">
             <p>
               <strong>The Eppo pipeline in one sentence:</strong> Randomise &rarr; collect{' '}
@@ -177,14 +177,6 @@ export function DetailedAct10() {
               &rarr; wrap in a sequential CI &rarr; decide when CI excludes zero.
             </p>
           </div>
-        </div>
-
-        {/* Transition */}
-        <div className="bg-neutral-100 border border-neutral-300 rounded-lg p-4 text-center">
-          <p className="text-neutral-600 italic">
-            &ldquo;The pipeline uses regression adjustment to remove noise. Let&apos;s see
-            exactly how and why that works.&rdquo;
-          </p>
         </div>
       </div>
     </section>

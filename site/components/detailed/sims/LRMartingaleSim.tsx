@@ -147,7 +147,7 @@ export function LRMartingaleSim() {
           </div>
           <div>
             <svg ref={h1Ref} viewBox="0 0 400 280" className="w-full" />
-            <div className="text-center text-sm text-red-700 font-medium mt-1">
+            <div className="text-center text-sm text-amber-700 font-medium mt-1">
               Mean final Λ: {h1Mean} (drifts upward)
             </div>
           </div>

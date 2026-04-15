@@ -111,8 +111,8 @@ export function DetailedAct11() {
         </div>
 
         {/* Safety rule */}
-        <div className="bg-red-50 border border-red-400 rounded-lg p-6 mb-6">
-          <h4 className="font-bold text-red-900 mb-3">Critical Safety Rule</h4>
+        <div className="bg-blue-50 border border-blue-400 rounded-lg p-6 mb-6">
+          <h4 className="font-bold text-blue-900 mb-3">Critical Safety Rule</h4>
           <div className="text-neutral-800 space-y-3">
             <p>
               The covariate <InlineMath>{`X`}</InlineMath> must satisfy{' '}
@@ -149,8 +149,8 @@ export function DetailedAct11() {
         </div>
 
         {/* Key Takeaway */}
-        <div className="bg-yellow-50 border border-yellow-600 rounded-lg p-6 mb-8">
-          <h4 className="font-bold text-yellow-900 mb-3">Key Takeaway</h4>
+        <div className="bg-green-50 border border-green-200 rounded-lg p-6 mb-8">
+          <h4 className="font-bold text-green-900 mb-3">Key Takeaway</h4>
           <div className="text-neutral-800">
             <p>
               <strong>Key concepts:</strong> regression adjustment as generalised CUPED, separate
@@ -159,14 +159,6 @@ export function DetailedAct11() {
               sequential guarantee.
             </p>
           </div>
-        </div>
-
-        {/* Transition */}
-        <div className="bg-neutral-100 border border-neutral-300 rounded-lg p-4 text-center">
-          <p className="text-neutral-600 italic">
-            &ldquo;The noise is reduced. Now let&apos;s wrap everything in a sequential
-            confidence interval and make the final decision.&rdquo;
-          </p>
         </div>
       </div>
     </section>

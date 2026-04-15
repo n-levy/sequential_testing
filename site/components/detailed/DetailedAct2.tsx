@@ -16,8 +16,8 @@ export function DetailedAct2() {
         {/* Simulation */}
         <h3 className="text-2xl font-bold text-neutral-900 mb-4">The Simulation</h3>
 
-        <div className="bg-orange-50 border border-orange-400 rounded-lg p-6 mb-8">
-          <h4 className="font-bold text-orange-900 mb-3">Simulation</h4>
+        <div className="bg-blue-50 border border-blue-200 rounded-lg p-6 mb-8">
+          <h4 className="font-bold text-blue-900 mb-3">Simulation</h4>
           <div className="text-neutral-800 space-y-3">
             <p>
               The same random walk, relabelled. The vertical axis now shows
@@ -184,7 +184,7 @@ export function DetailedAct2() {
                 <tr className="bg-neutral-50"><td className="border border-neutral-300 p-3">Stop the first time I am ahead by &euro;10</td><td className="border border-neutral-300 p-3 text-green-700">&#10003;</td></tr>
                 <tr><td className="border border-neutral-300 p-3">Stop when I have lost &euro;50</td><td className="border border-neutral-300 p-3 text-green-700">&#10003;</td></tr>
                 <tr className="bg-neutral-50"><td className="border border-neutral-300 p-3">Stop after 1000 flips <em>or</em> when ahead by &euro;5, whichever first</td><td className="border border-neutral-300 p-3 text-green-700">&#10003;</td></tr>
-                <tr><td className="border border-neutral-300 p-3">Stop right before the next loss</td><td className="border border-neutral-300 p-3 text-red-600">&#10007; (requires the future!)</td></tr>
+                <tr><td className="border border-neutral-300 p-3">Stop right before the next loss</td><td className="border border-neutral-300 p-3 text-neutral-500">&#10007; (requires the future!)</td></tr>
               </tbody>
             </table>
           </div>
@@ -237,8 +237,8 @@ export function DetailedAct2() {
         </div>
 
         {/* Key Takeaway */}
-        <div className="bg-yellow-50 border border-yellow-600 rounded-lg p-6 mb-8">
-          <h4 className="font-bold text-yellow-900 mb-3">Key Takeaway</h4>
+        <div className="bg-green-50 border border-green-200 rounded-lg p-6 mb-8">
+          <h4 className="font-bold text-green-900 mb-3">Key Takeaway</h4>
           <div className="text-neutral-800">
             <p>
               <strong>Key concepts:</strong> martingale, conditional expectation, stopping time,
@@ -248,21 +248,13 @@ export function DetailedAct2() {
         </div>
 
         {/* Historical Note */}
-        <div className="bg-purple-50 border border-purple-400 rounded-lg p-6 mb-8">
-          <h4 className="font-bold text-purple-900 mb-3">Historical Note</h4>
+        <div className="bg-neutral-100 border border-neutral-300 rounded-lg p-6 mb-8">
+          <h4 className="font-semibold text-neutral-700 mb-3">Historical Note</h4>
           <p className="text-neutral-700">
             Joseph L. Doob formalised martingale theory in his 1953 monograph{' '}
             <em>Stochastic Processes</em>. The name &ldquo;martingale&rdquo; comes from a French
             term for a type of betting strategy &mdash; the very doubling strategy we just
             debunked.
-          </p>
-        </div>
-
-        {/* Transition */}
-        <div className="bg-neutral-100 border border-neutral-300 rounded-lg p-4 text-center">
-          <p className="text-neutral-600 italic">
-            &ldquo;Fair games can&apos;t be beaten. Now let&apos;s build a detective &mdash;
-            a tool for telling two coins apart.&rdquo;
           </p>
         </div>
       </div>

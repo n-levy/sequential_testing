@@ -220,7 +220,7 @@ export function Act2() {
               </tr>
               <tr className="bg-neutral-50">
                 <td className="border border-neutral-300 p-3">CI entirely below 0</td>
-                <td className="border border-neutral-300 p-3"><span className="inline-block w-4 h-4 bg-red-600 rounded mr-2 align-middle"></span>Red</td>
+                <td className="border border-neutral-300 p-3"><span className="inline-block w-4 h-4 bg-neutral-500 rounded mr-2 align-middle"></span>Dark grey</td>
                 <td className="border border-neutral-300 p-3">Negative effect. Revert.</td>
               </tr>
               <tr>

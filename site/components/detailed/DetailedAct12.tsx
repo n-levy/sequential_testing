@@ -41,7 +41,7 @@ export function DetailedAct12() {
 
         <div className="text-neutral-700 space-y-3 mb-6">
           <p>From the pipeline (Act 10, Step 6):</p>
-          <div className="bg-white border-2 border-green-400 rounded-lg p-4">
+          <div className="bg-white border-2 border-green-200 rounded-lg p-4">
             <BlockMath>{`\\text{CI}(t) = \\hat{\\tau}(t) \\pm \\hat{\\sigma}_{\\hat{\\tau}}(t) \\cdot \\underbrace{\\sqrt{\\frac{n + \\nu}{n} \\cdot \\log\\!\\frac{n + \\nu}{\\nu \\alpha^2}}}_{\\text{sequential multiplier}}`}</BlockMath>
           </div>
           <p>Compare with a standard CI:</p>
@@ -120,8 +120,8 @@ export function DetailedAct12() {
         </div>
 
         {/* Summary box */}
-        <div className="bg-yellow-50 border border-yellow-600 rounded-lg p-6 mb-8">
-          <h4 className="font-bold text-yellow-900 mb-3">What Eppo Actually Uses (Summary)</h4>
+        <div className="bg-green-50 border border-green-200 rounded-lg p-6 mb-8">
+          <h4 className="font-bold text-green-900 mb-3">What Eppo Actually Uses (Summary)</h4>
           <div className="text-neutral-800 space-y-2">
             <ul className="list-disc ml-6 space-y-1">
               <li><strong>Framework:</strong> Howard et al. (2021) confidence sequences (not the mSPRT of Johari et al. 2017).</li>
@@ -133,14 +133,6 @@ export function DetailedAct12() {
               <li><strong>Decision:</strong> Stop when CI no longer crosses zero, valid at any time.</li>
             </ul>
           </div>
-        </div>
-
-        {/* Transition */}
-        <div className="bg-neutral-100 border border-neutral-300 rounded-lg p-4 text-center">
-          <p className="text-neutral-600 italic">
-            &ldquo;Eppo solves everything &mdash; but what if you don&apos;t have Eppo?
-            Three simple alternatives, from crude to clever.&rdquo;
-          </p>
         </div>
       </div>
     </section>

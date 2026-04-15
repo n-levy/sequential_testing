@@ -16,8 +16,8 @@ export function DetailedAct5() {
 
         {/* Simulation */}
         <h3 className="text-2xl font-bold text-neutral-900 mb-4">The Simulation</h3>
-        <div className="bg-orange-50 border border-orange-400 rounded-lg p-6 mb-8">
-          <h4 className="font-bold text-orange-900 mb-3">Simulation</h4>
+        <div className="bg-blue-50 border border-blue-200 rounded-lg p-6 mb-8">
+          <h4 className="font-bold text-blue-900 mb-3">Simulation</h4>
           <div className="text-neutral-800 space-y-3">
             <p>
               <strong>Panel 1 &mdash; Markov (single time):</strong>{' '}
@@ -175,7 +175,7 @@ export function DetailedAct5() {
             <InlineMath>{`m_0 = \\Lambda_0 = 1`}</InlineMath>,{' '}
             <InlineMath>{`c = 1/\\alpha`}</InlineMath>:
           </p>
-          <div className="bg-white border-2 border-green-400 rounded-lg p-4">
+          <div className="bg-white border-2 border-green-200 rounded-lg p-4">
             <BlockMath>{`\\PP\\!\\left(\\Lambda_n \\text{ ever reaches } \\frac{1}{\\alpha} \\text{ or higher}\\right) \\leq \\alpha`}</BlockMath>
           </div>
           <div className="bg-white border border-neutral-200 rounded-lg p-4 text-neutral-600">
@@ -208,8 +208,8 @@ export function DetailedAct5() {
         </div>
 
         {/* Historical Note */}
-        <div className="bg-purple-50 border border-purple-400 rounded-lg p-6 mb-8">
-          <h4 className="font-bold text-purple-900 mb-3">Historical Note</h4>
+        <div className="bg-neutral-100 border border-neutral-300 rounded-lg p-6 mb-8">
+          <h4 className="font-semibold text-neutral-700 mb-3">Historical Note</h4>
           <p className="text-neutral-700">
             Jean Ville proved this inequality in his 1939 doctoral thesis,{' '}
             <em>&Eacute;tude critique de la notion de collectif</em>. It predated the
@@ -220,8 +220,8 @@ export function DetailedAct5() {
         </div>
 
         {/* Key Takeaway */}
-        <div className="bg-yellow-50 border border-yellow-600 rounded-lg p-6 mb-8">
-          <h4 className="font-bold text-yellow-900 mb-3">Key Takeaway</h4>
+        <div className="bg-green-50 border border-green-200 rounded-lg p-6 mb-8">
+          <h4 className="font-bold text-green-900 mb-3">Key Takeaway</h4>
           <div className="text-neutral-800">
             <p>
               <strong>Key concepts:</strong> Markov&apos;s inequality (with proof),
@@ -229,14 +229,6 @@ export function DetailedAct5() {
               martingale + non-negative = peek-safe.
             </p>
           </div>
-        </div>
-
-        {/* Transition */}
-        <div className="bg-neutral-100 border border-neutral-300 rounded-lg p-4 text-center">
-          <p className="text-neutral-600 italic">
-            &ldquo;We have the theory: peeking is safe. Now let&apos;s turn it
-            into a practical decision procedure.&rdquo;
-          </p>
         </div>
       </div>
     </section>

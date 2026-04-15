@@ -56,8 +56,8 @@ export function DetailedAct9() {
         </div>
 
         {/* Three problems table */}
-        <div className="bg-yellow-50 border border-yellow-600 rounded-lg p-6 mb-8">
-          <h4 className="font-bold text-yellow-900 mb-3">Key Takeaway</h4>
+        <div className="bg-green-50 border border-green-200 rounded-lg p-6 mb-8">
+          <h4 className="font-bold text-green-900 mb-3">Key Takeaway</h4>
           <div className="text-neutral-800">
             <p className="mb-3"><strong>Three problems, three solutions:</strong></p>
             <div className="overflow-x-auto">
@@ -77,14 +77,6 @@ export function DetailedAct9() {
               </table>
             </div>
           </div>
-        </div>
-
-        {/* Transition */}
-        <div className="bg-neutral-100 border border-neutral-300 rounded-lg p-4 text-center">
-          <p className="text-neutral-600 italic">
-            &ldquo;Three problems, three solutions. Now let&apos;s walk through
-            Eppo&apos;s pipeline, step by step.&rdquo;
-          </p>
         </div>
       </div>
     </section>

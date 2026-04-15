@@ -7,7 +7,7 @@ export function BonferroniImpl() {
   return (
     <Card>
       <CardHeader>
-        <CardTitle className="text-red-700">Method 1: Bonferroni Correction (Simplest)</CardTitle>
+        <CardTitle className="text-blue-700">Method 1: Bonferroni Correction (Simplest)</CardTitle>
       </CardHeader>
       <CardContent>
         <div className="space-y-6">
@@ -123,8 +123,8 @@ export function BonferroniImpl() {
                   <li><strong>+</strong> Always valid. Works for any test statistic, any distribution.</li>
                 </ul>
               </div>
-              <div className="bg-red-50 p-4 rounded border border-red-200">
-                <ul className="text-sm text-red-800 space-y-1">
+              <div className="bg-amber-50 p-4 rounded border border-amber-200">
+                <ul className="text-sm text-amber-800 space-y-1">
                   <li><strong>&minus;</strong> Conservative. The CI is wider than necessary because Bonferroni ignores the correlation between test statistics at successive peeks.</li>
                   <li><strong>&minus;</strong> Scales poorly. As <InlineMath>{`K`}</InlineMath> grows, the correction becomes increasingly harsh.</li>
                 </ul>

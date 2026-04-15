@@ -204,9 +204,9 @@ export function MartingaleSim() {
               <div className="text-lg font-bold text-green-700">{results.winners.toLocaleString()}</div>
               <div className="text-xs text-green-600">Winners ({((results.winners / nGamblers) * 100).toFixed(1)}%)</div>
             </div>
-            <div className="bg-red-50 border border-red-200 rounded-lg p-3 text-center">
-              <div className="text-lg font-bold text-red-700">{results.losers.toLocaleString()}</div>
-              <div className="text-xs text-red-600">Losers ({((results.losers / nGamblers) * 100).toFixed(1)}%)</div>
+            <div className="bg-amber-50 border border-amber-200 rounded-lg p-3 text-center">
+              <div className="text-lg font-bold text-amber-700">{results.losers.toLocaleString()}</div>
+              <div className="text-xs text-amber-600">Losers ({((results.losers / nGamblers) * 100).toFixed(1)}%)</div>
             </div>
             <div className="bg-neutral-50 border border-neutral-200 rounded-lg p-3 text-center">
               <div className="text-lg font-bold text-neutral-700">€{results.avgProfit.toFixed(2)}</div>

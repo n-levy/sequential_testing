@@ -60,12 +60,12 @@ export function Act3() {
         <div className="grid md:grid-cols-3 gap-6 mb-8">
           <Card
             className={`cursor-pointer transition-all ${
-              selectedMethod === 'bonferroni' ? 'ring-2 ring-red-500 bg-red-50' : 'hover:shadow-lg'
+              selectedMethod === 'bonferroni' ? 'ring-2 ring-blue-500 bg-blue-50' : 'hover:shadow-lg'
             }`}
             onClick={() => setSelectedMethod(selectedMethod === 'bonferroni' ? null : 'bonferroni')}
           >
             <CardHeader>
-              <CardTitle className="text-red-700">Method 1: Bonferroni</CardTitle>
+              <CardTitle className="text-blue-700">Method 1: Bonferroni</CardTitle>
             </CardHeader>
             <CardContent>
               <p className="text-sm text-neutral-600">
@@ -124,7 +124,7 @@ export function Act3() {
             <thead>
               <tr className="bg-neutral-100">
                 <th className="border border-neutral-300 p-3 text-left font-semibold"></th>
-                <th className="border border-neutral-300 p-3 font-semibold text-red-700">Bonferroni</th>
+                <th className="border border-neutral-300 p-3 font-semibold text-blue-700">Bonferroni</th>
                 <th className="border border-neutral-300 p-3 font-semibold text-orange-700">Pocock</th>
                 <th className="border border-neutral-300 p-3 font-semibold text-blue-700">OBF</th>
                 <th className="border border-neutral-300 p-3 font-semibold text-green-700">Eppo</th>
@@ -262,7 +262,7 @@ export function Act3() {
         <p className="mb-2 text-neutral-700">At each scheduled peek:</p>
         <ol className="list-decimal list-inside ml-4 mb-4 text-neutral-700 space-y-1">
           <li>For <strong>each guardrail KPI</strong>: compute the CI using your chosen sequential method.</li>
-          <li>If <strong>any</strong> guardrail CI is entirely on the harmful side of zero: <span className="text-red-600 font-bold">ABORT</span> the experiment.</li>
+          <li>If <strong>any</strong> guardrail CI is entirely on the harmful side of zero: <span className="text-amber-600 font-bold">ABORT</span> the experiment.</li>
           <li>Otherwise: continue.</li>
         </ol>
 

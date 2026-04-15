@@ -167,8 +167,8 @@ export function DetailedAct13() {
         </div>
 
         {/* Key Takeaway */}
-        <div className="bg-yellow-50 border border-yellow-600 rounded-lg p-6 mb-8">
-          <h4 className="font-bold text-yellow-900 mb-3">Which method should you use?</h4>
+        <div className="bg-green-50 border border-green-200 rounded-lg p-6 mb-8">
+          <h4 className="font-bold text-green-900 mb-3">Which method should you use?</h4>
           <div className="text-neutral-800 space-y-3">
             <ul className="list-disc ml-6 space-y-2">
               <li><strong>No platform, minimal effort:</strong> Bonferroni. Commit to <InlineMath>{`K`}</InlineMath> peeks. Replace 1.96 with <InlineMath>{`z_{\\alpha/(2K)}`}</InlineMath>. Done.</li>
@@ -190,8 +190,8 @@ export function DetailedAct13() {
         </div>
 
         {/* Historical Note */}
-        <div className="bg-purple-50 border border-purple-400 rounded-lg p-6 mb-8">
-          <h4 className="font-bold text-purple-900 mb-3">Historical Note</h4>
+        <div className="bg-neutral-100 border border-neutral-300 rounded-lg p-6 mb-8">
+          <h4 className="font-semibold text-neutral-700 mb-3">Historical Note</h4>
           <p className="text-neutral-700">
             <strong>Stuart Pocock</strong> (1977) and <strong>Peter O&apos;Brien &amp; Thomas
             Fleming</strong> (1979) developed these group sequential methods for clinical trials,

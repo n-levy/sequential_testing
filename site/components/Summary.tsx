@@ -54,7 +54,7 @@ export function Summary() {
             <tbody>
               <tr>
                 <td className="border border-neutral-300 p-3 font-medium">No correction (naive)</td>
-                <td className="border border-neutral-300 p-3 text-red-700">Wrong answers (20&ndash;30% false positives)</td>
+                <td className="border border-neutral-300 p-3 text-amber-700">Wrong answers (20&ndash;30% false positives)</td>
               </tr>
               <tr className="bg-neutral-50">
                 <td className="border border-neutral-300 p-3 font-medium">Bonferroni</td>

@@ -40,7 +40,7 @@ export function DetailedHero() {
       <div className="max-w-4xl mx-auto px-4 mt-12">
         <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
           {[
-            { n: '0', t: 'The Peeking Problem', c: 'bg-red-50 border-red-200' },
+            { n: '0', t: 'The Peeking Problem', c: 'bg-amber-50 border-amber-200' },
             { n: '1', t: 'Random Walk', c: 'bg-blue-50 border-blue-200' },
             { n: '2', t: 'Martingale', c: 'bg-blue-50 border-blue-200' },
             { n: '3', t: 'Likelihood Ratio', c: 'bg-blue-50 border-blue-200' },
