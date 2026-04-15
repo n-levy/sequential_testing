@@ -137,11 +137,12 @@ export function DetailedAct1() {
           </div>
           <div className="bg-white border border-neutral-200 rounded-lg p-4 text-neutral-600">
             <p>
-              The expected position is always zero: <InlineMath>{`\\EE[S_n] = 0`}</InlineMath>.
-              But positions spread out over time. By the normal approximation,
-              about 68% of walks end up within{' '}
+              Before we begin flipping the coin, the expected position is zero: <InlineMath>{`\\EE[S_n] = 0`}</InlineMath>.
+              But positions spread out over time. If we flip the coin a large number of times,
+              about 68% of walks would end up within{' '}
               <InlineMath>{`\\pm\\sqrt{n}`}</InlineMath> of zero (one standard deviation),
               and about 95% within <InlineMath>{`\\pm 2\\sqrt{n}`}</InlineMath> (two standard deviations).
+              More generally, the distribution of the sum of walks would be approximately normal.
               For example, after 100 steps, 68% of walks are within ±10
               and 95% within ±20.
               The spread grows with the <em>square root</em> of the number of steps, not the
