@@ -1,4 +1,5 @@
 import { Navigation } from '@/components/Navigation'
+import { ActSidebar } from '@/components/ActSidebar'
 import { DetailedHero } from '@/components/detailed/DetailedHero'
 import { DetailedAct0 } from '@/components/detailed/DetailedAct0'
 import { DetailedAct1 } from '@/components/detailed/DetailedAct1'
@@ -17,11 +18,31 @@ import { DetailedAct13 } from '@/components/detailed/DetailedAct13'
 import { DetailedSummary } from '@/components/detailed/DetailedSummary'
 import { DetailedReferences } from '@/components/detailed/DetailedReferences'
 
+const DETAILED_ITEMS = [
+  { id: 'act-0', label: 'Act 0 – Peeking Problem' },
+  { id: 'act-1', label: 'Act 1 – Random Walk' },
+  { id: 'act-2', label: 'Act 2 – Martingale' },
+  { id: 'act-3', label: 'Act 3 – Likelihood Ratio' },
+  { id: 'act-4', label: 'Act 4 – LR is a Martingale' },
+  { id: 'act-5', label: 'Act 5 – Ville\'s Inequality' },
+  { id: 'act-6', label: 'Act 6 – Wald\'s SPRT' },
+  { id: 'act-7', label: 'Act 7 – Mixture / mSPRT' },
+  { id: 'act-8', label: 'Act 8 – Confidence Sequences' },
+  { id: 'act-9', label: 'Act 9 – Problem Eppo Solves' },
+  { id: 'act-10', label: 'Act 10 – Eppo Pipeline' },
+  { id: 'act-11', label: 'Act 11 – Variance Reduction' },
+  { id: 'act-12', label: 'Act 12 – Sequential CI' },
+  { id: 'act-13', label: 'Act 13 – DIY Alternatives' },
+  { id: 'summary', label: 'Summary' },
+  { id: 'references', label: 'References' },
+]
+
 export default function DetailedVersion() {
   return (
     <div className="min-h-screen bg-neutral-50">
       <Navigation variant="detailed" />
-      <main>
+      <ActSidebar items={DETAILED_ITEMS} />
+      <main className="lg:ml-56">
         <DetailedHero />
         <DetailedAct0 />
         <DetailedAct1 />

@@ -1,4 +1,5 @@
 import { Navigation } from '@/components/Navigation'
+import { ActSidebar } from '@/components/ActSidebar'
 import { Hero } from '@/components/Hero'
 import { Act1 } from '@/components/act1/Act1'
 import { Act2 } from '@/components/act2/Act2'
@@ -7,11 +8,21 @@ import { Summary } from '@/components/Summary'
 import { MathReference } from '@/components/MathReference'
 import { References } from '@/components/References'
 
+const SHORT_ITEMS = [
+  { id: 'act1', label: 'Act 1 – Peeking Problem' },
+  { id: 'act2', label: 'Act 2 – Eppo Solution' },
+  { id: 'act3', label: 'Act 3 – DIY Alternatives' },
+  { id: 'summary', label: 'Summary' },
+  { id: 'math-reference', label: 'Math Reference' },
+  { id: 'references', label: 'References' },
+]
+
 export default function ShortVersion() {
   return (
     <div className="min-h-screen bg-neutral-50">
       <Navigation variant="short" />
-      <main>
+      <ActSidebar items={SHORT_ITEMS} />
+      <main className="lg:ml-56">
         <Hero />
         <Act1 />
         <Act2 />
