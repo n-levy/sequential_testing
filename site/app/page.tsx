@@ -9,9 +9,12 @@ export default function Home() {
         {/* Hero */}
         <section className="py-20 bg-gradient-to-b from-white to-neutral-50">
           <div className="max-w-4xl mx-auto px-4 text-center">
-            <h1 className="text-5xl font-bold text-neutral-900 mb-6">
-              Sequential Testing &mdash; an Interactive Guide
+            <h1 className="text-5xl font-bold text-neutral-900 mb-2">
+              Sequential Testing
             </h1>
+            <p className="text-2xl text-neutral-600 mb-6">
+              An interactive guide
+            </p>
             <p className="text-xl text-neutral-600 mb-4 max-w-3xl mx-auto">
               Sequential testing enables &lsquo;peeking&rsquo; at A/B test results, and making
               decisions if they are clear before the test ends. This is done without increasing
