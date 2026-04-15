@@ -64,7 +64,7 @@ export function DetailedAct10() {
         {/* Step 3 */}
         <h3 className="text-xl font-bold text-neutral-900 mb-3">Step 3: Regression adjustment (noise removal)</h3>
         <div className="text-neutral-700 space-y-3 mb-8">
-          <p>This is where Eppo <em>generalises</em> the CUPED idea from Deng et al. (2013).</p>
+          <p>This is where Eppo <em>generalises</em> the CUPED idea from <a href="#ref-deng-2013" className="text-blue-600 hover:text-blue-800">Deng et al. (2013)</a>.</p>
           <p>For each group <strong>separately</strong>:</p>
           <ol className="list-decimal ml-6 space-y-1">
             <li>Fit a regression model predicting <InlineMath>{`Y`}</InlineMath> from the pre-experiment covariates <InlineMath>{`X`}</InlineMath>.</li>
@@ -110,8 +110,8 @@ export function DetailedAct10() {
           <div className="bg-white border border-neutral-200 rounded-lg p-4 text-neutral-600">
             <p>
               The variance is estimated from the data &mdash; not assumed known. This is a key
-              difference from the mSPRT (Act 7), which required known variance. Howard et al.&apos;s
-              framework (Act 8) permits this.
+              difference from the mSPRT (Act 7), which required known variance. <a href="#ref-howard-2021" className="text-blue-600 hover:text-blue-800">Howard et al.&apos;s
+              framework</a> (Act 8) permits this.
             </p>
           </div>
         </div>

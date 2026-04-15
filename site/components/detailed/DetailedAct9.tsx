@@ -69,7 +69,7 @@ export function DetailedAct9() {
                   </tr>
                 </thead>
                 <tbody>
-                  <tr><td className="border border-neutral-300 p-3">Peeking inflates errors</td><td className="border border-neutral-300 p-3">Sequential CI (Howard et al.)</td><td className="border border-neutral-300 p-3">Acts 5, 8</td></tr>
+                  <tr><td className="border border-neutral-300 p-3">Peeking inflates errors</td><td className="border border-neutral-300 p-3">Sequential CI (<a href="#ref-howard-2021" className="text-blue-600 hover:text-blue-800">Howard et al.</a>)</td><td className="border border-neutral-300 p-3">Acts 5, 8</td></tr>
                   <tr className="bg-neutral-50"><td className="border border-neutral-300 p-3">High variance / slow experiments</td><td className="border border-neutral-300 p-3">Regression adjustment (CUPED)</td><td className="border border-neutral-300 p-3">Act 11</td></tr>
                   <tr><td className="border border-neutral-300 p-3">Need interpretable output</td><td className="border border-neutral-300 p-3">Relative lift with CI</td><td className="border border-neutral-300 p-3">Act 12</td></tr>
                 </tbody>

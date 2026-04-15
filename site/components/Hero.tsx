@@ -1,6 +1,6 @@
 export function Hero() {
   return (
-    <section className="bg-gradient-to-br from-primary-50 to-secondary-50 py-20">
+    <section id="intro" className="bg-gradient-to-br from-primary-50 to-secondary-50 py-20">
       <div className="max-w-4xl mx-auto px-4 text-center">
         <h1 className="text-4xl md:text-6xl font-bold text-neutral-900 mb-6">
           Sequential Testing for A/B Experiments
@@ -21,8 +21,7 @@ export function Hero() {
         <p>
           <strong>The solution.</strong>{' '}
           <em>Sequential testing</em> provides statistical methods that remain valid
-          no matter when or how often you check. Modern platforms like Eppo build
-          this into their pipeline automatically.
+          no matter when or how often you check.
         </p>
         <p>
           <strong>This guide.</strong>{' '}

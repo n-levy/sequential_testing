@@ -49,7 +49,7 @@ export function DetailedAct11() {
         </h4>
 
         <div className="text-neutral-700 space-y-3 mb-6">
-          <p>Recall CUPED (Deng et al., 2013):</p>
+          <p>Recall CUPED (<a href="#ref-deng-2013" className="text-blue-600 hover:text-blue-800">Deng et al., 2013</a>):</p>
           <BlockMath>{`Y^* = Y - \\theta(X - \\EE[X])`}</BlockMath>
           <p>
             with optimal <InlineMath>{`\\theta = \\Cov(Y,X)/\\Var(X)`}</InlineMath> and variance
@@ -120,7 +120,7 @@ export function DetailedAct11() {
               <em>pre-experiment</em> period (randomisation has not yet occurred).
             </p>
             <p>
-              <strong>NEVER use post-treatment covariates.</strong> Deng et al. demonstrated that
+              <strong>NEVER use post-treatment covariates.</strong> <a href="#ref-deng-2013" className="text-blue-600 hover:text-blue-800">Deng et al.</a> demonstrated that
               using an in-experiment covariate produced <strong>directionally opposite
               conclusions</strong>, because the treatment itself changed <InlineMath>{`X`}</InlineMath>.
             </p>
@@ -136,7 +136,7 @@ export function DetailedAct11() {
             <li>Covariates come from the pre-experiment period (independent of treatment).</li>
             <li>Regression adjustment changes only the variance, not the mean treatment effect.</li>
             <li>The sub-Gaussian condition (Act 8) is satisfied by the adjusted residuals.</li>
-            <li>Ville&apos;s inequality applies to the resulting supermartingale.</li>
+            <li><a href="#ref-ville-1939" className="text-blue-600 hover:text-blue-800">Ville&apos;s inequality</a> applies to the resulting supermartingale.</li>
           </ol>
           <div className="bg-white border border-neutral-200 rounded-lg p-4 text-neutral-600 mt-2">
             <p>

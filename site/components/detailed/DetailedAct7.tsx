@@ -29,7 +29,7 @@ export function DetailedAct7() {
               are fast. Otherwise, slow.
             </p>
             <p>
-              Herbert Robbins proposed a radical alternative in 1970:{' '}
+              <a href="#ref-robbins-1970" className="text-blue-600 hover:text-blue-800">Herbert Robbins</a> proposed a radical alternative in 1970:{' '}
               <strong>bet on all horses simultaneously.</strong> Instead of choosing one{' '}
               <InlineMath>{`\\delta`}</InlineMath>, spread your &ldquo;evidence budget&rdquo; across
               many possible effect sizes using a weighting scheme (a mixing distribution{' '}
@@ -91,7 +91,7 @@ export function DetailedAct7() {
           <h4 className="font-bold text-blue-900 mb-3">Intuitive Explanation</h4>
           <div className="text-neutral-800 space-y-3">
             <p>
-              Johari, Pekelis, and Walsh (2017) applied Robbins&apos; idea to the specific
+              <a href="#ref-johari-2017" className="text-blue-600 hover:text-blue-800">Johari, Pekelis, and Walsh (2017)</a> applied Robbins&apos; idea to the specific
               setting of A/B tests. They chose the Normal distribution as the mixing
               distribution <InlineMath>{`H`}</InlineMath> and derived a closed-form formula for
               the mixture likelihood ratio. They called it the{' '}
@@ -200,7 +200,7 @@ export function DetailedAct7() {
             <p>
               <strong>What&apos;s next:</strong> The mSPRT was a landmark &mdash; but it is not
               what Eppo uses. The next act introduces <strong>confidence sequences</strong> from
-              Howard et al. (2021), a more general framework that Eppo adopted instead.
+              <a href="#ref-howard-2021" className="text-blue-600 hover:text-blue-800">Howard et al. (2021)</a>, a more general framework that Eppo adopted instead.
             </p>
           </div>
         </div>

@@ -193,10 +193,10 @@ export function DetailedAct13() {
         <div className="bg-neutral-100 border border-neutral-300 rounded-lg p-6 mb-8">
           <h4 className="font-semibold text-neutral-700 mb-3">Historical Note</h4>
           <p className="text-neutral-700">
-            <strong>Stuart Pocock</strong> (1977) and <strong>Peter O&apos;Brien &amp; Thomas
-            Fleming</strong> (1979) developed these group sequential methods for clinical trials,
-            where stopping a trial early can save lives. Their work sits between Wald&apos;s SPRT
-            (1945) and Howard et al.&apos;s continuous framework (2021) in the historical timeline.
+            <strong><a href="#ref-pocock-1977" className="text-blue-600 hover:text-blue-800">Stuart Pocock</a></strong> (1977) and <strong><a href="#ref-obrien-fleming-1979" className="text-blue-600 hover:text-blue-800">Peter O&apos;Brien &amp; Thomas
+            Fleming</a></strong> (1979) developed these group sequential methods for clinical trials,
+            where stopping a trial early can save lives. Their work sits between <a href="#ref-wald-1945" className="text-blue-600 hover:text-blue-800">Wald&apos;s SPRT
+            (1945)</a> and <a href="#ref-howard-2021" className="text-blue-600 hover:text-blue-800">Howard et al.&apos;s continuous framework (2021)</a> in the historical timeline.
             The key insight of all three: if you want to peek, you must pay &mdash; but the
             price is negotiable.
           </p>

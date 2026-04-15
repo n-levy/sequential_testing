@@ -19,6 +19,8 @@ import { DetailedSummary } from '@/components/detailed/DetailedSummary'
 import { DetailedReferences } from '@/components/detailed/DetailedReferences'
 
 const DETAILED_ITEMS = [
+  { id: '_home', label: 'Home' },
+  { id: 'intro', label: 'Introduction' },
   { id: 'act-0', label: 'Act 0 – Peeking Problem' },
   { id: 'act-1', label: 'Act 1 – Random Walk' },
   { id: 'act-2', label: 'Act 2 – Martingale' },

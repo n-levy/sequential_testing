@@ -28,17 +28,14 @@ export function Act1() {
               the new design wins.
             </p>
             <p>
-              But here is the dirty secret of traditional statistics:{' '}
+              But here is the problem:{' '}
               <strong>
                 the more often you check, the more likely you are to see a false positive.
               </strong>{' '}
               A test designed to have a 5% false positive rate can easily reach 20&ndash;30% if
               you peek at it repeatedly. One in four or five &ldquo;winning&rdquo; experiments
-              might actually be noise.
-            </p>
-            <p>
-              This is not a theoretical concern. It is the single most common statistical
-              mistake in online experimentation.
+              might actually be noise. That is, it results from randomness rather than
+              indicating a systematic difference between the Treatment and Control groups.
             </p>
           </div>
         </div>
@@ -49,7 +46,7 @@ export function Act1() {
           <h4 className="font-bold text-orange-900 mb-3">Simulation</h4>
           <div className="text-neutral-800 space-y-3">
             <p>
-              <strong>What is being simulated:</strong>{' '}
+              <strong>Setup:</strong>{' '}
               1,000 A/B experiments where there is <em>no real effect</em> &mdash; any apparent
               difference is pure noise.
             </p>
@@ -60,7 +57,7 @@ export function Act1() {
             </p>
             <p>
               A counter shows: &ldquo;Number of times <InlineMath>{`p < 0.05`}</InlineMath> so
-              far.&rdquo; The user watches the <InlineMath>{`p`}</InlineMath>-value bounce
+              far.&rdquo; Watch the <InlineMath>{`p`}</InlineMath>-value bounce
               around. Every time it dips below <InlineMath>{`0.05`}</InlineMath>, it lights up
               red &mdash; a false positive.
             </p>

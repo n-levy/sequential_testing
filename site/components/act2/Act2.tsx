@@ -47,7 +47,7 @@ export function Act2() {
           <h4 className="font-bold text-orange-900 mb-3">Simulation</h4>
           <div className="text-neutral-800 space-y-3">
             <p>
-              <strong>What is being simulated:</strong>{' '}
+              <strong>Setup:</strong>{' '}
               A single A/B experiment flowing through Eppo&apos;s pipeline, stage by stage.
             </p>
             <p>
@@ -118,7 +118,7 @@ export function Act2() {
             &mdash; and that&apos;s where the treatment effect hides.&rdquo;
           </p>
           <p className="text-neutral-700 mb-3">
-            This is a generalisation of a technique called CUPED (Deng et al., 2013).
+            This is a generalisation of a technique called CUPED (<a href="#ref-deng-2013" className="text-blue-600 hover:text-blue-800">Deng et al., 2013</a>).
             The stronger the correlation <InlineMath>{`\\rho`}</InlineMath> between pre-experiment
             and experiment behaviour, the more noise is removed:
           </p>
@@ -192,7 +192,7 @@ export function Act2() {
           </ul>
           <p className="text-neutral-700 mt-3">
             This formula comes from the <em>confidence sequence</em> framework of
-            Howard et al. (2021), specifically the Normal mixture boundary. The
+            <a href="#ref-howard-2021" className="text-blue-600 hover:text-blue-800">Howard et al. (2021)</a>, specifically the Normal mixture boundary. The
             mathematical guarantee: the true treatment effect lies inside the CI at{' '}
             <em>all times simultaneously</em> with probability{' '}
             <InlineMath>{`\\geq 1 - \\alpha`}</InlineMath>.
@@ -254,7 +254,7 @@ export function Act2() {
             </p>
             <p><strong>What makes it work:</strong></p>
             <ul className="list-disc list-inside space-y-1 ml-4">
-              <li><strong>Framework:</strong> Howard et al. (2021) confidence sequences.</li>
+              <li><strong>Framework:</strong> <a href="#ref-howard-2021" className="text-blue-600 hover:text-blue-800">Howard et al. (2021)</a> confidence sequences.</li>
               <li><strong>Noise reduction:</strong> Generalised CUPED via per-group regression.</li>
               <li><strong>Output:</strong> Relative lift with a CI that is valid at any time.</li>
             </ul>

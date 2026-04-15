@@ -19,7 +19,7 @@ export function DetailedAct6() {
           <div className="text-neutral-800 space-y-3">
             <p>
               Two coins: one fair (<InlineMath>{`H_0`}</InlineMath>), one biased (<InlineMath>{`H_1`}</InlineMath>).
-              The user does not know which they have.
+              You do not know which you have.
             </p>
             <p>
               <InlineMath>{`\\Lambda_n`}</InlineMath> is plotted as a path. Two thresholds:
@@ -39,7 +39,7 @@ export function DetailedAct6() {
           <h4 className="font-bold text-blue-900 mb-3">Intuitive Explanation</h4>
           <div className="text-neutral-800 space-y-3">
             <p>
-              Abraham Wald (1943, published 1945) asked: given that we can peek at the data
+              <a href="#ref-wald-1945" className="text-blue-600 hover:text-blue-800">Abraham Wald</a> (1943, published 1945) asked: given that we can peek at the data
               anytime, what is the most <em>efficient</em> way to decide between two hypotheses?
             </p>
             <p>
@@ -142,7 +142,7 @@ export function DetailedAct6() {
           <h4 className="font-semibold text-neutral-700 mb-3">Historical Note</h4>
           <p className="text-neutral-700">
             Wald conjectured in his 1945 paper that the SPRT is <em>exactly</em> optimal.
-            Three years later, Wald &amp; Wolfowitz (1948) proved the general result: among{' '}
+            Three years later, <a href="#ref-wald-wolfowitz-1948" className="text-blue-600 hover:text-blue-800">Wald &amp; Wolfowitz (1948)</a> proved the general result: among{' '}
             <strong>all</strong> sequential tests with the same or smaller error probabilities{' '}
             <InlineMath>{`(\\alpha, \\beta)`}</InlineMath>, the SPRT minimises the expected sample
             size under both <InlineMath>{`H_0`}</InlineMath> and <InlineMath>{`H_1`}</InlineMath> simultaneously.

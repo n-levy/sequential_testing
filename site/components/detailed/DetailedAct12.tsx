@@ -91,7 +91,7 @@ export function DetailedAct12() {
         </h4>
         <div className="text-neutral-700 space-y-3 mb-6">
           <p>
-            Schmit &amp; Miller set <InlineMath>{`\\nu = M \\cdot \\hat{\\sigma}^2`}</InlineMath>,
+            <a href="#ref-schmit-miller-2024" className="text-blue-600 hover:text-blue-800">Schmit &amp; Miller</a> set <InlineMath>{`\\nu = M \\cdot \\hat{\\sigma}^2`}</InlineMath>,
             where <InlineMath>{`M`}</InlineMath> is the <strong>expected total sample size</strong>.
           </p>
           <div className="overflow-x-auto">
@@ -123,7 +123,7 @@ export function DetailedAct12() {
           <h4 className="font-bold text-green-900 mb-3">What Eppo Actually Uses (Summary)</h4>
           <div className="text-neutral-800 space-y-2">
             <ul className="list-disc ml-6 space-y-1">
-              <li><strong>Framework:</strong> Howard et al. (2021) confidence sequences (not the mSPRT of Johari et al. 2017).</li>
+              <li><strong>Framework:</strong> <a href="#ref-howard-2021" className="text-blue-600 hover:text-blue-800">Howard et al. (2021)</a> confidence sequences (not the mSPRT of <a href="#ref-johari-2017" className="text-blue-600 hover:text-blue-800">Johari et al. 2017</a>).</li>
               <li><strong>Boundary:</strong> The Normal mixture boundary <InlineMath>{`u(v) = \\sqrt{(v+\\nu)\\log\\frac{v+\\nu}{\\nu\\alpha^2}}`}</InlineMath>.</li>
               <li><strong>Tuning:</strong> <InlineMath>{`\\nu = M\\hat{\\sigma}^2`}</InlineMath>, where <InlineMath>{`M`}</InlineMath> is the expected total sample size.</li>
               <li><strong>Variance:</strong> Estimated from data (not assumed known).</li>

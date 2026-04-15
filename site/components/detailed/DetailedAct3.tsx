@@ -18,7 +18,7 @@ export function DetailedAct3() {
           <h4 className="font-bold text-blue-900 mb-3">Simulation</h4>
           <div className="text-neutral-800 space-y-3">
             <p>
-              The user is presented with a coin and must decide: fair or biased?
+              You are presented with a coin and must decide: fair or biased?
               Two panels run side by side &mdash; one with a fair coin, one with a biased coin.
               For small bias, the sequences look nearly identical for many flips.
             </p>
@@ -143,7 +143,7 @@ export function DetailedAct3() {
         <div className="text-neutral-700 space-y-3 mb-6">
           <p>
             Before any data: <InlineMath>{`\\Lambda_0 = 1`}</InlineMath>.
-            Neither hypothesis is favoured. This will be important for Ville&apos;s inequality
+            Neither hypothesis is favoured. This will be important for <a href="#ref-ville-1939" className="text-blue-600 hover:text-blue-800">Ville&apos;s inequality</a>
             (which requires the starting value to equal 1).
           </p>
         </div>

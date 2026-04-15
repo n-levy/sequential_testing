@@ -9,6 +9,8 @@ import { MathReference } from '@/components/MathReference'
 import { References } from '@/components/References'
 
 const SHORT_ITEMS = [
+  { id: '_home', label: 'Home' },
+  { id: 'intro', label: 'Introduction' },
   { id: 'act1', label: 'Act 1 – Peeking Problem' },
   { id: 'act2', label: 'Act 2 – Eppo Solution' },
   { id: 'act3', label: 'Act 3 – DIY Alternatives' },

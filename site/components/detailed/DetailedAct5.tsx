@@ -120,7 +120,7 @@ export function DetailedAct5() {
         </div>
 
         {/* Step 2: Ville */}
-        <h4 className="text-lg font-semibold text-neutral-800 mb-3">Step 2: Ville&apos;s Inequality (1939)</h4>
+        <h4 className="text-lg font-semibold text-neutral-800 mb-3">Step 2: <a href="#ref-ville-1939" className="text-blue-600 hover:text-blue-800">Ville&apos;s Inequality (1939)</a></h4>
 
         <div className="bg-white border-2 border-neutral-400 rounded-lg p-5 mb-6">
           <p className="font-semibold text-neutral-900 mb-2">Theorem (Ville&apos;s Inequality)</p>
@@ -209,10 +209,10 @@ export function DetailedAct5() {
         <div className="bg-neutral-100 border border-neutral-300 rounded-lg p-6 mb-8">
           <h4 className="font-semibold text-neutral-700 mb-3">Historical Note</h4>
           <p className="text-neutral-700">
-            Jean Ville proved this inequality in his 1939 doctoral thesis,{' '}
+            <a href="#ref-ville-1939" className="text-blue-600 hover:text-blue-800">Jean Ville</a> proved this inequality in his 1939 doctoral thesis,{' '}
             <em>&Eacute;tude critique de la notion de collectif</em>. It predated the
-            formal development of martingale theory by Doob (1953) and was largely
-            overlooked for decades. Robbins (1970) was among the first to recognise its
+            formal development of martingale theory by <a href="#ref-doob-1953" className="text-blue-600 hover:text-blue-800">Doob (1953)</a> and was largely
+            overlooked for decades. <a href="#ref-robbins-1970" className="text-blue-600 hover:text-blue-800">Robbins (1970)</a> was among the first to recognise its
             practical importance for sequential testing &mdash; a connection we explore in Act 7.
           </p>
         </div>

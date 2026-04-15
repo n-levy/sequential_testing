@@ -133,7 +133,7 @@ export function DetailedAct2() {
 
         {/* Doob's Optional Stopping Theorem */}
         <h4 className="text-lg font-semibold text-neutral-800 mb-3">
-          Doob&apos;s Optional Stopping Theorem (1953)
+          <a href="#ref-doob-1953" className="text-blue-600 hover:text-blue-800">Doob&apos;s</a> Optional Stopping Theorem (1953)
         </h4>
 
         <div className="bg-white border-2 border-neutral-400 rounded-lg p-5 mb-6">
@@ -249,7 +249,7 @@ export function DetailedAct2() {
         <div className="bg-neutral-100 border border-neutral-300 rounded-lg p-6 mb-8">
           <h4 className="font-semibold text-neutral-700 mb-3">Historical Note</h4>
           <p className="text-neutral-700">
-            Joseph L. Doob formalised martingale theory in his 1953 monograph{' '}
+            <a href="#ref-doob-1953" className="text-blue-600 hover:text-blue-800">Joseph L. Doob</a> formalised martingale theory in his 1953 monograph{' '}
             <em>Stochastic Processes</em>. The name &ldquo;martingale&rdquo; comes from a French
             term for a type of betting strategy &mdash; the very doubling strategy we just
             debunked.

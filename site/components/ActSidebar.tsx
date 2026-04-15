@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
+import { useRouter } from 'next/navigation'
 
 interface SidebarItem {
   id: string
@@ -14,14 +15,14 @@ interface ActSidebarProps {
 export function ActSidebar({ items }: ActSidebarProps) {
   const [activeId, setActiveId] = useState<string>('')
   const [open, setOpen] = useState(false)
+  const router = useRouter()
 
   useEffect(() => {
+    const observableItems = items.filter(item => !item.id.startsWith('_'))
     const observer = new IntersectionObserver(
       (entries) => {
-        // Pick the first entry that is intersecting
         const visible = entries.filter(e => e.isIntersecting)
         if (visible.length > 0) {
-          // Use the one closest to the top
           visible.sort((a, b) => a.boundingClientRect.top - b.boundingClientRect.top)
           setActiveId(visible[0].target.id)
         }
@@ -29,7 +30,7 @@ export function ActSidebar({ items }: ActSidebarProps) {
       { rootMargin: '-80px 0px -60% 0px', threshold: 0 }
     )
 
-    const targets = items
+    const targets = observableItems
       .map(item => document.getElementById(item.id))
       .filter(Boolean) as HTMLElement[]
 
@@ -37,7 +38,12 @@ export function ActSidebar({ items }: ActSidebarProps) {
     return () => observer.disconnect()
   }, [items])
 
-  const scrollTo = (id: string) => {
+  const handleClick = (id: string) => {
+    if (id === '_home') {
+      router.push('/')
+      setOpen(false)
+      return
+    }
     const el = document.getElementById(id)
     if (el) {
       el.scrollIntoView({ behavior: 'smooth', block: 'start' })
@@ -66,11 +72,11 @@ export function ActSidebar({ items }: ActSidebarProps) {
       {/* Sidebar */}
       <aside
         className={`
-          fixed top-0 left-0 z-40 h-screen pt-16 pb-4 overflow-y-auto
+          fixed top-16 left-0 z-30 h-[calc(100vh-4rem)] pb-4 overflow-y-auto
           w-56 bg-white border-r border-neutral-200 shadow-sm
           transition-transform duration-200
-          lg:translate-x-0 lg:z-30
-          ${open ? 'translate-x-0' : '-translate-x-full'}
+          lg:translate-x-0
+          ${open ? 'translate-x-0 z-50' : '-translate-x-full lg:translate-x-0'}
         `}
       >
         <nav className="px-2 py-4">
@@ -78,7 +84,7 @@ export function ActSidebar({ items }: ActSidebarProps) {
             {items.map((item) => (
               <li key={item.id}>
                 <button
-                  onClick={() => scrollTo(item.id)}
+                  onClick={() => handleClick(item.id)}
                   className={`
                     w-full text-left px-3 py-1.5 rounded text-sm transition-colors
                     ${activeId === item.id

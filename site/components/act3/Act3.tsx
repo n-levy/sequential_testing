@@ -82,7 +82,7 @@ export function Act3() {
             onClick={() => setSelectedMethod(selectedMethod === 'pocock' ? null : 'pocock')}
           >
             <CardHeader>
-              <CardTitle className="text-orange-700">Method 2: Pocock (1977)</CardTitle>
+              <CardTitle className="text-orange-700">Method 2: <a href="#ref-pocock-1977" className="text-blue-600 hover:text-blue-800">Pocock (1977)</a></CardTitle>
             </CardHeader>
             <CardContent>
               <p className="text-sm text-neutral-600">
@@ -98,7 +98,7 @@ export function Act3() {
             onClick={() => setSelectedMethod(selectedMethod === 'obf' ? null : 'obf')}
           >
             <CardHeader>
-              <CardTitle className="text-blue-700">Method 3: O&apos;Brien&ndash;Fleming (1979)</CardTitle>
+              <CardTitle className="text-blue-700">Method 3: <a href="#ref-obrien-fleming-1979" className="text-blue-600 hover:text-blue-800">O&apos;Brien&ndash;Fleming (1979)</a></CardTitle>
             </CardHeader>
             <CardContent>
               <p className="text-sm text-neutral-600">

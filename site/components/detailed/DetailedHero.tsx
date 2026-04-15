@@ -1,6 +1,6 @@
 export function DetailedHero() {
   return (
-    <section className="bg-gradient-to-br from-purple-50 to-blue-50 py-20">
+    <section id="intro" className="bg-gradient-to-br from-purple-50 to-blue-50 py-20">
       <div className="max-w-4xl mx-auto px-4 text-center">
         <h1 className="text-4xl md:text-6xl font-bold text-neutral-900 mb-6">
           From Random Walks to Sequential Testing
@@ -13,11 +13,11 @@ export function DetailedHero() {
       <div className="max-w-3xl mx-auto px-4 mt-10 text-neutral-700 space-y-4">
         <p>
           <strong>The story.</strong>{' '}
-          A test where you can peek at results as often as you like and the false positive
-          guarantee still holds. Getting there requires some beautiful mathematics, built
-          up one step at a time: from coin flips to random walks, from gambling to
-          martingales, from likelihood ratios to Ville&apos;s inequality, from Wald&apos;s
-          SPRT to modern confidence sequences.
+          Sequential testing enables you to peek at test results as often as you like and the false positive
+          guarantee still holds. Getting there has required several developments in statistics.
+          This webpage takes you through that journey, one step at a time: beginning with coin
+          flips and random walks, proceeding with gambling examples in 1939 and testing ammunition
+          in WWII, all the way up to modern confidence sequences.
         </p>
         <p>
           <strong>Format.</strong>{' '}

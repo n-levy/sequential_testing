@@ -46,7 +46,7 @@ export function DetailedAct4() {
             </p>
             <p>
               This <em>is</em> a martingale &mdash; exactly like the gambler&apos;s cumulative
-              winnings. Everything from Act 2 applies: Doob&apos;s theorem says you cannot
+              winnings. Everything from Act 2 applies: <a href="#ref-doob-1953" className="text-blue-600 hover:text-blue-800">Doob&apos;s theorem</a> says you cannot
               systematically make <InlineMath>{`\\Lambda_n`}</InlineMath> large by choosing clever
               peeking times.
             </p>
@@ -161,7 +161,7 @@ export function DetailedAct4() {
           <p>
             So <InlineMath>{`\\Lambda_n`}</InlineMath> is a{' '}
             <strong>non-negative martingale starting at 1</strong>. Remember these properties &mdash;
-            they are exactly what Ville&apos;s inequality needs.
+            they are exactly what <a href="#ref-ville-1939" className="text-blue-600 hover:text-blue-800">Ville&apos;s inequality</a> needs.
           </p>
         </div>
 

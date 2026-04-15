@@ -139,11 +139,11 @@ export function DetailedAct8() {
         <h4 className="text-lg font-semibold text-neutral-800 mb-3">Connection to Robbins and the mSPRT</h4>
 
         <div className="text-neutral-700 space-y-3 mb-6">
-          <p>Howard et al. explicitly credit Robbins (1970) as their starting point:</p>
+          <p>Howard et al. explicitly credit <a href="#ref-robbins-1970" className="text-blue-600 hover:text-blue-800">Robbins (1970)</a> as their starting point:</p>
           <ul className="list-disc ml-6 space-y-2">
-            <li><strong>Robbins (1970):</strong> introduced the mixture approach and confidence sequences, but only for known-variance Normal data.</li>
-            <li><strong>Johari et al. (2017):</strong> made it practical for A/B testing via the mSPRT, but still assumed known variance and parametric (Normal) data.</li>
-            <li><strong>Howard et al. (2021): extended to nonparametric settings</strong> via the sub-<InlineMath>{`\\psi`}</InlineMath> framework. The boundary works for <em>any</em> sub-Gaussian data (not just Normal), the variance can be unknown (estimated from data), and the coverage guarantee is exact (non-asymptotic).</li>
+            <li><strong><a href="#ref-robbins-1970" className="text-blue-600 hover:text-blue-800">Robbins (1970)</a>:</strong> introduced the mixture approach and confidence sequences, but only for known-variance Normal data.</li>
+            <li><strong><a href="#ref-johari-2017" className="text-blue-600 hover:text-blue-800">Johari et al. (2017)</a>:</strong> made it practical for A/B testing via the mSPRT, but still assumed known variance and parametric (Normal) data.</li>
+            <li><strong><a href="#ref-howard-2021" className="text-blue-600 hover:text-blue-800">Howard et al. (2021)</a>: extended to nonparametric settings</strong> via the sub-<InlineMath>{`\psi`}</InlineMath> framework. The boundary works for <em>any</em> sub-Gaussian data (not just Normal), the variance can be unknown (estimated from data), and the coverage guarantee is exact (non-asymptotic).</li>
           </ul>
         </div>
 
