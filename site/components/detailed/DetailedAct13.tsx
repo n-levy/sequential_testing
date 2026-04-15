@@ -9,7 +9,7 @@ export function DetailedAct13() {
       <div className="max-w-4xl mx-auto px-4">
         <div className="text-center mb-12">
           <h2 className="text-3xl font-bold text-neutral-900 mb-4">
-            Act 13 &mdash; What If You Don&apos;t Have Eppo? (The Poor Man&apos;s Sequential Test)
+            Act 13 &mdash; What If You Don&apos;t Have Eppo?
           </h2>
         </div>
 

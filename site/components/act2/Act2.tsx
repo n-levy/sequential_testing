@@ -42,7 +42,6 @@ export function Act2() {
         </div>
 
         {/* ── Simulation ── */}
-        <h3 className="text-2xl font-bold text-neutral-900 mb-4">The Simulation</h3>
 
         <div className="bg-orange-50 border border-orange-400 rounded-lg p-6 mb-8">
           <h4 className="font-bold text-orange-900 mb-3">Simulation</h4>

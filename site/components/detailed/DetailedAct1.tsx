@@ -14,7 +14,6 @@ export function DetailedAct1() {
         </div>
 
         {/* Simulation description */}
-        <h3 className="text-2xl font-bold text-neutral-900 mb-4">The Simulation</h3>
 
         <div className="bg-blue-50 border border-blue-200 rounded-lg p-6 mb-8">
           <h4 className="font-bold text-blue-900 mb-3">Simulation</h4>
