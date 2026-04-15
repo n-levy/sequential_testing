@@ -8,7 +8,7 @@ export function Hero() {
           Sequential Testing for A/B Experiments
         </h1>
         <p className="text-xl text-neutral-700 mb-4 max-w-3xl mx-auto">
-          A Practical Guide in Three Acts
+          A Focused Guide in Three Acts
         </p>
       </div>
 
