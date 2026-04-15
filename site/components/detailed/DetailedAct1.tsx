@@ -137,9 +137,13 @@ export function DetailedAct1() {
           </div>
           <div className="bg-white border border-neutral-200 rounded-lg p-4 text-neutral-600">
             <p>
-              After 100 steps, the typical distance from zero is{' '}
-              <InlineMath>{`\\sqrt{100} = 10`}</InlineMath>.
-              After 10,000 steps, it is <InlineMath>{`\\sqrt{10{,}000} = 100`}</InlineMath>.
+              The expected position is always zero: <InlineMath>{`\\EE[S_n] = 0`}</InlineMath>.
+              But positions spread out over time. By the normal approximation,
+              about 68% of walks end up within{' '}
+              <InlineMath>{`\\pm\\sqrt{n}`}</InlineMath> of zero (one standard deviation),
+              and about 95% within <InlineMath>{`\\pm 2\\sqrt{n}`}</InlineMath> (two standard deviations).
+              For example, after 100 steps, 68% of walks are within ±10
+              and 95% within ±20.
               The spread grows with the <em>square root</em> of the number of steps, not the
               number itself.
             </p>

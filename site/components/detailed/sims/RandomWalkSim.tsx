@@ -2,6 +2,7 @@
 
 import { useState, useRef, useEffect, useCallback } from 'react'
 import * as d3 from 'd3'
+import { InlineMath } from '@/components/ui/Math'
 
 const COLORS = ['#3b82f6', '#ef4444', '#22c55e', '#f59e0b', '#8b5cf6', '#ec4899', '#14b8a6', '#f97316']
 
@@ -31,7 +32,7 @@ export function RandomWalkSim() {
     const svg = d3.select(svgRef.current)
     svg.selectAll('*').remove()
 
-    const margin = { top: 20, right: 20, bottom: 45, left: 55 }
+    const margin = { top: 20, right: 50, bottom: 45, left: 55 }
     const width = 600 - margin.left - margin.right
     const height = 340 - margin.top - margin.bottom
 
@@ -40,32 +41,56 @@ export function RandomWalkSim() {
     const x = d3.scaleLinear().domain([0, nSteps]).range([0, width])
     const allVals = paths.flat()
     const yExtent = d3.extent(allVals) as [number, number]
-    const pad = Math.max(Math.abs(yExtent[0]), Math.abs(yExtent[1]), 5) * 1.15
+    const pad = Math.max(Math.abs(yExtent[0]), Math.abs(yExtent[1]), 2 * Math.sqrt(nSteps) + 5) * 1.1
     const y = d3.scaleLinear().domain([-pad, pad]).range([height, 0])
 
     // Grid
     g.append('g').call(d3.axisLeft(y).ticks(8).tickSize(-width).tickFormat(() => ''))
       .selectAll('line').attr('stroke', '#f3f4f6')
 
-    // ±√n envelope
-    const envData = Array.from({ length: nSteps + 1 }, (_, i) => i)
+    // Downsample for performance with large step counts
+    const thin = Math.max(1, Math.floor(nSteps / 2000))
+
+    // ±√n and ±2√n envelopes
+    const envData: number[] = []
+    for (let i = 0; i <= nSteps; i += thin) envData.push(i)
+    if (envData[envData.length - 1] !== nSteps) envData.push(nSteps)
     const envLine = d3.line<number>().x(d => x(d)).curve(d3.curveMonotoneX)
 
+    // ±√n (68% of walks)
     g.append('path')
       .datum(envData)
       .attr('d', envLine.y(d => y(Math.sqrt(d))))
-      .attr('fill', 'none').attr('stroke', '#d1d5db').attr('stroke-dasharray', '4,4').attr('stroke-width', 1.5)
+      .attr('fill', 'none').attr('stroke', '#9ca3af').attr('stroke-dasharray', '6,3').attr('stroke-width', 1.5)
     g.append('path')
       .datum(envData)
       .attr('d', envLine.y(d => y(-Math.sqrt(d))))
-      .attr('fill', 'none').attr('stroke', '#d1d5db').attr('stroke-dasharray', '4,4').attr('stroke-width', 1.5)
+      .attr('fill', 'none').attr('stroke', '#9ca3af').attr('stroke-dasharray', '6,3').attr('stroke-width', 1.5)
 
+    // ±2√n (95% of walks)
+    g.append('path')
+      .datum(envData)
+      .attr('d', envLine.y(d => y(2 * Math.sqrt(d))))
+      .attr('fill', 'none').attr('stroke', '#d1d5db').attr('stroke-dasharray', '3,3').attr('stroke-width', 1)
+    g.append('path')
+      .datum(envData)
+      .attr('d', envLine.y(d => y(-2 * Math.sqrt(d))))
+      .attr('fill', 'none').attr('stroke', '#d1d5db').attr('stroke-dasharray', '3,3').attr('stroke-width', 1)
+
+    // Envelope labels
+    const mathFont = "'STIX Two Math', 'Times New Roman', Georgia, serif"
     g.append('text')
-      .attr('x', x(nSteps) + 2).attr('y', y(Math.sqrt(nSteps)) - 4)
-      .text('+√n').attr('fill', '#9ca3af').attr('font-size', '10px')
+      .attr('x', x(nSteps) + 3).attr('y', y(Math.sqrt(nSteps)) - 4)
+      .text('+\u221An').attr('fill', '#6b7280').attr('font-size', '11px').attr('font-family', mathFont)
     g.append('text')
-      .attr('x', x(nSteps) + 2).attr('y', y(-Math.sqrt(nSteps)) + 12)
-      .text('-√n').attr('fill', '#9ca3af').attr('font-size', '10px')
+      .attr('x', x(nSteps) + 3).attr('y', y(-Math.sqrt(nSteps)) + 12)
+      .text('\u2212\u221An').attr('fill', '#6b7280').attr('font-size', '11px').attr('font-family', mathFont)
+    g.append('text')
+      .attr('x', x(nSteps) + 3).attr('y', y(2 * Math.sqrt(nSteps)) - 4)
+      .text('+2\u221An').attr('fill', '#9ca3af').attr('font-size', '11px').attr('font-family', mathFont)
+    g.append('text')
+      .attr('x', x(nSteps) + 3).attr('y', y(-2 * Math.sqrt(nSteps)) + 12)
+      .text('\u22122\u221An').attr('fill', '#9ca3af').attr('font-size', '11px').attr('font-family', mathFont)
 
     // Zero line
     g.append('line')
@@ -73,14 +98,18 @@ export function RandomWalkSim() {
       .attr('y1', y(0)).attr('y2', y(0))
       .attr('stroke', '#6b7280').attr('stroke-width', 1)
 
-    // Paths
-    const line = d3.line<number>()
-      .x((_, i) => x(i))
-      .y(d => y(d))
+    // Paths (downsampled for rendering)
+    const line = d3.line<[number, number]>()
+      .x(d => x(d[0]))
+      .y(d => y(d[1]))
 
     paths.forEach((path, pIdx) => {
+      const data: [number, number][] = []
+      for (let i = 0; i < path.length; i++) {
+        if (i % thin === 0 || i === path.length - 1) data.push([i, path[i]])
+      }
       const p = g.append('path')
-        .datum(path)
+        .datum(data)
         .attr('d', line)
         .attr('fill', 'none')
         .attr('stroke', COLORS[pIdx % COLORS.length])
@@ -95,7 +124,8 @@ export function RandomWalkSim() {
     })
 
     // Axes
-    g.append('g').attr('transform', `translate(0,${height})`).call(d3.axisBottom(x).ticks(8))
+    g.append('g').attr('transform', `translate(0,${height})`)
+      .call(d3.axisBottom(x).ticks(8).tickFormat(d => d3.format(',')(d as number)))
       .selectAll('text').attr('font-size', '11px')
     g.append('g').call(d3.axisLeft(y).ticks(8))
       .selectAll('text').attr('font-size', '11px')
@@ -108,7 +138,7 @@ export function RandomWalkSim() {
       .attr('transform', 'rotate(-90)')
       .attr('x', -height / 2).attr('y', -40)
       .attr('text-anchor', 'middle').attr('font-size', '12px').attr('fill', '#6b7280')
-      .text('Position (Sₙ)')
+      .text('Position (S\u2099)')
   }, [paths, nSteps])
 
   return (
@@ -118,7 +148,7 @@ export function RandomWalkSim() {
           <div className="flex-1">
             <h4 className="font-bold text-neutral-900 mb-1">Random Walk Simulation</h4>
             <p className="text-sm text-neutral-600">
-              Watch coin-flip random walks fan out over time. The dashed lines show the ±√n envelope.
+              Watch coin-flip random walks fan out over time. Dashed lines show the ±√n and ±2√n envelopes.
             </p>
           </div>
           <button
@@ -135,7 +165,7 @@ export function RandomWalkSim() {
               Steps: {nSteps}
             </label>
             <input
-              type="range" min={50} max={1000} step={50} value={nSteps}
+              type="range" min={50} max={10000} step={50} value={nSteps}
               onChange={e => setNSteps(+e.target.value)}
               className="w-full accent-blue-600"
             />
@@ -170,7 +200,7 @@ export function RandomWalkSim() {
           <p className="text-sm text-blue-800">
             <strong>What you&apos;re seeing:</strong> Each path is a cumulative sum of ±1 coin flips.
             {prob === 0.5
-              ? ' With a fair coin (p = 0.5), paths wander symmetrically around zero. The ±√n envelope captures the typical spread.'
+              ? <> With a fair coin (p = 0.5), the expected position is always zero. About 68% of the time the walk stays within <InlineMath>{`\\pm\\sqrt{n}`}</InlineMath> of zero, and about 95% within <InlineMath>{`\\pm 2\\sqrt{n}`}</InlineMath>.</>
               : ` With p = ${prob.toFixed(2)}, paths drift ${prob > 0.5 ? 'upward' : 'downward'} — the expected position after n steps is ${((2 * prob - 1)).toFixed(2)}n.`}
           </p>
         </div>
