@@ -13,8 +13,9 @@ export function Hero() {
       <div className="max-w-3xl mx-auto px-4 mt-10 text-neutral-700 space-y-4">
         <p>
           <strong>The problem.</strong>{' '}
-          Every company running A/B tests faces a temptation: peek at the results
-          before the experiment is over. Traditional statistics breaks when you do
+          Teams running A/B tests face a temptation: peek at the results
+          before the experiment is over, and stop before the planned runtime if
+          results are statistically significant. Traditional statistics breaks when you do
           this &mdash; the false positive rate inflates far beyond the promised 5%.
         </p>
         <p>
