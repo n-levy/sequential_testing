@@ -39,11 +39,8 @@ export default function Home() {
                 href="/short"
                 className="group block bg-white border-2 border-blue-200 rounded-xl p-8 hover:border-blue-500 hover:shadow-lg transition-all"
               >
-                <div className="text-blue-600 text-sm font-semibold uppercase tracking-wide mb-2">
-                  Practical
-                </div>
                 <h3 className="text-2xl font-bold text-neutral-900 mb-3 group-hover:text-blue-700 transition-colors">
-                  Short Version
+                  Focused
                 </h3>
                 <p className="text-neutral-600 mb-4">
                   For data scientists who want to <strong>implement sequential testing</strong> in
@@ -69,7 +66,7 @@ export default function Home() {
                   </li>
                 </ul>
                 <span className="text-blue-600 font-medium group-hover:underline">
-                  Start the short version &rarr;
+                  Start &rarr;
                 </span>
               </Link>
 
@@ -78,11 +75,8 @@ export default function Home() {
                 href="/detailed"
                 className="group block bg-white border-2 border-purple-200 rounded-xl p-8 hover:border-purple-500 hover:shadow-lg transition-all"
               >
-                <div className="text-purple-600 text-sm font-semibold uppercase tracking-wide mb-2">
-                  In-Depth
-                </div>
                 <h3 className="text-2xl font-bold text-neutral-900 mb-3 group-hover:text-purple-700 transition-colors">
-                  Detailed Version
+                  In-depth
                 </h3>
                 <p className="text-neutral-600 mb-4">
                   For those who want to understand the <strong>historical origins and
@@ -108,7 +102,7 @@ export default function Home() {
                   </li>
                 </ul>
                 <span className="text-purple-600 font-medium group-hover:underline">
-                  Start the detailed version &rarr;
+                  Start &rarr;
                 </span>
               </Link>
             </div>

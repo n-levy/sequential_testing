@@ -34,8 +34,8 @@ export function Navigation({ variant = 'landing' }: NavigationProps) {
   ]
 
   const landingLinks = [
-    { id: 'short', title: 'Short Version', href: '/short' },
-    { id: 'detailed', title: 'Detailed Version', href: '/detailed' },
+    { id: 'short', title: 'Focused', href: '/short' },
+    { id: 'detailed', title: 'In-depth', href: '/detailed' },
   ]
 
   const links = variant === 'short' ? shortActs
@@ -56,7 +56,7 @@ export function Navigation({ variant = 'landing' }: NavigationProps) {
                   ? 'bg-blue-100 text-blue-700'
                   : 'bg-purple-100 text-purple-700'
               }`}>
-                {variant === 'short' ? 'Short' : 'Detailed'}
+                {variant === 'short' ? 'Focused' : 'In-depth'}
               </span>
             )}
           </div>
@@ -101,7 +101,7 @@ export function Navigation({ variant = 'landing' }: NavigationProps) {
                 href={variant === 'short' ? '/detailed' : '/short'}
                 className="text-neutral-400 hover:text-primary-600 transition-colors text-sm"
               >
-                Switch to {variant === 'short' ? 'Detailed' : 'Short'} Version
+                Switch to {variant === 'short' ? 'In-depth' : 'Focused'} Version
               </Link>
             )}
           </div>
@@ -143,7 +143,7 @@ export function Navigation({ variant = 'landing' }: NavigationProps) {
                   className="block px-3 py-2 text-neutral-400 hover:text-primary-600"
                   onClick={() => setIsOpen(false)}
                 >
-                  Switch to {variant === 'short' ? 'Detailed' : 'Short'} Version
+                  Switch to {variant === 'short' ? 'In-depth' : 'Focused'} Version
                 </Link>
               )}
             </div>
