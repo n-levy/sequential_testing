@@ -16,7 +16,7 @@ export function Act3() {
       <div className="max-w-4xl mx-auto px-4">
         <div className="text-center mb-12">
           <h2 className="text-3xl font-bold text-neutral-900 mb-4">
-            Act 3 &mdash; What If You Don&apos;t Have Eppo?
+            Act 3 &mdash; What If Your Experimentation Platform Does Not Support Sequential Testing?
           </h2>
           <p className="text-neutral-600">
             Three group sequential methods for controlling the family-wise error rate
