@@ -1,3 +1,5 @@
+import { InlineMath } from '@/components/ui/Math'
+
 export function Hero() {
   return (
     <section id="intro" className="bg-gradient-to-br from-primary-50 to-secondary-50 py-20">
@@ -13,32 +15,33 @@ export function Hero() {
       <div className="max-w-3xl mx-auto px-4 mt-10 text-neutral-700 space-y-4">
         <p>
           <strong>The problem.</strong>{' '}
-          Teams running A/B tests face a temptation: peek at the results
-          before the experiment is over, and stop before the planned runtime if
-          results are statistically significant. Traditional statistics breaks when you do
-          this &mdash; the false positive rate inflates far beyond the promised 5%.
+          Standard hypothesis tests guarantee a controlled false positive rate only when
+          results are analysed once, at a pre-specified sample size. In practice, teams
+          routinely monitor experiments and peek at interim results &mdash; inflating the
+          Type I error rate well beyond the nominal{' '}
+          <InlineMath>{`\\alpha`}</InlineMath>.
         </p>
         <p>
           <strong>The solution.</strong>{' '}
-          <em>Sequential testing</em> provides statistical methods that remain valid
-          no matter when or how often you check.
+          <em>Sequential testing</em> provides statistical methods whose error guarantees
+          hold regardless of the number or timing of analyses.
         </p>
         <p>
           <strong>This guide.</strong>{' '}
-          Three acts, each with a simulation, intuitive explanations, and key formulas
-          with plain-language translations:
+          Three acts, each with an interactive simulation, technical exposition, and
+          key formulas:
         </p>
         <ol className="list-decimal list-inside space-y-1 ml-4">
-          <li><strong>The Peeking Problem</strong> &mdash; Why checking early is dangerous.</li>
-          <li><strong>The Eppo Solution</strong> &mdash; How a modern platform solves it,
-              including the recommended <strong>hybrid approach</strong>.</li>
-          <li><strong>DIY Alternatives</strong> &mdash; What to do if you don&apos;t have Eppo,
-              including how to implement the hybrid approach yourself.</li>
+          <li><strong>The Peeking Problem</strong> &mdash; Why interim analyses invalidate standard tests.</li>
+          <li><strong>The Eppo Solution</strong> &mdash; Confidence sequences, variance reduction,
+              and the recommended <strong>hybrid approach</strong>.</li>
+          <li><strong>DIY Alternatives</strong> &mdash; Bonferroni, Pocock, and O&apos;Brien&ndash;Fleming
+              corrections for teams without a sequential testing platform.</li>
         </ol>
         <p>
           <strong>Target audience.</strong>{' '}
-          People comfortable with algebra and basic probability. No calculus required.
-          Every formula is accompanied by a plain-language translation.
+          Data scientists and analysts familiar with A/B testing, hypothesis testing,
+          and confidence intervals.
         </p>
       </div>
     </section>

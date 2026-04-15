@@ -15,9 +15,9 @@ export function BonferroniImpl() {
           <div>
             <h4 className="font-bold text-neutral-900 mb-2">The idea</h4>
             <p className="text-neutral-700">
-              Before the experiment starts, commit to checking exactly{' '}
-              <InlineMath>{`K`}</InlineMath> times (e.g. every Monday for 4 weeks:{' '}
-              <InlineMath>{`K = 4`}</InlineMath>). At each check, use a significance level of{' '}
+              Before the experiment starts, fix the number of planned analyses{' '}
+              <InlineMath>{`K`}</InlineMath> (e.g. weekly for 4 weeks:{' '}
+              <InlineMath>{`K = 4`}</InlineMath>). At each analysis, use a significance level of{' '}
               <InlineMath>{`\\alpha/K`}</InlineMath> instead of <InlineMath>{`\\alpha`}</InlineMath>.
             </p>
           </div>
@@ -77,9 +77,9 @@ export function BonferroniImpl() {
 
           <div className="bg-white border border-neutral-400 rounded-lg p-4">
             <p className="text-neutral-700">
-              With 4 planned peeks, replace <InlineMath>{`z = 1.96`}</InlineMath> with{' '}
-              <InlineMath>{`z = 2.50`}</InlineMath>. Your CI is 28% wider at each peek, but you can
-              safely check 4 times without inflating errors.
+              With <InlineMath>{`K = 4`}</InlineMath>, replace <InlineMath>{`z = 1.96`}</InlineMath> with{' '}
+              <InlineMath>{`z = 2.50`}</InlineMath>. The CI is 28% wider at each analysis, but the
+              family-wise error rate is controlled at <InlineMath>{`\alpha`}</InlineMath>.
             </p>
           </div>
 

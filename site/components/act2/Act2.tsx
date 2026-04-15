@@ -28,15 +28,15 @@ export function Act2() {
           <div className="text-neutral-800 space-y-3">
             <p>
               Eppo replaces the standard confidence interval with a{' '}
-              <strong>sequential confidence interval</strong> &mdash; a band around the estimated
-              treatment effect that is valid at <em>every moment</em> since the experiment started,
-              not just at one pre-planned analysis time.
+              <strong>sequential confidence interval</strong> (confidence sequence) &mdash;
+              a band around the estimated treatment effect that maintains coverage at{' '}
+              <em>every analysis time</em>, not just at a single pre-planned endpoint.
             </p>
             <p>
-              The key insight: a sequential CI is wider than a standard CI (you pay a small price
-              for the freedom to peek), but the error guarantee holds no matter when you look.
-              And Eppo reduces the noise in your data using pre-experiment information, making
-              the CI narrower and experiments faster.
+              The trade-off: a sequential CI is wider than a fixed-horizon CI at any given
+              sample size (the &ldquo;price of peeking&rdquo;). In exchange, its error guarantee
+              holds under arbitrary stopping rules. Eppo mitigates the width penalty through
+              CUPED-style variance reduction using pre-experiment covariates.
             </p>
           </div>
         </div>
@@ -48,15 +48,13 @@ export function Act2() {
           <div className="text-neutral-800 space-y-3">
             <p>
               <strong>Setup:</strong>{' '}
-              A single A/B experiment flowing through Eppo&apos;s pipeline, stage by stage.
+              A single A/B experiment flowing through Eppo&apos;s statistical pipeline.
             </p>
             <p>
-              <strong>Animated pipeline diagram.</strong> Data flows left-to-right through
-              labelled stages. Each stage lights up as it is explained.
+              The animated diagram below shows data flowing through each stage:
+              randomisation, data collection, regression adjustment, effect estimation,
+              sequential CI construction, and the decision rule.
             </p>
-            <div className="text-center my-4">
-              <BlockMath>{`\\fbox{Randomise} \\;\\to\\; \\fbox{Collect} \\;\\to\\; \\fbox{Adjust} \\;\\to\\; \\fbox{Estimate} \\;\\to\\; \\fbox{CI} \\;\\to\\; \\fbox{Decide}`}</BlockMath>
-            </div>
           </div>
         </div>
 
@@ -78,10 +76,9 @@ export function Act2() {
         {/* Step 1 */}
         <h4 className="text-xl font-bold text-neutral-900 mb-3">Step 1: Randomise</h4>
         <p className="mb-4 text-neutral-700">
-          Each user arriving at the website is randomly assigned to <strong>control</strong>{' '}
-          (existing experience) or <strong>treatment</strong> (new feature). Randomisation
-          ensures the groups are comparable &mdash; any difference in outcomes is caused by
-          the treatment, not by pre-existing differences.
+          Users are randomly assigned to <strong>control</strong> or{' '}
+          <strong>treatment</strong>. Randomisation ensures exchangeability between groups
+          so that any observed difference in outcomes can be attributed to the treatment.
         </p>
 
         {/* Step 2 */}
@@ -93,10 +90,11 @@ export function Act2() {
         </ul>
 
         {/* Step 3 */}
-        <h4 className="text-xl font-bold text-neutral-900 mb-3">Step 3: Regression adjustment (noise removal)</h4>
+        <h4 className="text-xl font-bold text-neutral-900 mb-3">Step 3: Regression adjustment (variance reduction)</h4>
         <p className="mb-3 text-neutral-700">
-          Users are wildly different &mdash; some buy &euro;0, others &euro;500. This noise drowns out
-          the treatment effect. Eppo reduces this noise by using pre-experiment data.
+          Individual-level outcome variance is typically large relative to the treatment
+          effect. Eppo reduces this variance by regressing out the predictable component
+          using pre-experiment covariates.
         </p>
         <p className="mb-2 text-neutral-700">
           For each group <strong>separately</strong>, fit a model predicting{' '}
@@ -130,8 +128,9 @@ export function Act2() {
         </div>
 
         <p className="mb-6 text-neutral-700">
-          <strong>Safety rule:</strong> The covariate <InlineMath>{`X`}</InlineMath> must come from
-          the <em>pre-experiment</em> period. Never use data that could be affected by the treatment.
+          <strong>Safety rule:</strong> Covariates must come from the{' '}
+          <em>pre-experiment</em> period. Using post-treatment covariates can introduce
+          bias and invalidate the analysis.
         </p>
 
         {/* Step 4 */}
@@ -143,16 +142,15 @@ export function Act2() {
 
         <div className="bg-white border border-neutral-400 rounded-lg p-5 mb-6">
           <p className="text-neutral-700 mb-2">
-            Here <InlineMath>{`\\hat{\\mu}_0(t)`}</InlineMath> and{' '}
-            <InlineMath>{`\\hat{\\mu}_1(t)`}</InlineMath> are the average adjusted outcomes
-            in the control and treatment groups at time <InlineMath>{`t`}</InlineMath>.
-            Their difference <InlineMath>{`\\hat{\\tau}(t)`}</InlineMath> is the estimated
-            treatment effect. Dividing by the control mean gives a percentage:
-            &ldquo;the treatment increased purchases by +3%.&rdquo;
+            <InlineMath>{`\hat{\mu}_0(t)`}</InlineMath> and{' '}
+            <InlineMath>{`\hat{\mu}_1(t)`}</InlineMath> are the adjusted group means at
+            time <InlineMath>{`t`}</InlineMath>. Their difference{' '}
+            <InlineMath>{`\hat{\tau}(t)`}</InlineMath> estimates the average treatment
+            effect. Dividing by the control mean yields the relative lift.
           </p>
           <p className="text-neutral-700">
             Relative lift is preferred because it is <strong>scale-invariant</strong> &mdash;
-            a 3% lift means the same thing whether the baseline is &euro;10 or &euro;10,000.
+            a 3% lift has the same interpretation regardless of the baseline level.
           </p>
         </div>
 
@@ -172,9 +170,9 @@ export function Act2() {
         {/* Step 6 */}
         <h4 className="text-xl font-bold text-neutral-900 mb-3">Step 6: Construct the sequential confidence interval</h4>
         <p className="mb-3 text-neutral-700">
-          This is the key formula. Instead of a standard CI (which uses the constant{' '}
-          <InlineMath>{`z_{\\alpha/2} \\approx 1.96`}</InlineMath>), Eppo uses a time-varying
-          multiplier:
+          Instead of using the fixed critical value{' '}
+          <InlineMath>{`z_{\alpha/2} \approx 1.96`}</InlineMath>, Eppo applies a time-varying
+          multiplier derived from the confidence sequence framework:
         </p>
         <div className="bg-neutral-100 border border-neutral-300 rounded-lg p-4 mb-4">
           <BlockMath>{`\\text{CI}(t) = \\hat{\\tau}(t) \\;\\pm\\; \\hat{\\sigma}_{\\hat{\\tau}}(t) \\cdot \\underbrace{\\sqrt{\\frac{n + \\nu}{n} \\cdot \\log\\!\\frac{n + \\nu}{\\nu \\alpha^2}}}_{\\text{sequential multiplier}}`}</BlockMath>
@@ -237,8 +235,8 @@ export function Act2() {
         </div>
 
         <p className="mb-6 text-neutral-700">
-          <strong>This decision is valid at whatever time it is made.</strong> No need to
-          pre-specify an analysis time. This solves the peeking problem from Act 1.
+          <strong>This decision is valid at any stopping time.</strong> No pre-specified
+          analysis schedule is required. This resolves the peeking problem from Act 1.
         </p>
 
         {/* ── Key Takeaway ── */}
@@ -265,30 +263,29 @@ export function Act2() {
         <h3 className="text-2xl font-bold text-neutral-900 mb-4">The Hybrid Approach</h3>
 
         <p className="mb-4 text-neutral-700">
-          The full sequential pipeline described above is powerful but comes with a cost:
-          the sequential CI is always wider than a fixed-horizon CI (the &ldquo;price of
-          peeking&rdquo;). For the <strong>primary KPI</strong> &mdash; the metric you are trying
-          to improve &mdash; this wider CI means you need more data to detect the same effect size.
+          The sequential CI is always wider than a fixed-horizon CI at any given sample
+          size. For the <strong>primary KPI</strong> &mdash; the metric the experiment is
+          designed to move &mdash; this width penalty reduces statistical power.
         </p>
 
         <div className="bg-blue-50 border border-blue-400 rounded-lg p-6 mb-6">
           <h4 className="font-bold text-blue-900 mb-3">Intuitive Explanation</h4>
           <div className="text-neutral-800 space-y-3">
             <p>
-              <strong>Use sequential testing where it matters most &mdash; early stopping for
-              safety &mdash; and fixed-horizon testing where it is most efficient &mdash; the
-              primary metric.</strong>
+              <strong>Apply sequential testing where early stopping adds the most value
+              (safety guardrails), and fixed-horizon testing where statistical power
+              matters most (the primary metric).</strong>
             </p>
             <p>
-              The hybrid approach splits your metrics into two categories:
+              The hybrid approach partitions metrics into two categories:
             </p>
             <ul className="list-disc list-inside ml-4 space-y-1">
               <li><strong>Guardrail KPIs</strong> (revenue, error rate, latency, etc.):
-                monitored with a <strong>sequential CI</strong>. You can check these every
-                day or even continuously. If the CI goes fully below zero, abort immediately.</li>
-              <li><strong>Primary KPI</strong> (the metric you are trying to improve):
+                monitored continuously with a <strong>sequential CI</strong>. If the CI
+                excludes zero on the harmful side, abort the experiment immediately.</li>
+              <li><strong>Primary KPI</strong> (the metric the experiment targets):
                 analysed with a <strong>standard fixed-horizon CI</strong> at the pre-planned
-                end of the experiment. No peeking penalty. Full statistical power.</li>
+                end date. No peeking penalty. Full statistical power.</li>
             </ul>
           </div>
         </div>

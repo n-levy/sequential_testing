@@ -70,10 +70,10 @@ export function ObfImpl() {
           <div className="bg-white border border-neutral-400 rounded-lg p-4">
             <p className="text-neutral-700">
               O&apos;Brien&ndash;Fleming is extremely conservative early (threshold 4.05 at the
-              first peek &mdash; you&apos;d almost never stop that early) but barely penalises
+              first analysis &mdash; early stopping is rare) but barely penalises
               the final analysis (2.02 vs. 1.96 &mdash; only 3% wider).
-              This is the most efficient approach: if you run the experiment to completion,
-              you pay almost nothing for the option to peek.
+              This makes it the most efficient method: if the experiment runs to completion,
+              the power loss from the interim analyses is negligible.
             </p>
           </div>
 

@@ -19,8 +19,8 @@ export function Act3() {
             Act 3 &mdash; What If You Don&apos;t Have Eppo?
           </h2>
           <p className="text-neutral-600">
-            Three progressively better approaches to peek-safe testing that anyone can
-            implement with a spreadsheet or a few lines of code.
+            Three group sequential methods for controlling the family-wise error rate
+            under interim analyses, implementable without a dedicated platform.
           </p>
         </div>
 
@@ -29,26 +29,24 @@ export function Act3() {
           <h4 className="font-bold text-blue-900 mb-3">Intuitive Explanation</h4>
           <div className="text-neutral-800 space-y-3">
             <p>
-              You want to check your experiment every Monday. If you use a standard
-              95% CI each time, you&apos;ll get false positives far too often (Act 1).
+              Suppose you plan to analyse your experiment at <InlineMath>{`K`}</InlineMath> pre-specified
+              interim time points. Using the standard <InlineMath>{`\\alpha = 0.05`}</InlineMath> threshold
+              at each analysis inflates the overall Type I error rate (Act 1).
             </p>
             <p>
-              The simplest fix: <strong>be stricter at each check.</strong> If you plan to peek
-              4 times, demand stronger evidence each time. The three methods below
-              differ in <em>how</em> they distribute that strictness across the peeks.
-            </p>
-            <p>
-              Think of it as a budget. You have a total error budget of{' '}
-              <InlineMath>{`\\alpha = 5\\%`}</InlineMath>.
+              The fix: <strong>adjust the per-analysis significance level</strong> so that
+              the family-wise error rate remains at <InlineMath>{`\\alpha`}</InlineMath>. The three
+              methods below differ in <em>how</em> they allocate the error budget across
+              the <InlineMath>{`K`}</InlineMath> analyses.
             </p>
             <ul className="list-disc list-inside ml-4 space-y-1">
-              <li><strong>Bonferroni</strong> distributes the budget equally: <InlineMath>{`\\alpha/K`}</InlineMath> per peek.</li>
-              <li><strong>Pocock</strong> distributes it more cleverly (using the correlation between test statistics at different peeks), but still equally across peeks.</li>
-              <li><strong>O&apos;Brien&ndash;Fleming</strong> front-loads the budget: almost no spending early, most of it saved for the final analysis.</li>
+              <li><strong>Bonferroni:</strong> equal allocation, <InlineMath>{`\\alpha/K`}</InlineMath> per analysis. Conservative because it ignores correlation across analyses.</li>
+              <li><strong>Pocock:</strong> constant critical value calibrated to the joint distribution of the test statistics across analyses. Tighter than Bonferroni.</li>
+              <li><strong>O&apos;Brien&ndash;Fleming:</strong> front-loaded allocation. Very strict early, nearly standard at the final analysis.</li>
             </ul>
             <p>
-              Eppo&apos;s approach (Act 2) doesn&apos;t need a fixed budget at all &mdash;
-              it works for <em>any</em> number of peeks, continuously.
+              Eppo&apos;s approach (Act 2) does not require pre-specifying <InlineMath>{`K`}</InlineMath> &mdash;
+              it provides a continuously valid guarantee.
             </p>
           </div>
         </div>
@@ -188,21 +186,20 @@ export function Act3() {
         <div className="bg-yellow-50 border border-yellow-600 rounded-lg p-6 mb-10">
           <h4 className="font-bold text-yellow-900 mb-3">Key Takeaway</h4>
           <div className="text-neutral-800 space-y-3">
-            <p><strong>Which method should you use?</strong></p>
+            <p><strong>Which method to use:</strong></p>
             <ul className="list-disc list-inside ml-4 space-y-1">
-              <li><strong>No platform, minimal effort:</strong> Bonferroni. Commit to{' '}
-                <InlineMath>{`K`}</InlineMath> peeks. Replace 1.96 with{' '}
-                <InlineMath>{`z_{\\alpha/(2K)}`}</InlineMath>. Done.</li>
-              <li><strong>No platform, moderate effort:</strong> O&apos;Brien&ndash;Fleming.
-                Nearly as efficient as Eppo at the final analysis, but requires pre-specifying{' '}
-                <InlineMath>{`K`}</InlineMath>.</li>
-              <li><strong>Need continuous monitoring or variance reduction:</strong> Use a platform
-                like Eppo.</li>
+              <li><strong>Minimal implementation effort:</strong> Bonferroni. Replace 1.96 with{' '}
+                <InlineMath>{`z_{\\alpha/(2K)}`}</InlineMath>.</li>
+              <li><strong>Best efficiency at the final analysis:</strong> O&apos;Brien&ndash;Fleming.
+                The final-analysis critical value is within 3% of the unadjusted value, but
+                requires pre-specifying <InlineMath>{`K`}</InlineMath>.</li>
+              <li><strong>Continuous monitoring or built-in variance reduction:</strong> Use Eppo
+                or an equivalent platform.</li>
             </ul>
             <p>
-              <strong>The bottom line:</strong> even the crudest correction (Bonferroni) is{' '}
-              <em>vastly</em> better than naive peeking. If you are checking results
-              without any correction, you should start with Bonferroni <em>today</em>.
+              <strong>Bottom line:</strong> even the simplest correction (Bonferroni) eliminates
+              the bulk of the peeking-induced inflation. Any correction is vastly better than
+              none.
             </p>
           </div>
         </div>
@@ -213,9 +210,9 @@ export function Act3() {
         </h3>
 
         <p className="mb-4 text-neutral-700">
-          Act 2 described the hybrid approach: sequential CI on guardrail KPIs for early abort,
-          standard CI on the primary KPI at the end. Here is how to implement it without a
-          platform, using any of the three methods above.
+          Act 2 introduced the hybrid approach: sequential CI on guardrail KPIs for early
+          abort, standard CI on the primary KPI at the planned end date. Below is how to
+          implement it using any of the three correction methods above.
         </p>
 
         <h4 className="text-lg font-bold text-neutral-900 mb-3">Step 1: Classify your metrics</h4>

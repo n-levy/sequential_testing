@@ -38,9 +38,8 @@ export function Summary() {
         </div>
 
         <p className="text-neutral-700 mb-4">
-          <strong>The core trade-off:</strong> if you want to peek, you must pay &mdash; your
-          confidence interval must be wider. The question is how much wider, and the
-          answer depends on how sophisticated a method you use:
+          <strong>The core trade-off:</strong> valid interim monitoring requires wider
+          confidence intervals. The magnitude of the penalty depends on the method:
         </p>
 
         <div className="overflow-x-auto mb-8">
@@ -54,7 +53,7 @@ export function Summary() {
             <tbody>
               <tr>
                 <td className="border border-neutral-300 p-3 font-medium">No correction (naive)</td>
-                <td className="border border-neutral-300 p-3 text-amber-700">Wrong answers (20&ndash;30% false positives)</td>
+                <td className="border border-neutral-300 p-3 text-amber-700">Invalid inference (20&ndash;30% false positives)</td>
               </tr>
               <tr className="bg-neutral-50">
                 <td className="border border-neutral-300 p-3 font-medium">Bonferroni</td>
