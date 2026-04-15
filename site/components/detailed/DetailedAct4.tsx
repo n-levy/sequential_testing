@@ -137,9 +137,9 @@ export function DetailedAct4() {
           <div className="bg-white border border-neutral-200 rounded-lg p-4 text-neutral-600">
             <p>
               When we compute the expected ratio under <InlineMath>{`H_0`}</InlineMath>, the{' '}
-              <InlineMath>{`H_0`}</InlineMath> probabilities cancel out, and we are just left
-              summing <InlineMath>{`H_1`}</InlineMath> probabilities &mdash; which must add to 1.
-              This is the &ldquo;aha&rdquo; moment of the proof.
+              <InlineMath>{`H_0`}</InlineMath> probabilities cancel out, leaving the sum of the{' '}
+              <InlineMath>{`H_1`}</InlineMath> probabilities &mdash; which equals 1 because{' '}
+              <InlineMath>{`f_1`}</InlineMath> is a valid probability distribution.
             </p>
           </div>
         </div>

@@ -18,19 +18,20 @@ export function DetailedAct12() {
           <h4 className="font-bold text-blue-900 mb-3">Intuitive Explanation</h4>
           <div className="text-neutral-800 space-y-3">
             <p>
-              A standard 95% CI says: &ldquo;Right now, the lift is +3% &plusmn; 1.5%.&rdquo;
-              But that guarantee is only valid at this exact moment. If you checked yesterday,
-              and you check again tomorrow, the guarantee has already been violated.
+              A standard 95% confidence interval is valid at one pre-specified analysis
+              time. If the experimenter checks multiple times, the coverage guarantee
+              degrades.
             </p>
             <p>
-              Eppo&apos;s sequential CI says: &ldquo;The lift is +3% &plusmn; 2.1%, and this
-              has been valid <em>at every moment since the experiment started</em>.&rdquo;
+              Eppo&apos;s sequential CI is a <strong>confidence sequence</strong>: it
+              maintains <InlineMath>{`(1-\alpha)`}</InlineMath> coverage <em>uniformly</em>{' '}
+              over all analysis times from the start of the experiment onward.
             </p>
             <p>
-              The price: the interval is wider &mdash; the &ldquo;&plusmn; 2.1%&rdquo; instead
-              of &ldquo;&plusmn; 1.5%&rdquo;. This is the <strong>cost of peeking</strong>.
-              But it is a small price for the freedom to check whenever you want and stop as
-              soon as you are convinced.
+              The cost is a wider interval. At typical sample sizes the sequential CI is
+              roughly 10&ndash;40% wider than the classical CI. This is the{' '}
+              <strong>price of continuous monitoring</strong>, enabling the experimenter
+              to stop at any point and draw valid conclusions.
             </p>
           </div>
         </div>
@@ -111,9 +112,9 @@ export function DetailedAct12() {
           </div>
           <div className="bg-white border border-neutral-200 rounded-lg p-4 text-neutral-600 mt-2">
             <p>
-              Setting <InlineMath>{`M`}</InlineMath> is like aiming a spotlight: you choose where
-              the beam is brightest. Aim at the expected experiment end, and you get the tightest
-              CI right when you need to make the decision.
+              The parameter <InlineMath>{`M`}</InlineMath> controls where the boundary is
+              tightest. Setting <InlineMath>{`M`}</InlineMath> equal to the planned total
+              sample size optimises the CI width around the expected decision point.
             </p>
           </div>
         </div>

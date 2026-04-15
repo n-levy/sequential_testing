@@ -19,9 +19,10 @@ export function DetailedAct1() {
           <h4 className="font-bold text-blue-900 mb-3">Simulation</h4>
           <div className="text-neutral-800 space-y-3">
             <p>
-              A dot starts at position 0. Each step, a coin is flipped. Heads: the dot
-              moves up one step. Tails: down one step. The path is drawn as a graph
-              (position vs. step number).
+              A symmetric random walk starting at the origin. At each step,{' '}
+              <InlineMath>{`+1`}</InlineMath> (heads) or <InlineMath>{`-1`}</InlineMath> (tails)
+              with equal probability. The cumulative sum <InlineMath>{`S_n`}</InlineMath> is
+              plotted against the step number.
             </p>
           </div>
         </div>
@@ -35,19 +36,15 @@ export function DetailedAct1() {
           <h4 className="font-bold text-blue-900 mb-3">Intuitive Explanation</h4>
           <div className="text-neutral-800 space-y-3">
             <p>
-              Imagine you are standing in the middle of a long hallway. Flip a coin.
-              Heads &mdash; step forward. Tails &mdash; step back. Repeat hundreds of times.
+              A random walk is the simplest stochastic process: independent, identically
+              distributed increments summed cumulatively. The walk has zero drift (the
+              expected position at any step is the origin) but increasing dispersion.
             </p>
             <p>
-              Where will you end up? We don&apos;t know exactly, but we can say something
-              precise about the <em>range</em> of likely outcomes. Most of the time
-              you won&apos;t wander far. Occasionally, a long streak of heads or tails
-              carries you far in one direction. The longer you walk, the wider the
-              range of possible positions &mdash; but the centre of that range stays at zero.
-            </p>
-            <p>
-              When we run many people simultaneously, they fan out over time &mdash; like
-              ink dropped into water. This spreading has a precise mathematical shape.
+              Individual paths can wander far from zero, but the distribution of{' '}
+              <InlineMath>{`S_n`}</InlineMath> across many realisations is centred at zero
+              with standard deviation <InlineMath>{`\sqrt{n}`}</InlineMath>. This spreading
+              has a precise characterisation via the Central Limit Theorem.
             </p>
           </div>
         </div>

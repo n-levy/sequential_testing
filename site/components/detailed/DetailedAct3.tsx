@@ -18,9 +18,10 @@ export function DetailedAct3() {
           <h4 className="font-bold text-blue-900 mb-3">Simulation</h4>
           <div className="text-neutral-800 space-y-3">
             <p>
-              You are presented with a coin and must decide: fair or biased?
-              Two panels run side by side &mdash; one with a fair coin, one with a biased coin.
-              For small bias, the sequences look nearly identical for many flips.
+              You are presented with a coin and must determine whether it is fair
+              (<InlineMath>{`p = 0.5`}</InlineMath>) or biased
+              (<InlineMath>{`p = 0.5 + \delta`}</InlineMath>). With small bias, sequences
+              from the two hypotheses are nearly indistinguishable over short horizons.
             </p>
           </div>
         </div>
@@ -33,15 +34,16 @@ export function DetailedAct3() {
           <h4 className="font-bold text-blue-900 mb-3">Intuitive Explanation</h4>
           <div className="text-neutral-800 space-y-3">
             <p>
-              You suspect a coin might be unfair. Flip it many times and look at the results.
-              10 flips with 6 heads? Could be luck. 1,000 flips with 600 heads? Strong evidence.
+              Given a sequence of coin flips, the goal is to discriminate between
+              two hypotheses. With 10 flips and 6 heads, the evidence is ambiguous.
+              With 1,000 flips and 600 heads, the evidence is overwhelming.
             </p>
-            <p>Statisticians frame this as two competing stories:</p>
+            <p>The framework:</p>
             <ul className="list-disc ml-6 space-y-1">
-              <li><strong>Null hypothesis <InlineMath>{`H_0`}</InlineMath>:</strong> &ldquo;The coin is fair. Nothing is happening.&rdquo;</li>
-              <li><strong>Alternative hypothesis <InlineMath>{`H_1`}</InlineMath>:</strong> &ldquo;The coin is biased. Something real is going on.&rdquo;</li>
+              <li><strong>Null hypothesis <InlineMath>{`H_0`}</InlineMath>:</strong> The coin is fair (<InlineMath>{`p = 0.5`}</InlineMath>). No effect.</li>
+              <li><strong>Alternative hypothesis <InlineMath>{`H_1`}</InlineMath>:</strong> The coin is biased (<InlineMath>{`p = 0.5 + \delta`}</InlineMath>). A real effect exists.</li>
             </ul>
-            <p>Two types of mistakes:</p>
+            <p>Two error types:</p>
             <ol className="list-decimal ml-6 space-y-1">
               <li><strong>False positive</strong> (Type I): conclude biased when it is fair.</li>
               <li><strong>False negative</strong> (Type II): conclude fair when it is biased.</li>
@@ -75,8 +77,8 @@ export function DetailedAct3() {
           </div>
           <div className="bg-white border border-neutral-200 rounded-lg p-4 text-neutral-600">
             <p>
-              &ldquo;How many times more likely is our observed data under the biased-coin story
-              compared to the fair-coin story?&rdquo;
+              The likelihood ratio quantifies how many times more probable the observed data are
+              under <InlineMath>{`H_1`}</InlineMath> relative to <InlineMath>{`H_0`}</InlineMath>.
             </p>
           </div>
         </div>

@@ -18,8 +18,9 @@ export function DetailedAct10() {
         <div className="bg-blue-50 border border-blue-400 rounded-lg p-6 mb-8">
           <h4 className="font-bold text-blue-900 mb-3">Intuitive Explanation</h4>
           <p className="text-neutral-800">
-            Think of Eppo&apos;s pipeline as a factory with six stations. Each station does
-            one job. Data enters raw and exits as a trustworthy confidence interval.
+            Eppo&apos;s statistical pipeline consists of six stages. Raw data enters,
+            passes through regression adjustment and sequential inference, and exits
+            as an anytime-valid confidence interval for the treatment effect.
           </p>
         </div>
 
@@ -75,9 +76,10 @@ export function DetailedAct10() {
           </div>
           <div className="bg-white border border-neutral-200 rounded-lg p-4 text-neutral-600 mt-2">
             <p>
-              &ldquo;Predict what each user would have done based on their history, then subtract
-              that prediction. What&apos;s left is the part you <em>couldn&apos;t</em> have predicted
-              &mdash; and that&apos;s where the treatment effect hides.&rdquo;
+              Each adjusted outcome <InlineMath>{`Y^*_i`}</InlineMath> equals the raw
+              outcome minus the model&apos;s prediction from pre-experiment covariates.
+              The residual isolates the unpredictable component &mdash; the part that
+              can be attributed to the treatment rather than to baseline user behaviour.
             </p>
           </div>
         </div>

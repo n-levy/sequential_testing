@@ -24,15 +24,17 @@ export function DetailedAct9() {
                 daily. Classical tests break under repeated checking.
               </li>
               <li>
-                <strong>High variance:</strong> Users are wildly different. Some buy &euro;0,
-                others buy &euro;500. This noise drowns out the signal &mdash; a 2% lift
-                buried under 200% noise. Experiments take weeks to reach significance.
+                <strong>High variance:</strong> Outcome metrics typically exhibit extreme
+                heterogeneity across users. Revenue per user, for example, can range from
+                &euro;0 to &euro;500+. The coefficient of variation often exceeds 200%,
+                meaning a 2% treatment effect is buried in noise. Without variance
+                reduction, experiments require weeks to reach significance.
               </li>
               <li>
-                <strong>Heterogeneous users:</strong> Not all users respond the same way.
-                Heavy spenders, occasional browsers, mobile vs. desktop &mdash; all mixed
-                together. Covariates (pre-experiment behaviour, device type, country) carry
-                information that can separate signal from noise.
+                <strong>Heterogeneous users:</strong> Treatment effects vary across user
+                segments. Pre-experiment covariates &mdash; past purchase behaviour, device
+                type, geography &mdash; carry predictive information that can be exploited
+                to separate signal from noise.
               </li>
             </ol>
           </div>

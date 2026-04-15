@@ -23,17 +23,16 @@ export function DetailedAct7() {
           <h4 className="font-bold text-blue-900 mb-3">Intuitive Explanation</h4>
           <div className="text-neutral-800 space-y-3">
             <p>
-              Wald&apos;s SPRT is like betting everything on one horse: you pick a specific
-              effect size <InlineMath>{`\\delta`}</InlineMath> and compute evidence based on that choice.
-              If the horse wins (the true effect is near <InlineMath>{`\\delta`}</InlineMath>), you
-              are fast. Otherwise, slow.
+              Wald&apos;s SPRT commits to a single point alternative: you specify an
+              effect size <InlineMath>{`\delta`}</InlineMath> and compute evidence against that
+              specific value. If the true effect is close to <InlineMath>{`\delta`}</InlineMath>,
+              the test is efficient. If not, it can be substantially slower.
             </p>
             <p>
-              <a href="#ref-robbins-1970" className="text-blue-600 hover:text-blue-800">Herbert Robbins</a> proposed a radical alternative in 1970:{' '}
-              <strong>bet on all horses simultaneously.</strong> Instead of choosing one{' '}
-              <InlineMath>{`\\delta`}</InlineMath>, spread your &ldquo;evidence budget&rdquo; across
-              many possible effect sizes using a weighting scheme (a mixing distribution{' '}
-              <InlineMath>{`H`}</InlineMath>).
+              <a href="#ref-robbins-1970" className="text-blue-600 hover:text-blue-800">Herbert Robbins</a> proposed a fundamentally different approach in 1970:{' '}
+              <strong>average the likelihood ratio over a distribution of effect sizes.</strong>{' '}
+              Instead of choosing one <InlineMath>{`\delta`}</InlineMath>, assign a mixing
+              distribution <InlineMath>{`H`}</InlineMath> over the plausible range and integrate.
             </p>
             <p>
               The key insight: this average likelihood ratio is <em>still</em> a non-negative
@@ -74,8 +73,8 @@ export function DetailedAct7() {
             <li><InlineMath>{`\\int`}</InlineMath> = continuous version of summation &mdash; averages over all possible <InlineMath>{`\\delta`}</InlineMath>.</li>
           </ul>
           <p className="mt-2">
-            Think: &ldquo;average likelihood ratio across an infinitely large expert panel,
-            weighted by credibility.&rdquo;
+            The result is the expected likelihood ratio under the mixing distribution{' '}
+            <InlineMath>{`H`}</InlineMath>, averaging evidence across all plausible effect sizes.
           </p>
         </div>
 
@@ -152,9 +151,9 @@ export function DetailedAct7() {
 
         <div className="bg-white border border-neutral-200 rounded-lg p-4 mb-6 text-neutral-600">
           <p>
-            &ldquo;The mSPRT score is large when the observed average is far from zero (strong
-            signal), there are many observations, and the noise is low relative to the
-            prior width.&rdquo;
+            The mSPRT statistic is large when the sample mean is far from zero (strong
+            signal), the sample size is large, and the observation noise is small relative
+            to the mixing-distribution variance.
           </p>
         </div>
 

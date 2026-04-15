@@ -176,9 +176,9 @@ export function DetailedAct13() {
               <li><strong>Need continuous monitoring or variance reduction:</strong> Use a platform like Eppo.</li>
             </ul>
             <p className="mt-2">
-              <strong>The bottom line:</strong> even the crudest correction (Bonferroni) is{' '}
-              <em>vastly</em> better than naive peeking. If you are checking results without any
-              correction, you should start with Bonferroni <em>today</em>.
+              <strong>The key point:</strong> even the simplest correction (Bonferroni) is{' '}
+              far superior to uncorrected repeated testing. Any team that currently checks
+              results without adjustment should adopt at least Bonferroni immediately.
             </p>
           </div>
         </div>
@@ -197,8 +197,9 @@ export function DetailedAct13() {
             Fleming</a></strong> (1979) developed these group sequential methods for clinical trials,
             where stopping a trial early can save lives. Their work sits between <a href="#ref-wald-1945" className="text-blue-600 hover:text-blue-800">Wald&apos;s SPRT
             (1945)</a> and <a href="#ref-howard-2021" className="text-blue-600 hover:text-blue-800">Howard et al.&apos;s continuous framework (2021)</a> in the historical timeline.
-            The key insight of all three: if you want to peek, you must pay &mdash; but the
-            price is negotiable.
+            The key insight of all three: sequential monitoring requires a wider
+            critical region, but the magnitude of the adjustment can be minimised
+            with the right boundary.
           </p>
         </div>
       </div>

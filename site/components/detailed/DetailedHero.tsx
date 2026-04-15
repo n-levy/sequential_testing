@@ -27,12 +27,14 @@ export function DetailedHero() {
         </p>
         <p>
           <strong>Target audience.</strong>{' '}
-          People comfortable with algebra and basic probability (e.g. a 12th-grade math
-          background). No calculus is required to follow the main ideas.
+          Data scientists and analysts familiar with A/B testing, hypothesis testing,
+          and confidence intervals. Each act includes a rigorous mathematical formulation
+          alongside an intuitive explanation.
         </p>
         <p>
           <strong>Design philosophy.</strong>{' '}
-          Better to over-explain than under-explain. When in doubt, slow down.
+          Deliberately incremental &mdash; each act introduces one concept and builds on
+          the previous ones.
         </p>
       </div>
 

@@ -20,21 +20,21 @@ export function DetailedAct0() {
           <h4 className="font-bold text-blue-900 mb-3">Intuitive Explanation</h4>
           <div className="text-neutral-800 space-y-3">
             <p>
-              You work at a company running an A/B test. Half your users see the old
-              website, half see a new design. Every day, you check the dashboard:
-              &ldquo;Is the new design better?&rdquo; After a week, the dashboard shows{' '}
-              <InlineMath>{`p = 0.03`}</InlineMath> &mdash; that looks significant! You call it:
-              the new design wins.
+              Consider a standard A/B test comparing a control experience against a new
+              variant. After a week of data collection, the dashboard reports{' '}
+              <InlineMath>{`p = 0.03`}</InlineMath>. At <InlineMath>{`\alpha = 0.05`}</InlineMath>,
+              this is statistically significant, so the variant is declared a winner.
             </p>
             <p>
-              But here is the problem:{' '}
+              But here is the problem: if you monitored the test daily before that decision,
+              the actual false positive rate may be far higher than the nominal 5%.{' '}
               <strong>
-                the more often you check, the more likely you are to see a false positive.
+                Repeated testing on accumulating data inflates the Type I error rate
+                to 20&ndash;30%.
               </strong>{' '}
-              A test designed to have a 5% false positive rate can easily reach 20&ndash;30% if
-              you peek at it repeatedly. One in four or five &ldquo;winning&rdquo; experiments
-              might actually be noise. That is, it results from randomness rather than
-              indicating a systematic difference between the Treatment and Control groups.
+              A substantial fraction of &ldquo;significant&rdquo; results under this practice
+              are false positives &mdash; driven by random fluctuation rather than a genuine
+              treatment effect.
             </p>
           </div>
         </div>
@@ -46,16 +46,14 @@ export function DetailedAct0() {
           <div className="text-neutral-800 space-y-3">
             <p>
               <strong>Setup:</strong>{' '}
-              1,000 A/B experiments where there is <em>no real effect</em> &mdash; any apparent
-              difference is pure noise. Two groups of observations (control and treatment)
-              are generated from <em>identical</em> distributions. A standard{' '}
-              <InlineMath>{`t`}</InlineMath>-test is computed after every new observation arrives.
+              1,000 A/B experiments simulated under the null hypothesis (zero treatment
+              effect). Both groups are drawn from identical distributions. A standard{' '}
+              <InlineMath>{`t`}</InlineMath>-test is recomputed after each new observation.
             </p>
             <p>
-              A bar chart accumulates: &ldquo;Fraction of experiments that showed{' '}
-              <InlineMath>{`p < 0.05`}</InlineMath> at <em>some</em> point during peeking.&rdquo;
-              For 1,000 simulated experiments with regular peeking, this fraction
-              climbs well above 5% &mdash; often to 20&ndash;30%.
+              The cumulative fraction of experiments that show{' '}
+              <InlineMath>{`p < 0.05`}</InlineMath> at some point during monitoring
+              climbs well above 5% &mdash; typically reaching 20&ndash;30%.
             </p>
           </div>
         </div>
@@ -70,27 +68,28 @@ export function DetailedAct0() {
           <h4 className="font-bold text-blue-900 mb-3">Intuitive Explanation</h4>
           <div className="text-neutral-800 space-y-3">
             <p>
-              Traditional statistical tests promise: &ldquo;If there is no real effect, I will
-              falsely cry wolf at most 5% of the time.&rdquo; But this promise comes with fine
-              print:{' '}
-              <strong>
-                you may only look at the result once, at a pre-determined time.
-              </strong>
+              When you run a standard hypothesis test with{' '}
+              <InlineMath>{`\alpha = 0.05`}</InlineMath>, the 5% false positive guarantee
+              holds only if you commit to a fixed sample size and analyse the result once.
             </p>
             <p>
-              Every time you peek, you get another chance for randomness to fool you. It is
-              like rolling a die repeatedly &mdash; the more rolls, the more likely you are to
-              get a six eventually, even though any single roll has only a{' '}
-              <InlineMath>{`1/6`}</InlineMath> chance.
+              If you monitor the experiment and repeatedly check for significance, that
+              guarantee no longer holds. Each interim analysis gives random variation
+              another opportunity to cross the significance threshold.
             </p>
             <p>
-              The rest of this presentation builds a test that does not have this problem:
-              a test where you can peek as often as you like and the false positive guarantee
-              still holds.
+              The tests across interim looks are not independent, but the overall
+              effect is clear: the more often you peek &mdash; and especially if you stop as
+              soon as <InlineMath>{`p < 0.05`}</InlineMath> &mdash; the higher the
+              realised false positive rate.
             </p>
             <p>
-              That promise has a name: <strong>anytime-valid inference</strong>. Getting there
-              requires some beautiful mathematics, which we will build up one step at a time.
+              The rest of this presentation develops a testing framework that does not
+              suffer from this problem: one where the Type I error guarantee holds
+              regardless of the number or timing of analyses.
+            </p>
+            <p>
+              That framework is called <strong>anytime-valid inference</strong>.
             </p>
           </div>
         </div>
@@ -136,9 +135,10 @@ export function DetailedAct0() {
           <h4 className="font-bold text-green-900 mb-3">Key Takeaway</h4>
           <div className="text-neutral-800 space-y-3">
             <p>
-              <strong>The peeking problem:</strong> Checking a traditional test repeatedly inflates
-              the false positive rate far beyond its nominal level. We need a fundamentally
-              different kind of test &mdash; one that remains valid no matter when or how often we look.
+              <strong>The peeking problem:</strong> Repeated interim analyses of a standard
+              hypothesis test inflate the Type I error rate well beyond its nominal level.
+              Valid continuous monitoring requires a fundamentally different testing
+              framework &mdash; one whose error guarantees hold regardless of the stopping rule.
             </p>
           </div>
         </div>

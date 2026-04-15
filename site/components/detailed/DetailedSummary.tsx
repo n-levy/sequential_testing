@@ -33,8 +33,8 @@ export function DetailedSummary() {
               <tr className="bg-neutral-50"><td className="border border-neutral-300 p-3">7</td><td className="border border-neutral-300 p-3"><InlineMath>{`\\Lambda_n^H`}</InlineMath> (mixture LR)</td><td className="border border-neutral-300 p-3">Robust evidence</td><td className="border border-neutral-300 p-3">Robbins&apos; mixtures &rarr; Johari&apos;s mSPRT</td></tr>
               <tr><td className="border border-neutral-300 p-3">8</td><td className="border border-neutral-300 p-3">Confidence sequence</td><td className="border border-neutral-300 p-3">Modern framework</td><td className="border border-neutral-300 p-3">Howard: nonparametric, estimated <InlineMath>{`\\sigma^2`}</InlineMath></td></tr>
               <tr className="bg-neutral-50"><td className="border border-neutral-300 p-3">9</td><td className="border border-neutral-300 p-3">Peeking vs. variance</td><td className="border border-neutral-300 p-3">Three problems</td><td className="border border-neutral-300 p-3">Peeking, high variance, heterogeneous users</td></tr>
-              <tr><td className="border border-neutral-300 p-3">10</td><td className="border border-neutral-300 p-3">Eppo pipeline</td><td className="border border-neutral-300 p-3">Step-by-step factory</td><td className="border border-neutral-300 p-3">Randomise &rarr; adjust &rarr; CI &rarr; decide</td></tr>
-              <tr className="bg-neutral-50"><td className="border border-neutral-300 p-3">11</td><td className="border border-neutral-300 p-3">Regression adjustment</td><td className="border border-neutral-300 p-3">Noise removal</td><td className="border border-neutral-300 p-3"><InlineMath>{`\\Var(Y^*) = \\Var(Y)(1-R^2)`}</InlineMath></td></tr>
+              <tr><td className="border border-neutral-300 p-3">10</td><td className="border border-neutral-300 p-3">Eppo pipeline</td><td className="border border-neutral-300 p-3">Statistical pipeline</td><td className="border border-neutral-300 p-3">Randomise &rarr; adjust &rarr; CI &rarr; decide</td></tr>
+              <tr className="bg-neutral-50"><td className="border border-neutral-300 p-3">11</td><td className="border border-neutral-300 p-3">Regression adjustment</td><td className="border border-neutral-300 p-3">Variance reduction</td><td className="border border-neutral-300 p-3"><InlineMath>{`\Var(Y^*) = \Var(Y)(1-R^2)`}</InlineMath></td></tr>
               <tr><td className="border border-neutral-300 p-3">12</td><td className="border border-neutral-300 p-3">Eppo&apos;s sequential CI</td><td className="border border-neutral-300 p-3">Final output</td><td className="border border-neutral-300 p-3">Sequential multiplier; decide anytime</td></tr>
               <tr className="bg-neutral-50"><td className="border border-neutral-300 p-3">13</td><td className="border border-neutral-300 p-3">DIY alternatives</td><td className="border border-neutral-300 p-3">Simple approximations</td><td className="border border-neutral-300 p-3">Bonferroni, Pocock, OBF vs. Eppo</td></tr>
             </tbody>
@@ -48,7 +48,7 @@ export function DetailedSummary() {
             anytime-valid guarantee flows from a single elegant fact:
           </p>
           <div className="bg-neutral-100 border border-neutral-300 rounded-lg p-6 text-center text-lg italic">
-            A fair game cannot be beaten by choosing when to quit.
+            No stopping rule applied to a non-negative martingale can inflate the probability of exceeding a fixed threshold.
           </div>
         </div>
 

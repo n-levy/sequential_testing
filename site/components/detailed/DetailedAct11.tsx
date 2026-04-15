@@ -18,22 +18,22 @@ export function DetailedAct11() {
           <h4 className="font-bold text-blue-900 mb-3">Intuitive Explanation</h4>
           <div className="text-neutral-800 space-y-3">
             <p>
-              Imagine weighing yourself before and after a meal. If every person in the study
-              has a different baseline weight (50 kg to 120 kg), the raw &ldquo;post-meal
-              weight&rdquo; is extremely variable. But the <em>change</em> (before &rarr; after)
-              is much more consistent &mdash; a meal adds roughly the same weight regardless
-              of the person.
+              The raw outcome <InlineMath>{`Y_i`}</InlineMath> for each user reflects both
+              the treatment effect and substantial baseline heterogeneity.
+              If pre-experiment behaviour <InlineMath>{`X_i`}</InlineMath> predicts a large
+              share of <InlineMath>{`Y_i`}</InlineMath>, subtracting that prediction reduces
+              variance without altering the expected treatment effect.
             </p>
             <p>
-              Regression adjustment does the same thing. Each user&apos;s outcome{' '}
-              <InlineMath>{`Y`}</InlineMath> is partly explained by their pre-experiment behaviour{' '}
-              <InlineMath>{`X`}</InlineMath> (their &ldquo;baseline weight&rdquo;). The regression
-              model predicts that baseline. Subtracting the prediction leaves the{' '}
-              <em>change</em> &mdash; the part due to the treatment, not the person.
+              Regression adjustment exploits this structure. A model trained on
+              pre-experiment covariates produces fitted values{' '}
+              <InlineMath>{`\hat{f}(X_i)`}</InlineMath>. The adjusted outcome{' '}
+              <InlineMath>{`Y^*_i = Y_i - \hat{f}(X_i)`}</InlineMath> retains the signal
+              but removes the predictable component of the noise.
             </p>
             <p>
-              <strong>The result:</strong> less noise, same signal, tighter confidence intervals,
-              faster decisions.
+              <strong>The result:</strong> lower variance, unchanged signal, tighter confidence
+              intervals, and faster decisions.
             </p>
           </div>
         </div>
@@ -66,9 +66,9 @@ export function DetailedAct11() {
           </div>
           <div className="bg-white border border-neutral-200 rounded-lg p-4 text-neutral-600 mt-2">
             <p>
-              &ldquo;Take what user <InlineMath>{`i`}</InlineMath> actually did. Subtract what the
-              model predicted they would do based on their history. What&apos;s left is the
-              residual &mdash; the <em>unpredictable</em> part.&rdquo;
+              The adjusted outcome <InlineMath>{`Y^*_i`}</InlineMath> equals the raw outcome
+              minus the model&apos;s prediction from pre-experiment covariates. The residual
+              captures only the unpredictable component of each user&apos;s behaviour.
             </p>
           </div>
         </div>
@@ -140,9 +140,9 @@ export function DetailedAct11() {
           </ol>
           <div className="bg-white border border-neutral-200 rounded-lg p-4 text-neutral-600 mt-2">
             <p>
-              The adjustment is like using a better measuring instrument &mdash; more precise,
-              but measuring the same thing. The sequential guarantee depends on the structure
-              of the martingale, which is preserved.
+              Regression adjustment reduces variance without changing the estimand. The
+              sequential guarantee depends on the martingale structure, which is preserved
+              because pre-experiment covariates are independent of treatment assignment.
             </p>
           </div>
         </div>

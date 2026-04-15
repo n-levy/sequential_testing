@@ -19,15 +19,14 @@ export function DetailedAct2() {
           <h4 className="font-bold text-blue-900 mb-3">Simulation</h4>
           <div className="text-neutral-800 space-y-3">
             <p>
-              The same random walk, relabelled. The vertical axis now shows
-              &ldquo;&euro; profit or loss.&rdquo; A bold horizontal line marks zero &mdash;
-              break-even.
+              The same random walk relabelled as cumulative profit/loss in a fair game.
+              The horizontal line at zero represents break-even.
             </p>
             <p>
-              <strong>Doubling strategy mode:</strong> Runs 10,000 gamblers using the martingale
-              betting strategy. A histogram shows the distribution of final wealth &mdash; many
-              small winners, a few catastrophic losers. A counter shows average profit
-              converging to zero.
+              <strong>Doubling strategy mode:</strong> Simulates 10,000 gamblers using
+              the martingale betting strategy. The resulting histogram shows the
+              characteristic heavy left tail: many small winners, a few catastrophic
+              losers. The sample mean converges to zero.
             </p>
           </div>
         </div>
@@ -41,23 +40,24 @@ export function DetailedAct2() {
           <h4 className="font-bold text-blue-900 mb-3">Intuitive Explanation</h4>
           <div className="text-neutral-800 space-y-3">
             <p>
-              Win &euro;1 for heads, lose &euro;1 for tails. Cumulative winnings
-              trace the same random walk from Act 1.
+              A fair game pays <InlineMath>{`+1`}</InlineMath> for heads and{' '}
+              <InlineMath>{`-1`}</InlineMath> for tails. Cumulative winnings trace the
+              same random walk from Act 1.
             </p>
             <p>
-              The gambler&apos;s temptation: &ldquo;I&apos;ll keep playing until I&apos;m ahead,
-              then quit.&rdquo; Sounds foolproof &mdash; surely a run of luck will eventually
-              put you in the green?
+              A natural question: can you beat a fair game by choosing a clever stopping
+              rule &mdash; e.g. quitting as soon as cumulative winnings exceed some
+              threshold? The answer is no.
             </p>
             <p>
-              Mathematically, a fair random walk does eventually return to positive territory.
-              But the time it takes can be astronomically long, and while you wait you might
-              lose everything.
+              A fair random walk does eventually return to positive territory (by
+              recurrence), but the expected waiting time is infinite. No stopping
+              strategy can generate positive expected profit in a fair game.
             </p>
             <p>
-              <strong>Central insight:</strong> There is no strategy that improves your expected
-              outcome in a fair game. This is a proven mathematical theorem. Try any
-              stopping rule &mdash; the average winnings always converge to zero.
+              <strong>Central insight:</strong> Under mild regularity conditions, the
+              expected value of a martingale at any stopping time equals its initial
+              value. This is a theorem, not an approximation.
             </p>
           </div>
         </div>
@@ -66,15 +66,16 @@ export function DetailedAct2() {
           <h4 className="font-bold text-blue-900 mb-3">The doubling strategy (Martingale betting), exposed</h4>
           <div className="text-neutral-800 space-y-3">
             <p>
-              Lose, double the bet, repeat until you win back your losses plus &euro;1.
-              It works &mdash; most of the time.
+              The martingale betting strategy doubles the stake after each loss until a
+              win recovers all previous losses plus one unit. It produces a profit of{' '}
+              <InlineMath>{`+1`}</InlineMath> with high probability.
             </p>
             <p>
-              But a long losing streak forces bets of &euro;1, 2, 4, 8, 16, 32, 64, &hellip;
-              After just 10 consecutive losses, you must bet &euro;1,024 to win back &euro;1.
-              The histogram makes it vivid: a tall bar of people who won &euro;1, and a barely
-              visible bar at the far left of people who lost thousands. Multiply heights by
-              positions and sum: the average is zero.
+              However, a sequence of <InlineMath>{`k`}</InlineMath> consecutive losses
+              requires a stake of <InlineMath>{`2^k`}</InlineMath>. Ten consecutive losses
+              demand a bet of 1,024 to recover 1. The distribution of outcomes has
+              extreme negative skew: the expected value is exactly zero, consistent with
+              the martingale property.
             </p>
           </div>
         </div>
