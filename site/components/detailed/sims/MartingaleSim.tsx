@@ -199,7 +199,7 @@ export function MartingaleSim() {
         </div>
 
         {results && (
-          <div className="grid grid-cols-3 gap-3">
+          <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
             <div className="bg-green-50 border border-green-200 rounded-lg p-3 text-center">
               <div className="text-lg font-bold text-green-700">{results.winners.toLocaleString()}</div>
               <div className="text-xs text-green-600">Winners ({((results.winners / nGamblers) * 100).toFixed(1)}%)</div>

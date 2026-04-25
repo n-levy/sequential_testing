@@ -166,7 +166,7 @@ export function NoiseDemoSim() {
         <svg ref={svgRef} viewBox="0 0 600 300" className="w-full" />
 
         {data && (
-          <div className="grid grid-cols-4 gap-3 mt-4">
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mt-4">
             <div className="bg-neutral-50 border border-neutral-200 rounded-lg p-3 text-center">
               <div className="text-sm font-bold text-neutral-700">{snr}</div>
               <div className="text-xs text-neutral-500">Signal / Noise</div>

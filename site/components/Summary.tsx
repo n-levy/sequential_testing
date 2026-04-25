@@ -9,7 +9,7 @@ export function Summary() {
         <h2 className="text-3xl font-bold text-neutral-900 mb-8 text-center">Summary</h2>
 
         <div className="overflow-x-auto mb-8">
-          <table className="w-full text-sm border-collapse border border-neutral-300">
+          <table className="w-full min-w-[640px] text-sm border-collapse border border-neutral-300">
             <thead>
               <tr className="bg-neutral-100">
                 <th className="border border-neutral-300 p-3 font-semibold">Act</th>
@@ -43,7 +43,7 @@ export function Summary() {
         </p>
 
         <div className="overflow-x-auto mb-8">
-          <table className="w-full text-sm border-collapse border border-neutral-300">
+          <table className="w-full min-w-[640px] text-sm border-collapse border border-neutral-300">
             <thead>
               <tr className="bg-neutral-100">
                 <th className="border border-neutral-300 p-3 font-semibold text-left">Method</th>

@@ -143,7 +143,7 @@ export function DetailedAct5() {
         <div className="text-neutral-700 space-y-3 mb-6">
           <p><strong>Why this is remarkable:</strong></p>
           <div className="overflow-x-auto">
-            <table className="w-full text-sm border-collapse border border-neutral-300">
+            <table className="w-full min-w-[640px] text-sm border-collapse border border-neutral-300">
               <tbody>
                 <tr><td className="border border-neutral-300 p-3 font-semibold bg-neutral-100">Markov</td><td className="border border-neutral-300 p-3">At any single <em>fixed</em> moment, <InlineMath>{`\\PP(M_n \\geq c)`}</InlineMath> is small.</td></tr>
                 <tr className="bg-neutral-50"><td className="border border-neutral-300 p-3 font-semibold bg-neutral-100">Ville</td><td className="border border-neutral-300 p-3"><InlineMath>{`\\PP(M_n`}</InlineMath> <strong>ever</strong> <InlineMath>{`\\geq c`}</InlineMath>, at <strong>any</strong> moment<InlineMath>{`)`}</InlineMath> is <em>also</em> small.</td></tr>

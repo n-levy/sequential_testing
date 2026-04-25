@@ -211,7 +211,7 @@ export function ConfidenceSequenceSim() {
 
         <svg ref={svgRef} viewBox="0 0 650 380" className="w-full" />
 
-        <div className="grid grid-cols-3 gap-3 mt-4">
+        <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 mt-4">
           <div className="bg-blue-50 border border-blue-200 rounded-lg p-3 text-center">
             <div className="text-sm font-bold text-blue-700">{ciWidth}</div>
             <div className="text-xs text-blue-600">Fixed CI width at n={nObs}</div>

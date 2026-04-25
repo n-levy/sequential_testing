@@ -9,10 +9,10 @@ export default function Home() {
         {/* Hero */}
         <section className="py-10 bg-gradient-to-b from-white to-neutral-50">
           <div className="max-w-4xl mx-auto px-4 text-center">
-            <h1 className="text-5xl font-bold text-neutral-900 mb-2">
+            <h1 className="text-4xl sm:text-5xl font-bold text-neutral-900 mb-2">
               Sequential Testing
             </h1>
-            <p className="text-2xl text-neutral-600">
+            <p className="text-xl sm:text-2xl text-neutral-600">
               An interactive guide
             </p>
           </div>

@@ -260,7 +260,7 @@ export function SPRTSim() {
         </div>
 
         {data && (
-          <div className="grid grid-cols-3 gap-3 mt-4">
+          <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 mt-4">
             <div className="bg-amber-50 border border-amber-200 rounded-lg p-3 text-center">
               <div className="text-lg font-bold text-amber-700">{rejectCount}</div>
               <div className="text-xs text-amber-600">Reject H₀ ({((rejectCount / nTrials) * 100).toFixed(1)}%)</div>

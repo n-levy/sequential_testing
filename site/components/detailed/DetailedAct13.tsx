@@ -52,7 +52,7 @@ export function DetailedAct13() {
         </div>
 
         <div className="overflow-x-auto mb-6">
-          <table className="w-full text-sm border-collapse border border-neutral-300">
+          <table className="w-full min-w-[640px] text-sm border-collapse border border-neutral-300">
             <thead>
               <tr className="bg-neutral-100">
                 <th className="border border-neutral-300 p-3 text-left font-semibold"><InlineMath>{`K`}</InlineMath> (peeks)</th>
@@ -84,7 +84,7 @@ export function DetailedAct13() {
         </div>
 
         <div className="overflow-x-auto mb-6">
-          <table className="w-full text-sm border-collapse border border-neutral-300">
+          <table className="w-full min-w-[640px] text-sm border-collapse border border-neutral-300">
             <thead>
               <tr className="bg-neutral-100">
                 <th className="border border-neutral-300 p-3 text-left font-semibold"><InlineMath>{`K`}</InlineMath></th>
@@ -115,7 +115,7 @@ export function DetailedAct13() {
         </div>
 
         <div className="overflow-x-auto mb-6">
-          <table className="w-full text-sm border-collapse border border-neutral-300">
+          <table className="w-full min-w-[640px] text-sm border-collapse border border-neutral-300">
             <thead>
               <tr className="bg-neutral-100">
                 <th className="border border-neutral-300 p-3 text-left font-semibold">Peek <InlineMath>{`k`}</InlineMath> (of <InlineMath>{`K = 4`}</InlineMath>)</th>
@@ -146,7 +146,7 @@ export function DetailedAct13() {
         <h3 className="text-2xl font-bold text-neutral-900 mb-4">Head-to-Head Comparison</h3>
 
         <div className="overflow-x-auto mb-6">
-          <table className="w-full text-sm border-collapse border border-neutral-300">
+          <table className="w-full min-w-[640px] text-sm border-collapse border border-neutral-300">
             <thead>
               <tr className="bg-neutral-100">
                 <th className="border border-neutral-300 p-3 text-left font-semibold"></th>

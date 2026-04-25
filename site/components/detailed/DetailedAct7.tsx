@@ -130,7 +130,7 @@ export function DetailedAct7() {
         <div className="text-neutral-700 space-y-3 mb-6">
           <p><strong>Unpacking every piece:</strong></p>
           <div className="overflow-x-auto">
-            <table className="w-full text-sm border-collapse border border-neutral-300">
+            <table className="w-full min-w-[640px] text-sm border-collapse border border-neutral-300">
               <thead>
                 <tr className="bg-neutral-100">
                   <th className="border border-neutral-300 p-3 text-left font-semibold">Symbol</th>

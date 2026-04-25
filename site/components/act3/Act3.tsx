@@ -118,7 +118,7 @@ export function Act3() {
         <h3 className="text-2xl font-bold text-neutral-900 mb-4">Head-to-Head Comparison</h3>
 
         <div className="overflow-x-auto mb-6">
-          <table className="w-full text-sm border-collapse border border-neutral-300">
+          <table className="w-full min-w-[640px] text-sm border-collapse border border-neutral-300">
             <thead>
               <tr className="bg-neutral-100">
                 <th className="border border-neutral-300 p-3 text-left font-semibold"></th>
@@ -217,7 +217,7 @@ export function Act3() {
 
         <h4 className="text-lg font-bold text-neutral-900 mb-3">Step 1: Classify your metrics</h4>
         <div className="overflow-x-auto mb-6">
-          <table className="w-full text-sm border-collapse border border-neutral-300">
+          <table className="w-full min-w-[640px] text-sm border-collapse border border-neutral-300">
             <thead>
               <tr className="bg-neutral-100">
                 <th className="border border-neutral-300 p-3 text-left font-semibold">Category</th>

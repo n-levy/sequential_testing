@@ -13,7 +13,7 @@ export function MathReference() {
         {/* ── Notation Table ── */}
         <h3 className="text-2xl font-bold text-neutral-900 mb-4">Notation</h3>
         <div className="overflow-x-auto mb-10">
-          <table className="w-full text-sm border-collapse border border-neutral-300">
+          <table className="w-full min-w-[640px] text-sm border-collapse border border-neutral-300">
             <thead>
               <tr className="bg-neutral-100">
                 <th className="border border-neutral-300 p-3 font-semibold text-left">Symbol</th>

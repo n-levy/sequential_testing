@@ -178,7 +178,7 @@ export function SequentialMultiplierSim() {
 
         <svg ref={svgRef} viewBox="0 0 650 360" className="w-full" />
 
-        <div className="grid grid-cols-3 gap-3 mt-4">
+        <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 mt-4">
           {exampleNs.map((n, i) => (
             <div key={n} className="bg-purple-50 border border-purple-200 rounded-lg p-3 text-center">
               <div className="text-sm font-bold text-purple-700">{exampleMults[i].toFixed(2)}</div>

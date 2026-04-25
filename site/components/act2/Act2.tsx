@@ -201,7 +201,7 @@ export function Act2() {
         <h4 className="text-xl font-bold text-neutral-900 mb-3">Step 7: Decide</h4>
 
         <div className="overflow-x-auto mb-4">
-          <table className="w-full text-sm border-collapse border border-neutral-300">
+          <table className="w-full min-w-[640px] text-sm border-collapse border border-neutral-300">
             <thead>
               <tr className="bg-neutral-100">
                 <th className="border border-neutral-300 p-3 text-left font-semibold">What you see</th>
@@ -293,7 +293,7 @@ export function Act2() {
         <h4 className="text-lg font-bold text-neutral-900 mb-3">What you gain</h4>
 
         <div className="overflow-x-auto mb-6">
-          <table className="w-full text-sm border-collapse border border-neutral-300">
+          <table className="w-full min-w-[640px] text-sm border-collapse border border-neutral-300">
             <thead>
               <tr className="bg-neutral-100">
                 <th className="border border-neutral-300 p-3 text-left font-semibold"></th>

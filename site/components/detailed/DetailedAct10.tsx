@@ -137,7 +137,7 @@ export function DetailedAct10() {
         {/* Step 7 */}
         <h3 className="text-xl font-bold text-neutral-900 mb-3">Step 7: Decide</h3>
         <div className="overflow-x-auto mb-8">
-          <table className="w-full text-sm border-collapse border border-neutral-300">
+          <table className="w-full min-w-[640px] text-sm border-collapse border border-neutral-300">
             <thead>
               <tr className="bg-neutral-100">
                 <th className="border border-neutral-300 p-3 text-left font-semibold">What you see</th>

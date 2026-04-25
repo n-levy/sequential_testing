@@ -110,7 +110,8 @@ export function Navigation({ variant = 'landing' }: NavigationProps) {
           <div className="md:hidden flex items-center">
             <button
               onClick={() => setIsOpen(!isOpen)}
-              className="text-neutral-600 hover:text-primary-600"
+              className="text-neutral-600 hover:text-primary-600 p-2 -mr-2"
+              aria-label="Toggle navigation menu"
             >
               <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 {isOpen ? (

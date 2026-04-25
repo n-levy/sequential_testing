@@ -76,7 +76,7 @@ export function DetailedAct6() {
         </div>
 
         <div className="overflow-x-auto mb-6">
-          <table className="w-full text-sm border-collapse border border-neutral-300">
+          <table className="w-full min-w-[640px] text-sm border-collapse border border-neutral-300">
             <thead>
               <tr className="bg-neutral-100">
                 <th className="border border-neutral-300 p-3 text-left font-semibold">Condition</th>
@@ -96,7 +96,7 @@ export function DetailedAct6() {
         <h4 className="text-lg font-semibold text-neutral-800 mb-3">Savings over fixed-sample tests</h4>
         <div className="text-neutral-700 space-y-3 mb-6">
           <div className="overflow-x-auto">
-            <table className="w-full text-sm border-collapse border border-neutral-300">
+            <table className="w-full min-w-[640px] text-sm border-collapse border border-neutral-300">
               <thead>
                 <tr className="bg-neutral-100">
                   <th className="border border-neutral-300 p-3 text-left font-semibold"><InlineMath>{`\\alpha`}</InlineMath></th>

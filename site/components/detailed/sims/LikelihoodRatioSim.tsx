@@ -142,7 +142,7 @@ export function LikelihoodRatioSim() {
         <svg ref={svgRef} viewBox="0 0 600 320" className="w-full" />
 
         {data && (
-          <div className="grid grid-cols-3 gap-3 mt-4">
+          <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 mt-4">
             <div className="bg-purple-50 border border-purple-200 rounded-lg p-3 text-center">
               <div className="text-lg font-bold text-purple-700">{finalLR.toFixed(2)}</div>
               <div className="text-xs text-purple-600">Final Λₙ</div>

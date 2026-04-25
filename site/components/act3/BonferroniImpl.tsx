@@ -44,7 +44,7 @@ export function BonferroniImpl() {
           <div>
             <h4 className="font-bold text-neutral-900 mb-2">Critical Values</h4>
             <div className="overflow-x-auto">
-              <table className="w-full text-sm border-collapse border border-neutral-300">
+              <table className="w-full min-w-[640px] text-sm border-collapse border border-neutral-300">
                 <thead>
                   <tr className="bg-neutral-100">
                     <th className="border border-neutral-300 p-2"><InlineMath>{`K`}</InlineMath> (peeks)</th>

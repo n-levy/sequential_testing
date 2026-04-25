@@ -42,7 +42,7 @@ export function Math({ children, block = false, className = '' }: MathProps) {
   }, [children, block])
 
   return block ? (
-    <div ref={ref as React.RefObject<HTMLDivElement>} className={`math-display ${className}`} />
+    <div ref={ref as React.RefObject<HTMLDivElement>} className={`math-display overflow-x-auto overflow-y-hidden ${className}`} />
   ) : (
     <span ref={ref as React.RefObject<HTMLSpanElement>} className={className} />
   )
