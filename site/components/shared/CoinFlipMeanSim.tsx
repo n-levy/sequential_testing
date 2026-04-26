@@ -183,47 +183,54 @@ export function CoinFlipMeanSim({
           const rand = mulberry32(seed * 7919 + s + 10000 * Object.keys(LAYER_STYLE).indexOf(layer))
           let sum = 0
           let crossed = false
+          let step = 1;
+          if (layer === 'fixed-ci') {
+            step = Math.max(1, Math.floor(n / PEEK_LOOKS));
+          } else if (layer === 'pocock' || layer === 'obf' || layer === 'bonferroni') {
+            step = Math.floor(n / N_LOOKS);
+          }
           for (let i = 1; i <= n && !crossed; i++) {
-            sum += rand() < pHeads ? 1 : 0
-            let check = true;
-            if (layer === 'pocock' || layer === 'obf' || layer === 'bonferroni') {
-              const step = Math.floor(n / N_LOOKS)
-              if (i % step !== 0 && i !== n) check = false
+            sum += rand() < pHeads ? 1 : 0;
+            let check = false;
+            if (layer === 'fixed-ci') {
+              if (i % step === 0 || i === n) check = true;
+            } else if (layer === 'sequential-ci') {
+              check = true;
+            } else if (layer === 'pocock' || layer === 'obf' || layer === 'bonferroni') {
+              if (i % step === 0 || i === n) check = true;
             }
-            // For fixed/sequential CI, always check every step
-            if (layer === 'fixed-ci' || layer === 'sequential-ci') check = true;
             if (!check) continue;
-            const m = sum / i
-            const se = Math.sqrt(Math.max(m * (1 - m), 1e-4) / i)
-            let bound = 0
+            const m = sum / i;
+            const se = Math.sqrt(Math.max(m * (1 - m), 1e-4) / i);
+            let bound = 0;
             switch (layer) {
               case 'fixed-ci': {
-                const z = alpha === 0.05 ? Z_975 : 1.96
-                bound = z * se
-                break
+                const z = alpha === 0.05 ? Z_975 : 1.96;
+                bound = z * se;
+                break;
               }
               case 'sequential-ci': {
-                bound = sequentialHalfWidth(i, se, alpha, n)
-                break
+                bound = sequentialHalfWidth(i, se, alpha, n);
+                break;
               }
               case 'pocock': {
-                bound = POCOCK_C * se
-                break
+                bound = POCOCK_C * se;
+                break;
               }
               case 'obf': {
-                bound = OBF_C * Math.sqrt(n / i) * se
-                break
+                bound = OBF_C * Math.sqrt(n / i) * se;
+                break;
               }
               case 'bonferroni': {
-                const aPer = alpha / N_LOOKS
-                const t = Math.sqrt(-2 * Math.log(aPer / 2))
+                const aPer = alpha / N_LOOKS;
+                const t = Math.sqrt(-2 * Math.log(aPer / 2));
                 const zB = t - (2.515517 + 0.802853 * t + 0.010328 * t * t) /
-                  (1 + 1.432788 * t + 0.189269 * t * t + 0.001308 * t * t * t)
-                bound = zB * se
-                break
+                  (1 + 1.432788 * t + 0.189269 * t * t + 0.001308 * t * t * t);
+                bound = zB * se;
+                break;
               }
             }
-            if (Math.abs(m - 0.5) > bound) crossed = true
+            if (Math.abs(m - 0.5) > bound) crossed = true;
           }
           if (crossed) fpCount++
         }
@@ -343,40 +350,6 @@ export function CoinFlipMeanSim({
       .attr('x1', 0).attr('x2', innerW)
       .attr('y1', y(0)).attr('y2', y(0))
       .attr('stroke', '#525252').attr('stroke-width', 1).attr('stroke-dasharray', '4 3')
-    // Draw white rectangle behind the label, higher (about +0.2)
-    const nullLabel = 'Null (fair coin)';
-    const nullFontSize = 11;
-    const nullPaddingX = 6;
-    const nullPaddingY = 2;
-    const nullLabelY = y(0.2) - 8;
-    // Temporary text to measure width
-    const tempText = g.append('text')
-      .attr('x', innerW - 8)
-      .attr('y', nullLabelY)
-      .style('font-size', `${nullFontSize}px`)
-      .text(nullLabel);
-    const node = tempText.node();
-    if (node) {
-      const bbox = node.getBBox();
-      tempText.remove();
-      g.append('rect')
-        .attr('x', innerW - 8 - bbox.width - nullPaddingX)
-        .attr('y', nullLabelY - bbox.height + nullPaddingY)
-        .attr('width', bbox.width + 2 * nullPaddingX)
-        .attr('height', bbox.height + 2 * nullPaddingY)
-        .attr('fill', 'white')
-        .attr('stroke', '#e5e7eb')
-        .attr('rx', 3)
-        .attr('ry', 3)
-        .attr('opacity', 0.95);
-      g.append('text')
-        .attr('x', innerW - 8)
-        .attr('y', nullLabelY)
-        .style('text-anchor', 'end')
-        .style('font-size', `${nullFontSize}px`)
-        .style('fill', '#525252')
-        .text(nullLabel);
-    }
 
     // True bias line if non-zero (removed: bias is always 0)
 
@@ -435,6 +408,9 @@ export function CoinFlipMeanSim({
 
   return (
     <div className="bg-white border border-neutral-300 rounded-lg p-4 my-6">
+      <div className="mb-2 text-base font-semibold text-blue-900">
+        Mean of coin flips, null hypothesis = 0.
+      </div>
       <div className="mb-3 text-sm text-blue-900 font-semibold">
         Coin bias: <span className="font-mono">{bias >= 0 ? '+' : ''}{bias.toFixed(2)}</span> (P(heads) = {(0.5 + bias).toFixed(2)})
       </div>
