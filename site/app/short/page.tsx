@@ -7,6 +7,8 @@ import { Act3 } from '@/components/act3/Act3'
 import { Summary } from '@/components/Summary'
 import { MathReference } from '@/components/MathReference'
 import { References } from '@/components/References'
+import { Comments } from '@/components/Comments'
+import { ContactForm } from '@/components/ContactForm'
 
 const SHORT_ITEMS = [
   { id: '_home', label: 'Home' },
@@ -17,6 +19,8 @@ const SHORT_ITEMS = [
   { id: 'summary', label: 'Summary' },
   { id: 'math-reference', label: 'Math Reference' },
   { id: 'references', label: 'References' },
+  { id: 'comments', label: 'Comments' },
+  { id: 'contact', label: 'Contact us' },
 ]
 
 export default function ShortVersion() {
@@ -32,6 +36,8 @@ export default function ShortVersion() {
         <Summary />
         <MathReference />
         <References />
+        <Comments />
+        <ContactForm />
       </main>
     </div>
   )

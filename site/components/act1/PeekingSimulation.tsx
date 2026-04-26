@@ -333,10 +333,9 @@ export function PeekingSimulation() {
 
           <div className="bg-amber-50 border border-amber-200 rounded-lg p-4">
             <p className="text-sm text-amber-800">
-              <strong>What you&apos;re seeing:</strong> Under the null hypothesis (no real effect),
+              <strong>Simulation takeaway:</strong> Under the null hypothesis (no real effect),
               the more often you peek at p-values, the more likely you are to see a
-              &ldquo;significant&rdquo; result by chance. Continuous peeking inflates the false
-              positive rate from 5% to over 25%. This is the core problem that sequential
+              &ldquo;significant&rdquo; result by chance. This is the core problem that sequential
               testing methods solve.
             </p>
           </div>

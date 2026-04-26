@@ -26,7 +26,6 @@ export function Act3() {
 
         {/* ── Intuition ── */}
         <div className="bg-blue-50 border border-blue-400 rounded-lg p-6 mb-8">
-          <h4 className="font-bold text-blue-900 mb-3">Intuitive Explanation</h4>
           <div className="text-neutral-800 space-y-3">
             <p>
               Suppose you plan to analyse your experiment at <InlineMath>{`K`}</InlineMath> pre-specified

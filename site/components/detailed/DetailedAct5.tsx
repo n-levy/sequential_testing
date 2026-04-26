@@ -1,17 +1,16 @@
 'use client'
 
 import { InlineMath, BlockMath } from '@/components/ui/Math'
-import { VilleInequalitySim } from './sims/VilleInequalitySim'
+import { LRMartingaleSim } from './sims/LRMartingaleSim'
 
 export function DetailedAct5() {
   return (
-    <section id="act-5" className="py-16 bg-neutral-50">
+    <section id="act-5" className="py-16 bg-white">
       <div className="max-w-4xl mx-auto px-4">
         <div className="text-center mb-12">
           <h2 className="text-3xl font-bold text-neutral-900 mb-4">
-            Act 5 &mdash; Markov, Ville, and the Anytime-Valid Guarantee
+            Act 5 &mdash; The Likelihood Ratio Is a Martingale
           </h2>
-          <p className="text-neutral-600">This is the pivotal act of the entire presentation.</p>
         </div>
 
         {/* Simulation */}
@@ -19,201 +18,162 @@ export function DetailedAct5() {
           <h4 className="font-bold text-blue-900 mb-3">Simulation</h4>
           <div className="text-neutral-800 space-y-3">
             <p>
-              <strong>Panel 1 &mdash; Markov (single time):</strong>{' '}
-              10,000 fair-coin paths of <InlineMath>{`\\Lambda_n`}</InlineMath>. A threshold at{' '}
-              <InlineMath>{`\\Lambda = 1/\\alpha = 20`}</InlineMath>. Count: how many paths are
-              above the threshold at step 200? Fraction <InlineMath>{`\\leq 5\\%`}</InlineMath>.
+              The likelihood ratio <InlineMath>{`\\Lambda_n`}</InlineMath> is plotted as a path
+              over time &mdash; like the random walk from Act 2.
             </p>
             <p>
-              <strong>Panel 2 &mdash; Ville (any time):</strong>{' '}
-              Same paths. Count: how many <em>ever</em> crossed the threshold at <em>any</em> step?
-              Also <InlineMath>{`\\leq 5\\%`}</InlineMath> &mdash; but requires a stronger theorem.
+              <strong>Left panel:</strong> 100 paths of <InlineMath>{`\\Lambda_n`}</InlineMath> when
+              the coin is truly <em>fair</em> (<InlineMath>{`H_0`}</InlineMath> true).
+              Paths wander with no systematic trend.
             </p>
             <p>
-              <strong>Panel 3 &mdash; Comparison:</strong>{' '}
-              Standard <InlineMath>{`z`}</InlineMath>-score checked at every step. Count how many
-              ever show significance. Much higher than 5% &mdash; the peeking problem.
+              <strong>Right panel:</strong> 100 paths when the coin is truly <em>biased</em>
+              (<InlineMath>{`H_1`}</InlineMath> true). Paths drift upward.
             </p>
           </div>
         </div>
 
         {/* Interactive Simulation */}
-        <VilleInequalitySim />
+        <LRMartingaleSim />
 
         {/* Intuition */}
         <div className="bg-blue-50 border border-blue-400 rounded-lg p-6 mb-8">
-          <h4 className="font-bold text-blue-900 mb-3">Intuitive Explanation</h4>
           <div className="text-neutral-800 space-y-3">
-            <p>We are about to prove the most important result in this entire presentation:
-              the <strong>anytime-valid guarantee</strong>.
+            <p>
+              Under <InlineMath>{`H_0`}</InlineMath>, the likelihood ratio wanders up and down but
+              never develops a consistent trend. On average, it stays at 1.
             </p>
-            <p>Two steps:</p>
-            <ol className="list-decimal ml-6 space-y-1">
-              <li><strong>Markov&apos;s inequality</strong> &mdash; a simple bound at one point in time.</li>
-              <li><strong>Ville&apos;s inequality</strong> &mdash; extends the bound to all points in time simultaneously.</li>
-            </ol>
-            <p>Ville&apos;s inequality is <em>the reason</em> sequential testing works.</p>
+            <p>
+              This <em>is</em> a martingale &mdash; exactly like the gambler&apos;s cumulative
+              winnings. Everything from Act 3 applies: <a href="#ref-doob-1953" className="text-blue-600 hover:text-blue-800">Doob&apos;s theorem</a> says you cannot
+              systematically make <InlineMath>{`\\Lambda_n`}</InlineMath> large by choosing clever
+              peeking times.
+            </p>
           </div>
         </div>
 
-        {/* Step 1: Markov */}
+        {/* Proof */}
         <h3 className="text-2xl font-bold text-neutral-900 mb-4">Mathematical Formulation</h3>
 
-        <h4 className="text-lg font-semibold text-neutral-800 mb-3">Step 1: Markov&apos;s Inequality</h4>
-
-        <div className="bg-white border-2 border-neutral-400 rounded-lg p-5 mb-6">
-          <p className="font-semibold text-neutral-900 mb-2">Theorem (Markov&apos;s Inequality)</p>
-          <div className="text-neutral-700">
-            <p>
-              For any non-negative random variable <InlineMath>{`X`}</InlineMath> with finite{' '}
-              <InlineMath>{`\\EE[X]`}</InlineMath>:
-            </p>
-            <div className="bg-neutral-50 border border-neutral-300 rounded p-3 mt-2">
-              <BlockMath>{`\\PP(X \\geq c) \\leq \\frac{\\EE[X]}{c}`}</BlockMath>
-            </div>
-          </div>
-        </div>
-
-        <div className="bg-white border border-neutral-200 rounded-lg p-4 mb-6 text-neutral-600">
-          <p>
-            <InlineMath>{`\\PP(\\cdot)`}</InlineMath> denotes probability &mdash; a number between
-            0 and 1 measuring how likely an event is. So &ldquo;the probability that{' '}
-            <InlineMath>{`X`}</InlineMath> is at least <InlineMath>{`c`}</InlineMath> cannot exceed
-            the average of <InlineMath>{`X`}</InlineMath> divided by <InlineMath>{`c`}</InlineMath>.&rdquo;
-          </p>
-        </div>
-
-        <div className="text-neutral-700 space-y-3 mb-6">
-          <p><strong>Why is this true? An intuitive proof.</strong></p>
-          <p>
-            Suppose <InlineMath>{`X \\geq 0`}</InlineMath> always. Let{' '}
-            <InlineMath>{`q = \\PP(X \\geq c)`}</InlineMath> be the fraction of outcomes at or
-            above <InlineMath>{`c`}</InlineMath>. Those outcomes contribute <em>at least</em>{' '}
-            <InlineMath>{`q \\times c`}</InlineMath> to the average (each is{' '}
-            <InlineMath>{`\\geq c`}</InlineMath>). The rest contribute{' '}
-            <InlineMath>{`\\geq 0`}</InlineMath> (since <InlineMath>{`X \\geq 0`}</InlineMath>):
-          </p>
-          <BlockMath>{`\\EE[X] \\geq q \\cdot c + (1-q) \\cdot 0 = q \\cdot c \\quad \\Longrightarrow \\quad q \\leq \\frac{\\EE[X]}{c} \\quad \\checkmark`}</BlockMath>
-        </div>
-
-        <div className="text-neutral-700 space-y-3 mb-6">
-          <p><strong>Concrete example.</strong> Average income in a town is &euro;50,000.</p>
-          <BlockMath>{`\\PP(\\text{income} \\geq \\text{€}500{,}000) \\leq \\frac{50{,}000}{500{,}000} = 0.10 = 10\\%`}</BlockMath>
-          <p>At most 10% of people can earn &euro;500,000+.</p>
-        </div>
-
-        <div className="text-neutral-700 space-y-3 mb-6">
-          <p><strong>Applying Markov to the likelihood ratio.</strong></p>
-          <p>
-            Under <InlineMath>{`H_0`}</InlineMath>, <InlineMath>{`\\Lambda_n`}</InlineMath> is a
-            martingale with <InlineMath>{`\\EE[\\Lambda_n] = \\Lambda_0 = 1`}</InlineMath> and{' '}
-            <InlineMath>{`\\Lambda_n \\geq 0`}</InlineMath>. Markov gives:
-          </p>
-          <BlockMath>{`\\PP\\!\\left(\\Lambda_n \\geq \\frac{1}{\\alpha}\\right) \\leq \\frac{\\EE[\\Lambda_n]}{1/\\alpha} = 1 \\cdot \\alpha = \\alpha`}</BlockMath>
-          <div className="bg-white border border-neutral-200 rounded-lg p-4 text-neutral-600">
-            <p>
-              At any single, pre-specified step <InlineMath>{`n`}</InlineMath>, the false positive
-              probability is at most <InlineMath>{`\\alpha`}</InlineMath>. Reassuring &mdash; but
-              only for <em>one</em> moment.
-            </p>
-          </div>
-        </div>
-
-        {/* Step 2: Ville */}
-        <h4 className="text-lg font-semibold text-neutral-800 mb-3">Step 2: <a href="#ref-ville-1939" className="text-blue-600 hover:text-blue-800">Ville&apos;s Inequality (1939)</a></h4>
-
-        <div className="bg-white border-2 border-neutral-400 rounded-lg p-5 mb-6">
-          <p className="font-semibold text-neutral-900 mb-2">Theorem (Ville&apos;s Inequality)</p>
-          <div className="text-neutral-700">
-            <p>
-              For any <strong>non-negative martingale</strong>{' '}
-              <InlineMath>{`\\{M_n\\}_{n \\geq 0}`}</InlineMath> with{' '}
-              <InlineMath>{`M_0 = m_0`}</InlineMath>:
-            </p>
-            <div className="bg-neutral-50 border border-neutral-300 rounded p-3 mt-2">
-              <BlockMath>{`\\PP\\!\\left(\\sup_{n \\geq 0}\\, M_n \\geq c\\right) \\leq \\frac{m_0}{c}`}</BlockMath>
-            </div>
-            <p className="mt-2">
-              where <InlineMath>{`\\sup_{n \\geq 0} M_n`}</InlineMath> is the highest value{' '}
-              <InlineMath>{`M_n`}</InlineMath> <em>ever</em> reaches.
-            </p>
-          </div>
-        </div>
-
-        <div className="text-neutral-700 space-y-3 mb-6">
-          <p><strong>Why this is remarkable:</strong></p>
-          <div className="overflow-x-auto">
-            <table className="w-full min-w-[640px] text-sm border-collapse border border-neutral-300">
-              <tbody>
-                <tr><td className="border border-neutral-300 p-3 font-semibold bg-neutral-100">Markov</td><td className="border border-neutral-300 p-3">At any single <em>fixed</em> moment, <InlineMath>{`\\PP(M_n \\geq c)`}</InlineMath> is small.</td></tr>
-                <tr className="bg-neutral-50"><td className="border border-neutral-300 p-3 font-semibold bg-neutral-100">Ville</td><td className="border border-neutral-300 p-3"><InlineMath>{`\\PP(M_n`}</InlineMath> <strong>ever</strong> <InlineMath>{`\\geq c`}</InlineMath>, at <strong>any</strong> moment<InlineMath>{`)`}</InlineMath> is <em>also</em> small.</td></tr>
-              </tbody>
-            </table>
-          </div>
-        </div>
-
-        <div className="text-neutral-700 space-y-3 mb-6">
-          <p><strong>The intuition behind Ville.</strong></p>
-          <p>
-            For a non-negative martingale, reaching a high value &ldquo;uses up&rdquo; the
-            available expected value. Once high, it must stay high on average (martingale
-            property), yet it cannot go below zero (non-negativity). These two constraints
-            together limit how often it can ever be high.
-          </p>
-        </div>
-
-        {/* Applying Ville to LR */}
         <h4 className="text-lg font-semibold text-neutral-800 mb-3">
-          Applying Ville to the likelihood ratio
+          Proof that <InlineMath>{`\\Lambda_n`}</InlineMath> is a martingale under <InlineMath>{`H_0`}</InlineMath>
         </h4>
 
         <div className="text-neutral-700 space-y-3 mb-6">
           <p>
-            Set <InlineMath>{`M_n = \\Lambda_n`}</InlineMath>,{' '}
-            <InlineMath>{`m_0 = \\Lambda_0 = 1`}</InlineMath>,{' '}
-            <InlineMath>{`c = 1/\\alpha`}</InlineMath>:
+            We must show: <InlineMath>{`\\EE[\\Lambda_n \\given \\Lambda_0, \\ldots, \\Lambda_{n-1}] = \\Lambda_{n-1}`}</InlineMath>.
           </p>
-          <div className="bg-white border-2 border-green-200 rounded-lg p-4">
-            <BlockMath>{`\\PP\\!\\left(\\Lambda_n \\text{ ever reaches } \\frac{1}{\\alpha} \\text{ or higher}\\right) \\leq \\alpha`}</BlockMath>
-          </div>
-          <div className="bg-white border border-neutral-200 rounded-lg p-4 text-neutral-600">
-            <p>
-              The probability that the likelihood ratio ever crosses our rejection threshold
-              &mdash; at any point, across all flips, even if you run forever &mdash; is at
-              most <InlineMath>{`\\alpha`}</InlineMath>.
-            </p>
-            <p className="mt-2">
-              <strong>This is the anytime-valid guarantee.</strong> You can peek after every
-              observation. The false positive rate, across all checks combined, stays{' '}
-              <InlineMath>{`\\leq \\alpha`}</InlineMath>.
-            </p>
-          </div>
+          <p>
+            From Act 4, <InlineMath>{`\\Lambda_n = \\Lambda_{n-1} \\times \\frac{f_1(x_n)}{f_0(x_n)}`}</InlineMath>.
+            Therefore:
+          </p>
+          <BlockMath>{`\\begin{aligned}
+\\EE[\\Lambda_n \\given \\text{past}]
+&= \\EE\\!\\left[\\Lambda_{n-1} \\cdot \\frac{f_1(x_n)}{f_0(x_n)} \\;\\bigg\\vert\\; \\text{past}\\right] \\\\
+&= \\Lambda_{n-1} \\cdot \\EE\\!\\left[\\frac{f_1(x_n)}{f_0(x_n)}\\right]
+\\quad \\text{(}\\Lambda_{n-1}\\text{ is known)}
+\\end{aligned}`}</BlockMath>
+
+          <p>
+            Now the key step. Under <InlineMath>{`H_0`}</InlineMath>,{' '}
+            <InlineMath>{`x_n`}</InlineMath> is drawn from <InlineMath>{`f_0`}</InlineMath>. So:
+          </p>
+
+          <BlockMath>{`\\begin{aligned}
+\\EE\\!\\left[\\frac{f_1(x_n)}{f_0(x_n)}\\right]
+&= \\sum_{\\text{all outcomes } x} f_0(x) \\cdot \\frac{f_1(x)}{f_0(x)} \\\\
+&= \\sum_x \\cancel{f_0(x)} \\cdot \\frac{f_1(x)}{\\cancel{f_0(x)}} \\quad \\textbf{(the cancellation!)} \\\\
+&= \\sum_x f_1(x) \\\\
+&= 1 \\quad \\text{(}f_1\\text{ is a probability distribution)}
+\\end{aligned}`}</BlockMath>
+
+          <p>Therefore:</p>
+          <BlockMath>{`\\EE[\\Lambda_n \\given \\text{past}] = \\Lambda_{n-1} \\times 1 = \\Lambda_{n-1} \\quad \\checkmark`}</BlockMath>
         </div>
 
-        {/* Connecting back */}
-        <h4 className="text-lg font-semibold text-neutral-800 mb-3">Connecting back to Act 0</h4>
+        {/* Cancellation with numbers */}
+        <h4 className="text-lg font-semibold text-neutral-800 mb-3">
+          The cancellation with actual numbers
+        </h4>
+
         <div className="text-neutral-700 space-y-3 mb-6">
           <p>
-            Standard test statistics (like <InlineMath>{`p`}</InlineMath>-values from a{' '}
-            <InlineMath>{`t`}</InlineMath>-test) are <em>not</em> martingales. Checking
-            repeatedly gives many independent chances to be fooled.
+            For <InlineMath>{`\\delta = 0.1`}</InlineMath> (biased coin{' '}
+            <InlineMath>{`p = 0.6`}</InlineMath>):
           </p>
+
+          <div className="overflow-x-auto">
+            <table className="w-full min-w-[640px] text-sm border-collapse border border-neutral-300">
+              <thead>
+                <tr className="bg-neutral-100">
+                  <th className="border border-neutral-300 p-3 text-left font-semibold">Outcome</th>
+                  <th className="border border-neutral-300 p-3 text-left font-semibold"><InlineMath>{`f_0(x)`}</InlineMath></th>
+                  <th className="border border-neutral-300 p-3 text-left font-semibold"><InlineMath>{`f_1(x)/f_0(x)`}</InlineMath></th>
+                  <th className="border border-neutral-300 p-3 text-left font-semibold"><InlineMath>{`f_0(x) \\times [f_1(x)/f_0(x)]`}</InlineMath></th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td className="border border-neutral-300 p-3">Heads</td>
+                  <td className="border border-neutral-300 p-3">0.5</td>
+                  <td className="border border-neutral-300 p-3"><InlineMath>{`0.6/0.5 = 1.2`}</InlineMath></td>
+                  <td className="border border-neutral-300 p-3"><InlineMath>{`0.5 \\times 1.2 = 0.6`}</InlineMath></td>
+                </tr>
+                <tr className="bg-neutral-50">
+                  <td className="border border-neutral-300 p-3">Tails</td>
+                  <td className="border border-neutral-300 p-3">0.5</td>
+                  <td className="border border-neutral-300 p-3"><InlineMath>{`0.4/0.5 = 0.8`}</InlineMath></td>
+                  <td className="border border-neutral-300 p-3"><InlineMath>{`0.5 \\times 0.8 = 0.4`}</InlineMath></td>
+                </tr>
+                <tr className="bg-neutral-100 font-semibold">
+                  <td className="border border-neutral-300 p-3" colSpan={3}>Total:</td>
+                  <td className="border border-neutral-300 p-3"><strong>1.0</strong> &#10003;</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div className="bg-white border border-neutral-200 rounded-lg p-4 text-neutral-600">
+            <p>
+              When we compute the expected ratio under <InlineMath>{`H_0`}</InlineMath>, the{' '}
+              <InlineMath>{`H_0`}</InlineMath> probabilities cancel out, leaving the sum of the{' '}
+              <InlineMath>{`H_1`}</InlineMath> probabilities &mdash; which equals 1 because{' '}
+              <InlineMath>{`f_1`}</InlineMath> is a valid probability distribution.
+            </p>
+          </div>
+        </div>
+
+        {/* Additional properties */}
+        <h4 className="text-lg font-semibold text-neutral-800 mb-3">Two additional properties</h4>
+        <div className="text-neutral-700 space-y-3 mb-6">
+          <ol className="list-decimal ml-6 space-y-1">
+            <li>
+              <strong><InlineMath>{`\\Lambda_n`}</InlineMath> is non-negative:</strong> It is a product
+              of non-negative ratios (probabilities divided by probabilities), so{' '}
+              <InlineMath>{`\\Lambda_n \\geq 0`}</InlineMath>.
+            </li>
+            <li>
+              <strong><InlineMath>{`\\Lambda_0 = 1`}</InlineMath>:</strong> Before any data, neither
+              hypothesis is favoured.
+            </li>
+          </ol>
           <p>
-            The likelihood ratio <em>is</em> a martingale under <InlineMath>{`H_0`}</InlineMath>.
-            Ville&apos;s inequality converts this into a practical guarantee:{' '}
-            <strong>peeking is safe.</strong>
+            So <InlineMath>{`\\Lambda_n`}</InlineMath> is a{' '}
+            <strong>non-negative martingale starting at 1</strong>. Remember these properties &mdash;
+            they are exactly what <a href="#ref-ville-1939" className="text-blue-600 hover:text-blue-800">Ville&apos;s inequality</a> needs.
           </p>
         </div>
 
-        {/* Historical Note */}
-        <div className="bg-neutral-100 border border-neutral-300 rounded-lg p-6 mb-8">
-          <h4 className="font-semibold text-neutral-700 mb-3">Historical Note</h4>
-          <p className="text-neutral-700">
-            <a href="#ref-ville-1939" className="text-blue-600 hover:text-blue-800">Jean Ville</a> proved this inequality in his 1939 doctoral thesis,{' '}
-            <em>&Eacute;tude critique de la notion de collectif</em>. It predated the
-            formal development of martingale theory by <a href="#ref-doob-1953" className="text-blue-600 hover:text-blue-800">Doob (1953)</a> and was largely
-            overlooked for decades. <a href="#ref-robbins-1970" className="text-blue-600 hover:text-blue-800">Robbins (1970)</a> was among the first to recognise its
-            practical importance for sequential testing &mdash; a connection we explore in Act 7.
+        {/* Under H1 */}
+        <h4 className="text-lg font-semibold text-neutral-800 mb-3">
+          Under <InlineMath>{`H_1`}</InlineMath>, <InlineMath>{`\\Lambda_n`}</InlineMath> drifts upward
+        </h4>
+        <div className="text-neutral-700 space-y-3 mb-6">
+          <p>When the coin really is biased:</p>
+          <BlockMath>{`\\EE\\!\\left[\\frac{f_1(x_n)}{f_0(x_n)}\\right]_{H_1} = \\sum_x f_1(x) \\cdot \\frac{f_1(x)}{f_0(x)} > 1`}</BlockMath>
+          <p>
+            So <InlineMath>{`\\Lambda_n`}</InlineMath> tends to grow &mdash; this upward drift is
+            the signal the test detects.
           </p>
         </div>
 
@@ -222,9 +182,9 @@ export function DetailedAct5() {
           <h4 className="font-bold text-green-900 mb-3">Key Takeaway</h4>
           <div className="text-neutral-800">
             <p>
-              <strong>Key concepts:</strong> Markov&apos;s inequality (with proof),
-              Ville&apos;s inequality, the anytime-valid guarantee,
-              martingale + non-negative = peek-safe.
+              <strong>Key concepts:</strong> the likelihood ratio is a martingale under{' '}
+              <InlineMath>{`H_0`}</InlineMath>; the cancellation that makes it work;
+              non-negative martingale; drift under <InlineMath>{`H_1`}</InlineMath>.
             </p>
           </div>
         </div>

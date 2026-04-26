@@ -6,7 +6,7 @@ export function DetailedHero() {
           From Random Walks to Sequential Testing
         </h1>
         <p className="text-xl text-neutral-700 mb-4 max-w-3xl mx-auto">
-          The Complete Mathematical Journey in 14 Acts
+          The Complete Statistical Journey in 14 Acts
         </p>
       </div>
 
@@ -21,20 +21,12 @@ export function DetailedHero() {
         </p>
         <p>
           <strong>Format.</strong>{' '}
-          Fourteen interactive acts (Acts 0&ndash;13) &mdash; deliberately small steps. Each
-          act has an intuitive explanation, mathematical formulation, and key takeaway.
-          Every formula is accompanied by a plain-language translation.
+          Fourteen interactive acts. Each act introduces one concept and builds on the previous ones.
         </p>
         <p>
           <strong>Target audience.</strong>{' '}
           Data scientists and analysts familiar with A/B testing, hypothesis testing,
-          and confidence intervals. Each act includes a rigorous mathematical formulation
-          alongside an intuitive explanation.
-        </p>
-        <p>
-          <strong>Design philosophy.</strong>{' '}
-          Deliberately incremental &mdash; each act introduces one concept and builds on
-          the previous ones.
+          and confidence intervals.
         </p>
       </div>
 
@@ -42,20 +34,20 @@ export function DetailedHero() {
       <div className="max-w-4xl mx-auto px-4 mt-12">
         <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
           {[
-            { n: '0', t: 'The Peeking Problem', c: 'bg-blue-50 border-blue-200' },
-            { n: '1', t: 'Random Walk', c: 'bg-blue-50 border-blue-200' },
-            { n: '2', t: 'Martingale', c: 'bg-blue-50 border-blue-200' },
-            { n: '3', t: 'Likelihood Ratio', c: 'bg-blue-50 border-blue-200' },
-            { n: '4', t: 'LR is a Martingale', c: 'bg-blue-50 border-blue-200' },
-            { n: '5', t: 'Ville\'s Inequality', c: 'bg-blue-50 border-blue-200' },
-            { n: '6', t: 'Wald\'s SPRT', c: 'bg-blue-50 border-blue-200' },
-            { n: '7', t: 'Mixture / mSPRT', c: 'bg-blue-50 border-blue-200' },
-            { n: '8', t: 'Confidence Sequences', c: 'bg-blue-50 border-blue-200' },
-            { n: '9', t: 'Problem Eppo Solves', c: 'bg-blue-50 border-blue-200' },
-            { n: '10', t: 'Eppo Pipeline', c: 'bg-blue-50 border-blue-200' },
-            { n: '11', t: 'Variance Reduction', c: 'bg-blue-50 border-blue-200' },
-            { n: '12', t: 'Sequential CI', c: 'bg-blue-50 border-blue-200' },
-            { n: '13', t: 'DIY Alternatives', c: 'bg-blue-50 border-blue-200' },
+            { n: '1', t: 'The Peeking Problem', c: 'bg-blue-50 border-blue-200' },
+            { n: '2', t: 'Random Walk', c: 'bg-blue-50 border-blue-200' },
+            { n: '3', t: 'Martingale', c: 'bg-blue-50 border-blue-200' },
+            { n: '4', t: 'Likelihood Ratio', c: 'bg-blue-50 border-blue-200' },
+            { n: '5', t: 'LR is a Martingale', c: 'bg-blue-50 border-blue-200' },
+            { n: '6', t: 'Ville\'s Inequality', c: 'bg-blue-50 border-blue-200' },
+            { n: '7', t: 'Wald\'s SPRT', c: 'bg-blue-50 border-blue-200' },
+            { n: '8', t: 'Mixture / mSPRT', c: 'bg-blue-50 border-blue-200' },
+            { n: '9', t: 'Confidence Sequences', c: 'bg-blue-50 border-blue-200' },
+            { n: '10', t: 'Problem Eppo Solves', c: 'bg-blue-50 border-blue-200' },
+            { n: '11', t: 'Eppo Pipeline', c: 'bg-blue-50 border-blue-200' },
+            { n: '12', t: 'Variance Reduction', c: 'bg-blue-50 border-blue-200' },
+            { n: '13', t: 'Sequential CI', c: 'bg-blue-50 border-blue-200' },
+            { n: '14', t: 'DIY Alternatives', c: 'bg-blue-50 border-blue-200' },
           ].map(({ n, t, c }) => (
             <a
               key={n}

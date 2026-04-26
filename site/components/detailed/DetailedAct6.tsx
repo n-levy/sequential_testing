@@ -1,16 +1,17 @@
 'use client'
 
 import { InlineMath, BlockMath } from '@/components/ui/Math'
-import { SPRTSim } from './sims/SPRTSim'
+import { VilleInequalitySim } from './sims/VilleInequalitySim'
 
 export function DetailedAct6() {
   return (
-    <section id="act-6" className="py-16 bg-white">
+    <section id="act-6" className="py-16 bg-neutral-50">
       <div className="max-w-4xl mx-auto px-4">
         <div className="text-center mb-12">
           <h2 className="text-3xl font-bold text-neutral-900 mb-4">
-            Act 6 &mdash; SPRT: Wald&apos;s Sequential Probability Ratio Test (1945)
+            Act 6 &mdash; Markov, Ville, and the Anytime-Valid Guarantee
           </h2>
+          <p className="text-neutral-600">This is the pivotal act of the entire presentation.</p>
         </div>
 
         {/* Simulation */}
@@ -18,122 +19,179 @@ export function DetailedAct6() {
           <h4 className="font-bold text-blue-900 mb-3">Simulation</h4>
           <div className="text-neutral-800 space-y-3">
             <p>
-              Two coins: one fair (<InlineMath>{`H_0`}</InlineMath>), one biased (<InlineMath>{`H_1`}</InlineMath>).
-              You do not know which you have.
+              <strong>Panel 1 &mdash; Markov (single time):</strong>{' '}
+              10,000 fair-coin paths of <InlineMath>{`\\Lambda_n`}</InlineMath>. A threshold at{' '}
+              <InlineMath>{`\\Lambda = 1/\\alpha = 20`}</InlineMath>. Count: how many paths are
+              above the threshold at step 200? Fraction <InlineMath>{`\\leq 5\\%`}</InlineMath>.
             </p>
             <p>
-              <InlineMath>{`\\Lambda_n`}</InlineMath> is plotted as a path. Two thresholds:
-              <strong> Upper</strong> at <InlineMath>{`\\Lambda_n = B`}</InlineMath>: cross this
-              &rArr; &ldquo;coin is biased.&rdquo;{' '}
-              <strong>Lower</strong> at <InlineMath>{`\\Lambda_n = A`}</InlineMath>: fall below this
-              &rArr; &ldquo;coin is fair.&rdquo;
+              <strong>Panel 2 &mdash; Ville (any time):</strong>{' '}
+              Same paths. Count: how many <em>ever</em> crossed the threshold at <em>any</em> step?
+              Also <InlineMath>{`\\leq 5\\%`}</InlineMath> &mdash; but requires a stronger theorem.
+            </p>
+            <p>
+              <strong>Panel 3 &mdash; Comparison:</strong>{' '}
+              Standard <InlineMath>{`z`}</InlineMath>-score checked at every step. Count how many
+              ever show significance. Much higher than 5% &mdash; the peeking problem.
             </p>
           </div>
         </div>
 
         {/* Interactive Simulation */}
-        <SPRTSim />
+        <VilleInequalitySim />
 
         {/* Intuition */}
         <div className="bg-blue-50 border border-blue-400 rounded-lg p-6 mb-8">
-          <h4 className="font-bold text-blue-900 mb-3">Intuitive Explanation</h4>
           <div className="text-neutral-800 space-y-3">
-            <p>
-              <a href="#ref-wald-1945" className="text-blue-600 hover:text-blue-800">Abraham Wald</a> (1943, published 1945) asked: given that we can peek at the data
-              anytime, what is the most <em>efficient</em> way to decide between two hypotheses?
+            <p>We are about to prove the most important result in this entire presentation:
+              the <strong>anytime-valid guarantee</strong>.
             </p>
-            <p>
-              His answer: compute <InlineMath>{`\\Lambda_n`}</InlineMath> after each observation.
-              If it gets high enough, conclude <InlineMath>{`H_1`}</InlineMath>. Low enough,
-              conclude <InlineMath>{`H_0`}</InlineMath>. Otherwise, keep collecting.
-            </p>
-            <p>
-              Wald proved this is <strong>optimal</strong>: no other sequential test with the same
-              error guarantees needs fewer observations on average. In fact, the SPRT typically
-              requires <strong>47&ndash;63% fewer observations</strong> than the best
-              fixed-sample test with the same error rates.
-            </p>
+            <p>Two steps:</p>
+            <ol className="list-decimal ml-6 space-y-1">
+              <li><strong>Markov&apos;s inequality</strong> &mdash; a simple bound at one point in time.</li>
+              <li><strong>Ville&apos;s inequality</strong> &mdash; extends the bound to all points in time simultaneously.</li>
+            </ol>
+            <p>Ville&apos;s inequality is <em>the reason</em> sequential testing works.</p>
           </div>
         </div>
 
-        {/* Mathematical Formulation */}
+        {/* Step 1: Markov */}
         <h3 className="text-2xl font-bold text-neutral-900 mb-4">Mathematical Formulation</h3>
 
-        <h4 className="text-lg font-semibold text-neutral-800 mb-3">Decision rule</h4>
-        <div className="text-neutral-700 space-y-3 mb-6">
-          <p>
-            Choose error tolerances <InlineMath>{`\\alpha`}</InlineMath> (false positive rate) and{' '}
-            <InlineMath>{`\\beta`}</InlineMath> (false negative rate). Compute two thresholds:
-          </p>
-          <div className="bg-white border border-neutral-300 rounded-lg p-4">
-            <BlockMath>{`B = \\frac{1 - \\beta}{\\alpha}, \\quad A = \\frac{\\beta}{1 - \\alpha}`}</BlockMath>
+        <h4 className="text-lg font-semibold text-neutral-800 mb-3">Step 1: Markov&apos;s Inequality</h4>
+
+        <div className="bg-white border-2 border-neutral-400 rounded-lg p-5 mb-6">
+          <p className="font-semibold text-neutral-900 mb-2">Theorem (Markov&apos;s Inequality)</p>
+          <div className="text-neutral-700">
+            <p>
+              For any non-negative random variable <InlineMath>{`X`}</InlineMath> with finite{' '}
+              <InlineMath>{`\\EE[X]`}</InlineMath>:
+            </p>
+            <div className="bg-neutral-50 border border-neutral-300 rounded p-3 mt-2">
+              <BlockMath>{`\\PP(X \\geq c) \\leq \\frac{\\EE[X]}{c}`}</BlockMath>
+            </div>
           </div>
-          <p>
-            <strong>Example</strong> (<InlineMath>{`\\alpha = 0.05`}</InlineMath>,{' '}
-            <InlineMath>{`\\beta = 0.20`}</InlineMath>):
-          </p>
-          <BlockMath>{`B = \\frac{0.80}{0.05} = 16, \\quad A = \\frac{0.20}{0.95} \\approx 0.211`}</BlockMath>
         </div>
 
-        <div className="overflow-x-auto mb-6">
-          <table className="w-full min-w-[640px] text-sm border-collapse border border-neutral-300">
-            <thead>
-              <tr className="bg-neutral-100">
-                <th className="border border-neutral-300 p-3 text-left font-semibold">Condition</th>
-                <th className="border border-neutral-300 p-3 text-left font-semibold">Decision</th>
-                <th className="border border-neutral-300 p-3 text-left font-semibold">Meaning</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr><td className="border border-neutral-300 p-3"><InlineMath>{`\\Lambda_n \\geq B = 16`}</InlineMath></td><td className="border border-neutral-300 p-3">Reject <InlineMath>{`H_0`}</InlineMath></td><td className="border border-neutral-300 p-3">&ldquo;Coin is biased&rdquo;</td></tr>
-              <tr className="bg-neutral-50"><td className="border border-neutral-300 p-3"><InlineMath>{`\\Lambda_n \\leq A \\approx 0.21`}</InlineMath></td><td className="border border-neutral-300 p-3">Accept <InlineMath>{`H_0`}</InlineMath></td><td className="border border-neutral-300 p-3">&ldquo;Coin is fair&rdquo;</td></tr>
-              <tr><td className="border border-neutral-300 p-3"><InlineMath>{`A < \\Lambda_n < B`}</InlineMath></td><td className="border border-neutral-300 p-3">Keep flipping</td><td className="border border-neutral-300 p-3">&ldquo;Not enough evidence yet&rdquo;</td></tr>
-            </tbody>
-          </table>
-        </div>
-
-        {/* Savings */}
-        <h4 className="text-lg font-semibold text-neutral-800 mb-3">Savings over fixed-sample tests</h4>
         <div className="text-neutral-700 space-y-3 mb-6">
+          <p><strong>Why is this true? An intuitive proof.</strong></p>
+          <p>
+            Suppose <InlineMath>{`X \\geq 0`}</InlineMath> always. Let{' '}
+            <InlineMath>{`q = \\PP(X \\geq c)`}</InlineMath> be the fraction of outcomes at or
+            above <InlineMath>{`c`}</InlineMath>. Those outcomes contribute <em>at least</em>{' '}
+            <InlineMath>{`q \\times c`}</InlineMath> to the average (each is{' '}
+            <InlineMath>{`\\geq c`}</InlineMath>). The rest contribute{' '}
+            <InlineMath>{`\\geq 0`}</InlineMath> (since <InlineMath>{`X \\geq 0`}</InlineMath>):
+          </p>
+          <BlockMath>{`\\EE[X] \\geq q \\cdot c + (1-q) \\cdot 0 = q \\cdot c \\quad \\Longrightarrow \\quad q \\leq \\frac{\\EE[X]}{c} \\quad \\checkmark`}</BlockMath>
+        </div>
+
+        <div className="text-neutral-700 space-y-3 mb-6">
+          <p><strong>Concrete example.</strong> Average income in a town is &euro;50,000.</p>
+          <BlockMath>{`\\PP(\\text{income} \\geq \\text{€}500{,}000) \\leq \\frac{50{,}000}{500{,}000} = 0.10 = 10\\%`}</BlockMath>
+          <p>At most 10% of people can earn &euro;500,000+.</p>
+        </div>
+
+        <div className="text-neutral-700 space-y-3 mb-6">
+          <p><strong>Applying Markov to the likelihood ratio.</strong></p>
+          <p>
+            Under <InlineMath>{`H_0`}</InlineMath>, <InlineMath>{`\\Lambda_n`}</InlineMath> is a
+            martingale with <InlineMath>{`\\EE[\\Lambda_n] = \\Lambda_0 = 1`}</InlineMath> and{' '}
+            <InlineMath>{`\\Lambda_n \\geq 0`}</InlineMath>. Markov gives:
+          </p>
+          <BlockMath>{`\\PP\\!\\left(\\Lambda_n \\geq \\frac{1}{\\alpha}\\right) \\leq \\frac{\\EE[\\Lambda_n]}{1/\\alpha} = 1 \\cdot \\alpha = \\alpha`}</BlockMath>
+          <div className="bg-white border border-neutral-200 rounded-lg p-4 text-neutral-600">
+            <p>
+              At any single, pre-specified step <InlineMath>{`n`}</InlineMath>, the false positive
+              probability is at most <InlineMath>{`\\alpha`}</InlineMath>. Reassuring &mdash; but
+              only for <em>one</em> moment.
+            </p>
+          </div>
+        </div>
+
+        {/* Step 2: Ville */}
+        <h4 className="text-lg font-semibold text-neutral-800 mb-3">Step 2: <a href="#ref-ville-1939" className="text-blue-600 hover:text-blue-800">Ville&apos;s Inequality (1939)</a></h4>
+
+        <div className="bg-white border-2 border-neutral-400 rounded-lg p-5 mb-6">
+          <p className="font-semibold text-neutral-900 mb-2">Theorem (Ville&apos;s Inequality)</p>
+          <div className="text-neutral-700">
+            <p>
+              For any <strong>non-negative martingale</strong>{' '}
+              <InlineMath>{`\\{M_n\\}_{n \\geq 0}`}</InlineMath> with{' '}
+              <InlineMath>{`M_0 = m_0`}</InlineMath>:
+            </p>
+            <div className="bg-neutral-50 border border-neutral-300 rounded p-3 mt-2">
+              <BlockMath>{`\\PP\\!\\left(\\sup_{n \\geq 0}\\, M_n \\geq c\\right) \\leq \\frac{m_0}{c}`}</BlockMath>
+            </div>
+            <p className="mt-2">
+              where <InlineMath>{`\\sup_{n \\geq 0} M_n`}</InlineMath> is the highest value{' '}
+              <InlineMath>{`M_n`}</InlineMath> <em>ever</em> reaches.
+            </p>
+          </div>
+        </div>
+
+        <div className="text-neutral-700 space-y-3 mb-6">
+          <p><strong>Why this is remarkable:</strong></p>
           <div className="overflow-x-auto">
             <table className="w-full min-w-[640px] text-sm border-collapse border border-neutral-300">
-              <thead>
-                <tr className="bg-neutral-100">
-                  <th className="border border-neutral-300 p-3 text-left font-semibold"><InlineMath>{`\\alpha`}</InlineMath></th>
-                  <th className="border border-neutral-300 p-3 text-left font-semibold"><InlineMath>{`\\beta`}</InlineMath></th>
-                  <th className="border border-neutral-300 p-3 text-left font-semibold">Saving in expected observations</th>
-                </tr>
-              </thead>
               <tbody>
-                <tr><td className="border border-neutral-300 p-3">0.05</td><td className="border border-neutral-300 p-3">0.05</td><td className="border border-neutral-300 p-3"><InlineMath>{`\\approx 53\\%`}</InlineMath></td></tr>
-                <tr className="bg-neutral-50"><td className="border border-neutral-300 p-3">0.05</td><td className="border border-neutral-300 p-3">0.01</td><td className="border border-neutral-300 p-3"><InlineMath>{`\\approx 47\\%`}</InlineMath></td></tr>
-                <tr><td className="border border-neutral-300 p-3">0.01</td><td className="border border-neutral-300 p-3">0.01</td><td className="border border-neutral-300 p-3"><InlineMath>{`\\approx 63\\%`}</InlineMath></td></tr>
+                <tr><td className="border border-neutral-300 p-3 font-semibold bg-neutral-100">Markov</td><td className="border border-neutral-300 p-3">At any single <em>fixed</em> moment, <InlineMath>{`\\PP(M_n \\geq c)`}</InlineMath> is small.</td></tr>
+                <tr className="bg-neutral-50"><td className="border border-neutral-300 p-3 font-semibold bg-neutral-100">Ville</td><td className="border border-neutral-300 p-3"><InlineMath>{`\\PP(M_n`}</InlineMath> <strong>ever</strong> <InlineMath>{`\\geq c`}</InlineMath>, at <strong>any</strong> moment<InlineMath>{`)`}</InlineMath> is <em>also</em> small.</td></tr>
               </tbody>
             </table>
           </div>
+        </div>
+
+        <div className="text-neutral-700 space-y-3 mb-6">
+          <p><strong>The intuition behind Ville.</strong></p>
+          <p>
+            For a non-negative martingale, reaching a high value &ldquo;uses up&rdquo; the
+            available expected value. Once high, it must stay high on average (martingale
+            property), yet it cannot go below zero (non-negativity). These two constraints
+            together limit how often it can ever be high.
+          </p>
+        </div>
+
+        {/* Applying Ville to LR */}
+        <h4 className="text-lg font-semibold text-neutral-800 mb-3">
+          Applying Ville to the likelihood ratio
+        </h4>
+
+        <div className="text-neutral-700 space-y-3 mb-6">
+          <p>
+            Set <InlineMath>{`M_n = \\Lambda_n`}</InlineMath>,{' '}
+            <InlineMath>{`m_0 = \\Lambda_0 = 1`}</InlineMath>,{' '}
+            <InlineMath>{`c = 1/\\alpha`}</InlineMath>:
+          </p>
+          <div className="bg-white border-2 border-green-200 rounded-lg p-4">
+            <BlockMath>{`\\PP\\!\\left(\\Lambda_n \\text{ ever reaches } \\frac{1}{\\alpha} \\text{ or higher}\\right) \\leq \\alpha`}</BlockMath>
+          </div>
           <div className="bg-white border border-neutral-200 rounded-lg p-4 text-neutral-600">
             <p>
-              The SPRT needs, on average, only about <strong>half as many observations</strong> as
-              a traditional fixed-sample test. This was a remarkable result in 1945 and
-              remains one of the main motivations for sequential testing.
+              The probability that the likelihood ratio ever crosses our rejection threshold
+              &mdash; at any point, across all flips, even if you run forever &mdash; is at
+              most <InlineMath>{`\\alpha`}</InlineMath>.
+            </p>
+            <p className="mt-2">
+              <strong>This is the anytime-valid guarantee.</strong> You can peek after every
+              observation. The false positive rate, across all checks combined, stays{' '}
+              <InlineMath>{`\\leq \\alpha`}</InlineMath>.
             </p>
           </div>
         </div>
 
-        {/* Critical weakness */}
-        <h4 className="text-lg font-semibold text-neutral-800 mb-3">The critical weakness</h4>
+        {/* Connecting back */}
+        <h4 className="text-lg font-semibold text-neutral-800 mb-3">Connecting back to Act 1</h4>
         <div className="text-neutral-700 space-y-3 mb-6">
           <p>
-            SPRT requires specifying <InlineMath>{`\\delta`}</InlineMath> in advance &mdash;
-            the exact alternative hypothesis <InlineMath>{`H_1`}</InlineMath>. If you set{' '}
-            <InlineMath>{`\\delta = 0.1`}</InlineMath> but the true bias is{' '}
-            <InlineMath>{`0.03`}</InlineMath>, the likelihood ratio is computed against the
-            wrong alternative. The test may take much longer, or still determine the correct
-            answer but far less efficiently.
+            Standard test statistics (like <InlineMath>{`p`}</InlineMath>-values from a{' '}
+            <InlineMath>{`t`}</InlineMath>-test) are <em>not</em> martingales. Checking
+            repeatedly gives many independent chances to be fooled.
           </p>
           <p>
-            In A/B testing &mdash; where the effect size is typically unknown &mdash; this is a
-            serious limitation. The next two acts address this.
+            The likelihood ratio <em>is</em> a martingale under <InlineMath>{`H_0`}</InlineMath>.
+            Ville&apos;s inequality converts this into a practical guarantee:{' '}
+            <strong>peeking is safe.</strong>
           </p>
         </div>
 
@@ -141,11 +199,11 @@ export function DetailedAct6() {
         <div className="bg-neutral-100 border border-neutral-300 rounded-lg p-6 mb-8">
           <h4 className="font-semibold text-neutral-700 mb-3">Historical Note</h4>
           <p className="text-neutral-700">
-            Wald conjectured in his 1945 paper that the SPRT is <em>exactly</em> optimal.
-            Three years later, <a href="#ref-wald-wolfowitz-1948" className="text-blue-600 hover:text-blue-800">Wald &amp; Wolfowitz (1948)</a> proved the general result: among{' '}
-            <strong>all</strong> sequential tests with the same or smaller error probabilities{' '}
-            <InlineMath>{`(\\alpha, \\beta)`}</InlineMath>, the SPRT minimises the expected sample
-            size under both <InlineMath>{`H_0`}</InlineMath> and <InlineMath>{`H_1`}</InlineMath> simultaneously.
+            <a href="#ref-ville-1939" className="text-blue-600 hover:text-blue-800">Jean Ville</a> proved this inequality in his 1939 doctoral thesis,{' '}
+            <em>&Eacute;tude critique de la notion de collectif</em>. It predated the
+            formal development of martingale theory by <a href="#ref-doob-1953" className="text-blue-600 hover:text-blue-800">Doob (1953)</a> and was largely
+            overlooked for decades. <a href="#ref-robbins-1970" className="text-blue-600 hover:text-blue-800">Robbins (1970)</a> was among the first to recognise its
+            practical importance for sequential testing &mdash; a connection we explore in Act 8.
           </p>
         </div>
 
@@ -154,9 +212,9 @@ export function DetailedAct6() {
           <h4 className="font-bold text-green-900 mb-3">Key Takeaway</h4>
           <div className="text-neutral-800">
             <p>
-              <strong>Key concepts:</strong> SPRT decision rule, Wald&apos;s boundary approximations,
-              47&ndash;63% saving over fixed-sample tests, optimality (Wald &amp; Wolfowitz 1948),
-              the critical dependence on a pre-specified effect size.
+              <strong>Key concepts:</strong> Markov&apos;s inequality (with proof),
+              Ville&apos;s inequality, the anytime-valid guarantee,
+              martingale + non-negative = peek-safe.
             </p>
           </div>
         </div>

@@ -1,81 +1,49 @@
 'use client'
 
 import { InlineMath, BlockMath } from '@/components/ui/Math'
-import { MartingaleSim } from './sims/MartingaleSim'
+import { RandomWalkSim } from './sims/RandomWalkSim'
 
 export function DetailedAct2() {
   return (
-    <section id="act-2" className="py-16 bg-white">
+    <section id="act-2" className="py-16 bg-neutral-50">
       <div className="max-w-4xl mx-auto px-4">
         <div className="text-center mb-12">
           <h2 className="text-3xl font-bold text-neutral-900 mb-4">
-            Act 2 &mdash; The Gambling Game and the Martingale
+            Act 2 &mdash; The Random Walk
           </h2>
         </div>
 
-        {/* Simulation */}
+        {/* Simulation description */}
 
         <div className="bg-blue-50 border border-blue-200 rounded-lg p-6 mb-8">
           <h4 className="font-bold text-blue-900 mb-3">Simulation</h4>
           <div className="text-neutral-800 space-y-3">
             <p>
-              The same random walk relabelled as cumulative profit/loss in a fair game.
-              The horizontal line at zero represents break-even.
-            </p>
-            <p>
-              <strong>Doubling strategy mode:</strong> Simulates 10,000 gamblers using
-              the martingale betting strategy. The resulting histogram shows the
-              characteristic heavy left tail: many small winners, a few catastrophic
-              losers. The sample mean converges to zero.
+              A symmetric random walk starting at the origin. At each step,{' '}
+              <InlineMath>{`+1`}</InlineMath> (heads) or <InlineMath>{`-1`}</InlineMath> (tails)
+              with equal probability. The cumulative sum <InlineMath>{`S_n`}</InlineMath> is
+              plotted against the step number.
             </p>
           </div>
         </div>
 
         {/* Interactive Simulation */}
-        <MartingaleSim />
+        <RandomWalkSim />
 
         {/* Intuitive Explanation */}
 
         <div className="bg-blue-50 border border-blue-400 rounded-lg p-6 mb-8">
-          <h4 className="font-bold text-blue-900 mb-3">Intuitive Explanation</h4>
           <div className="text-neutral-800 space-y-3">
             <p>
-              A fair game pays <InlineMath>{`+1`}</InlineMath> for heads and{' '}
-              <InlineMath>{`-1`}</InlineMath> for tails. Cumulative winnings trace the
-              same random walk from Act 1.
+              A random walk is the simplest stochastic process: independent, identically
+              distributed increments summed cumulatively. The walk has zero drift (the
+              expected position at any step is the current sum) but increasing dispersion.
             </p>
             <p>
-              A natural question: can you beat a fair game by choosing a clever stopping
-              rule &mdash; e.g. quitting as soon as cumulative winnings exceed some
-              threshold? The answer is no.
-            </p>
-            <p>
-              A fair random walk does eventually return to positive territory (by
-              recurrence), but the expected waiting time is infinite. No stopping
-              strategy can generate positive expected profit in a fair game.
-            </p>
-            <p>
-              <strong>Central insight:</strong> Under mild regularity conditions, the
-              expected value of a martingale at any stopping time equals its initial
-              value. This is a theorem, not an approximation.
-            </p>
-          </div>
-        </div>
-
-        <div className="bg-blue-50 border border-blue-400 rounded-lg p-6 mb-8">
-          <h4 className="font-bold text-blue-900 mb-3">The doubling strategy (Martingale betting), exposed</h4>
-          <div className="text-neutral-800 space-y-3">
-            <p>
-              The martingale betting strategy doubles the stake after each loss until a
-              win recovers all previous losses plus one unit. It produces a profit of{' '}
-              <InlineMath>{`+1`}</InlineMath> with high probability.
-            </p>
-            <p>
-              However, a sequence of <InlineMath>{`k`}</InlineMath> consecutive losses
-              requires a stake of <InlineMath>{`2^k`}</InlineMath>. Ten consecutive losses
-              demand a bet of 1,024 to recover 1. The distribution of outcomes has
-              extreme negative skew: the expected value is exactly zero, consistent with
-              the martingale property.
+              Individual paths can wander far from zero, but the distribution of{' '}
+              <InlineMath>{`S_n`}</InlineMath> across many realisations is centred at zero
+              with standard deviation <InlineMath>{`\sqrt{n}`}</InlineMath>. This spreading
+              has a precise characterisation via the Central Limit Theorem.
             </p>
           </div>
         </div>
@@ -83,156 +51,117 @@ export function DetailedAct2() {
         {/* Mathematical Formulation */}
         <h3 className="text-2xl font-bold text-neutral-900 mb-4">Mathematical Formulation</h3>
 
-        <h4 className="text-lg font-semibold text-neutral-800 mb-3">Definition: Martingale</h4>
+        <h4 className="text-lg font-semibold text-neutral-800 mb-3">Setting up the notation</h4>
 
         <div className="text-neutral-700 space-y-3 mb-6">
           <p>
-            A sequence <InlineMath>{`M_0, M_1, M_2, \\ldots`}</InlineMath> is a{' '}
-            <strong>martingale</strong> if, at every step, the best prediction of the next
-            value is the current value:
+            Let <InlineMath>{`X_i`}</InlineMath> represent the outcome of the{' '}
+            <InlineMath>{`i`}</InlineMath>th coin flip:
+          </p>
+          <BlockMath>{`X_i = \\begin{cases} +1 & \\text{if heads (step forward)} \\\\ -1 & \\text{if tails (step backward)} \\end{cases}`}</BlockMath>
+          <p>
+            The probability of heads is written <InlineMath>{`p`}</InlineMath>. For a fair coin,{' '}
+            <InlineMath>{`p = 0.5`}</InlineMath>.
+          </p>
+        </div>
+
+        <h4 className="text-lg font-semibold text-neutral-800 mb-3">
+          Position after <InlineMath>{`n`}</InlineMath> steps
+        </h4>
+
+        <div className="text-neutral-700 space-y-3 mb-6">
+          <div className="bg-white border border-neutral-300 rounded-lg p-4">
+            <BlockMath>{`S_n = \\sum_{i=1}^{n} X_i = X_1 + X_2 + \\cdots + X_n`}</BlockMath>
+          </div>
+          <div className="bg-white border border-neutral-200 rounded-lg p-4 text-neutral-600">
+            <p>
+              In words: <InlineMath>{`S`}</InlineMath> sub <InlineMath>{`n`}</InlineMath> equals
+              the sum of all <InlineMath>{`X_i`}</InlineMath>, starting from{' '}
+              <InlineMath>{`i = 1`}</InlineMath> up to <InlineMath>{`i = n`}</InlineMath>.
+            </p>
+          </div>
+        </div>
+
+        <div className="text-neutral-700 space-y-3 mb-6">
+          <p><strong>Example.</strong><br />First 5 flips: H, T, H, H, T, so{' '}
+            <InlineMath>{`X_1 = +1,\\; X_2 = -1,\\; X_3 = +1,\\; X_4 = +1,\\; X_5 = -1`}</InlineMath>.
+          </p>
+          <BlockMath>{`S_1 = 1, \\quad S_2 = 0, \\quad S_3 = 1, \\quad S_4 = 2, \\quad S_5 = 1`}</BlockMath>
+        </div>
+
+        {/* Expected value */}
+        <h4 className="text-lg font-semibold text-neutral-800 mb-3">
+          The average outcome (expected value)
+        </h4>
+
+        <div className="text-neutral-700 space-y-3 mb-6">
+          <p>
+            When <InlineMath>{`p = 0.5`}</InlineMath>, each flip has expected value zero:
+          </p>
+          <BlockMath>{`\\EE[X_i] = \\underbrace{0.5}_{P(\\text{heads})} \\times (+1) + \\underbrace{0.5}_{P(\\text{tails})} \\times (-1) = 0`}</BlockMath>
+          <p>Because each step averages to zero:</p>
+          <div className="bg-white border border-neutral-300 rounded-lg p-4">
+            <BlockMath>{`\\EE[S_n] = \\EE[X_1] + \\EE[X_2] + \\cdots + \\EE[X_n] = 0`}</BlockMath>
+          </div>
+          <div className="bg-white border border-neutral-200 rounded-lg p-4 text-neutral-600">
+            <p>On average, across many trials, you end up back where you started.</p>
+          </div>
+        </div>
+
+        {/* Variance */}
+        <h4 className="text-lg font-semibold text-neutral-800 mb-3">
+          How spread out the outcomes are &mdash; variance &amp; standard deviation
+        </h4>
+
+        <div className="text-neutral-700 space-y-3 mb-6">
+          <p>
+            <strong>Variance</strong> measures the average squared distance from the mean.
+            For a single fair coin flip:
+          </p>
+          <BlockMath>{`\\Var(X_i) = \\EE[(X_i - 0)^2] = 0.5 \\times (+1)^2 + 0.5 \\times (-1)^2 = 1`}</BlockMath>
+          <p>
+            Because flips are independent, the variance of the sum is the sum of the variances:
+          </p>
+          <BlockMath>{`\\Var(S_n) = \\Var(X_1) + \\Var(X_2) + \\cdots + \\Var(X_n) = \\underbrace{1 + 1 + \\cdots + 1}_{n \\text{ terms}} = n`}</BlockMath>
+          <p>
+            The <strong>standard deviation</strong> is the square root of the variance &mdash;
+            same units as the position:
           </p>
           <div className="bg-white border border-neutral-300 rounded-lg p-4">
-            <BlockMath>{`\\EE[M_n \\given M_0, M_1, \\ldots, M_{n-1}] = M_{n-1}`}</BlockMath>
+            <BlockMath>{`\\text{SD}(S_n) = \\sqrt{\\Var(S_n)} = \\sqrt{n}`}</BlockMath>
           </div>
-        </div>
-
-        <div className="text-neutral-700 space-y-3 mb-6">
-          <p><strong>Reading the notation carefully:</strong></p>
-          <ul className="list-disc ml-6 space-y-1">
-            <li><InlineMath>{`\\EE[\\cdot]`}</InlineMath> = &ldquo;the expected value of&hellip;&rdquo; (long-run average).</li>
-            <li>The vertical bar &ldquo;<InlineMath>{`\\given`}</InlineMath>&rdquo; = &ldquo;given that we know.&rdquo; Everything after the bar is information we have.</li>
-            <li><InlineMath>{`M_0, M_1, \\ldots, M_{n-1}`}</InlineMath> = the full history up to step <InlineMath>{`n-1`}</InlineMath>.</li>
-            <li>Full sentence: &ldquo;The expected value of <InlineMath>{`M_n`}</InlineMath>, given that we know everything up to step <InlineMath>{`n-1`}</InlineMath>, equals <InlineMath>{`M_{n-1}`}</InlineMath>.&rdquo;</li>
-          </ul>
-        </div>
-
-        <div className="bg-white border border-neutral-200 rounded-lg p-4 mb-6 text-neutral-600">
-          <p>
-            Knowing the entire history, your best guess for the next value is just
-            the current value. The past gives no useful information about the future direction.
-          </p>
-        </div>
-
-        {/* Verifying martingale */}
-        <h4 className="text-lg font-semibold text-neutral-800 mb-3">
-          Verifying: the coin-flip game is a martingale
-        </h4>
-
-        <div className="text-neutral-700 space-y-3 mb-6">
-          <p>
-            Let <InlineMath>{`M_n = S_n`}</InlineMath> (cumulative winnings).
-            Then <InlineMath>{`M_n = M_{n-1} + X_n`}</InlineMath>.
-          </p>
-          <BlockMath>{`\\begin{aligned}
-\\EE[M_n \\given M_0, \\ldots, M_{n-1}]
-&= \\EE[M_{n-1} + X_n \\given M_0, \\ldots, M_{n-1}] \\\\
-&= M_{n-1} + \\EE[X_n \\given M_0, \\ldots, M_{n-1}] \\quad \\text{(}M_{n-1}\\text{ is known)} \\\\
-&= M_{n-1} + 0 \\quad \\text{(next flip is independent; }\\EE[X_n] = 0\\text{)} \\\\
-&= M_{n-1} \\quad \\checkmark
-\\end{aligned}`}</BlockMath>
-        </div>
-
-        {/* Doob's Optional Stopping Theorem */}
-        <h4 className="text-lg font-semibold text-neutral-800 mb-3">
-          <a href="#ref-doob-1953" className="text-blue-600 hover:text-blue-800">Doob&apos;s</a> Optional Stopping Theorem (1953)
-        </h4>
-
-        <div className="bg-white border-2 border-neutral-400 rounded-lg p-5 mb-6">
-          <p className="font-semibold text-neutral-900 mb-2">Theorem (Doob&apos;s Optional Stopping Theorem)</p>
-          <div className="text-neutral-700 space-y-2">
+          <div className="bg-white border border-neutral-200 rounded-lg p-4 text-neutral-600">
             <p>
-              Let <InlineMath>{`\\{M_n\\}`}</InlineMath> be a martingale and{' '}
-              <InlineMath>{`\\tau`}</InlineMath> a <strong>stopping time</strong> &mdash; a rule
-              for when to quit that uses only information accumulated so far (no looking
-              into the future). Then, under reasonable conditions:
+              Before we begin flipping the coin, the expected position is zero: <InlineMath>{`\\EE[S_n] = 0`}</InlineMath>.
+              But positions spread out over time. If we flip the coin a large number of times,
+              about 68% of walks would end up within{' '}
+              <InlineMath>{`\\pm\\sqrt{n}`}</InlineMath> of zero (one standard deviation),
+              and about 95% within <InlineMath>{`\\pm 2\\sqrt{n}`}</InlineMath> (two standard deviations).
+              More generally, the distribution of the sum of walks would be approximately normal.
+              For example, after 100 steps, 68% of walks are within ±10
+              and 95% within ±20.
+              The spread grows with the <em>square root</em> of the number of steps, not the
+              number itself.
             </p>
-            <div className="bg-neutral-50 border border-neutral-300 rounded p-3">
-              <BlockMath>{`\\EE[M_\\tau] = \\EE[M_0]`}</BlockMath>
-            </div>
           </div>
         </div>
 
-        <div className="bg-white border border-neutral-200 rounded-lg p-4 mb-6 text-neutral-600">
-          <p>
-            For a gambler starting with <InlineMath>{`M_0 = 0`}</InlineMath>: expected
-            winnings at stopping = 0, always, for any strategy.{' '}
-            <strong>You cannot beat a fair game by choosing when to quit.</strong>
-          </p>
-        </div>
-
-        {/* Stopping time table */}
-        <h4 className="text-lg font-semibold text-neutral-800 mb-3">What is a stopping time?</h4>
-
-        <div className="text-neutral-700 space-y-3 mb-6">
-          <p>
-            <InlineMath>{`\\tau`}</InlineMath> is a decision rule of the form: &ldquo;Stop
-            after step <InlineMath>{`n`}</InlineMath> if [condition based only on what happened
-            so far].&rdquo;
-          </p>
-
-          <div className="overflow-x-auto">
-            <table className="w-full min-w-[640px] text-sm border-collapse border border-neutral-300">
-              <thead>
-                <tr className="bg-neutral-100">
-                  <th className="border border-neutral-300 p-3 text-left font-semibold">Rule</th>
-                  <th className="border border-neutral-300 p-3 text-left font-semibold">Valid?</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr><td className="border border-neutral-300 p-3">Stop after exactly 100 flips</td><td className="border border-neutral-300 p-3 text-green-700">&#10003;</td></tr>
-                <tr className="bg-neutral-50"><td className="border border-neutral-300 p-3">Stop the first time I am ahead by &euro;10</td><td className="border border-neutral-300 p-3 text-green-700">&#10003;</td></tr>
-                <tr><td className="border border-neutral-300 p-3">Stop when I have lost &euro;50</td><td className="border border-neutral-300 p-3 text-green-700">&#10003;</td></tr>
-                <tr className="bg-neutral-50"><td className="border border-neutral-300 p-3">Stop after 1000 flips <em>or</em> when ahead by &euro;5, whichever first</td><td className="border border-neutral-300 p-3 text-green-700">&#10003;</td></tr>
-                <tr><td className="border border-neutral-300 p-3">Stop right before the next loss</td><td className="border border-neutral-300 p-3 text-neutral-500">&#10007; (requires the future!)</td></tr>
-              </tbody>
-            </table>
-          </div>
-        </div>
-
-        {/* Reasonable conditions */}
+        {/* Biased coin */}
         <h4 className="text-lg font-semibold text-neutral-800 mb-3">
-          The &ldquo;reasonable conditions&rdquo; for Doob&apos;s theorem
+          What if the coin is not fair?
         </h4>
 
         <div className="text-neutral-700 space-y-3 mb-6">
-          <p>Doob&apos;s theorem requires at least one of:</p>
-          <ol className="list-decimal ml-6 space-y-1">
-            <li><InlineMath>{`\\tau \\leq N`}</InlineMath> for some fixed <InlineMath>{`N`}</InlineMath> (bounded stopping time), <strong>or</strong></li>
-            <li><InlineMath>{`|M_n| \\leq C`}</InlineMath> for some fixed <InlineMath>{`C`}</InlineMath> (bounded martingale), <strong>or</strong></li>
-            <li><InlineMath>{`\\EE[\\tau] < \\infty`}</InlineMath> and certain integrability conditions (finite expected stopping time).</li>
-          </ol>
           <p>
-            When <em>none</em> hold &mdash; as with the doubling strategy &mdash; the guarantee
-            breaks down.
+            When <InlineMath>{`p \\neq 0.5`}</InlineMath>, each step has a non-zero average:
           </p>
-        </div>
-
-        {/* Why doubling fails */}
-        <h4 className="text-lg font-semibold text-neutral-800 mb-3">Why the doubling strategy fails</h4>
-
-        <div className="text-neutral-700 space-y-3 mb-6">
+          <BlockMath>{`\\EE[X_i] = p \\times (+1) + (1-p) \\times (-1) = 2p - 1`}</BlockMath>
           <p>
-            The doubling strategy guarantees eventual profit <em>only if</em> you have
-            infinite money and infinite time. In practice:
+            For <InlineMath>{`p = 0.6`}</InlineMath>: <InlineMath>{`\\EE[X_i] = 0.2`}</InlineMath>.
+            After <InlineMath>{`n`}</InlineMath> steps:
           </p>
-          <ul className="list-disc ml-6 space-y-1">
-            <li>Finite budget &rArr; real probability of ruin before recovery.</li>
-            <li>Expected time to recovery is infinite: <InlineMath>{`\\EE[\\tau] = \\infty`}</InlineMath>.</li>
-            <li>Doob&apos;s theorem gives <InlineMath>{`\\EE[M_\\tau] \\leq 0`}</InlineMath>, not <InlineMath>{`= 0`}</InlineMath>.</li>
-          </ul>
-        </div>
-
-        {/* Why this matters */}
-        <h4 className="text-lg font-semibold text-neutral-800 mb-3">Why this matters for what is coming</h4>
-
-        <div className="text-neutral-700 space-y-3 mb-6">
-          <p>
-            The martingale concept reappears in every subsequent act. The likelihood
-            ratio (Act 4) is a martingale. The mixture likelihood ratio (Act 7) is a
-            martingale. The reason sequential tests control false positives &mdash; even
-            with peeking &mdash; is that they exploit the same structure:{' '}
-            <strong>a fair game cannot be beaten by choosing when to stop.</strong>
-          </p>
+          <BlockMath>{`\\EE[S_n] = n(2p - 1)`}</BlockMath>
+          <p>This is a systematic <em>drift</em> &mdash; the random walk now has a trend.</p>
         </div>
 
         {/* Key Takeaway */}
@@ -240,21 +169,10 @@ export function DetailedAct2() {
           <h4 className="font-bold text-green-900 mb-3">Key Takeaway</h4>
           <div className="text-neutral-800">
             <p>
-              <strong>Key concepts:</strong> martingale, conditional expectation, stopping time,
-              Doob&apos;s Optional Stopping Theorem, the &ldquo;reasonable conditions.&rdquo;
+              Random fluctuations can cause the sum of many coin flips to be far from zero,
+              even though the expected value of each coin flip is zero.
             </p>
           </div>
-        </div>
-
-        {/* Historical Note */}
-        <div className="bg-neutral-100 border border-neutral-300 rounded-lg p-6 mb-8">
-          <h4 className="font-semibold text-neutral-700 mb-3">Historical Note</h4>
-          <p className="text-neutral-700">
-            <a href="#ref-doob-1953" className="text-blue-600 hover:text-blue-800">Joseph L. Doob</a> formalised martingale theory in his 1953 monograph{' '}
-            <em>Stochastic Processes</em>. The name &ldquo;martingale&rdquo; comes from a French
-            term for a type of betting strategy &mdash; the very doubling strategy we just
-            debunked.
-          </p>
         </div>
       </div>
     </section>

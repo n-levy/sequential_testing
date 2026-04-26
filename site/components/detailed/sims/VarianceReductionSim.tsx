@@ -190,7 +190,7 @@ export function VarianceReductionSim() {
           </div>
           <div>
             <label className="block text-sm font-medium text-neutral-700 mb-1">
-              True effect: {trueEffect}
+              True effect: {trueEffect}%
             </label>
             <input type="range" min={0} max={10} step={0.5} value={trueEffect}
               onChange={e => setTrueEffect(+e.target.value)} className="w-full accent-purple-600" />

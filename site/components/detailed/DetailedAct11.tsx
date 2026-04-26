@@ -1,150 +1,170 @@
 'use client'
 
 import { InlineMath, BlockMath } from '@/components/ui/Math'
-import { VarianceReductionSim } from './sims/VarianceReductionSim'
+import { EppoPipelineSim } from '@/components/act2/EppoPipelineSim'
 
 export function DetailedAct11() {
   return (
-    <section id="act-11" className="py-16 bg-neutral-50">
+    <section id="act-11" className="py-16 bg-white">
       <div className="max-w-4xl mx-auto px-4">
         <div className="text-center mb-12">
           <h2 className="text-3xl font-bold text-neutral-900 mb-4">
-            Act 11 &mdash; Variance Reduction via Regression Adjustment
+            Act 11 &mdash; The Eppo Pipeline, Step by Step
           </h2>
+          <p className="text-neutral-600">(Schmit &amp; Miller, 2024)</p>
         </div>
 
         {/* Intuition */}
         <div className="bg-blue-50 border border-blue-400 rounded-lg p-6 mb-8">
-          <h4 className="font-bold text-blue-900 mb-3">Intuitive Explanation</h4>
-          <div className="text-neutral-800 space-y-3">
-            <p>
-              The raw outcome <InlineMath>{`Y_i`}</InlineMath> for each user reflects both
-              the treatment effect and substantial baseline heterogeneity.
-              If pre-experiment behaviour <InlineMath>{`X_i`}</InlineMath> predicts a large
-              share of <InlineMath>{`Y_i`}</InlineMath>, subtracting that prediction reduces
-              variance without altering the expected treatment effect.
-            </p>
-            <p>
-              Regression adjustment exploits this structure. A model trained on
-              pre-experiment covariates produces fitted values{' '}
-              <InlineMath>{`\hat{f}(X_i)`}</InlineMath>. The adjusted outcome{' '}
-              <InlineMath>{`Y^*_i = Y_i - \hat{f}(X_i)`}</InlineMath> retains the signal
-              but removes the predictable component of the noise.
-            </p>
-            <p>
-              <strong>The result:</strong> lower variance, unchanged signal, tighter confidence
-              intervals, and faster decisions.
-            </p>
+          <p className="text-neutral-800">
+            Eppo&apos;s statistical pipeline consists of six stages. Raw data enters,
+            passes through regression adjustment and sequential inference, and exits
+            as an anytime-valid confidence interval for the treatment effect.
+          </p>
+        </div>
+
+        {/* Pipeline diagram */}
+        <div className="bg-neutral-100 rounded-lg p-6 mb-8 text-center">
+          <div className="flex flex-wrap items-center justify-center gap-2 text-sm font-mono">
+            <span className="bg-blue-100 border border-blue-300 rounded px-3 py-2">Randomise</span>
+            <span className="text-neutral-400">&rarr;</span>
+            <span className="bg-blue-100 border border-blue-300 rounded px-3 py-2">Collect</span>
+            <span className="text-neutral-400">&rarr;</span>
+            <span className="bg-blue-100 border border-blue-300 rounded px-3 py-2">Adjust</span>
+            <span className="text-neutral-400">&rarr;</span>
+            <span className="bg-blue-100 border border-blue-300 rounded px-3 py-2">Estimate</span>
+            <span className="text-neutral-400">&rarr;</span>
+            <span className="bg-blue-100 border border-blue-300 rounded px-3 py-2">CI</span>
+            <span className="text-neutral-400">&rarr;</span>
+            <span className="bg-blue-100 border border-blue-300 rounded px-3 py-2">Decide</span>
           </div>
         </div>
 
-        {/* Interactive Simulation */}
-        <VarianceReductionSim />
-
-        {/* Mathematical Formulation */}
-        <h3 className="text-2xl font-bold text-neutral-900 mb-4 mt-8">Mathematical Formulation</h3>
-
-        <h4 className="text-lg font-semibold text-neutral-800 mb-3">
-          From CUPED to generalised regression adjustment
-        </h4>
-
-        <div className="text-neutral-700 space-y-3 mb-6">
-          <p>Recall CUPED (<a href="#ref-deng-2013" className="text-blue-600 hover:text-blue-800">Deng et al., 2013</a>):</p>
-          <BlockMath>{`Y^* = Y - \\theta(X - \\EE[X])`}</BlockMath>
+        {/* Step 1 */}
+        <h3 className="text-xl font-bold text-neutral-900 mb-3">Step 1: Randomise</h3>
+        <div className="text-neutral-700 space-y-3 mb-8">
           <p>
-            with optimal <InlineMath>{`\\theta = \\Cov(Y,X)/\\Var(X)`}</InlineMath> and variance
-            reduction <InlineMath>{`\\Var(Y^*) = \\Var(Y)(1 - \\rho^2)`}</InlineMath>, where{' '}
-            <InlineMath>{`\\rho = \\Cor(Y,X)`}</InlineMath> is the correlation coefficient.
+            Each user arriving at the website is randomly assigned to <strong>control</strong>{' '}
+            (existing experience) or <strong>treatment</strong> (new feature). Randomisation
+            ensures the groups are comparable &mdash; any difference in outcomes is caused by
+            the treatment, not by pre-existing differences.
           </p>
-          <p>Eppo generalises this in two ways:</p>
+        </div>
+
+        {/* Step 2 */}
+        <h3 className="text-xl font-bold text-neutral-900 mb-3">Step 2: Collect data over time</h3>
+        <div className="text-neutral-700 space-y-3 mb-8">
+          <p>As users interact with the product, two quantities are recorded for each user:</p>
+          <ul className="list-disc ml-6 space-y-1">
+            <li><InlineMath>{`Y_i`}</InlineMath>: the <strong>outcome</strong> during the experiment (e.g. purchase amount, clicks, session length).</li>
+            <li><InlineMath>{`X_i`}</InlineMath>: a <strong>pre-experiment covariate</strong> &mdash; the same metric from before the experiment started.</li>
+          </ul>
+        </div>
+
+        {/* Step 3 */}
+        <h3 className="text-xl font-bold text-neutral-900 mb-3">Step 3: Regression adjustment (noise removal)</h3>
+        <div className="text-neutral-700 space-y-3 mb-8">
+          <p>This is where Eppo <em>generalises</em> the CUPED idea from <a href="#ref-deng-2013" className="text-blue-600 hover:text-blue-800">Deng et al. (2013)</a>.</p>
+          <p>For each group <strong>separately</strong>:</p>
           <ol className="list-decimal ml-6 space-y-1">
-            <li><strong>Nonlinear models:</strong> Instead of a single linear coefficient <InlineMath>{`\\theta`}</InlineMath>, fit a full regression model that can capture nonlinear relationships.</li>
-            <li><strong>Separate models per group:</strong> Fit <InlineMath>{`\\hat{f}_{\\text{control}}(X)`}</InlineMath> and <InlineMath>{`\\hat{f}_{\\text{treatment}}(X)`}</InlineMath> independently.</li>
+            <li>Fit a regression model predicting <InlineMath>{`Y`}</InlineMath> from the pre-experiment covariates <InlineMath>{`X`}</InlineMath>.</li>
+            <li>Compute the <strong>adjusted outcome</strong> (residual) for each user:</li>
           </ol>
           <div className="bg-white border border-neutral-300 rounded-lg p-4 mt-2">
             <BlockMath>{`Y^*_i = Y_i - \\hat{f}_g(X_i)`}</BlockMath>
           </div>
           <div className="bg-white border border-neutral-200 rounded-lg p-4 text-neutral-600 mt-2">
             <p>
-              The adjusted outcome <InlineMath>{`Y^*_i`}</InlineMath> equals the raw outcome
-              minus the model&apos;s prediction from pre-experiment covariates. The residual
-              captures only the unpredictable component of each user&apos;s behaviour.
+              Each adjusted outcome <InlineMath>{`Y^*_i`}</InlineMath> equals the raw
+              outcome minus the model&apos;s prediction from pre-experiment covariates.
+              The residual isolates the unpredictable component &mdash; the part that
+              can be attributed to the treatment rather than to baseline user behaviour.
             </p>
           </div>
         </div>
 
-        {/* Variance reduction */}
-        <h4 className="text-lg font-semibold text-neutral-800 mb-3">Why this reduces variance</h4>
-        <div className="text-neutral-700 space-y-3 mb-6">
-          <BlockMath>{`\\Var(Y^*) = \\Var(Y - \\hat{f}(X)) = \\Var(Y)(1 - R^2)`}</BlockMath>
+        {/* Step 4 */}
+        <h3 className="text-xl font-bold text-neutral-900 mb-3">Step 4: Estimate the treatment effect</h3>
+        <div className="text-neutral-700 space-y-3 mb-8">
+          <p>Compute the adjusted group means:</p>
+          <BlockMath>{`\\hat{\\mu}_0(t) = \\frac{1}{n_0(t)} \\sum_{i \\in \\text{control}} Y^*_i, \\qquad \\hat{\\mu}_1(t) = \\frac{1}{n_1(t)} \\sum_{i \\in \\text{treatment}} Y^*_i`}</BlockMath>
+          <p>The estimated treatment effect and the <strong>relative lift</strong>:</p>
+          <div className="bg-white border border-neutral-300 rounded-lg p-4">
+            <BlockMath>{`\\text{Relative lift}(t) = \\frac{\\hat{\\tau}(t)}{\\hat{\\mu}_0(t)} = \\frac{\\hat{\\mu}_1(t)}{\\hat{\\mu}_0(t)} - 1`}</BlockMath>
+          </div>
+          <div className="bg-white border border-neutral-200 rounded-lg p-4 text-neutral-600 mt-2">
+            <p>
+              If control averages &euro;100 and treatment averages &euro;103, the relative lift
+              is <InlineMath>{`103/100 - 1 = 0.03 = +3\\%`}</InlineMath>.
+            </p>
+          </div>
+        </div>
+
+        {/* Step 5 */}
+        <h3 className="text-xl font-bold text-neutral-900 mb-3">Step 5: Estimate the variance</h3>
+        <div className="text-neutral-700 space-y-3 mb-8">
           <p>
-            where <InlineMath>{`R^2`}</InlineMath> is the coefficient of determination &mdash;
-            the fraction of variance in <InlineMath>{`Y`}</InlineMath> explained by <InlineMath>{`X`}</InlineMath>.
+            Compute the standard error of <InlineMath>{`\\hat{\\tau}(t)`}</InlineMath> from the{' '}
+            <strong>residuals</strong> <InlineMath>{`Y^*_i`}</InlineMath>:
           </p>
-          <div className="overflow-x-auto">
-            <table className="w-full min-w-[640px] text-sm border-collapse border border-neutral-300">
-              <thead>
-                <tr className="bg-neutral-100">
-                  <th className="border border-neutral-300 p-3 text-left font-semibold"><InlineMath>{`R^2`}</InlineMath></th>
-                  <th className="border border-neutral-300 p-3 text-left font-semibold"><InlineMath>{`1 - R^2`}</InlineMath></th>
-                  <th className="border border-neutral-300 p-3 text-left font-semibold">Variance remaining</th>
-                  <th className="border border-neutral-300 p-3 text-left font-semibold">Traffic multiplier</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr><td className="border border-neutral-300 p-3">0.10</td><td className="border border-neutral-300 p-3">0.90</td><td className="border border-neutral-300 p-3">90%</td><td className="border border-neutral-300 p-3">1.1&times;</td></tr>
-                <tr className="bg-neutral-50"><td className="border border-neutral-300 p-3">0.25</td><td className="border border-neutral-300 p-3">0.75</td><td className="border border-neutral-300 p-3">75%</td><td className="border border-neutral-300 p-3">1.3&times;</td></tr>
-                <tr><td className="border border-neutral-300 p-3">0.50</td><td className="border border-neutral-300 p-3">0.50</td><td className="border border-neutral-300 p-3">50%</td><td className="border border-neutral-300 p-3">2&times;</td></tr>
-                <tr className="bg-neutral-50"><td className="border border-neutral-300 p-3">0.60</td><td className="border border-neutral-300 p-3">0.40</td><td className="border border-neutral-300 p-3">40%</td><td className="border border-neutral-300 p-3">2.5&times;</td></tr>
-                <tr><td className="border border-neutral-300 p-3">0.75</td><td className="border border-neutral-300 p-3">0.25</td><td className="border border-neutral-300 p-3">25%</td><td className="border border-neutral-300 p-3">4&times;</td></tr>
-              </tbody>
-            </table>
-          </div>
-          <div className="bg-white border border-neutral-200 rounded-lg p-4 text-neutral-600 mt-2">
+          <BlockMath>{`\\hat{\\sigma}_{\\hat{\\tau}}^2(t) = \\frac{s_0^2(t)}{n_0(t)} + \\frac{s_1^2(t)}{n_1(t)}`}</BlockMath>
+          <div className="bg-white border border-neutral-200 rounded-lg p-4 text-neutral-600">
             <p>
-              With <InlineMath>{`R^2 = 0.50`}</InlineMath>, the regression explains half the
-              variance. The remaining noise is halved &mdash; equivalent to running the
-              experiment with twice as many users.
+              The variance is estimated from the data &mdash; not assumed known. This is a key
+              difference from the mSPRT (Act 8), which required known variance. <a href="#ref-howard-2021" className="text-blue-600 hover:text-blue-800">Howard et al.&apos;s
+              framework</a> (Act 9) permits this.
             </p>
           </div>
         </div>
 
-        {/* Safety rule */}
-        <div className="bg-blue-50 border border-blue-400 rounded-lg p-6 mb-6">
-          <h4 className="font-bold text-blue-900 mb-3">Critical Safety Rule</h4>
-          <div className="text-neutral-800 space-y-3">
-            <p>
-              The covariate <InlineMath>{`X`}</InlineMath> must satisfy{' '}
-              <InlineMath>{`\\EE[X^{(\\text{treatment})}] = \\EE[X^{(\\text{control})}]`}</InlineMath>.
-              This is automatically guaranteed when <InlineMath>{`X`}</InlineMath> comes from the{' '}
-              <em>pre-experiment</em> period (randomisation has not yet occurred).
-            </p>
-            <p>
-              <strong>NEVER use post-treatment covariates.</strong> <a href="#ref-deng-2013" className="text-blue-600 hover:text-blue-800">Deng et al.</a> demonstrated that
-              using an in-experiment covariate produced <strong>directionally opposite
-              conclusions</strong>, because the treatment itself changed <InlineMath>{`X`}</InlineMath>.
-            </p>
+        {/* Step 6 */}
+        <h3 className="text-xl font-bold text-neutral-900 mb-3">Step 6: Construct the sequential confidence interval</h3>
+        <div className="text-neutral-700 space-y-3 mb-8">
+          <p>
+            Plug the estimated treatment effect and its standard error into the Normal
+            mixture boundary from Act 9:
+          </p>
+          <div className="bg-white border-2 border-green-200 rounded-lg p-4">
+            <BlockMath>{`\\text{CI}(t) = \\hat{\\tau}(t) \\pm \\hat{\\sigma}_{\\hat{\\tau}}(t) \\cdot \\sqrt{\\frac{n + \\nu}{n} \\cdot \\log\\!\\frac{n + \\nu}{\\nu \\alpha^2}}`}</BlockMath>
           </div>
+          <p className="mt-2">
+            where <InlineMath>{`n = n_0(t) + n_1(t)`}</InlineMath> is the total sample size and{' '}
+            <InlineMath>{`\\nu = M \\cdot \\hat{\\sigma}^2`}</InlineMath> is the tuning parameter.
+          </p>
         </div>
 
-        {/* Why adjustment doesn't break sequential guarantee */}
-        <h4 className="text-lg font-semibold text-neutral-800 mb-3">
-          Why adjustment does not break the sequential guarantee
-        </h4>
-        <div className="text-neutral-700 space-y-3 mb-6">
-          <ol className="list-decimal ml-6 space-y-1">
-            <li>Covariates come from the pre-experiment period (independent of treatment).</li>
-            <li>Regression adjustment changes only the variance, not the mean treatment effect.</li>
-            <li>The sub-Gaussian condition (Act 8) is satisfied by the adjusted residuals.</li>
-            <li><a href="#ref-ville-1939" className="text-blue-600 hover:text-blue-800">Ville&apos;s inequality</a> applies to the resulting supermartingale.</li>
-          </ol>
-          <div className="bg-white border border-neutral-200 rounded-lg p-4 text-neutral-600 mt-2">
-            <p>
-              Regression adjustment reduces variance without changing the estimand. The
-              sequential guarantee depends on the martingale structure, which is preserved
-              because pre-experiment covariates are independent of treatment assignment.
-            </p>
-          </div>
+        {/* Step 7 */}
+        <h3 className="text-xl font-bold text-neutral-900 mb-3">Step 7: Decide</h3>
+        <div className="overflow-x-auto mb-8">
+          <table className="w-full min-w-[640px] text-sm border-collapse border border-neutral-300">
+            <thead>
+              <tr className="bg-neutral-100">
+                <th className="border border-neutral-300 p-3 text-left font-semibold">What you see</th>
+                <th className="border border-neutral-300 p-3 text-left font-semibold">Colour</th>
+                <th className="border border-neutral-300 p-3 text-left font-semibold">Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td className="border border-neutral-300 p-3">CI entirely above 0</td><td className="border border-neutral-300 p-3"><span className="inline-block w-4 h-4 bg-green-500 rounded mr-1 align-middle"></span> Green</td><td className="border border-neutral-300 p-3">Positive effect. Ship the feature.</td></tr>
+              <tr className="bg-neutral-50"><td className="border border-neutral-300 p-3">CI entirely below 0</td><td className="border border-neutral-300 p-3"><span className="inline-block w-4 h-4 bg-neutral-500 rounded mr-1 align-middle"></span> Dark grey</td><td className="border border-neutral-300 p-3">Negative effect. Revert.</td></tr>
+              <tr><td className="border border-neutral-300 p-3">CI crosses 0, experiment ongoing</td><td className="border border-neutral-300 p-3"><span className="inline-block w-4 h-4 bg-neutral-400 rounded mr-1 align-middle"></span> Grey</td><td className="border border-neutral-300 p-3">Inconclusive. Keep collecting.</td></tr>
+              <tr className="bg-neutral-50"><td className="border border-neutral-300 p-3">CI crosses 0, experiment ended</td><td className="border border-neutral-300 p-3"><span className="inline-block w-4 h-4 bg-neutral-400 rounded mr-1 align-middle"></span> Grey</td><td className="border border-neutral-300 p-3">No significant effect. Decide pragmatically.</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div className="text-neutral-700 mb-6">
+          <p>
+            Because the CI is a confidence sequence (Act 9),{' '}
+            <strong>this decision is valid at whatever time it is made.</strong> No need to
+            pre-specify an analysis time.
+          </p>
+        </div>
+
+        {/* Interactive Pipeline Simulation */}
+        <h3 className="text-xl font-bold text-neutral-900 mb-3">Try It: Interactive Pipeline</h3>
+        <div className="mb-8">
+          <EppoPipelineSim />
         </div>
 
         {/* Key Takeaway */}
@@ -152,10 +172,10 @@ export function DetailedAct11() {
           <h4 className="font-bold text-green-900 mb-3">Key Takeaway</h4>
           <div className="text-neutral-800">
             <p>
-              <strong>Key concepts:</strong> regression adjustment as generalised CUPED, separate
-              models per group, variance reduction factor <InlineMath>{`1 - R^2`}</InlineMath>,
-              the safety rule (pre-experiment covariates only), adjustment preserves the
-              sequential guarantee.
+              <strong>The Eppo pipeline in one sentence:</strong> Randomise &rarr; collect{' '}
+              <InlineMath>{`Y`}</InlineMath> and covariates <InlineMath>{`X`}</InlineMath> &rarr;
+              regression-adjust (remove predictable noise) &rarr; estimate lift and variance
+              &rarr; wrap in a sequential CI &rarr; decide when CI excludes zero.
             </p>
           </div>
         </div>

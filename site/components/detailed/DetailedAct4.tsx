@@ -1,15 +1,15 @@
 'use client'
 
 import { InlineMath, BlockMath } from '@/components/ui/Math'
-import { LRMartingaleSim } from './sims/LRMartingaleSim'
+import { LikelihoodRatioSim } from './sims/LikelihoodRatioSim'
 
 export function DetailedAct4() {
   return (
-    <section id="act-4" className="py-16 bg-white">
+    <section id="act-4" className="py-16 bg-neutral-50">
       <div className="max-w-4xl mx-auto px-4">
         <div className="text-center mb-12">
           <h2 className="text-3xl font-bold text-neutral-900 mb-4">
-            Act 4 &mdash; The Likelihood Ratio Is a Martingale
+            Act 4 &mdash; Hypothesis Testing: Telling Two Coins Apart
           </h2>
         </div>
 
@@ -18,163 +18,134 @@ export function DetailedAct4() {
           <h4 className="font-bold text-blue-900 mb-3">Simulation</h4>
           <div className="text-neutral-800 space-y-3">
             <p>
-              The likelihood ratio <InlineMath>{`\\Lambda_n`}</InlineMath> is plotted as a path
-              over time &mdash; like the random walk from Act 1.
-            </p>
-            <p>
-              <strong>Left panel:</strong> 100 paths of <InlineMath>{`\\Lambda_n`}</InlineMath> when
-              the coin is truly <em>fair</em> (<InlineMath>{`H_0`}</InlineMath> true).
-              Paths wander with no systematic trend.
-            </p>
-            <p>
-              <strong>Right panel:</strong> 100 paths when the coin is truly <em>biased</em>
-              (<InlineMath>{`H_1`}</InlineMath> true). Paths drift upward.
+              You are presented with a coin and must determine whether it is fair
+              (<InlineMath>{`p = 0.5`}</InlineMath>) or biased
+              (<InlineMath>{`p = 0.5 + \delta`}</InlineMath>). With small bias, sequences
+              from the two hypotheses are nearly indistinguishable over short horizons.
             </p>
           </div>
         </div>
 
         {/* Interactive Simulation */}
-        <LRMartingaleSim />
+        <LikelihoodRatioSim />
 
         {/* Intuition */}
         <div className="bg-blue-50 border border-blue-400 rounded-lg p-6 mb-8">
-          <h4 className="font-bold text-blue-900 mb-3">Intuitive Explanation</h4>
           <div className="text-neutral-800 space-y-3">
             <p>
-              Under <InlineMath>{`H_0`}</InlineMath>, the likelihood ratio wanders up and down but
-              never develops a consistent trend. On average, it stays at 1.
+              Given a sequence of coin flips, the goal is to discriminate between
+              two hypotheses. With 10 flips and 6 heads, the evidence is ambiguous.
+              With 1,000 flips and 600 heads, the evidence is overwhelming.
             </p>
+            <p>The framework:</p>
+            <ul className="list-disc ml-6 space-y-1">
+              <li><strong>Null hypothesis <InlineMath>{`H_0`}</InlineMath>:</strong> The coin is fair (<InlineMath>{`p = 0.5`}</InlineMath>). No effect.</li>
+              <li><strong>Alternative hypothesis <InlineMath>{`H_1`}</InlineMath>:</strong> The coin is biased (<InlineMath>{`p = 0.5 + \delta`}</InlineMath>). A real effect exists.</li>
+            </ul>
+            <p>Two error types:</p>
+            <ol className="list-decimal ml-6 space-y-1">
+              <li><strong>False positive</strong> (Type I): conclude biased when it is fair.</li>
+              <li><strong>False negative</strong> (Type II): conclude fair when it is biased.</li>
+            </ol>
             <p>
-              This <em>is</em> a martingale &mdash; exactly like the gambler&apos;s cumulative
-              winnings. Everything from Act 2 applies: <a href="#ref-doob-1953" className="text-blue-600 hover:text-blue-800">Doob&apos;s theorem</a> says you cannot
-              systematically make <InlineMath>{`\\Lambda_n`}</InlineMath> large by choosing clever
-              peeking times.
+              Traditionally: <InlineMath>{`\\alpha = 0.05`}</InlineMath> (max false positive rate),{' '}
+              <InlineMath>{`\\beta = 0.20`}</InlineMath> (max false negative rate).{' '}
+              <strong>Power</strong> <InlineMath>{`= 1 - \\beta = 0.80`}</InlineMath>.
             </p>
           </div>
         </div>
 
-        {/* Proof */}
+        {/* Mathematical Formulation */}
         <h3 className="text-2xl font-bold text-neutral-900 mb-4">Mathematical Formulation</h3>
 
-        <h4 className="text-lg font-semibold text-neutral-800 mb-3">
-          Proof that <InlineMath>{`\\Lambda_n`}</InlineMath> is a martingale under <InlineMath>{`H_0`}</InlineMath>
-        </h4>
-
+        <h4 className="text-lg font-semibold text-neutral-800 mb-3">The likelihood</h4>
         <div className="text-neutral-700 space-y-3 mb-6">
           <p>
-            We must show: <InlineMath>{`\\EE[\\Lambda_n \\given \\Lambda_0, \\ldots, \\Lambda_{n-1}] = \\Lambda_{n-1}`}</InlineMath>.
+            Suppose <InlineMath>{`n`}</InlineMath> flips produce <InlineMath>{`k`}</InlineMath> heads.
           </p>
-          <p>
-            From Act 3, <InlineMath>{`\\Lambda_n = \\Lambda_{n-1} \\times \\frac{f_1(x_n)}{f_0(x_n)}`}</InlineMath>.
-            Therefore:
-          </p>
-          <BlockMath>{`\\begin{aligned}
-\\EE[\\Lambda_n \\given \\text{past}]
-&= \\EE\\!\\left[\\Lambda_{n-1} \\cdot \\frac{f_1(x_n)}{f_0(x_n)} \\;\\bigg\\vert\\; \\text{past}\\right] \\\\
-&= \\Lambda_{n-1} \\cdot \\EE\\!\\left[\\frac{f_1(x_n)}{f_0(x_n)}\\right]
-\\quad \\text{(}\\Lambda_{n-1}\\text{ is known)}
-\\end{aligned}`}</BlockMath>
-
-          <p>
-            Now the key step. Under <InlineMath>{`H_0`}</InlineMath>,{' '}
-            <InlineMath>{`x_n`}</InlineMath> is drawn from <InlineMath>{`f_0`}</InlineMath>. So:
-          </p>
-
-          <BlockMath>{`\\begin{aligned}
-\\EE\\!\\left[\\frac{f_1(x_n)}{f_0(x_n)}\\right]
-&= \\sum_{\\text{all outcomes } x} f_0(x) \\cdot \\frac{f_1(x)}{f_0(x)} \\\\
-&= \\sum_x \\cancel{f_0(x)} \\cdot \\frac{f_1(x)}{\\cancel{f_0(x)}} \\quad \\textbf{(the cancellation!)} \\\\
-&= \\sum_x f_1(x) \\\\
-&= 1 \\quad \\text{(}f_1\\text{ is a probability distribution)}
-\\end{aligned}`}</BlockMath>
-
-          <p>Therefore:</p>
-          <BlockMath>{`\\EE[\\Lambda_n \\given \\text{past}] = \\Lambda_{n-1} \\times 1 = \\Lambda_{n-1} \\quad \\checkmark`}</BlockMath>
+          <p>The likelihood of <InlineMath>{`p = 0.5`}</InlineMath> (fair coin, <InlineMath>{`H_0`}</InlineMath>) given <InlineMath>{`k`}</InlineMath> heads is:</p>
+          <BlockMath>{`\mathcal{L}_0 = (0.5)^k \times (0.5)^{n-k} = (0.5)^n`}</BlockMath>
+          <p>The likelihood of <InlineMath>{`p = 0.5 + \delta`}</InlineMath> (<InlineMath>{`H_1`}</InlineMath>, biased coin) is:</p>
+          <BlockMath>{`\\mathcal{L}_1 = (0.5 + \\delta)^k \\times (0.5 - \\delta)^{n-k}`}</BlockMath>
         </div>
 
-        {/* Cancellation with numbers */}
-        <h4 className="text-lg font-semibold text-neutral-800 mb-3">
-          The cancellation with actual numbers
-        </h4>
-
+        <h4 className="text-lg font-semibold text-neutral-800 mb-3">The likelihood ratio</h4>
         <div className="text-neutral-700 space-y-3 mb-6">
-          <p>
-            For <InlineMath>{`\\delta = 0.1`}</InlineMath> (biased coin{' '}
-            <InlineMath>{`p = 0.6`}</InlineMath>):
-          </p>
-
-          <div className="overflow-x-auto">
-            <table className="w-full min-w-[640px] text-sm border-collapse border border-neutral-300">
-              <thead>
-                <tr className="bg-neutral-100">
-                  <th className="border border-neutral-300 p-3 text-left font-semibold">Outcome</th>
-                  <th className="border border-neutral-300 p-3 text-left font-semibold"><InlineMath>{`f_0(x)`}</InlineMath></th>
-                  <th className="border border-neutral-300 p-3 text-left font-semibold"><InlineMath>{`f_1(x)/f_0(x)`}</InlineMath></th>
-                  <th className="border border-neutral-300 p-3 text-left font-semibold"><InlineMath>{`f_0(x) \\times [f_1(x)/f_0(x)]`}</InlineMath></th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td className="border border-neutral-300 p-3">Heads</td>
-                  <td className="border border-neutral-300 p-3">0.5</td>
-                  <td className="border border-neutral-300 p-3"><InlineMath>{`0.6/0.5 = 1.2`}</InlineMath></td>
-                  <td className="border border-neutral-300 p-3"><InlineMath>{`0.5 \\times 1.2 = 0.6`}</InlineMath></td>
-                </tr>
-                <tr className="bg-neutral-50">
-                  <td className="border border-neutral-300 p-3">Tails</td>
-                  <td className="border border-neutral-300 p-3">0.5</td>
-                  <td className="border border-neutral-300 p-3"><InlineMath>{`0.4/0.5 = 0.8`}</InlineMath></td>
-                  <td className="border border-neutral-300 p-3"><InlineMath>{`0.5 \\times 0.8 = 0.4`}</InlineMath></td>
-                </tr>
-                <tr className="bg-neutral-100 font-semibold">
-                  <td className="border border-neutral-300 p-3" colSpan={3}>Total:</td>
-                  <td className="border border-neutral-300 p-3"><strong>1.0</strong> &#10003;</td>
-                </tr>
-              </tbody>
-            </table>
+          <div className="bg-white border border-neutral-300 rounded-lg p-4">
+            <BlockMath>{`\\Lambda_n = \\frac{\\mathcal{L}_1}{\\mathcal{L}_0} = \\frac{(0.5+\\delta)^k \\;(0.5-\\delta)^{n-k}}{(0.5)^n}`}</BlockMath>
           </div>
-
           <div className="bg-white border border-neutral-200 rounded-lg p-4 text-neutral-600">
             <p>
-              When we compute the expected ratio under <InlineMath>{`H_0`}</InlineMath>, the{' '}
-              <InlineMath>{`H_0`}</InlineMath> probabilities cancel out, leaving the sum of the{' '}
-              <InlineMath>{`H_1`}</InlineMath> probabilities &mdash; which equals 1 because{' '}
-              <InlineMath>{`f_1`}</InlineMath> is a valid probability distribution.
+              The likelihood ratio quantifies how many times more probable the observed data are
+              under <InlineMath>{`H_1`}</InlineMath> (biased coin) relative to <InlineMath>{`H_0`}</InlineMath> (fair coin).
             </p>
           </div>
         </div>
 
-        {/* Additional properties */}
-        <h4 className="text-lg font-semibold text-neutral-800 mb-3">Two additional properties</h4>
+        {/* Example */}
         <div className="text-neutral-700 space-y-3 mb-6">
-          <ol className="list-decimal ml-6 space-y-1">
-            <li>
-              <strong><InlineMath>{`\\Lambda_n`}</InlineMath> is non-negative:</strong> It is a product
-              of non-negative ratios (probabilities divided by probabilities), so{' '}
-              <InlineMath>{`\\Lambda_n \\geq 0`}</InlineMath>.
-            </li>
-            <li>
-              <strong><InlineMath>{`\\Lambda_0 = 1`}</InlineMath>:</strong> Before any data, neither
-              hypothesis is favoured.
-            </li>
-          </ol>
           <p>
-            So <InlineMath>{`\\Lambda_n`}</InlineMath> is a{' '}
-            <strong>non-negative martingale starting at 1</strong>. Remember these properties &mdash;
-            they are exactly what <a href="#ref-ville-1939" className="text-blue-600 hover:text-blue-800">Ville&apos;s inequality</a> needs.
+            <strong>Example.</strong><br />
+            <InlineMath>{`\delta = 0.1`}</InlineMath> (biased coin has{' '}
+            <InlineMath>{`p = 0.6`}</InlineMath>);{' '}
+            <InlineMath>{`n = 10`}</InlineMath> flips, <InlineMath>{`k = 7`}</InlineMath> heads.
+          </p>
+          <BlockMath>{`\begin{aligned}
+\mathcal{L}_1 &= (0.6)^7 \times (0.4)^3 \approx 0.001792 \\
+\mathcal{L}_0 &= (0.5)^{10} \approx 0.000977 \\
+\Lambda_{10} &= \frac{0.001792}{0.000977} \approx 1.83
+\end{aligned}`}</BlockMath>
+          <p>
+            The data is <InlineMath>{`\approx 1.83`}</InlineMath> times more likely if the coin
+            is biased.
           </p>
         </div>
 
-        {/* Under H1 */}
+        {/* Interpreting LR */}
         <h4 className="text-lg font-semibold text-neutral-800 mb-3">
-          Under <InlineMath>{`H_1`}</InlineMath>, <InlineMath>{`\\Lambda_n`}</InlineMath> drifts upward
+          Interpreting <InlineMath>{`\\Lambda_n`}</InlineMath>
         </h4>
+        <div className="overflow-x-auto mb-6">
+          <table className="w-full min-w-[640px] text-sm border-collapse border border-neutral-300">
+            <thead>
+              <tr className="bg-neutral-100">
+                <th className="border border-neutral-300 p-3 text-left font-semibold"><InlineMath>{`\\Lambda_n`}</InlineMath></th>
+                <th className="border border-neutral-300 p-3 text-left font-semibold">Interpretation</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td className="border border-neutral-300 p-3"><InlineMath>{`= 1`}</InlineMath></td><td className="border border-neutral-300 p-3">Data equally consistent with both hypotheses</td></tr>
+              <tr className="bg-neutral-50"><td className="border border-neutral-300 p-3"><InlineMath>{`= 10`}</InlineMath></td><td className="border border-neutral-300 p-3">10&times; more likely under <InlineMath>{`H_1`}</InlineMath> &mdash; moderate evidence</td></tr>
+              <tr><td className="border border-neutral-300 p-3"><InlineMath>{`= 100`}</InlineMath></td><td className="border border-neutral-300 p-3">100&times; more likely under <InlineMath>{`H_1`}</InlineMath> &mdash; strong evidence</td></tr>
+              <tr className="bg-neutral-50"><td className="border border-neutral-300 p-3"><InlineMath>{`= 0.1`}</InlineMath></td><td className="border border-neutral-300 p-3">10&times; more likely under <InlineMath>{`H_0`}</InlineMath> &mdash; evidence for fairness</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        {/* Incremental updating */}
+        <h4 className="text-lg font-semibold text-neutral-800 mb-3">Incremental updating</h4>
         <div className="text-neutral-700 space-y-3 mb-6">
-          <p>When the coin really is biased:</p>
-          <BlockMath>{`\\EE\\!\\left[\\frac{f_1(x_n)}{f_0(x_n)}\\right]_{H_1} = \\sum_x f_1(x) \\cdot \\frac{f_1(x)}{f_0(x)} > 1`}</BlockMath>
+          <p><InlineMath>{`\\Lambda_n`}</InlineMath> can be computed one flip at a time:</p>
+          <div className="bg-white border border-neutral-300 rounded-lg p-4">
+            <BlockMath>{`\\Lambda_n = \\Lambda_{n-1} \\times \\frac{f_1(x_n)}{f_0(x_n)}`}</BlockMath>
+          </div>
           <p>
-            So <InlineMath>{`\\Lambda_n`}</InlineMath> tends to grow &mdash; this upward drift is
-            the signal the test detects.
+            where <InlineMath>{`f_j(x_n)`}</InlineMath> is the probability of the{' '}
+            <InlineMath>{`n`}</InlineMath>th flip&apos;s outcome under <InlineMath>{`H_j`}</InlineMath>.
+          </p>
+          <ul className="list-disc ml-6 space-y-1">
+            <li>Heads: multiply by <InlineMath>{`\\frac{0.5 + \\delta}{0.5}`}</InlineMath>.</li>
+            <li>Tails: multiply by <InlineMath>{`\\frac{0.5 - \\delta}{0.5}`}</InlineMath>.</li>
+          </ul>
+          <p>This incremental structure is what makes <em>sequential</em> testing possible.</p>
+        </div>
+
+        <h4 className="text-lg font-semibold text-neutral-800 mb-3">Starting value</h4>
+        <div className="text-neutral-700 space-y-3 mb-6">
+          <p>
+            Before any data: <InlineMath>{`\\Lambda_0 = 1`}</InlineMath>.
+            Neither hypothesis is favoured. This will be important for <a href="#ref-ville-1939" className="text-blue-600 hover:text-blue-800">Ville&apos;s inequality</a>{' '}
+            (which requires the starting value to equal 1).
           </p>
         </div>
 
@@ -183,9 +154,7 @@ export function DetailedAct4() {
           <h4 className="font-bold text-green-900 mb-3">Key Takeaway</h4>
           <div className="text-neutral-800">
             <p>
-              <strong>Key concepts:</strong> the likelihood ratio is a martingale under{' '}
-              <InlineMath>{`H_0`}</InlineMath>; the cancellation that makes it work;
-              non-negative martingale; drift under <InlineMath>{`H_1`}</InlineMath>.
+              The likelihood ratio quantifies how many times more probable the observed data are under <InlineMath>{`H_1`}</InlineMath> relative to <InlineMath>{`H_0`}</InlineMath>.
             </p>
           </div>
         </div>

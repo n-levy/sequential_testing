@@ -1,205 +1,161 @@
 'use client'
 
 import { InlineMath, BlockMath } from '@/components/ui/Math'
-import { MixtureSPRTSim } from './sims/MixtureSPRTSim'
+import { SPRTSim } from './sims/SPRTSim'
 
 export function DetailedAct7() {
   return (
-    <section id="act-7" className="py-16 bg-neutral-50">
+    <section id="act-7" className="py-16 bg-white">
       <div className="max-w-4xl mx-auto px-4">
         <div className="text-center mb-12">
           <h2 className="text-3xl font-bold text-neutral-900 mb-4">
-            Act 7 &mdash; The Mixture Approach: From Robbins (1970) to the mSPRT
+            Act 7 &mdash; SPRT: Wald&apos;s Sequential Probability Ratio Test (1945)
           </h2>
-          <p className="text-neutral-600">
-            Two parts: Robbins&apos; key idea, then Johari et al.&apos;s application to A/B testing.
-          </p>
         </div>
 
-        {/* Part A: Robbins */}
-        <h3 className="text-2xl font-bold text-neutral-900 mb-4">Part A: Robbins&apos; Mixture Approach (1970)</h3>
-
-        <div className="bg-blue-50 border border-blue-400 rounded-lg p-6 mb-8">
-          <h4 className="font-bold text-blue-900 mb-3">Intuitive Explanation</h4>
+        {/* Simulation */}
+        <div className="bg-blue-50 border border-blue-200 rounded-lg p-6 mb-8">
+          <h4 className="font-bold text-blue-900 mb-3">Simulation</h4>
           <div className="text-neutral-800 space-y-3">
             <p>
-              Wald&apos;s SPRT commits to a single point alternative: you specify an
-              effect size <InlineMath>{`\delta`}</InlineMath> and compute evidence against that
-              specific value. If the true effect is close to <InlineMath>{`\delta`}</InlineMath>,
-              the test is efficient. If not, it can be substantially slower.
+              Two coins: one fair (<InlineMath>{`H_0`}</InlineMath>), one biased (<InlineMath>{`H_1`}</InlineMath>).
+              You do not know which you have.
             </p>
             <p>
-              <a href="#ref-robbins-1970" className="text-blue-600 hover:text-blue-800">Herbert Robbins</a> proposed a fundamentally different approach in 1970:{' '}
-              <strong>average the likelihood ratio over a distribution of effect sizes.</strong>{' '}
-              Instead of choosing one <InlineMath>{`\delta`}</InlineMath>, assign a mixing
-              distribution <InlineMath>{`H`}</InlineMath> over the plausible range and integrate.
-            </p>
-            <p>
-              The key insight: this average likelihood ratio is <em>still</em> a non-negative
-              martingale under <InlineMath>{`H_0`}</InlineMath>. Ville&apos;s inequality still
-              applies. The anytime-valid guarantee is preserved.
+              <InlineMath>{`\\Lambda_n`}</InlineMath> is plotted as a path. Two thresholds:
+              <strong> Upper</strong> at <InlineMath>{`\\Lambda_n = B`}</InlineMath>: cross this
+              &rArr; &ldquo;coin is biased.&rdquo;{' '}
+              <strong>Lower</strong> at <InlineMath>{`\\Lambda_n = A`}</InlineMath>: fall below this
+              &rArr; &ldquo;coin is fair.&rdquo;
             </p>
           </div>
-        </div>
-
-        <h4 className="text-lg font-semibold text-neutral-800 mb-3">The fundamental result</h4>
-
-        <div className="text-neutral-700 space-y-3 mb-6">
-          <p>
-            Robbins observed that if <InlineMath>{`\\Lambda_n^\\delta`}</InlineMath> is the likelihood
-            ratio for a specific effect size <InlineMath>{`\\delta`}</InlineMath>, then the{' '}
-            <strong>mixture likelihood ratio</strong>
-          </p>
-          <div className="bg-white border border-neutral-300 rounded-lg p-4">
-            <BlockMath>{`\\Lambda_n^{H} = \\int \\Lambda_n^{\\delta} \\, dH(\\delta)`}</BlockMath>
-          </div>
-          <p>
-            is also a non-negative martingale starting at 1 under <InlineMath>{`H_0`}</InlineMath>,
-            because:
-          </p>
-          <ol className="list-decimal ml-6 space-y-1">
-            <li>Each <InlineMath>{`\\Lambda_n^\\delta`}</InlineMath> is a non-negative martingale under <InlineMath>{`H_0`}</InlineMath> (Act 4).</li>
-            <li>A weighted average (integral) of martingales is a martingale (linearity of conditional expectation).</li>
-          </ol>
-          <p>Therefore Ville&apos;s inequality gives:</p>
-          <BlockMath>{`\\PP\\!\\left(\\Lambda_n^{H} \\text{ ever} \\geq \\frac{1}{\\alpha}\\right) \\leq \\alpha`}</BlockMath>
-        </div>
-
-        <div className="bg-white border border-neutral-200 rounded-lg p-4 mb-6 text-neutral-600">
-          <p><strong>Symbol by symbol:</strong></p>
-          <ul className="list-disc ml-6 space-y-1 mt-2">
-            <li><InlineMath>{`\\Lambda_n^{\\delta}`}</InlineMath> = the likelihood ratio assuming effect size <InlineMath>{`\\delta`}</InlineMath>.</li>
-            <li><InlineMath>{`dH(\\delta)`}</InlineMath> = how much weight to give effect size <InlineMath>{`\\delta`}</InlineMath>.</li>
-            <li><InlineMath>{`\\int`}</InlineMath> = continuous version of summation &mdash; averages over all possible <InlineMath>{`\\delta`}</InlineMath>.</li>
-          </ul>
-          <p className="mt-2">
-            The result is the expected likelihood ratio under the mixing distribution{' '}
-            <InlineMath>{`H`}</InlineMath>, averaging evidence across all plausible effect sizes.
-          </p>
         </div>
 
         {/* Interactive Simulation */}
-        <MixtureSPRTSim />
+        <SPRTSim />
 
-        {/* Part B: mSPRT */}
-        <h3 className="text-2xl font-bold text-neutral-900 mb-4">
-          Part B: The mSPRT for A/B Testing (Johari et al., 2017)
-        </h3>
-
+        {/* Intuition */}
         <div className="bg-blue-50 border border-blue-400 rounded-lg p-6 mb-8">
-          <h4 className="font-bold text-blue-900 mb-3">Intuitive Explanation</h4>
           <div className="text-neutral-800 space-y-3">
             <p>
-              <a href="#ref-johari-2017" className="text-blue-600 hover:text-blue-800">Johari, Pekelis, and Walsh (2017)</a> applied Robbins&apos; idea to the specific
-              setting of A/B tests. They chose the Normal distribution as the mixing
-              distribution <InlineMath>{`H`}</InlineMath> and derived a closed-form formula for
-              the mixture likelihood ratio. They called it the{' '}
-              <strong>mixture Sequential Probability Ratio Test (mSPRT)</strong>.
+              <a href="#ref-wald-1945" className="text-blue-600 hover:text-blue-800">Abraham Wald</a> (1943, published 1945) asked: given that we can peek at the data
+              anytime, what is the most <em>efficient</em> way to decide between two hypotheses?
             </p>
             <p>
-              Their key contribution: making the theory practical. They gave explicit
-              formulas, calibration guidance for <InlineMath>{`\\tau`}</InlineMath>, and proved that being within
-              an order of magnitude of the true effect-size variance is sufficient for
-              near-optimal power.
+              His answer: compute <InlineMath>{`\\Lambda_n`}</InlineMath> after each observation.
+              If it gets high enough, conclude <InlineMath>{`H_1`}</InlineMath>. Low enough,
+              conclude <InlineMath>{`H_0`}</InlineMath>. Otherwise, keep collecting.
+            </p>
+            <p>
+              Wald proved this is <strong>optimal</strong>: no other sequential test with the same
+              error guarantees needs fewer observations on average. In fact, the SPRT typically
+              requires <strong>47&ndash;63% fewer observations</strong> than the best
+              fixed-sample test with the same error rates.
             </p>
           </div>
         </div>
 
-        <h4 className="text-lg font-semibold text-neutral-800 mb-3">Closed form for Normal observations</h4>
+        {/* Mathematical Formulation */}
+        <h3 className="text-2xl font-bold text-neutral-900 mb-4">Mathematical Formulation</h3>
 
+        <h4 className="text-lg font-semibold text-neutral-800 mb-3">Decision rule</h4>
         <div className="text-neutral-700 space-y-3 mb-6">
-          <p><strong>Assumptions:</strong></p>
-          <ul className="list-disc ml-6 space-y-1">
-            <li>
-              Observations <InlineMath>{`x_i \\sim \\mathcal{N}(\\mu, \\sigma^2)`}</InlineMath>{' '}
-              (Normal with mean <InlineMath>{`\\mu`}</InlineMath>, <strong>known</strong> variance{' '}
-              <InlineMath>{`\\sigma^2`}</InlineMath>).
-            </li>
-            <li>
-              Mixing distribution <InlineMath>{`H = \\mathcal{N}(0, \\tau^2 \\sigma^2)`}</InlineMath>{' '}
-              (Normal centred at 0, variance proportional to <InlineMath>{`\\sigma^2`}</InlineMath>).
-            </li>
-          </ul>
-
-          <p>The mixture likelihood ratio (Johari et al., Proposition 1):</p>
+          <p>
+            Choose error tolerances <InlineMath>{`\\alpha`}</InlineMath> (false positive rate) and{' '}
+            <InlineMath>{`\\beta`}</InlineMath> (false negative rate). Compute two thresholds:
+          </p>
           <div className="bg-white border border-neutral-300 rounded-lg p-4">
-            <BlockMath>{`\\Lambda_n^{H} = \\frac{1}{\\sqrt{1 + n\\tau^2}} \\;\\exp\\!\\left(\\frac{n\\tau^2\\, \\bar{x}_n^2}{2\\,(\\sigma^2/n)\\,(1 + n\\tau^2)}\\right)`}</BlockMath>
+            <BlockMath>{`B = \\frac{1 - \\beta}{\\alpha}, \\quad A = \\frac{\\beta}{1 - \\alpha}`}</BlockMath>
           </div>
+          <p>
+            <strong>Example</strong> (<InlineMath>{`\\alpha = 0.05`}</InlineMath>,{' '}
+            <InlineMath>{`\\beta = 0.20`}</InlineMath>):
+          </p>
+          <BlockMath>{`B = \\frac{0.80}{0.05} = 16, \\quad A = \\frac{0.20}{0.95} \\approx 0.211`}</BlockMath>
         </div>
 
+        <div className="overflow-x-auto mb-6">
+          <table className="w-full min-w-[640px] text-sm border-collapse border border-neutral-300">
+            <thead>
+              <tr className="bg-neutral-100">
+                <th className="border border-neutral-300 p-3 text-left font-semibold">Condition</th>
+                <th className="border border-neutral-300 p-3 text-left font-semibold">Decision</th>
+                <th className="border border-neutral-300 p-3 text-left font-semibold">Meaning</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td className="border border-neutral-300 p-3"><InlineMath>{`\\Lambda_n \\geq B = 16`}</InlineMath></td><td className="border border-neutral-300 p-3">Reject <InlineMath>{`H_0`}</InlineMath></td><td className="border border-neutral-300 p-3">&ldquo;Coin is biased&rdquo;</td></tr>
+              <tr className="bg-neutral-50"><td className="border border-neutral-300 p-3"><InlineMath>{`\\Lambda_n \\leq A \\approx 0.21`}</InlineMath></td><td className="border border-neutral-300 p-3">Accept <InlineMath>{`H_0`}</InlineMath></td><td className="border border-neutral-300 p-3">&ldquo;Coin is fair&rdquo;</td></tr>
+              <tr><td className="border border-neutral-300 p-3"><InlineMath>{`A < \\Lambda_n < B`}</InlineMath></td><td className="border border-neutral-300 p-3">Keep flipping</td><td className="border border-neutral-300 p-3">&ldquo;Not enough evidence yet&rdquo;</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        {/* Savings */}
+        <h4 className="text-lg font-semibold text-neutral-800 mb-3">Savings over fixed-sample tests</h4>
         <div className="text-neutral-700 space-y-3 mb-6">
-          <p><strong>Unpacking every piece:</strong></p>
           <div className="overflow-x-auto">
             <table className="w-full min-w-[640px] text-sm border-collapse border border-neutral-300">
               <thead>
                 <tr className="bg-neutral-100">
-                  <th className="border border-neutral-300 p-3 text-left font-semibold">Symbol</th>
-                  <th className="border border-neutral-300 p-3 text-left font-semibold">Meaning</th>
+                  <th className="border border-neutral-300 p-3 text-left font-semibold"><InlineMath>{`\\alpha`}</InlineMath></th>
+                  <th className="border border-neutral-300 p-3 text-left font-semibold"><InlineMath>{`\\beta`}</InlineMath></th>
+                  <th className="border border-neutral-300 p-3 text-left font-semibold">Saving in expected observations</th>
                 </tr>
               </thead>
               <tbody>
-                <tr><td className="border border-neutral-300 p-3"><InlineMath>{`\\sigma^2`}</InlineMath></td><td className="border border-neutral-300 p-3">Variance of individual observations (how noisy the data is)</td></tr>
-                <tr className="bg-neutral-50"><td className="border border-neutral-300 p-3"><InlineMath>{`n`}</InlineMath></td><td className="border border-neutral-300 p-3">Number of observations so far</td></tr>
-                <tr><td className="border border-neutral-300 p-3"><InlineMath>{`\\tau^2`}</InlineMath></td><td className="border border-neutral-300 p-3">Variance of the mixing distribution; controls how wide a range of effect sizes we consider plausible</td></tr>
-                <tr className="bg-neutral-50"><td className="border border-neutral-300 p-3"><InlineMath>{`\\bar{x}_n`}</InlineMath></td><td className="border border-neutral-300 p-3">Sample mean after <InlineMath>{`n`}</InlineMath> observations</td></tr>
-                <tr><td className="border border-neutral-300 p-3"><InlineMath>{`1/\\sqrt{1 + n\\tau^2}`}</InlineMath></td><td className="border border-neutral-300 p-3">Shrinkage factor; slowly decreases as <InlineMath>{`n`}</InlineMath> grows</td></tr>
-                <tr className="bg-neutral-50"><td className="border border-neutral-300 p-3"><InlineMath>{`\\exp(\\cdot)`}</InlineMath></td><td className="border border-neutral-300 p-3"><InlineMath>{`e \\approx 2.718`}</InlineMath> raised to the argument; grows rapidly when <InlineMath>{`\\bar{x}_n`}</InlineMath> is far from zero</td></tr>
+                <tr><td className="border border-neutral-300 p-3">0.05</td><td className="border border-neutral-300 p-3">0.05</td><td className="border border-neutral-300 p-3"><InlineMath>{`\\approx 53\\%`}</InlineMath></td></tr>
+                <tr className="bg-neutral-50"><td className="border border-neutral-300 p-3">0.05</td><td className="border border-neutral-300 p-3">0.01</td><td className="border border-neutral-300 p-3"><InlineMath>{`\\approx 47\\%`}</InlineMath></td></tr>
+                <tr><td className="border border-neutral-300 p-3">0.01</td><td className="border border-neutral-300 p-3">0.01</td><td className="border border-neutral-300 p-3"><InlineMath>{`\\approx 63\\%`}</InlineMath></td></tr>
               </tbody>
             </table>
           </div>
-        </div>
-
-        <div className="bg-white border border-neutral-200 rounded-lg p-4 mb-6 text-neutral-600">
-          <p>
-            The mSPRT statistic is large when the sample mean is far from zero (strong
-            signal), the sample size is large, and the observation noise is small relative
-            to the mixing-distribution variance.
-          </p>
-        </div>
-
-        {/* Decision rule */}
-        <h4 className="text-lg font-semibold text-neutral-800 mb-3">Decision rule</h4>
-        <div className="text-neutral-700 space-y-3 mb-6">
-          <div className="bg-white border border-neutral-300 rounded-lg p-4">
-            <BlockMath>{`\\text{Stop and reject } H_0 \\text{ when:} \\quad \\Lambda_n^{H} \\geq \\frac{1}{\\alpha}`}</BlockMath>
+          <div className="bg-white border border-neutral-200 rounded-lg p-4 text-neutral-600">
+            <p>
+              The SPRT needs, on average, only about <strong>half as many observations</strong> as
+              a traditional fixed-sample test. This was a remarkable result in 1945 and
+              remains one of the main motivations for sequential testing.
+            </p>
           </div>
+        </div>
+
+        {/* Critical weakness */}
+        <h4 className="text-lg font-semibold text-neutral-800 mb-3">The critical weakness</h4>
+        <div className="text-neutral-700 space-y-3 mb-6">
           <p>
-            For <InlineMath>{`\\alpha = 0.05`}</InlineMath>: stop when{' '}
-            <InlineMath>{`\\Lambda_n^{H} \\geq 20`}</InlineMath>.
+            SPRT requires specifying <InlineMath>{`\\delta`}</InlineMath> in advance &mdash;
+            the exact alternative hypothesis <InlineMath>{`H_1`}</InlineMath>. If you set{' '}
+            <InlineMath>{`\\delta = 0.1`}</InlineMath> but the true bias is{' '}
+            <InlineMath>{`0.03`}</InlineMath>, the likelihood ratio is computed against the
+            wrong alternative. The test may take much longer, or still determine the correct
+            answer but far less efficiently.
           </p>
           <p>
-            <strong>No lower boundary.</strong> Unlike the SPRT, the mSPRT cannot definitively
-            confirm <InlineMath>{`H_0`}</InlineMath>. In practice, experiments run for a fixed
-            maximum duration; if the threshold is never crossed, conclude: &ldquo;No significant
-            effect detected.&rdquo;
+            In A/B testing &mdash; where the effect size is typically unknown &mdash; this is a
+            serious limitation. The next two acts address this.
           </p>
         </div>
 
-        {/* Key assumption */}
-        <h4 className="text-lg font-semibold text-neutral-800 mb-3">Key assumption: known variance</h4>
-        <div className="text-neutral-700 space-y-3 mb-6">
-          <p>
-            The mSPRT formula assumes <InlineMath>{`\\sigma^2`}</InlineMath> is known. For
-            continuous data this is typically estimated; for binary data (e.g. click/no-click),
-            the exact mSPRT results hold only approximately via the Central Limit Theorem.
-            For large samples (<InlineMath>{`n \\geq 100`}</InlineMath>, nearly always true in
-            A/B testing), the approximation is excellent.
+        {/* Historical Note */}
+        <div className="bg-neutral-100 border border-neutral-300 rounded-lg p-6 mb-8">
+          <h4 className="font-semibold text-neutral-700 mb-3">Historical Note</h4>
+          <p className="text-neutral-700">
+            Wald conjectured in his 1945 paper that the SPRT is <em>exactly</em> optimal.
+            Three years later, <a href="#ref-wald-wolfowitz-1948" className="text-blue-600 hover:text-blue-800">Wald &amp; Wolfowitz (1948)</a> proved the general result: among{' '}
+            <strong>all</strong> sequential tests with the same or smaller error probabilities{' '}
+            <InlineMath>{`(\\alpha, \\beta)`}</InlineMath>, the SPRT minimises the expected sample
+            size under both <InlineMath>{`H_0`}</InlineMath> and <InlineMath>{`H_1`}</InlineMath> simultaneously.
           </p>
         </div>
 
         {/* Key Takeaway */}
         <div className="bg-green-50 border border-green-200 rounded-lg p-6 mb-8">
           <h4 className="font-bold text-green-900 mb-3">Key Takeaway</h4>
-          <div className="text-neutral-800 space-y-3">
+          <div className="text-neutral-800">
             <p>
-              <strong>Key concepts:</strong> Robbins&apos; mixture idea, the mSPRT as a weighted
-              average of likelihood ratios, the closed-form Normal formula, the role of{' '}
-              <InlineMath>{`\\tau`}</InlineMath>, no lower boundary, the known-variance assumption.
-            </p>
-            <p>
-              <strong>What&apos;s next:</strong> The mSPRT was a landmark &mdash; but it is not
-              what Eppo uses. The next act introduces <strong>confidence sequences</strong> from
-              <a href="#ref-howard-2021" className="text-blue-600 hover:text-blue-800">Howard et al. (2021)</a>, a more general framework that Eppo adopted instead.
+              <strong>Key concepts:</strong> SPRT decision rule, Wald&apos;s boundary approximations,
+              47&ndash;63% saving over fixed-sample tests, optimality (Wald &amp; Wolfowitz 1948),
+              the critical dependence on a pre-specified effect size.
             </p>
           </div>
         </div>

@@ -17,20 +17,20 @@ export function Navigation({ variant = 'landing' }: NavigationProps) {
   ]
 
   const detailedActs = [
-    { id: 'act-0', title: 'Act 0: Peeking', href: '/detailed#act-0' },
-    { id: 'act-1', title: 'Act 1: Random Walk', href: '/detailed#act-1' },
-    { id: 'act-2', title: 'Act 2: Martingale', href: '/detailed#act-2' },
-    { id: 'act-3', title: 'Act 3: Likelihood', href: '/detailed#act-3' },
-    { id: 'act-4', title: 'Act 4: LR = Martingale', href: '/detailed#act-4' },
-    { id: 'act-5', title: 'Act 5: Ville', href: '/detailed#act-5' },
-    { id: 'act-6', title: 'Act 6: SPRT', href: '/detailed#act-6' },
-    { id: 'act-7', title: 'Act 7: mSPRT', href: '/detailed#act-7' },
-    { id: 'act-8', title: 'Act 8: Conf. Sequences', href: '/detailed#act-8' },
-    { id: 'act-9', title: 'Act 9: Eppo Problem', href: '/detailed#act-9' },
-    { id: 'act-10', title: 'Act 10: Pipeline', href: '/detailed#act-10' },
-    { id: 'act-11', title: 'Act 11: CUPED', href: '/detailed#act-11' },
-    { id: 'act-12', title: 'Act 12: Sequential CI', href: '/detailed#act-12' },
-    { id: 'act-13', title: 'Act 13: DIY', href: '/detailed#act-13' },
+    { id: 'act-1', title: 'Act 1: Peeking', href: '/detailed#act-1' },
+    { id: 'act-2', title: 'Act 2: Random Walk', href: '/detailed#act-2' },
+    { id: 'act-3', title: 'Act 3: Martingale', href: '/detailed#act-3' },
+    { id: 'act-4', title: 'Act 4: Likelihood', href: '/detailed#act-4' },
+    { id: 'act-5', title: 'Act 5: LR = Martingale', href: '/detailed#act-5' },
+    { id: 'act-6', title: 'Act 6: Ville', href: '/detailed#act-6' },
+    { id: 'act-7', title: 'Act 7: SPRT', href: '/detailed#act-7' },
+    { id: 'act-8', title: 'Act 8: mSPRT', href: '/detailed#act-8' },
+    { id: 'act-9', title: 'Act 9: Conf. Sequences', href: '/detailed#act-9' },
+    { id: 'act-10', title: 'Act 10: Eppo Problem', href: '/detailed#act-10' },
+    { id: 'act-11', title: 'Act 11: Pipeline', href: '/detailed#act-11' },
+    { id: 'act-12', title: 'Act 12: CUPED', href: '/detailed#act-12' },
+    { id: 'act-13', title: 'Act 13: Sequential CI', href: '/detailed#act-13' },
+    { id: 'act-14', title: 'Act 14: DIY', href: '/detailed#act-14' },
   ]
 
   const landingLinks = [
@@ -128,6 +128,24 @@ export function Navigation({ variant = 'landing' }: NavigationProps) {
         {isOpen && (
           <div className="md:hidden">
             <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3 bg-neutral-50">
+              {variant !== 'landing' && (
+                <>
+                  <Link
+                    href="/"
+                    className="block px-3 py-2 text-neutral-600 hover:text-primary-600"
+                    onClick={() => setIsOpen(false)}
+                  >
+                    Home
+                  </Link>
+                  <Link
+                    href={variant === 'short' ? '/short#intro' : '/detailed#intro'}
+                    className="block px-3 py-2 text-neutral-600 hover:text-primary-600"
+                    onClick={() => setIsOpen(false)}
+                  >
+                    Introduction
+                  </Link>
+                </>
+              )}
               {links.map((link) => (
                 <Link
                   key={link.id}

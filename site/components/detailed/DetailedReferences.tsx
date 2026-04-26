@@ -17,7 +17,7 @@ export function DetailedReferences() {
             <p>Gauthier-Villars, Paris.</p>
             <p className="text-sm text-neutral-500 mt-1">
               Original proof of Ville&apos;s inequality for non-negative supermartingales.
-              <span className="italic"> [Used in Acts 5, 7, 8.]</span>
+              <span className="italic"> [Used in Acts 6, 7, 8.]</span>
             </p>
           </li>
 
@@ -28,7 +28,7 @@ export function DetailedReferences() {
             <p className="text-sm text-neutral-500 mt-1">
               Foundational 70-page monograph defining the SPRT, proving the fundamental
               inequalities, and showing 47&ndash;63% savings over fixed-sample tests.
-              <span className="italic"> [Used in Act 6.]</span>
+              <span className="italic"> [Used in Act 7.]</span>
             </p>
           </li>
 
@@ -39,7 +39,7 @@ export function DetailedReferences() {
             <p className="text-sm text-neutral-500 mt-1">
               Proof that the SPRT is exactly optimal among all sequential tests with the same
               error probabilities.
-              <span className="italic"> [Used in Act 6.]</span>
+              <span className="italic"> [Used in Act 7.]</span>
             </p>
           </li>
 
@@ -49,7 +49,7 @@ export function DetailedReferences() {
             <p>Wiley, New York.</p>
             <p className="text-sm text-neutral-500 mt-1">
               Definitive treatment of martingale theory including the Optional Stopping Theorem.
-              <span className="italic"> [Used in Act 2.]</span>
+              <span className="italic"> [Used in Act 3.]</span>
             </p>
           </li>
 
@@ -59,7 +59,7 @@ export function DetailedReferences() {
             <p className="italic">Annals of Mathematical Statistics, 41(5), 1397&ndash;1409.</p>
             <p className="text-sm text-neutral-500 mt-1">
               Introduced the mixture likelihood ratio approach and confidence sequences.
-              <span className="italic"> [Used in Act 7.]</span>
+              <span className="italic"> [Used in Act 8.]</span>
             </p>
           </li>
 
@@ -69,7 +69,7 @@ export function DetailedReferences() {
             <p className="italic">Biometrika, 64(2), 191&ndash;199.</p>
             <p className="text-sm text-neutral-500 mt-1">
               Constant boundary for group sequential testing in clinical trials.
-              <span className="italic"> [Used in Act 13.]</span>
+              <span className="italic"> [Used in Act 14.]</span>
             </p>
           </li>
 
@@ -79,7 +79,7 @@ export function DetailedReferences() {
             <p className="italic">Biometrics, 35(3), 549&ndash;556.</p>
             <p className="text-sm text-neutral-500 mt-1">
               Decreasing boundary that preserves most of the final-analysis power.
-              <span className="italic"> [Used in Act 13.]</span>
+              <span className="italic"> [Used in Act 14.]</span>
             </p>
           </li>
 
@@ -90,7 +90,7 @@ export function DetailedReferences() {
             <p className="italic">Proc. WSDM, 123&ndash;132.</p>
             <p className="text-sm text-neutral-500 mt-1">
               The original CUPED paper. Practical results at Microsoft Bing: 45&ndash;52% variance reduction.
-              <span className="italic"> [Used in Acts 9&ndash;11.]</span>
+              <span className="italic"> [Used in Acts 10&ndash;11.]</span>
             </p>
           </li>
 
@@ -100,7 +100,7 @@ export function DetailedReferences() {
             <p className="italic">Operations Research, 65(6), 1651&ndash;1667.</p>
             <p className="text-sm text-neutral-500 mt-1">
               Applied the mixture SPRT to A/B testing. Assumes known variance.
-              <span className="italic"> [Used in Act 7.]</span>
+              <span className="italic"> [Used in Act 8.]</span>
             </p>
           </li>
 
@@ -111,7 +111,7 @@ export function DetailedReferences() {
             <p className="text-sm text-neutral-500 mt-1">
               Developed the sub-&psi; framework for confidence sequences. Key result: the
               Normal mixture boundary. <strong>This is the framework Eppo adopted.</strong>
-              <span className="italic"> [Used in Acts 8, 10, 12.]</span>
+              <span className="italic"> [Used in Acts 9, 10, 12.]</span>
             </p>
           </li>
 
@@ -122,7 +122,7 @@ export function DetailedReferences() {
             <p className="text-sm text-neutral-500 mt-1">
               Eppo&apos;s implementation combining Howard et al.&apos;s confidence sequences with
               generalised CUPED. Estimates variance (does not assume known &sigma;&sup2;).
-              <span className="italic"> [Used in Acts 9&ndash;12.]</span>
+              <span className="italic"> [Used in Acts 10&ndash;12.]</span>
             </p>
           </li>
         </ol>

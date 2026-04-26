@@ -142,7 +142,7 @@ export function NoiseDemoSim() {
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-4">
           <div>
             <label className="block text-sm font-medium text-neutral-700 mb-1">
-              True effect: {trueEffect}
+              True effect: {trueEffect}%
             </label>
             <input type="range" min={0} max={20} step={1} value={trueEffect}
               onChange={e => setTrueEffect(+e.target.value)} className="w-full accent-blue-600" />
