@@ -37,7 +37,7 @@ function normalInv(p: number): number {
 
 /* ── method boundary functions ── */
 const ALPHA = 0.05
-const K = 12  // number of peeks
+const K = 6  // number of peeks
 
 function bonferroniZ(): number {
   return normalInv(1 - ALPHA / (2 * K))

@@ -27,13 +27,12 @@ export function DetailedAct14() {
             </p>
             <p>Think of it as a budget. You have a total error budget of <InlineMath>{`\\alpha = 5\\%`}</InlineMath>.</p>
             <ul className="list-disc ml-6 space-y-1">
-              <li><strong>Bonferroni</strong> distributes the budget equally: <InlineMath>{`\\alpha/K`}</InlineMath> per peek.</li>
-              <li><strong>Pocock</strong> distributes it more cleverly (using the correlation between test statistics at different peeks), but still equally across peeks.</li>
-              <li><strong>O&apos;Brien&ndash;Fleming</strong> front-loads the budget: almost no spending early, most of it saved for the final analysis.</li>
+              <li>Bonferroni distributes the budget equally: <InlineMath>{`\alpha/K`}</InlineMath> per peek.</li>
+              <li>Pocock distributes it more cleverly (using the correlation between test statistics at different peeks), but still equally across peeks.</li>
+              <li>O'Brien–Fleming front-loads the budget: almost no spending early, most of it saved for the final analysis.</li>
             </ul>
             <p>
-              Eppo&apos;s approach (Acts 9&ndash;12) doesn&apos;t need a fixed budget at all &mdash;
-              it works for <em>any</em> number of peeks, continuously.
+              Eppo's approach (Acts 9–12) doesn't need a fixed budget at all — it works for any number of peeks, continuously. However, in practice, it is often overly conservative (type I error well below 1% for typical n and k), so one of the group sequential alternatives, especially O'Brien–Fleming or Pocock, may be a better choice for most practical A/B tests.
             </p>
           </div>
         </div>
@@ -170,14 +169,12 @@ export function DetailedAct14() {
           <h4 className="font-bold text-green-900 mb-3">Which method should you use?</h4>
           <div className="text-neutral-800 space-y-3">
             <ul className="list-disc ml-6 space-y-2">
-              <li><strong>No platform, minimal effort:</strong> Bonferroni. Commit to <InlineMath>{`K`}</InlineMath> peeks. Replace 1.96 with <InlineMath>{`z_{\\alpha/(2K)}`}</InlineMath>. Done.</li>
-              <li><strong>No platform, moderate effort:</strong> O&apos;Brien&ndash;Fleming. Nearly as efficient as Eppo at the final analysis, but requires pre-specifying <InlineMath>{`K`}</InlineMath>.</li>
-              <li><strong>Need continuous monitoring or variance reduction:</strong> Use a platform like Eppo.</li>
+              <li>No platform, minimal effort: Bonferroni. Commit to <InlineMath>{`K`}</InlineMath> peeks. Replace 1.96 with <InlineMath>{`z_{\alpha/(2K)}`}</InlineMath>. Done.</li>
+              <li>No platform, moderate effort: O'Brien–Fleming or Pocock. These are not overly conservative and are a good practical choice for most A/B tests.</li>
+              <li>Need continuous monitoring or variance reduction: Use a platform like Eppo, but be aware that the sequential CI is often much more conservative than necessary for typical A/B testing.</li>
             </ul>
             <p className="mt-2">
-              <strong>The key point:</strong> even the simplest correction (Bonferroni) is{' '}
-              far superior to uncorrected repeated testing. Any team that currently checks
-              results without adjustment should adopt at least Bonferroni immediately.
+              The key point: even the simplest correction (Bonferroni) is far superior to uncorrected repeated testing. Any team that currently checks results without adjustment should adopt at least Bonferroni immediately.
             </p>
           </div>
         </div>
