@@ -31,7 +31,7 @@ export default function Home() {
             <div className="grid md:grid-cols-2 gap-8">
               {/* Short version card */}
               <Link
-                href="/short"
+                href="/focused"
                 className="group block bg-white border-2 border-blue-200 rounded-xl p-8 hover:border-blue-500 hover:shadow-lg transition-all"
               >
                 <h3 className="text-2xl font-bold text-neutral-900 mb-3 group-hover:text-blue-700 transition-colors">
@@ -63,13 +63,13 @@ export default function Home() {
                 <span className="text-blue-600 font-medium group-hover:underline">
                   Start &rarr;
                 </span>
-              </Link>
-
-              {/* Detailed version card */}
               <Link
-                href="/detailed"
-                className="group block bg-white border-2 border-purple-200 rounded-xl p-8 hover:border-purple-500 hover:shadow-lg transition-all"
+                href="/in-depth"
+                className="group block bg-white border-2 border-green-200 rounded-xl p-8 hover:border-green-500 hover:shadow-lg transition-all"
               >
+                <h3 className="text-2xl font-bold text-neutral-900 mb-3 group-hover:text-green-700 transition-colors">
+                  In-Depth
+                </h3>
                 <h3 className="text-2xl font-bold text-neutral-900 mb-3 group-hover:text-purple-700 transition-colors">
                   In-depth
                 </h3>
