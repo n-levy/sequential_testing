@@ -17,19 +17,17 @@ export function Act1() {
         {/* ── Simulation ── */}
         <div className="bg-orange-50 border border-orange-400 rounded-lg p-6 mb-2">
           <h4 className="font-bold text-orange-900 mb-2">Simulation</h4>
-          }
-
-          function DisplayMathBox({ children }: { children: React.ReactNode }) {
-            const [show, setShow] = useState(false);
-            if (show) return <>{children}</>;
-            return <button className="px-4 py-2 bg-blue-600 text-white rounded mb-6" onClick={() => setShow(true)}>Display the math</button>;
-          }
+        </div>
+        <ABTestSim
+          layers={['fixed-ci']}
+          showPeekStats
+          defaultEffect={0}
           defaultN={500}
           showPowerControl={true}
           hideEffectStats={true}
           takeaway={
             <>
-              Simulation takeaway. With no true effect (effect = 0), the standard CI is calibrated to fail to cover only <InlineMath>{`\\alpha = 5\\%`}</InlineMath> of the time at one specific look. But if you peek along the way, far more than 5% of trajectories will cross the boundary at some point. The box below shows the share of 500 runs in which the estimate was significant at least once during the test (false positive, leading to early stopping with the wrong conclusion). If you set the effect away from zero, the box below reports the probability of crossing the CI at some point under the simulated effect.
+              Simulation takeaway. With no true effect (effect = 0), the standard CI is calibrated to fail to cover only <InlineMath>{`\alpha = 5\%`}</InlineMath> of the time at one specific look. But if you peek along the way, far more than 5% of trajectories will cross the boundary at some point. The box below shows the share of 500 runs in which the estimate was significant at least once during the test (false positive, leading to early stopping with the wrong conclusion). If you set the effect away from zero, the box below reports the probability of crossing the CI at some point under the simulated effect.
             </>
           }
         />
@@ -106,6 +104,12 @@ export function Act1() {
         </DisplayMathBox>
       </div>
     )
+}
+
+function DisplayMathBox({ children }: { children: React.ReactNode }) {
+  const [show, setShow] = useState(false);
+  if (show) return <>{children}</>;
+  return <button className="px-4 py-2 bg-blue-600 text-white rounded mb-6" onClick={() => setShow(true)}>Display the math</button>;
 }
 
 function DisplayMathBox({ children }: { children: React.ReactNode }) {

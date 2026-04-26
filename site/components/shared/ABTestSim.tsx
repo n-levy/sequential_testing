@@ -307,16 +307,6 @@ export function ABTestSim({
     }
     setPeekProbs(results);
   }, [showPeekStats, layers, n, clampedEffect, seed, alpha]);
-                  break
-                }
-              }
-              if (crossed) count++
-            }
-            results[layer] = count / PEEK_N_SIMS
-          }
-          setPeekProbs(results)
-        }, [n, clampedEffect, seed, showPeekStats, layers, alpha])
-      </div>
       {/* Plot */}
       <div style={{ width: '100%', overflowX: 'auto' }}>
         <svg
