@@ -468,7 +468,14 @@ export function CoinFlipMeanSim({
       </div>
 
       {/* Plot */}
-      <svg ref={svgRef} viewBox="0 0 700 360" className="w-full" />
+      <div style={{ width: '100%', overflowX: 'auto' }}>
+        <svg
+          ref={svgRef}
+          viewBox="0 0 700 360"
+          style={{ minWidth: 700, width: '100%', maxWidth: '100%' }}
+          className="w-full"
+        />
+      </div>
 
       {/* Stats / decision panel */}
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mt-4">
