@@ -418,7 +418,7 @@ export function CoinFlipMeanSim({
             Number of flips <span className="font-mono">(n = {n})</span>
           </label>
           <input
-            type="range" min={50} max={500000} step={50}
+            type="range" min={50} max={100000} step={50}
             value={n} onChange={e => setN(parseInt(e.target.value, 10))}
             className="w-full"
           />
@@ -526,6 +526,17 @@ export function CoinFlipMeanSim({
           {takeaway}
         </div>
       )}
+      {/* Analogy to A/B testing */}
+      <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4 mt-6">
+        <div className="text-base font-semibold text-yellow-800 mb-2">
+          Analogy to A/B Testing
+        </div>
+        <div className="text-sm text-yellow-900">
+          In this simulation, each coin flip is analogous to a single user or observation in an A/B test. If you imagine running an online experiment, each flip could represent one user being assigned to a treatment (e.g., a new feature) or control (e.g., the current version). Alternatively, each flip could represent one additional day of data collection, if you aggregate results daily.<br /><br />
+          The <b>treatment</b> in this analogy is the coin having a bias (i.e., probability of heads different from 0.5). The <b>null hypothesis</b> is that the coin is fair (no treatment effect, bias = 0). The simulation tracks how the running mean (conversion rate) and confidence intervals evolve as more data (users or days) accumulate.<br /><br />
+          This helps illustrate why peeking at results in A/B tests can inflate false positive rates, and how sequential methods can help control error rates even with continuous monitoring.
+        </div>
+      </div>
     </div>
   )
 }
