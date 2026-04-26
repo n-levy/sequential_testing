@@ -259,25 +259,26 @@ export function ABTestSim({
             Standard 95% CI
           </span>
         </div>
-        // Compute the probability of crossing the CI at any point for all selected layers
-        const [peekProbs, setPeekProbs] = useState<Record<string, number> | null>(null)
-        useEffect(() => {
-          if (!showPeekStats) return
-          const results: Record<string, number> = {}
-          for (const layer of layers) {
-            let count = 0
-            for (let sim = 0; sim < PEEK_N_SIMS; ++sim) {
-              const t = simulateABTestTrajectory(n, clampedEffect, seed + sim)
-              let crossed = false
-              for (let i = 0; i < n; ++i) {
-                const denom = t.meansA[i]
-                const est = denom !== 0 ? 100 * (t.meansB[i] - denom) / denom : 0
-                let w = 0
-                if (layer === 'fixed-ci') {
-                  w = denom !== 0 ? 100 * Z_975 * t.ses[i] / denom : 0
-                } else if (layer === 'sequential-ci') {
-                  // Eppo/Howard mixture boundary (approximate)
-                  const nu = n * 0.25 // tuning parameter, can be adjusted
+  // Compute the probability of crossing the CI at any point for all selected layers
+  // Place after all hooks, before return
+  const [peekProbs, setPeekProbs] = useState<Record<string, number> | null>(null)
+  useEffect(() => {
+    if (!showPeekStats) return
+    const results: Record<string, number> = {}
+    for (const layer of layers) {
+      let count = 0
+      for (let sim = 0; sim < PEEK_N_SIMS; ++sim) {
+        const t = simulateABTestTrajectory(n, clampedEffect, seed + sim)
+        let crossed = false
+        for (let i = 0; i < n; ++i) {
+          const denom = t.meansA[i]
+          const est = denom !== 0 ? 100 * (t.meansB[i] - denom) / denom : 0
+          let w = 0
+          if (layer === 'fixed-ci') {
+            w = denom !== 0 ? 100 * Z_975 * t.ses[i] / denom : 0
+          } else if (layer === 'sequential-ci') {
+            // Eppo/Howard mixture boundary (approximate)
+            const nu = n * 0.25 // tuning parameter, can be adjusted
                   w = denom !== 0 ? 100 * t.ses[i] * Math.sqrt(((i+1) + nu) / (i+1) * Math.log(((i+1) + nu) / (nu * alpha * alpha))) / denom : 0
                 } else if (layer === 'pocock') {
                   // Pocock critical value (approximate)

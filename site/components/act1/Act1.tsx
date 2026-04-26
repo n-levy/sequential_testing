@@ -14,10 +14,8 @@ export function Act1() {
             Act 1 &mdash; The Peeking Problem
           </h2>
         </div>
-
-        {/* ── Peeking without adjustments ── */}
-        <h3 className="text-2xl font-bold text-neutral-900 mb-4">Peeking without adjustments</h3>
-
+      )
+  }
         {/* ── Simulation ── */}
 
         <div className="bg-orange-50 border border-orange-400 rounded-lg p-6 mb-2">
@@ -111,12 +109,15 @@ export function Act1() {
             </div>
           </div>
         </DisplayMathBox>
-      // --- DisplayMathBox helper ---
-      function DisplayMathBox({ children }: { children: React.ReactNode }) {
-        const [show, setShow] = useState(false)
-        if (show) return <>{children}</>
-        return <button className="px-4 py-2 bg-blue-600 text-white rounded mb-6" onClick={() => setShow(true)}>Display the math</button>
-      }
+      </div>
+    )
+}
+
+function DisplayMathBox({ children }: { children: React.ReactNode }) {
+  const [show, setShow] = useState(false)
+  if (show) return <>{children}</>
+  return <button className="px-4 py-2 bg-blue-600 text-white rounded mb-6" onClick={() => setShow(true)}>Display the math</button>
+}
       </div>
     </section>
   )
