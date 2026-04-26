@@ -17,13 +17,19 @@ export function DetailedAct14() {
         <div className="bg-blue-50 border border-blue-400 rounded-lg p-6 mb-8">
           <div className="text-neutral-800 space-y-3">
             <p>
-              Confidence intervals contain the true value 95% of the time, but only if we fix the sample size in advance. If we keep checking and stop based on the data, that guarantee no longer applies. The issue is not with confidence intervals themselves, but with using them outside their intended assumptions.
+              Standard confidence intervals guarantee 95% coverage only at a fixed sample size.
+            </p>
+            <p>
+              Confidence intervals are only valid when the sample size is fixed in advance. If we monitor continuously and stop based on the data, that guarantee no longer applies.
             </p>
             <p>
               By checking repeatedly and stopping when results look good, we give ourselves multiple chances to get a lucky fluctuation.
             </p>
             <p>
               At a fixed sample size, the chance of a false positive is 5%. If we can stop at any time, the chance of ever making at least one false positive is much higher.
+            </p>
+            <p>
+              The issue isn’t peeking itself — it’s that standard statistical tools weren’t designed for continuous monitoring.
             </p>
             <p>
               The issue isn’t peeking itself — it’s that standard statistical tools weren’t designed for continuous monitoring.

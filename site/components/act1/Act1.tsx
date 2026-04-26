@@ -1,6 +1,7 @@
 'use client'
 
-import { CoinFlipMeanSim } from '../shared/CoinFlipMeanSim'
+// import { CoinFlipMeanSim } from '../shared/CoinFlipMeanSim'
+import { ABTestSim } from '../shared/ABTestSim'
 import { InlineMath } from '../ui/Math'
 
 export function Act1() {
@@ -13,56 +14,27 @@ export function Act1() {
           </h2>
         </div>
 
-        {/* ── Motivation ── */}
-        <h3 className="text-2xl font-bold text-neutral-900 mb-4">The Motivation</h3>
-
-        <div className="bg-blue-50 border border-blue-400 rounded-lg p-6 mb-8">
-          <div className="text-neutral-800 space-y-3">
-            <p>
-              Suppose we flip a coin many times to see if it’s fair. After each flip, we look at the running average and ask: is the coin biased?
-            </p>
-            <p>
-              In A/B testing, it’s the same idea. The “coin” is treatment versus control. A bias of zero means no real effect.
-            </p>
-            <p>
-              Confidence intervals contain the true value 95% of the time, but only if we fix the sample size in advance. If we keep checking and stop based on the data, that guarantee no longer applies. The issue is not with confidence intervals themselves, but with using them outside their intended assumptions.
-            </p>
-            <p>
-              By checking repeatedly and stopping when results look good, we give ourselves multiple chances to get a lucky fluctuation.
-            </p>
-            <p>
-              At a fixed sample size, the chance of a false positive is 5%. If we can stop at any time, the chance of ever making at least one false positive is much higher.
-            </p>
-            <p>
-              The issue isn’t peeking itself — it’s that standard statistical tools weren’t designed for continuous monitoring.
-            </p>
-            <p>
-              We need methods that remain valid no matter when we stop.
-            </p>
-            <p>
-              These methods control the probability of ever making at least one false positive, even if we keep checking.
-            </p>
-          </div>
-        </div>
+        {/* ── Peeking without adjustments ── */}
+        <h3 className="text-2xl font-bold text-neutral-900 mb-4">Peeking without adjustments</h3>
 
         {/* ── Simulation ── */}
 
         <div className="bg-orange-50 border border-orange-400 rounded-lg p-6 mb-2">
           <h4 className="font-bold text-orange-900 mb-2">Simulation</h4>
           <p className="text-neutral-800">
-            The coin bias is fixed at 0 (fair coin). Use the sliders to set the number of flips and alpha. The plot shows the running average and the standard 95% CI. The stat box below reports, under the null (bias = 0), how often the standard CI crosses the “reject” threshold at some point during peeking.
+            Simulate an A/B test. Specify the effect size (difference in means between treatment and control), the number of users in the test, and the significance level (alpha). Optionally, set the desired power (1 - beta). The plot shows the running difference in means and the standard 95% CI. The stat box below reports, under the null (effect = 0), how often the standard CI crosses the “reject” threshold at some point during peeking.
           </p>
         </div>
 
-        <CoinFlipMeanSim
+        <ABTestSim
           layers={['fixed-ci']}
           showPeekStats
-          defaultBias={0}
-          showAnalogy={false}
-          analogyNote={"This is analogous to peeking at results while using fixed-horizon confidence intervals in an A/B test."}
+          defaultEffect={0}
+          defaultN={500}
+          showPowerControl={true}
           takeaway={
             <>
-              Simulation takeaway. With a fair coin (bias = 0), the standard CI is calibrated to fail to cover only <InlineMath>{`\\alpha = 5\\%`}</InlineMath> of the time at one specific look. But if you peek along the way, far more than 5% of trajectories will cross the boundary at some point. If you set the bias away from zero, the stat box below reports the probability of crossing the CI at some point under the simulated bias.
+              Simulation takeaway. With no true effect (effect = 0), the standard CI is calibrated to fail to cover only <InlineMath>{`\\alpha = 5\\%`}</InlineMath> of the time at one specific look. But if you peek along the way, far more than 5% of trajectories will cross the boundary at some point. If you set the effect away from zero, the stat box below reports the probability of crossing the CI at some point under the simulated effect.
             </>
           }
         />

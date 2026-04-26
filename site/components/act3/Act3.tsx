@@ -10,6 +10,7 @@ import { CoinFlipMeanSim } from '../shared/CoinFlipMeanSim'
 
 export function Act3() {
   const [selectedMethod, setSelectedMethod] = useState<string | null>(null)
+  const [K, setK] = useState(6)
 
   return (
     <section id="act3" className="py-16 bg-white">
@@ -48,6 +49,18 @@ export function Act3() {
               it provides a continuously valid guarantee.
             </p>
           </div>
+        </div>
+
+        {/* ── K slider ── */}
+        <div className="mb-6">
+          <label className="block text-sm font-medium text-neutral-700 mb-1">
+            Number of planned analyses (K): <span className="font-mono">{K}</span>
+          </label>
+          <input
+            type="range" min={2} max={20} step={1}
+            value={K} onChange={e => setK(Number(e.target.value))}
+            className="w-full max-w-xs"
+          />
         </div>
 
         {/* ── All Methods ── */}
@@ -95,6 +108,7 @@ export function Act3() {
           <CoinFlipMeanSim
             layers={['fixed-ci', 'sequential-ci', 'pocock', 'obf', 'bonferroni']}
             defaultBias={0}
+            K={K}
             takeaway={<>
               Simulation takeaway. For each method, this shows the share of 500 simulated tests that crossed the respective threshold at any point. When bias = 0, this is an A/A test; otherwise, it shows the probability of crossing under the simulated bias.<br /><br />
               Note: The Eppo/Howard sequential CI is very conservative in this setting, with a type I error rate often well below 1%. One of the group sequential alternatives, especially O'Brien–Fleming or Pocock, may be a better choice for most practical A/B tests, as they are not overly conservative and still control the error rate under peeking.
@@ -286,18 +300,20 @@ export function Act3() {
         <CoinFlipMeanSim
           layers={['fixed-ci', 'sequential-ci', 'pocock', 'obf', 'bonferroni']}
           showPeekStats
-          takeaway={
+          K={K}
+          takeaway={({ crossStats }) => (
             <>
               <strong>Simulation takeaway.</strong> The standard CI (red) is the
               narrowest but its peeking guarantee is broken. Eppo&apos;s sequential CI
               (blue) is the tightest valid band for continuous monitoring. Among the
-              DIY methods, O&apos;Brien&ndash;Fleming is conservative early and tight at
+              DIY methods, O&apos;Brien&ndash;Fleming is conservative early and tight at the final analysis.
               <br />
               <span className="block mt-2 text-blue-900 text-sm">
-                <strong>Share of false positives in 500 runs using sequential testing (Eppo approach):</strong> <EppoFPRReport />
+                <strong>Share of false positives in 500 runs using sequential testing (Eppo approach):</strong>
+                {typeof crossStats?.['sequential-ci'] === 'number' ? ` ${(crossStats['sequential-ci'] * 100).toFixed(1)}%` : ' ...'}
               </span>
             </>
-          }
+          )}
         />
       </div>
     </section>
