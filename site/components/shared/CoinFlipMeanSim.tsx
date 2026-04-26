@@ -317,10 +317,10 @@ export function CoinFlipMeanSim({
       if (v < minMean) minMean = v;
       if (v > maxMean) maxMean = v;
     }
-    // Add a small margin for visual comfort
-    const margin = 0.02 * Math.max(1, Math.abs(maxMean - minMean));
-    const yMin = minMean - margin;
-    const yMax = maxMean + margin;
+    // Add a small y-axis margin for visual comfort
+    const yMargin = 0.02 * Math.max(1, Math.abs(maxMean - minMean));
+    const yMin = minMean - yMargin;
+    const yMax = maxMean + yMargin;
 
     const x = d3.scaleLinear().domain([1, n]).range([0, innerW])
     const y = d3.scaleLinear().domain([yMin, yMax]).range([innerH, 0])
