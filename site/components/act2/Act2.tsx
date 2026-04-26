@@ -178,11 +178,12 @@ export function Act2() {
         </DisplayMathBox>
         // --- DisplayMathBox helper ---
 
-        function DisplayMathBox({ children }: { children: React.ReactNode }) {
-          const [show, setShow] = useState(false);
-          if (show) return <>{children}</>;
-          return <button className="px-4 py-2 bg-blue-600 text-white rounded mb-6" onClick={() => setShow(true)}>Display the math</button>;
-        }
+// --- DisplayMathBox helper ---
+function DisplayMathBox({ children }: { children: React.ReactNode }) {
+  const [show, setShow] = useState(false);
+  if (show) return <>{children}</>;
+  return <button className="px-4 py-2 bg-blue-600 text-white rounded mb-6" onClick={() => setShow(true)}>Display the math</button>;
+}
         <div className="bg-white border border-neutral-400 rounded-lg p-5 mb-6">
           <p className="font-semibold text-neutral-800 mb-3">Unpacking the formula:</p>
           <ul className="list-disc list-inside space-y-2 text-neutral-700">
