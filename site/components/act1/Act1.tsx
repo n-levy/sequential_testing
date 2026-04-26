@@ -19,13 +19,25 @@ export function Act1() {
         <div className="bg-blue-50 border border-blue-400 rounded-lg p-6 mb-8">
           <div className="text-neutral-800 space-y-3">
             <p>
-              Throughout this guide, we use a simple example: <strong>flipping a coin many times to decide if it’s fair</strong>. After each flip, we look at the running average and ask: is the coin biased, or not?
+              Suppose we flip a coin many times to see if it’s fair. After each flip, we look at the running average and ask: is the coin biased?
             </p>
             <p>
-              In A/B testing, it’s the same idea. The “coin” is the treatment versus control; “heads” means the user’s outcome was higher under treatment. A bias of zero means no real effect.
+              In A/B testing, it’s the same idea. The “coin” is treatment versus control. A bias of zero means no real effect.
             </p>
             <p>
-              In the simulation below, set the bias to <strong>0</strong> (the null is true) and watch the running average. Each time you check and the standard 95% confidence interval excludes zero, you might (wrongly) declare a winner.
+              Standard confidence intervals only guarantee 95% coverage if we fix the sample size in advance. If we keep checking and stop early, that guarantee no longer holds. The issue is not with the method itself, but with using it outside its intended assumptions.
+            </p>
+            <p>
+              Each time we check, we give ourselves another chance to get lucky. These checks are not independent, but the overall chance of a false positive still increases. The probability of a false positive increases substantially and can approach 1 if we keep checking long enough.
+            </p>
+            <p>
+              The issue isn’t peeking itself — it’s that standard statistical tools weren’t designed for continuous monitoring.
+            </p>
+            <p>
+              There’s a core distinction: with a fixed sample size, there’s a 5% chance of error at that point. If we can stop at any time, the chance of error is much higher.
+            </p>
+            <p>
+              We need methods that remain valid no matter when we stop. That’s the motivation for sequential testing.
             </p>
           </div>
         </div>
@@ -110,10 +122,7 @@ export function Act1() {
           <h4 className="font-bold text-yellow-900 mb-3">Key Takeaway</h4>
           <div className="text-neutral-800 space-y-3">
             <p>
-              The core issue is that standard statistical tools weren’t designed for continuous monitoring. Standard confidence intervals give a fixed-time guarantee: the chance of a false positive at a single, pre-planned analysis is 5%. But if we look at any time, the chance of a false positive can be much higher. The probability increases substantially and can approach 1 if we keep checking long enough.
-            </p>
-            <p>
-              The problem isn’t peeking itself—it’s using tools outside their intended assumptions. We need methods that remain valid no matter when we stop. That’s the motivation for sequential testing, which is what platforms like Eppo use under the hood.
+              Sequential methods control the probability of ever making a false positive, no matter when we stop. They use stricter or time-dependent thresholds to account for repeated checking. This way, we can monitor results as often as we like, and the error rate stays controlled.
             </p>
           </div>
         </div>
