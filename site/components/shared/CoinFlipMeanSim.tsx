@@ -185,13 +185,14 @@ export function CoinFlipMeanSim({
           let crossed = false
           for (let i = 1; i <= n && !crossed; i++) {
             sum += rand() < pHeads ? 1 : 0
-            // Only check at scheduled looks (for group sequential methods)
+            // For group sequential methods, only check at scheduled looks; for others, check every step
             let check = true
             if (layer === 'pocock' || layer === 'obf' || layer === 'bonferroni') {
               const step = Math.floor(n / N_LOOKS)
               if (i % step !== 0 && i !== n) check = false
             }
-            if (!check) continue
+            // For fixed/sequential CI, always check
+            if (!check && (layer === 'pocock' || layer === 'obf' || layer === 'bonferroni')) continue
             const m = sum / i
             const se = Math.sqrt(Math.max(m * (1 - m), 1e-4) / i)
             let bound = 0
