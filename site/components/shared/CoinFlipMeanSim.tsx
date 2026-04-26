@@ -152,19 +152,86 @@ export function CoinFlipMeanSim({
   // Trajectory recomputed automatically whenever the controls change.
   const traj = useMemo(() => simulateTrajectory(n, pHeads, seed), [n, pHeads, seed])
 
-  // Peeking-FPR stats, gated by prop. Recomputed on n / α change only.
-  const [peekFPR, setPeekFPR] = useState<number | null>(null)
-  const [peekSeqFPR, setPeekSeqFPR] = useState<number | null>(null)
+  // For each enabled method, compute the share of simulations that crossed its threshold at any point.
+  const [crossStats, setCrossStats] = useState<Record<SimLayer, number | null>>({
+    'fixed-ci': null,
+    'sequential-ci': null,
+    'pocock': null,
+    'obf': null,
+    'bonferroni': null,
+  })
   useEffect(() => {
-    if (!showPeekStats) return
-    setPeekFPR(null)
-    setPeekSeqFPR(null)
-    const id = setTimeout(() => {
-      setPeekFPR(computePeekFPR(n, alpha, seed * 7919))
-      setPeekSeqFPR(computePeekSeqFPR(n, alpha, seed * 7919))
+    let cancelled = false
+    setCrossStats({
+      'fixed-ci': null,
+      'sequential-ci': null,
+      'pocock': null,
+      'obf': null,
+      'bonferroni': null,
+    })
+    setTimeout(() => {
+      const results: Record<SimLayer, number> = {
+        'fixed-ci': 0,
+        'sequential-ci': 0,
+        'pocock': 0,
+        'obf': 0,
+        'bonferroni': 0,
+      }
+      for (const layer of layers) {
+        let fpCount = 0
+        for (let s = 0; s < PEEK_N_SIMS; s++) {
+          const rand = mulberry32(seed * 7919 + s + 10000 * Object.keys(LAYER_STYLE).indexOf(layer))
+          let sum = 0
+          let crossed = false
+          for (let i = 1; i <= n && !crossed; i++) {
+            sum += rand() < 0.5 ? 1 : 0
+            // Only check at scheduled looks (for group sequential methods)
+            let check = true
+            if (layer === 'pocock' || layer === 'obf' || layer === 'bonferroni') {
+              const step = Math.floor(n / N_LOOKS)
+              if (i % step !== 0 && i !== n) check = false
+            }
+            if (!check) continue
+            const m = sum / i
+            const se = Math.sqrt(Math.max(m * (1 - m), 1e-4) / i)
+            let bound = 0
+            switch (layer) {
+              case 'fixed-ci': {
+                const z = alpha === 0.05 ? Z_975 : 1.96
+                bound = z * se
+                break
+              }
+              case 'sequential-ci': {
+                bound = sequentialHalfWidth(i, se, alpha, n)
+                break
+              }
+              case 'pocock': {
+                bound = POCOCK_C * se
+                break
+              }
+              case 'obf': {
+                bound = OBF_C * Math.sqrt(n / i) * se
+                break
+              }
+              case 'bonferroni': {
+                const aPer = alpha / N_LOOKS
+                const t = Math.sqrt(-2 * Math.log(aPer / 2))
+                const zB = t - (2.515517 + 0.802853 * t + 0.010328 * t * t) /
+                  (1 + 1.432788 * t + 0.189269 * t * t + 0.001308 * t * t * t)
+                bound = zB * se
+                break
+              }
+            }
+            if (Math.abs(m - 0.5) > bound) crossed = true
+          }
+          if (crossed) fpCount++
+        }
+        results[layer] = fpCount / PEEK_N_SIMS
+      }
+      if (!cancelled) setCrossStats(results)
     }, 50)
-    return () => clearTimeout(id)
-  }, [showPeekStats, n, alpha, seed])
+    return () => { cancelled = true }
+  }, [layers, n, alpha, seed])
 
   // Compute the per-step CI half-width for each enabled layer.
   const bands = useMemo(() => {
@@ -443,26 +510,19 @@ export function CoinFlipMeanSim({
             <div className={`text-base font-semibold ${decision.color}`}>{decision.label}</div>
           </div>
         )}
-        {showPeekStats && (
-          <div className="bg-amber-50 border border-amber-200 rounded-lg p-3 col-span-2 sm:col-span-4">
-            <div className="text-[11px] font-medium text-amber-700 uppercase">
-              False positive rate when peeking after every batch (true bias = 0)
+        {/* Show share crossing each enabled threshold at any point */}
+        {layers.length > 1 && (
+          <div className="bg-blue-50 border border-blue-200 rounded-lg p-3 col-span-2 sm:col-span-4">
+            <div className="text-[11px] font-medium text-blue-700 uppercase mb-1">
+              Share of simulations that crossed each threshold at any point (A/A, bias = 0)
             </div>
-            <div className="text-lg font-semibold text-amber-900">
-              {peekFPR == null
-                ? 'Computing…'
-                : `${(peekFPR * 100).toFixed(1)}% of ${PEEK_N_SIMS} simulated A/A tests crossed the standard CI at some point.`}
-            </div>
-            <div className="text-lg font-semibold text-blue-900 mt-1">
-              {peekSeqFPR == null
-                ? 'Computing…'
-                : `${(peekSeqFPR * 100).toFixed(1)}% of ${PEEK_N_SIMS} simulated A/A tests crossed the Sequential CI at some point.`}
-            </div>
-            <div className="text-xs text-amber-800 mt-1">
-              {bias === 0
-                ? `Compare with the alpha of ${(alpha * 100).toFixed(0)}% — peeking inflates the error rate well beyond what a single look would give.`
-                : 'With nonzero bias, this is not a false positive rate but the probability of crossing the standard or sequential CI at some point.'}
-            </div>
+            <ul className="text-sm text-blue-900 font-mono space-y-1">
+              {layers.map(layer => (
+                <li key={layer}>
+                  {LAYER_STYLE[layer].label}: {crossStats[layer] == null ? 'Computing…' : `${(crossStats[layer]! * 100).toFixed(1)}%`}
+                </li>
+              ))}
+            </ul>
           </div>
         )}
       </div>

@@ -88,9 +88,20 @@ export function Act3() {
           </Card>
         </div>
 
+
+        {/* ── Simulation: Share crossing each threshold ── */}
+        <h3 className="text-2xl font-bold text-neutral-900 mb-4">Simulation: Share Crossing Each Threshold</h3>
+        <div className="mb-10">
+          <CoinFlipMeanSim
+            layers={['fixed-ci', 'sequential-ci', 'pocock', 'obf', 'bonferroni']}
+            takeaway={<>
+              <strong>Simulation takeaway.</strong> For each method, this shows the share of 500 simulated A/A tests (fair coin) that crossed the respective threshold at any point. This demonstrates how each correction controls the false positive rate under peeking.
+            </>}
+          />
+        </div>
+
         {/* ── Head-to-Head Comparison ── */}
         <h3 className="text-2xl font-bold text-neutral-900 mb-4">Comparison</h3>
-
         <div className="overflow-x-auto mb-6">
           <table className="w-full min-w-[640px] text-sm border-collapse border border-neutral-300">
             <thead>
