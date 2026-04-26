@@ -25,13 +25,13 @@ export function Act1() {
               In A/B testing, it’s the same idea. The “coin” is treatment versus control. A bias of zero means no real effect.
             </p>
             <p>
-              Confidence intervals give a 95% guarantee only if we fix the sample size in advance. If we keep checking and stop based on the data, that guarantee no longer applies. The issue is not with confidence intervals themselves, but with using them outside their intended assumptions.
+              Confidence intervals contain the true value 95% of the time, but only if we fix the sample size in advance. If we keep checking and stop based on the data, that guarantee no longer applies. The issue is not with confidence intervals themselves, but with using them outside their intended assumptions.
             </p>
             <p>
               By checking repeatedly and stopping when results look good, we give ourselves multiple chances to get a lucky fluctuation.
             </p>
             <p>
-              At a fixed sample size, the chance of a false positive is 5%. If we can stop at any time, the chance of ever making a false positive is much higher.
+              At a fixed sample size, the chance of a false positive is 5%. If we can stop at any time, the chance of ever making at least one false positive is much higher.
             </p>
             <p>
               The issue isn’t peeking itself — it’s that standard statistical tools weren’t designed for continuous monitoring.
@@ -40,7 +40,7 @@ export function Act1() {
               We need methods that remain valid no matter when we stop.
             </p>
             <p>
-              These methods control the probability of ever making a false positive, even if we keep checking.
+              These methods control the probability of ever making at least one false positive, even if we keep checking.
             </p>
           </div>
         </div>
