@@ -185,19 +185,7 @@ export function Act2() {
         </DisplayMathBox>
       </div>
     )
-  }
-        <div className="bg-white border border-neutral-400 rounded-lg p-5 mb-6">
-          <p className="font-semibold text-neutral-800 mb-3">Unpacking the formula:</p>
-          <ul className="list-disc list-inside space-y-2 text-neutral-700">
-            <li><InlineMath>{`\\hat{\\tau}(t)`}</InlineMath>: the estimated treatment effect at time <InlineMath>{`t`}</InlineMath> (from Step 4).</li>
-            <li><InlineMath>{`\\hat{\\sigma}_{\\hat{\\tau}}(t)`}</InlineMath>: the estimated standard error (from Step 5).</li>
-            <li><InlineMath>{`n = n_0(t) + n_1(t)`}</InlineMath>: total observations so far.</li>
-            <li><InlineMath>{`\\alpha`}</InlineMath>: significance level (e.g. 0.05 for a 95% CI).</li>
-            <li><InlineMath>{`\\nu`}</InlineMath>: a tuning parameter set from the expected total sample size <InlineMath>{`M`}</InlineMath>: <InlineMath>{`\\nu = M \\cdot \\hat{\\sigma}^2`}</InlineMath>. It controls <em>which</em> sample size the CI is tightest for.</li>
-            <li>The &ldquo;sequential multiplier&rdquo; replaces the constant 1.96. It starts higher (e.g. ~3.8 early on) and slowly decreases toward 1.96 &mdash; but never quite reaches it. This is the <strong>price of peeking</strong>.</li>
-          </ul>
-          <p className="text-neutral-700 mt-3">
-            This formula comes from the <em>confidence sequence</em> framework of
+}
             <a href="#ref-howard-2021" className="text-blue-600 hover:text-blue-800">Howard et al. (2021)</a>, specifically the Normal mixture boundary. The
             mathematical guarantee: the true treatment effect lies inside the CI at{' '}
             <em>all times simultaneously</em> with probability{' '}

@@ -76,11 +76,3 @@ export function Act1() {
     </div>
   )
 }
-  function DisplayMathBox({ children }: { children: React.ReactNode }) {
-    const [show, setShow] = useState(false);
-    if (show) return <>{children}</>;
-    return <button className="px-4 py-2 bg-blue-600 text-white rounded mb-6" onClick={() => setShow(true)}>Display the math</button>;
-  }
-
-  // --- Main render ---
-}
