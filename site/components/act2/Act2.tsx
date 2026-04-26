@@ -27,7 +27,7 @@ export function Act2() {
         <div className="bg-orange-50 border border-orange-400 rounded-lg p-6 mb-2">
           <h4 className="font-bold text-orange-900 mb-2">Simulation</h4>
           <p className="text-neutral-800">
-            We continue with the same coin-flip example. The plot below adds Eppo&apos;s
+            The coin bias is fixed at 0 (fair coin). The plot below adds Eppo&apos;s
             <strong> sequential confidence interval</strong> (blue band) on top of the
             standard 95% CI (red band) you saw in Act 1. The sequential CI is wider at
             any single look &mdash; that is the price of peeking &mdash; but its 95% coverage

@@ -42,7 +42,7 @@ export function Act1() {
         <div className="bg-orange-50 border border-orange-400 rounded-lg p-6 mb-2">
           <h4 className="font-bold text-orange-900 mb-2">Simulation</h4>
           <p className="text-neutral-800">
-            Use the sliders to set the coin bias and the number of flips. The plot shows
+            The coin bias is fixed at 0 (fair coin). Use the sliders to set the number of flips and alpha. The plot shows
             the running sample mean and the standard 95% CI around it. The amber stat box
             below the plot reports, under the null (bias = 0), how often the standard CI
             crosses the &ldquo;reject&rdquo; threshold at <em>some</em> point during peeking.

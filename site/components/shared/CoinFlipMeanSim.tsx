@@ -79,10 +79,8 @@ function sequentialHalfWidth(k: number, se: number, alpha: number, nu: number) {
  * fixed-n CI under the null (true bias = 0). This is the punchline of Act 1.
  */
 function computePeekFPR(n: number, alpha: number, seedBase: number): number {
-  const z = -Math.log(alpha) // not used; keep z below
-  const zCrit = Z_975 // assume α≈0.05 for the comparison; recompute for general α below
-  // recompute exact two-sided critical value via inverse-normal approximation
-  const ratIcdf = (p: number) => {
+  // Standard CI crossing
+  const zCrit = (() => {
     // Beasley-Springer-Moro
     const a = [-3.969683028665376e1, 2.209460984245205e2, -2.759285104469687e2, 1.38357751867269e2, -3.066479806614716e1, 2.506628277459239]
     const b = [-5.447609879822406e1, 1.615858368580409e2, -1.556989798598866e2, 6.680131188771972e1, -1.328068155288572e1]
@@ -90,13 +88,11 @@ function computePeekFPR(n: number, alpha: number, seedBase: number): number {
     const d = [7.784695709041462e-3, 3.224671290700398e-1, 2.445134137142996, 3.754408661907416]
     const pl = 0.02425, pu = 1 - pl
     let q: number, r: number
+    const p = 1 - alpha / 2
     if (p < pl) { q = Math.sqrt(-2 * Math.log(p)); return (((((c[0]*q+c[1])*q+c[2])*q+c[3])*q+c[4])*q+c[5]) / ((((d[0]*q+d[1])*q+d[2])*q+d[3])*q+1) }
     if (p <= pu) { q = p - 0.5; r = q*q; return (((((a[0]*r+a[1])*r+a[2])*r+a[3])*r+a[4])*r+a[5])*q / (((((b[0]*r+b[1])*r+b[2])*r+b[3])*r+b[4])*r+1) }
     q = Math.sqrt(-2 * Math.log(1-p)); return -(((((c[0]*q+c[1])*q+c[2])*q+c[3])*q+c[4])*q+c[5]) / ((((d[0]*q+d[1])*q+d[2])*q+d[3])*q+1)
-  }
-  const zUse = ratIcdf(1 - alpha / 2)
-  void zCrit; void z
-  // Peek schedule: every n/PEEK_LOOKS flips
+  })();
   const looks = Math.min(PEEK_LOOKS, n)
   const stepSize = Math.max(1, Math.floor(n / looks))
   let fpCount = 0
@@ -109,8 +105,29 @@ function computePeekFPR(n: number, alpha: number, seedBase: number): number {
       if (i % stepSize !== 0 && i !== n) continue
       const m = sum / i
       const se = Math.sqrt(Math.max(m * (1 - m), 1e-4) / i)
-      // Test H0: p = 0.5
-      if (Math.abs(m - 0.5) > zUse * se) crossed = true
+      if (Math.abs(m - 0.5) > zCrit * se) crossed = true
+    }
+    if (crossed) fpCount++
+  }
+  return fpCount / PEEK_N_SIMS
+}
+
+// Sequential CI crossing (Eppo/Howard/mixture)
+function computePeekSeqFPR(n: number, alpha: number, seedBase: number): number {
+  const looks = Math.min(PEEK_LOOKS, n)
+  const stepSize = Math.max(1, Math.floor(n / looks))
+  let fpCount = 0
+  for (let s = 0; s < PEEK_N_SIMS; s++) {
+    const rand = mulberry32(seedBase + 10000 + s) // offset seed for independence
+    let sum = 0
+    let crossed = false
+    for (let i = 1; i <= n && !crossed; i++) {
+      sum += rand() < 0.5 ? 1 : 0
+      if (i % stepSize !== 0 && i !== n) continue
+      const m = sum / i
+      const se = Math.sqrt(Math.max(m * (1 - m), 1e-4) / i)
+      const hw = sequentialHalfWidth(i, se, alpha, n)
+      if (Math.abs(m - 0.5) > hw) crossed = true
     }
     if (crossed) fpCount++
   }
@@ -121,27 +138,30 @@ export function CoinFlipMeanSim({
   layers,
   showPeekStats = false,
   takeaway,
-  defaultBias = 0,
+  // defaultBias is ignored; bias is always zero in this version
   defaultN = 500,
 }: CoinFlipMeanSimProps) {
-  const [bias, setBias] = useState(defaultBias)
+  const bias = 0 // always fair coin
   const [n, setN] = useState(defaultN)
   const [alpha, setAlpha] = useState(0.05)
   const [seed, setSeed] = useState(1)
   const svgRef = useRef<SVGSVGElement | null>(null)
 
-  const pHeads = 0.5 + bias
+  const pHeads = 0.5
 
   // Trajectory recomputed automatically whenever the controls change.
   const traj = useMemo(() => simulateTrajectory(n, pHeads, seed), [n, pHeads, seed])
 
-  // Peeking-FPR stat, gated by prop. Recomputed on n / α change only.
+  // Peeking-FPR stats, gated by prop. Recomputed on n / α change only.
   const [peekFPR, setPeekFPR] = useState<number | null>(null)
+  const [peekSeqFPR, setPeekSeqFPR] = useState<number | null>(null)
   useEffect(() => {
     if (!showPeekStats) return
     setPeekFPR(null)
+    setPeekSeqFPR(null)
     const id = setTimeout(() => {
       setPeekFPR(computePeekFPR(n, alpha, seed * 7919))
+      setPeekSeqFPR(computePeekSeqFPR(n, alpha, seed * 7919))
     }, 50)
     return () => clearTimeout(id)
   }, [showPeekStats, n, alpha, seed])
@@ -255,10 +275,36 @@ export function CoinFlipMeanSim({
       .attr('x1', 0).attr('x2', innerW)
       .attr('y1', y(0)).attr('y2', y(0))
       .attr('stroke', '#525252').attr('stroke-width', 1).attr('stroke-dasharray', '4 3')
+    // Draw white rectangle behind the label
+    const nullLabel = 'Null (fair coin)';
+    const nullFontSize = 11;
+    const nullPaddingX = 6;
+    const nullPaddingY = 2;
+    // Temporary text to measure width
+    const tempText = g.append('text')
+      .attr('x', innerW - 8)
+      .attr('y', y(0) - 8)
+      .style('font-size', `${nullFontSize}px`)
+      .text(nullLabel);
+    const bbox = tempText.node().getBBox();
+    tempText.remove();
+    g.append('rect')
+      .attr('x', innerW - 8 - bbox.width - nullPaddingX)
+      .attr('y', y(0) - 8 - bbox.height + nullPaddingY)
+      .attr('width', bbox.width + 2 * nullPaddingX)
+      .attr('height', bbox.height + 2 * nullPaddingY)
+      .attr('fill', 'white')
+      .attr('stroke', '#e5e7eb')
+      .attr('rx', 3)
+      .attr('ry', 3)
+      .attr('opacity', 0.95);
     g.append('text')
-      .attr('x', 8).attr('y', y(0) - 8)
-      .style('text-anchor', 'start').style('font-size', '11px').style('fill', '#525252')
-      .text('Null (fair coin)')
+      .attr('x', innerW - 8)
+      .attr('y', y(0) - 8)
+      .style('text-anchor', 'end')
+      .style('font-size', `${nullFontSize}px`)
+      .style('fill', '#525252')
+      .text(nullLabel);
 
     // True bias line if non-zero
     if (bias !== 0) {
@@ -327,21 +373,10 @@ export function CoinFlipMeanSim({
 
   return (
     <div className="bg-white border border-neutral-300 rounded-lg p-4 my-6">
-      {/* Controls */}
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-4">
-        <div>
-          <label className="block text-xs font-medium text-neutral-600 mb-1">
-            Coin bias <span className="font-mono">({bias > 0 ? '+' : ''}{bias.toFixed(2)})</span>
-          </label>
-          <input
-            type="range" min={-0.5} max={0.5} step={0.01}
-            value={bias} onChange={e => setBias(parseFloat(e.target.value))}
-            className="w-full"
-          />
-          <div className="flex justify-between text-[10px] text-neutral-400 mt-0.5">
-            <span>−0.5 (always tails)</span><span>0 (fair)</span><span>+0.5 (always heads)</span>
-          </div>
-        </div>
+      <div className="mb-3 text-sm text-blue-900 font-semibold">
+        Coin bias is fixed at 0 (fair coin)
+      </div>
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
         <div>
           <label className="block text-xs font-medium text-neutral-600 mb-1">
             Number of flips <span className="font-mono">(n = {n})</span>
@@ -426,10 +461,15 @@ export function CoinFlipMeanSim({
                 ? 'Computing…'
                 : `${(peekFPR * 100).toFixed(1)}% of ${PEEK_N_SIMS} simulated A/A tests crossed the standard CI at some point.`}
             </div>
+            <div className="text-lg font-semibold text-blue-900 mt-1">
+              {peekSeqFPR == null
+                ? 'Computing…'
+                : `${(peekSeqFPR * 100).toFixed(1)}% of ${PEEK_N_SIMS} simulated A/A tests crossed the Sequential CI at some point.`}
+            </div>
             <div className="text-xs text-amber-800 mt-1">
               {bias === 0
                 ? `Compare with the alpha of ${(alpha * 100).toFixed(0)}% — peeking inflates the error rate well beyond what a single look would give.`
-                : 'With nonzero bias, this is not a false positive rate but the probability of crossing the standard CI at some point.'}
+                : 'With nonzero bias, this is not a false positive rate but the probability of crossing the standard or sequential CI at some point.'}
             </div>
           </div>
         )}
