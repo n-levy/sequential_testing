@@ -418,7 +418,7 @@ export function CoinFlipMeanSim({
             Number of flips <span className="font-mono">(n = {n})</span>
           </label>
           <input
-            type="range" min={50} max={3000} step={50}
+            type="range" min={50} max={500000} step={50}
             value={n} onChange={e => setN(parseInt(e.target.value, 10))}
             className="w-full"
           />
