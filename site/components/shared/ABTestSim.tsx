@@ -94,6 +94,7 @@ export function ABTestSim({
       const denom = traj.meansA[i]
       arr[i] = denom !== 0 ? 100 * (traj.meansB[i] - denom) / denom : 0
     }
+    if (n > 0) arr[0] = 0 // Force first value to zero
     return arr
   }, [traj, n])
 
@@ -104,6 +105,7 @@ export function ABTestSim({
       const denom = traj.meansA[i]
       arr[i] = denom !== 0 ? 100 * Z_975 * traj.ses[i] / denom : 0
     }
+    if (n > 0) arr[0] = 0 // Force first value to zero
     return arr
   }, [traj, n])
 
