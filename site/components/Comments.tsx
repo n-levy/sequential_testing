@@ -22,10 +22,9 @@ export function Comments() {
     script.async = true
     script.crossOrigin = 'anonymous'
     script.setAttribute('data-repo', 'n-levy/sequential_testing')
-    // Replace these IDs after generating them at https://giscus.app/
-    script.setAttribute('data-repo-id', 'R_kgDOPLACEHOLDER')
-    script.setAttribute('data-category', 'Comments')
-    script.setAttribute('data-category-id', 'DIC_kwDOPLACEHOLDER')
+    script.setAttribute('data-repo-id', 'R_kgDOSCHEWQ')
+    script.setAttribute('data-category', 'Announcements')
+    script.setAttribute('data-category-id', 'DIC_kwDOSCHEWc4C7vfX')
     script.setAttribute('data-mapping', 'pathname')
     script.setAttribute('data-strict', '0')
     script.setAttribute('data-reactions-enabled', '1')
