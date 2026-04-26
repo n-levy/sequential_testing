@@ -537,19 +537,6 @@ export function CoinFlipMeanSim({
           {takeaway}
         </div>
       )}
-      {/* Analogy to A/B testing (conditionally shown) */}
-      {showAnalogy && (
-        <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4 mt-6">
-          <div className="text-base font-semibold text-yellow-800 mb-2">
-            Analogy to A/B Testing
-          </div>
-          <div className="text-sm text-yellow-900">
-            In this simulation, each coin flip is analogous to a single user or observation in an A/B test.<br /><br />
-            The treatment in this analogy is the coin having a bias (i.e., probability of heads different from 0.5). The null hypothesis is that the treatment has no effect (bias = 0, fair coin). The simulation tracks how the running mean (estimated treatment effect) and confidence intervals evolve as more data (e.g. users) accumulates.<br /><br />
-            {analogyNote}
-          </div>
-        </div>
-      )}
     </div>
   )
 }
