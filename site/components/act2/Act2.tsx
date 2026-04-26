@@ -185,9 +185,15 @@ export function Act2() {
         </DisplayMathBox>
         {/* Step 7 and remaining JSX go here */}
         {/* ...existing code... */}
+        <a href="#ref-howard-2021" className="text-blue-600 hover:text-blue-800">Howard et al. (2021)</a>, specifically the Normal mixture boundary. The
+        mathematical guarantee: the true treatment effect lies inside the CI at{' '}
+        <em>all times simultaneously</em> with probability{' '}
+        <InlineMath>{`\geq 1 - \alpha`}</InlineMath>.
       </div>
     )
 }
+        {/* Step 7 */}
+        <h4 className="text-xl font-bold text-neutral-900 mb-3">Step 7: Decide</h4>
             <a href="#ref-howard-2021" className="text-blue-600 hover:text-blue-800">Howard et al. (2021)</a>, specifically the Normal mixture boundary. The
             mathematical guarantee: the true treatment effect lies inside the CI at{' '}
             <em>all times simultaneously</em> with probability{' '}
