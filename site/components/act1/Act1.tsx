@@ -14,21 +14,16 @@ export function Act1() {
             Act 1 &mdash; The Peeking Problem
           </h2>
         </div>
-      )
-  }
         {/* ── Simulation ── */}
-
         <div className="bg-orange-50 border border-orange-400 rounded-lg p-6 mb-2">
           <h4 className="font-bold text-orange-900 mb-2">Simulation</h4>
-          <p className="text-neutral-800">
-            Simulate an A/B test. Specify the effect size (difference in means between treatment and control), the number of users in the test, and the significance level (alpha). Optionally, set the desired power (1 - beta). The plot shows the running difference in means and the standard 95% CI. The box below reports, under the null (effect = 0), how often the standard CI crosses the “reject” threshold at some point during peeking.
-          </p>
-        </div>
+          }
 
-        <ABTestSim
-          layers={['fixed-ci']}
-          showPeekStats
-          defaultEffect={0}
+          function DisplayMathBox({ children }: { children: React.ReactNode }) {
+            const [show, setShow] = useState(false);
+            if (show) return <>{children}</>;
+            return <button className="px-4 py-2 bg-blue-600 text-white rounded mb-6" onClick={() => setShow(true)}>Display the math</button>;
+          }
           defaultN={500}
           showPowerControl={true}
           hideEffectStats={true}

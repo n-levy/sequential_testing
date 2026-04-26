@@ -259,46 +259,54 @@ export function ABTestSim({
             Standard 95% CI
           </span>
         </div>
+
   // Compute the probability of crossing the CI at any point for all selected layers
-  // Place after all hooks, before return
-  const [peekProbs, setPeekProbs] = useState<Record<string, number> | null>(null)
+  const [peekProbs, setPeekProbs] = useState<Record<string, number> | null>(null);
   useEffect(() => {
-    if (!showPeekStats) return
-    const results: Record<string, number> = {}
+    if (!showPeekStats) return;
+    const results: Record<string, number> = {};
     for (const layer of layers) {
-      let count = 0
+      let count = 0;
       for (let sim = 0; sim < PEEK_N_SIMS; ++sim) {
-        const t = simulateABTestTrajectory(n, clampedEffect, seed + sim)
-        let crossed = false
+        const t = simulateABTestTrajectory(n, clampedEffect, seed + sim);
+        let crossed = false;
         for (let i = 0; i < n; ++i) {
-          const denom = t.meansA[i]
-          const est = denom !== 0 ? 100 * (t.meansB[i] - denom) / denom : 0
-          let w = 0
+          const denom = t.meansA[i];
+          const est = denom !== 0 ? 100 * (t.meansB[i] - denom) / denom : 0;
+          let w = 0;
           if (layer === 'fixed-ci') {
-            w = denom !== 0 ? 100 * Z_975 * t.ses[i] / denom : 0
+            w = denom !== 0 ? 100 * Z_975 * t.ses[i] / denom : 0;
           } else if (layer === 'sequential-ci') {
             // Eppo/Howard mixture boundary (approximate)
-            const nu = n * 0.25 // tuning parameter, can be adjusted
-                  w = denom !== 0 ? 100 * t.ses[i] * Math.sqrt(((i+1) + nu) / (i+1) * Math.log(((i+1) + nu) / (nu * alpha * alpha))) / denom : 0
-                } else if (layer === 'pocock') {
-                  // Pocock critical value (approximate)
-                  const K = 6
-                  const cP = [null, null, 2.18, 2.36, 2.51, 2.60, 2.69][K] || 2.36
-                  w = denom !== 0 ? 100 * t.ses[i] * cP / denom : 0
-                } else if (layer === 'obf') {
-                  // O'Brien–Fleming critical value (approximate)
-                  const K = 6
-                  const k = Math.max(1, Math.round((i+1) / n * K))
-                  const z = 1.96 * Math.sqrt(K / k)
-                  w = denom !== 0 ? 100 * t.ses[i] * z / denom : 0
-                } else if (layer === 'bonferroni') {
-                  // Bonferroni critical value (approximate)
-                  const K = 6
-                  const z = 2.50 // for K=4, alpha=0.05
-                  w = denom !== 0 ? 100 * t.ses[i] * z / denom : 0
-                }
-                if (est - w > 0 || est + w < 0) {
-                  crossed = true
+            const nu = n * 0.25; // tuning parameter, can be adjusted
+            w = denom !== 0 ? 100 * t.ses[i] * Math.sqrt(((i+1) + nu) / (i+1) * Math.log(((i+1) + nu) / (nu * alpha * alpha))) / denom : 0;
+          } else if (layer === 'pocock') {
+            // Pocock critical value (approximate)
+            const K = 6;
+            const cP = [null, null, 2.18, 2.36, 2.51, 2.60, 2.69][K] || 2.36;
+            w = denom !== 0 ? 100 * t.ses[i] * cP / denom : 0;
+          } else if (layer === 'obf') {
+            // O'Brien–Fleming critical value (approximate)
+            const K = 6;
+            const k = Math.max(1, Math.round((i+1) / n * K));
+            const z = 1.96 * Math.sqrt(K / k);
+            w = denom !== 0 ? 100 * t.ses[i] * z / denom : 0;
+          } else if (layer === 'bonferroni') {
+            // Bonferroni critical value (approximate)
+            const K = 6;
+            const z = 2.50; // for K=4, alpha=0.05
+            w = denom !== 0 ? 100 * t.ses[i] * z / denom : 0;
+          }
+          if (est - w > 0 || est + w < 0) {
+            crossed = true;
+          }
+        }
+        if (crossed) count++;
+      }
+      results[layer] = count / PEEK_N_SIMS;
+    }
+    setPeekProbs(results);
+  }, [showPeekStats, layers, n, clampedEffect, seed, alpha]);
                   break
                 }
               }
