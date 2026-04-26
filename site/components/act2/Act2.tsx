@@ -185,7 +185,7 @@ export function Act2() {
         </DisplayMathBox>
       </div>
     )
-}
+  }
         <div className="bg-white border border-neutral-400 rounded-lg p-5 mb-6">
           <p className="font-semibold text-neutral-800 mb-3">Unpacking the formula:</p>
           <ul className="list-disc list-inside space-y-2 text-neutral-700">

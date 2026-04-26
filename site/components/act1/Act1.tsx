@@ -76,8 +76,6 @@ export function Act1() {
     </div>
   )
 }
-    )
-  // --- DisplayMathBox helper ---
   function DisplayMathBox({ children }: { children: React.ReactNode }) {
     const [show, setShow] = useState(false);
     if (show) return <>{children}</>;
