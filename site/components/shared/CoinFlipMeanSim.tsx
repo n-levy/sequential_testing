@@ -520,22 +520,31 @@ export function CoinFlipMeanSim({
             <div className={`text-base font-semibold ${decision.color}`}>{decision.label}</div>
           </div>
         )}
-        {/* Show share crossing each enabled threshold at any point */}
-        {layers.length > 1 && (
-          <div className="bg-blue-50 border border-blue-200 rounded-lg p-3 col-span-2 sm:col-span-4">
-            <div className="text-[11px] font-medium text-blue-700 uppercase mb-1">
-              Share of simulations that crossed each threshold at any point{bias === 0 ? ' (A/A test, bias = 0)' : ' (simulated test)'}
-            </div>
-            <ul className="text-sm text-blue-900 font-mono space-y-1">
+      </div>
+
+      {/* Stat box: always show for Act 1, below takeaway for Act 2/3 */}
+      {((layers.length === 1 && layers[0] === 'fixed-ci') || layers.length > 1) && (
+        <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mt-4">
+          <div className="text-base font-semibold text-blue-700 uppercase mb-2">
+            {layers.length > 1
+              ? `Share of simulations that crossed each threshold at any point${bias === 0 ? ' (A/A test, bias = 0)' : ' (simulated test)'}`
+              : `Share of simulations that crossed the CI at any point${bias === 0 ? ' (A/A test, bias = 0)' : ' (simulated test)'}`}
+          </div>
+          {layers.length > 1 ? (
+            <ul className="text-base text-blue-900 font-mono space-y-1">
               {layers.map(layer => (
                 <li key={layer}>
                   {LAYER_STYLE[layer].label}: {crossStats[layer] == null ? 'Computing…' : `${(crossStats[layer]! * 100).toFixed(1)}%`}
                 </li>
               ))}
             </ul>
-          </div>
-        )}
-      </div>
+          ) : (
+            <div className="text-base text-blue-900 font-mono">
+              {crossStats['fixed-ci'] == null ? 'Computing…' : `${(crossStats['fixed-ci']! * 100).toFixed(1)}%`}
+            </div>
+          )}
+        </div>
+      )}
 
       {takeaway && (
         <div className="bg-blue-50 border border-blue-200 rounded-lg p-3 mt-3 text-sm text-blue-900">
