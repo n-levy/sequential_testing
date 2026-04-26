@@ -51,7 +51,7 @@ export function Act3() {
         </div>
 
         {/* ── All Methods ── */}
-        <div className="grid md:grid-cols-3 gap-6 mb-8">
+        <div className="flex flex-col gap-6 mb-8">
           <Card className="bg-blue-50">
             <CardHeader>
               <CardTitle className="text-blue-700">Method 1: Bonferroni</CardTitle>
