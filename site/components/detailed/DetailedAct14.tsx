@@ -17,22 +17,22 @@ export function DetailedAct14() {
         <div className="bg-blue-50 border border-blue-400 rounded-lg p-6 mb-8">
           <div className="text-neutral-800 space-y-3">
             <p>
-              You want to check your experiment every Monday. If you use a standard 95% CI each
-              time, you&apos;ll get false positives far too often (Act 1).
+              Confidence intervals contain the true value 95% of the time, but only if we fix the sample size in advance. If we keep checking and stop based on the data, that guarantee no longer applies. The issue is not with confidence intervals themselves, but with using them outside their intended assumptions.
             </p>
             <p>
-              The simplest fix: <strong>be stricter at each check.</strong> If you plan to peek
-              4 times, demand stronger evidence each time. The three methods below differ in{' '}
-              <em>how</em> they distribute that strictness across the peeks.
+              By checking repeatedly and stopping when results look good, we give ourselves multiple chances to get a lucky fluctuation.
             </p>
-            <p>Think of it as a budget. You have a total error budget of <InlineMath>{`\\alpha = 5\\%`}</InlineMath>.</p>
-            <ul className="list-disc ml-6 space-y-1">
-              <li>Bonferroni distributes the budget equally: <InlineMath>{`\alpha/K`}</InlineMath> per peek.</li>
-              <li>Pocock distributes it more cleverly (using the correlation between test statistics at different peeks), but still equally across peeks.</li>
-              <li>O'Brien–Fleming front-loads the budget: almost no spending early, most of it saved for the final analysis.</li>
-            </ul>
             <p>
-              Eppo's approach (Acts 9–12) doesn't need a fixed budget at all — it works for any number of peeks, continuously. However, in practice, it is often overly conservative (type I error well below 1% for typical n and k), so one of the group sequential alternatives, especially O'Brien–Fleming or Pocock, may be a better choice for most practical A/B tests.
+              At a fixed sample size, the chance of a false positive is 5%. If we can stop at any time, the chance of ever making at least one false positive is much higher.
+            </p>
+            <p>
+              The issue isn’t peeking itself — it’s that standard statistical tools weren’t designed for continuous monitoring.
+            </p>
+            <p>
+              We need methods that remain valid no matter when we stop.
+            </p>
+            <p>
+              These methods control the probability of ever making at least one false positive, even if we keep checking.
             </p>
           </div>
         </div>
