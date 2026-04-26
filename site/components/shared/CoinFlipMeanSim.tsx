@@ -223,7 +223,7 @@ export function CoinFlipMeanSim({
                 break;
               }
               case 'bonferroni': {
-                const aPer = alpha / N_LOOKS;
+                const aPer = alpha / K;
                 const t = Math.sqrt(-2 * Math.log(aPer / 2));
                 const zB = t - (2.515517 + 0.802853 * t + 0.010328 * t * t) /
                   (1 + 1.432788 * t + 0.189269 * t * t + 0.001308 * t * t * t);

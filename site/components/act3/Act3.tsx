@@ -301,7 +301,7 @@ export function Act3() {
           layers={['fixed-ci', 'sequential-ci', 'pocock', 'obf', 'bonferroni']}
           showPeekStats
           K={K}
-          takeaway={({ crossStats }) => (
+          takeaway={
             <>
               <strong>Simulation takeaway.</strong> The standard CI (red) is the
               narrowest but its peeking guarantee is broken. Eppo&apos;s sequential CI
@@ -310,10 +310,10 @@ export function Act3() {
               <br />
               <span className="block mt-2 text-blue-900 text-sm">
                 <strong>Share of false positives in 500 runs using sequential testing (Eppo approach):</strong>
-                {typeof crossStats?.['sequential-ci'] === 'number' ? ` ${(crossStats['sequential-ci'] * 100).toFixed(1)}%` : ' ...'}
+                (see stat box below)
               </span>
             </>
-          )}
+          }
         />
       </div>
     </section>
