@@ -19,6 +19,7 @@ interface ABTestSimProps {
   defaultN?: number
   showPowerControl?: boolean
   K?: number // number of peeks for group sequential methods
+  hideEffectStats?: boolean // hide sample effect and CI half-width boxes
 }
 
 const Z_975 = 1.959964
@@ -70,6 +71,7 @@ export function ABTestSim({
   defaultN = 500,
   showPowerControl = false,
   K = 6,
+  hideEffectStats = false,
 }: ABTestSimProps) {
   const [effect, setEffect] = useState(defaultEffect)
   const [n, setN] = useState(defaultN)
@@ -270,28 +272,30 @@ export function ABTestSim({
         />
       </div>
       {/* Stats / decision panel */}
-      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mt-4">
-        <div className="bg-neutral-50 border border-neutral-200 rounded-lg p-3">
-          <div className="text-[11px] font-medium text-neutral-500 uppercase">Sample effect</div>
-          <div className="text-lg font-semibold text-neutral-900 font-mono">
-            {(effectPct[n - 1] >= 0 ? '+' : '')}{effectPct[n - 1].toFixed(2)}%
-          </div>
-        </div>
-        <div className="bg-neutral-50 border border-neutral-200 rounded-lg p-3">
-          <div className="text-[11px] font-medium text-neutral-500 uppercase">CI half-width</div>
-          <div className="text-lg font-semibold text-neutral-900 font-mono">
-            ±{ciHalfWidthPct[n - 1].toFixed(2)}%
-          </div>
-        </div>
-        {decision && (
-          <div className="bg-neutral-50 border border-neutral-200 rounded-lg p-3 col-span-2">
-            <div className="text-[11px] font-medium text-neutral-500 uppercase">
-              Decision at n = {n}
+      {!hideEffectStats && (
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mt-4">
+          <div className="bg-neutral-50 border border-neutral-200 rounded-lg p-3">
+            <div className="text-[11px] font-medium text-neutral-500 uppercase">Sample effect</div>
+            <div className="text-lg font-semibold text-neutral-900 font-mono">
+              {(effectPct[n - 1] >= 0 ? '+' : '')}{effectPct[n - 1].toFixed(2)}%
             </div>
-            <div className={`text-base font-semibold ${decision.color}`}>{decision.label}</div>
           </div>
-        )}
-      </div>
+          <div className="bg-neutral-50 border border-neutral-200 rounded-lg p-3">
+            <div className="text-[11px] font-medium text-neutral-500 uppercase">CI half-width</div>
+            <div className="text-lg font-semibold text-neutral-900 font-mono">
+              ±{ciHalfWidthPct[n - 1].toFixed(2)}%
+            </div>
+          </div>
+          {decision && (
+            <div className="bg-neutral-50 border border-neutral-200 rounded-lg p-3 col-span-2">
+              <div className="text-[11px] font-medium text-neutral-500 uppercase">
+                Decision at n = {n}
+              </div>
+              <div className={`text-base font-semibold ${decision.color}`}>{decision.label}</div>
+            </div>
+          )}
+        </div>
+      )}
       {takeaway && (
         <div className="bg-blue-50 border border-blue-200 rounded-lg p-3 mt-3 text-sm text-blue-900">
           {takeaway}

@@ -6,7 +6,7 @@ import { InlineMath, BlockMath } from '../ui/Math'
 import { BonferroniImpl } from './BonferroniImpl'
 import { PocockImpl } from './PocockImpl'
 import { ObfImpl } from './ObfImpl'
-import { CoinFlipMeanSim } from '../shared/CoinFlipMeanSim'
+import { ABTestSim } from '../shared/ABTestSim'
 
 export function Act3() {
   const [selectedMethod, setSelectedMethod] = useState<string | null>(null)
@@ -105,12 +105,12 @@ export function Act3() {
         {/* ── Simulation: Share crossing each threshold ── */}
         <h3 className="text-2xl font-bold text-neutral-900 mb-4">Simulation: Share Crossing Each Threshold</h3>
         <div className="mb-10">
-          <CoinFlipMeanSim
+          <ABTestSim
             layers={['fixed-ci', 'sequential-ci', 'pocock', 'obf', 'bonferroni']}
-            defaultBias={0}
+            defaultEffect={0}
             K={K}
             takeaway={<>
-              Simulation takeaway. For each method, this shows the share of 500 simulated tests that crossed the respective threshold at any point. When bias = 0, this is an A/A test; otherwise, it shows the probability of crossing under the simulated bias.<br /><br />
+              Simulation takeaway. For each method, this shows the share of 500 simulated A/B tests (effect = 0) that crossed the respective threshold at any point. When effect = 0, this is an A/A test; otherwise, it shows the probability of crossing under the simulated effect.<br /><br />
               Note: The Eppo/Howard sequential CI is very conservative in this setting, with a type I error rate often well below 1%. One of the group sequential alternatives, especially O'Brien–Fleming or Pocock, may be a better choice for most practical A/B tests, as they are not overly conservative and still control the error rate under peeking.
             </>}
           />
@@ -287,34 +287,7 @@ export function Act3() {
           </div>
         </div>
 
-        <div className="bg-orange-50 border border-orange-400 rounded-lg p-6 mb-2">
-          <h4 className="font-bold text-orange-900 mb-2">Simulation &mdash; All Methods Side by Side</h4>
-          <p className="text-neutral-800">
-            The coin bias is fixed at 0 (fair coin). The same coin-flip example, now with all three group-sequential bands
-            (Pocock, O&apos;Brien&ndash;Fleming, Bonferroni) drawn alongside Eppo&apos;s
-            sequential CI and the standard fixed-n CI. Compare how wide each method
-            is at every step.
-          </p>
-        </div>
-
-        <CoinFlipMeanSim
-          layers={['fixed-ci', 'sequential-ci', 'pocock', 'obf', 'bonferroni']}
-          showPeekStats
-          K={K}
-          takeaway={
-            <>
-              <strong>Simulation takeaway.</strong> The standard CI (red) is the
-              narrowest but its peeking guarantee is broken. Eppo&apos;s sequential CI
-              (blue) is the tightest valid band for continuous monitoring. Among the
-              DIY methods, O&apos;Brien&ndash;Fleming is conservative early and tight at the final analysis.
-              <br />
-              <span className="block mt-2 text-blue-900 text-sm">
-                <strong>Share of false positives in 500 runs using sequential testing (Eppo approach):</strong>
-                (see stat box below)
-              </span>
-            </>
-          }
-        />
+        {/* (Removed duplicate CoinFlipMeanSim simulation; see ABTestSim block above) */}
       </div>
     </section>
   )

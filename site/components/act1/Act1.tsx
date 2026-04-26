@@ -32,9 +32,10 @@ export function Act1() {
           defaultEffect={0}
           defaultN={500}
           showPowerControl={true}
+          hideEffectStats={true}
           takeaway={
             <>
-              Simulation takeaway. With no true effect (effect = 0), the standard CI is calibrated to fail to cover only <InlineMath>{`\\alpha = 5\\%`}</InlineMath> of the time at one specific look. But if you peek along the way, far more than 5% of trajectories will cross the boundary at some point. If you set the effect away from zero, the stat box below reports the probability of crossing the CI at some point under the simulated effect.
+              Simulation takeaway. With no true effect (effect = 0), the standard CI is calibrated to fail to cover only <InlineMath>{`\\alpha = 5\\%`}</InlineMath> of the time at one specific look. But if you peek along the way, far more than 5% of trajectories will cross the boundary at some point. The stat box below shows the share of 500 runs in which the estimate was significant at least once during the test (false positive, leading to early stopping with the wrong conclusion). If you set the effect away from zero, the stat box below reports the probability of crossing the CI at some point under the simulated effect.
             </>
           }
         />

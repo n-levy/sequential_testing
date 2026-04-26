@@ -5,7 +5,7 @@ import { Card, CardHeader, CardTitle, CardContent } from '../ui/Card'
 import { InlineMath, BlockMath } from '../ui/Math'
 import { PipelineDiagram } from './PipelineDiagram'
 import { PipelineStepDetail } from './PipelineStepDetail'
-import { CoinFlipMeanSim } from '../shared/CoinFlipMeanSim'
+import { ABTestSim } from '../shared/ABTestSim'
 
 export function Act2() {
   const [activeStep, setActiveStep] = useState<string | null>(null)
@@ -27,7 +27,7 @@ export function Act2() {
         <div className="bg-orange-50 border border-orange-400 rounded-lg p-6 mb-2">
           <h4 className="font-bold text-orange-900 mb-2">Simulation</h4>
           <p className="text-neutral-800">
-            The coin bias is fixed at 0 (fair coin). The plot below adds Eppo&apos;s
+            Simulate an A/B test with no true effect (effect = 0). The plot below adds Eppo&apos;s
             <strong> sequential confidence interval</strong> (blue band) on top of the
             standard 95% CI (red band) you saw in Act 1. The sequential CI is wider at
             any single look &mdash; that is the price of peeking &mdash; but its 95% coverage
@@ -35,23 +35,18 @@ export function Act2() {
           </p>
         </div>
 
-        <>
-          <CoinFlipMeanSim
-            layers={['fixed-ci', 'sequential-ci']}
-            showPeekStats
-            defaultBias={0}
-            showAnalogy={false}
-            takeaway={
-              <>
-                Simulation takeaway. Slide the bias to 0 and re-randomize
-                several times. The standard CI (red) crosses the null line in many
-                trajectories &mdash; the peeking problem. The sequential CI (blue) is wider but
-                its boundary is calibrated to keep the false positive rate at{' '}
-                <InlineMath>{`\\alpha`}</InlineMath> across <em>every</em> peek. If you set the bias away from zero, the stat box below reports the probability of crossing the CI at some point under the simulated bias.
-              </>
-            }
-          />
-        </>
+        <ABTestSim
+          layers={['fixed-ci', 'sequential-ci']}
+          showPeekStats
+          defaultEffect={0}
+          takeaway={
+            <>
+              Simulation takeaway. With no true effect, the standard CI (red) crosses the null line in many
+              trajectories &mdash; the peeking problem. The sequential CI (blue) is wider but
+              its boundary is calibrated to keep the false positive rate at <InlineMath>{`\\alpha`}</InlineMath> across <em>every</em> peek. If you set the effect away from zero, the stat box below reports the probability of crossing the CI at some point under the simulated effect.
+            </>
+          }
+        />
 
         {/* ── Pipeline diagram (kept for the conceptual flow) ── */}
         <h3 className="text-2xl font-bold text-neutral-900 mb-4 mt-12">The Pipeline at a Glance</h3>
