@@ -94,8 +94,9 @@ export function Act3() {
         <div className="mb-10">
           <CoinFlipMeanSim
             layers={['fixed-ci', 'sequential-ci', 'pocock', 'obf', 'bonferroni']}
+            defaultBias={0}
             takeaway={<>
-              <strong>Simulation takeaway.</strong> For each method, this shows the share of 500 simulated A/A tests (fair coin) that crossed the respective threshold at any point. This demonstrates how each correction controls the false positive rate under peeking.
+              <strong>Simulation takeaway.</strong> For each method, this shows the share of 500 simulated tests that crossed the respective threshold at any point. When bias = 0, this is an A/A test; otherwise, it shows the probability of crossing under the simulated bias. This demonstrates how each correction controls the error rate under peeking.
             </>}
           />
         </div>

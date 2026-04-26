@@ -38,13 +38,14 @@ export function Act2() {
         <CoinFlipMeanSim
           layers={['fixed-ci', 'sequential-ci']}
           showPeekStats
+          defaultBias={0}
           takeaway={
             <>
               <strong>Simulation takeaway.</strong> Slide the bias to 0 and re-randomize
               several times. The standard CI (red) crosses the null line in many
               trajectories &mdash; the peeking problem. The sequential CI (blue) is wider but
               its boundary is calibrated to keep the false positive rate at{' '}
-              <InlineMath>{`\\alpha`}</InlineMath> across <em>every</em> peek.
+              <InlineMath>{`\\alpha`}</InlineMath> across <em>every</em> peek. If you set the bias away from zero, the stat box below reports the probability of crossing the CI at some point under the simulated bias.
             </>
           }
         />

@@ -138,16 +138,16 @@ export function CoinFlipMeanSim({
   layers,
   showPeekStats = false,
   takeaway,
-  // defaultBias is ignored; bias is always zero in this version
+  defaultBias = 0,
   defaultN = 500,
 }: CoinFlipMeanSimProps) {
-  const bias = 0 // always fair coin
+  const [bias, setBias] = useState(defaultBias)
   const [n, setN] = useState(defaultN)
   const [alpha, setAlpha] = useState(0.05)
   const [seed, setSeed] = useState(1)
   const svgRef = useRef<SVGSVGElement | null>(null)
 
-  const pHeads = 0.5
+  const pHeads = 0.5 + bias
 
   // Trajectory recomputed automatically whenever the controls change.
   const traj = useMemo(() => simulateTrajectory(n, pHeads, seed), [n, pHeads, seed])
@@ -184,7 +184,7 @@ export function CoinFlipMeanSim({
           let sum = 0
           let crossed = false
           for (let i = 1; i <= n && !crossed; i++) {
-            sum += rand() < 0.5 ? 1 : 0
+            sum += rand() < pHeads ? 1 : 0
             // Only check at scheduled looks (for group sequential methods)
             let check = true
             if (layer === 'pocock' || layer === 'obf' || layer === 'bonferroni') {
@@ -435,9 +435,9 @@ export function CoinFlipMeanSim({
   return (
     <div className="bg-white border border-neutral-300 rounded-lg p-4 my-6">
       <div className="mb-3 text-sm text-blue-900 font-semibold">
-        Coin bias is fixed at 0 (fair coin)
+        Coin bias: <span className="font-mono">{bias >= 0 ? '+' : ''}{bias.toFixed(2)}</span> (P(heads) = {(0.5 + bias).toFixed(2)})
       </div>
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-4">
         <div>
           <label className="block text-xs font-medium text-neutral-600 mb-1">
             Number of flips <span className="font-mono">(n = {n})</span>
@@ -455,6 +455,16 @@ export function CoinFlipMeanSim({
           <input
             type="range" min={0.01} max={0.10} step={0.01}
             value={alpha} onChange={e => setAlpha(parseFloat(e.target.value))}
+            className="w-full"
+          />
+        </div>
+        <div>
+          <label className="block text-xs font-medium text-neutral-600 mb-1">
+            Bias <span className="font-mono">({bias >= 0 ? '+' : ''}{bias.toFixed(2)})</span>
+          </label>
+          <input
+            type="range" min={-0.5} max={0.5} step={0.01}
+            value={bias} onChange={e => setBias(parseFloat(e.target.value))}
             className="w-full"
           />
         </div>
@@ -514,7 +524,7 @@ export function CoinFlipMeanSim({
         {layers.length > 1 && (
           <div className="bg-blue-50 border border-blue-200 rounded-lg p-3 col-span-2 sm:col-span-4">
             <div className="text-[11px] font-medium text-blue-700 uppercase mb-1">
-              Share of simulations that crossed each threshold at any point (A/A, bias = 0)
+              Share of simulations that crossed each threshold at any point{bias === 0 ? ' (A/A test, bias = 0)' : ' (simulated test)'}
             </div>
             <ul className="text-sm text-blue-900 font-mono space-y-1">
               {layers.map(layer => (
