@@ -22,7 +22,7 @@ export function Act1() {
         <div className="bg-orange-50 border border-orange-400 rounded-lg p-6 mb-2">
           <h4 className="font-bold text-orange-900 mb-2">Simulation</h4>
           <p className="text-neutral-800">
-            Simulate an A/B test. Specify the effect size (difference in means between treatment and control), the number of users in the test, and the significance level (alpha). Optionally, set the desired power (1 - beta). The plot shows the running difference in means and the standard 95% CI. The stat box below reports, under the null (effect = 0), how often the standard CI crosses the “reject” threshold at some point during peeking.
+            Simulate an A/B test. Specify the effect size (difference in means between treatment and control), the number of users in the test, and the significance level (alpha). Optionally, set the desired power (1 - beta). The plot shows the running difference in means and the standard 95% CI. The box below reports, under the null (effect = 0), how often the standard CI crosses the “reject” threshold at some point during peeking.
           </p>
         </div>
 
@@ -35,10 +35,16 @@ export function Act1() {
           hideEffectStats={true}
           takeaway={
             <>
-              Simulation takeaway. With no true effect (effect = 0), the standard CI is calibrated to fail to cover only <InlineMath>{`\\alpha = 5\\%`}</InlineMath> of the time at one specific look. But if you peek along the way, far more than 5% of trajectories will cross the boundary at some point. The stat box below shows the share of 500 runs in which the estimate was significant at least once during the test (false positive, leading to early stopping with the wrong conclusion). If you set the effect away from zero, the stat box below reports the probability of crossing the CI at some point under the simulated effect.
+              Simulation takeaway. With no true effect (effect = 0), the standard CI is calibrated to fail to cover only <InlineMath>{`\\alpha = 5\\%`}</InlineMath> of the time at one specific look. But if you peek along the way, far more than 5% of trajectories will cross the boundary at some point. The box below shows the share of 500 runs in which the estimate was significant at least once during the test (false positive, leading to early stopping with the wrong conclusion). If you set the effect away from zero, the box below reports the probability of crossing the CI at some point under the simulated effect.
             </>
           }
         />
+
+        {/* Stat/probability box below simulation */}
+        <div className="bg-white border border-blue-400 rounded-lg p-5 mb-8 mt-4 text-center">
+          <span className="text-blue-900 font-semibold">Probability of crossing the CI at some point:</span>
+          <span className="ml-2 text-blue-700 font-mono" id="peek-prob-box">(see simulation output above)</span>
+        </div>
 
         {/* ── Why Does This Happen? ── */}
         <h3 className="text-2xl font-bold text-neutral-900 mb-4 mt-12">Why Does This Happen?</h3>
