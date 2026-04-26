@@ -176,11 +176,11 @@ export function Act2() {
           multiplier derived from the confidence sequence framework:
         </p>
         <div className="bg-neutral-100 border border-neutral-300 rounded-lg p-4 mb-4">
-          <BlockMath>{`\text{CI}(t) = \hat{\tau}(t) \;\pm\; \hat{\sigma}_{\hat{\tau}}(t) \cdot \underbrace{\sqrt{\frac{n + \nu}{n} \cdot \log\!\frac{n + \nu}{\nu \alpha^2}}}_{\text{sequential multiplier}}`}</BlockMath>
+          <BlockMath>{`\text{CI}(t) = \hat{\tau}(t) \;\pm\; \hat{\sigma}_{\hat{\tau}}(t) \cdot \underbrace{\sqrt{\frac{n + \nu}{n} \cdot \log\,\frac{n + \nu}{\nu \alpha^2}}}_{\text{sequential multiplier}}`}</BlockMath>
         </div>
         <DisplayMathBox>
           <div className="bg-neutral-100 border border-neutral-300 rounded-lg p-4 mb-4">
-            <BlockMath>{`\text{CI}(t) = \hat{\tau}(t) \;\pm\; \hat{\sigma}_{\hat{\tau}}(t) \cdot \underbrace{\sqrt{\frac{n + \nu}{n} \cdot \log\!\frac{n + \nu}{\nu \alpha^2}}}_{\text{sequential multiplier}}`}</BlockMath>
+            <BlockMath>{`\text{CI}(t) = \hat{\tau}(t) \;\pm\; \hat{\sigma}_{\hat{\tau}}(t) \cdot \underbrace{\sqrt{\frac{n + \nu}{n} \cdot \log\,\frac{n + \nu}{\nu \alpha^2}}}_{\text{sequential multiplier}}`}</BlockMath>
           </div>
         </DisplayMathBox>
         {/* Step 7 and remaining JSX go here */}
