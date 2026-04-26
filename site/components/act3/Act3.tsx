@@ -89,7 +89,7 @@ export function Act3() {
         </div>
 
         {/* ── Head-to-Head Comparison ── */}
-        <h3 className="text-2xl font-bold text-neutral-900 mb-4">Head-to-Head Comparison</h3>
+        <h3 className="text-2xl font-bold text-neutral-900 mb-4">Comparison</h3>
 
         <div className="overflow-x-auto mb-6">
           <table className="w-full min-w-[640px] text-sm border-collapse border border-neutral-300">
