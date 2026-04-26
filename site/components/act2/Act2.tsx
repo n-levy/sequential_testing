@@ -184,6 +184,8 @@ export function Act2() {
     if (show) return <>{children}</>;
     return <button className="px-4 py-2 bg-blue-600 text-white rounded mb-6" onClick={() => setShow(true)}>Display the math</button>;
   }
+
+  // --- Main render ---
 }
         <div className="bg-white border border-neutral-400 rounded-lg p-5 mb-6">
           <p className="font-semibold text-neutral-800 mb-3">Unpacking the formula:</p>
