@@ -28,16 +28,16 @@ export function Act1() {
               Standard confidence intervals guarantee 95% coverage only if the sample size is fixed in advance. If we monitor continuously and stop based on the data, that guarantee no longer holds. The issue is not with confidence intervals themselves, but with using them outside their intended assumptions.
             </p>
             <p>
-              By checking repeatedly and stopping when results look good, we give ourselves multiple chances to get a lucky fluctuation. The probability can become very large if we keep checking.
+              By checking repeatedly and stopping when results look good, we give ourselves multiple chances to get lucky. The probability can approach 1 if we keep checking long enough.
             </p>
             <p>
-              At a fixed sample size, the error rate is 5%. If we can stop at any time, the chance of ever making an error is much higher.
+              At a fixed sample size, the chance of a false positive is 5%. If we can stop at any time, the chance of ever making a false positive is much higher.
             </p>
             <p>
               The issue isn’t peeking itself — it’s that standard statistical tools weren’t designed for continuous monitoring. We need methods that remain valid no matter when we stop.
             </p>
             <p>
-              These methods control the probability of ever making a false positive, even if we keep checking.
+              These methods control the probability of ever making a false positive, even when we keep checking.
             </p>
           </div>
         </div>
