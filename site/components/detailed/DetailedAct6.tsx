@@ -1,6 +1,6 @@
 'use client'
 
-import { InlineMath, BlockMath } from '@/components/ui/Math'
+import { InlineMath, BlockMath } from '../ui/Math'
 import { VilleInequalitySim } from './sims/VilleInequalitySim'
 
 export function DetailedAct6() {

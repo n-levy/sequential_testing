@@ -1,7 +1,7 @@
 'use client'
 
-import { InlineMath, BlockMath } from '@/components/ui/Math'
-import { ComparisonSim } from '@/components/act3/ComparisonSim'
+import { InlineMath, BlockMath } from '../ui/Math'
+import { ComparisonSim } from '../act3/ComparisonSim'
 
 export function DetailedAct14() {
   return (

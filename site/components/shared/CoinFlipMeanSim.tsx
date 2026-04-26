@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useMemo, useRef, type ReactNode } from 'react'
 import * as d3 from 'd3'
-import { InlineMath } from '@/components/ui/Math'
+import { InlineMath } from '../ui/Math'
 
 /**
  * Layers correspond to the concepts the user has learned so far.

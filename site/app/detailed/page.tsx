@@ -1,26 +1,26 @@
-import { Navigation } from '@/components/Navigation'
-import { ActSidebar } from '@/components/ActSidebar'
-import { DetailedHero } from '@/components/detailed/DetailedHero'
-import { DetailedAct1 } from '@/components/detailed/DetailedAct1'
-import { DetailedAct2 } from '@/components/detailed/DetailedAct2'
-import { DetailedAct3 } from '@/components/detailed/DetailedAct3'
-import { DetailedAct4 } from '@/components/detailed/DetailedAct4'
-import { DetailedAct5 } from '@/components/detailed/DetailedAct5'
-import { DetailedAct6 } from '@/components/detailed/DetailedAct6'
-import { DetailedAct7 } from '@/components/detailed/DetailedAct7'
-import { DetailedAct8 } from '@/components/detailed/DetailedAct8'
-import { DetailedAct9 } from '@/components/detailed/DetailedAct9'
-import { DetailedAct10 } from '@/components/detailed/DetailedAct10'
-import { DetailedAct11 } from '@/components/detailed/DetailedAct11'
-import { DetailedAct12 } from '@/components/detailed/DetailedAct12'
-import { DetailedAct13 } from '@/components/detailed/DetailedAct13'
-import { DetailedAct14 } from '@/components/detailed/DetailedAct14'
-import { HybridApproach } from '@/components/detailed/HybridApproach'
-import { AppendixDivider } from '@/components/detailed/AppendixDivider'
-import { DetailedSummary } from '@/components/detailed/DetailedSummary'
-import { DetailedReferences } from '@/components/detailed/DetailedReferences'
-import { Comments } from '@/components/Comments'
-import { ContactForm } from '@/components/ContactForm'
+import { Navigation } from '../../components/Navigation'
+import { ActSidebar } from '../../components/ActSidebar'
+import { DetailedHero } from '../../components/detailed/DetailedHero'
+import { DetailedAct1 } from '../../components/detailed/DetailedAct1'
+import { DetailedAct2 } from '../../components/detailed/DetailedAct2'
+import { DetailedAct3 } from '../../components/detailed/DetailedAct3_clean'
+import { DetailedAct4 } from '../../components/detailed/DetailedAct4'
+import { DetailedAct5 } from '../../components/detailed/DetailedAct5'
+import { DetailedAct6 } from '../../components/detailed/DetailedAct6'
+import { DetailedAct7 } from '../../components/detailed/DetailedAct7'
+import { DetailedAct8 } from '../../components/detailed/DetailedAct8'
+import { DetailedAct9 } from '../../components/detailed/DetailedAct9'
+import { DetailedAct10 } from '../../components/detailed/DetailedAct10'
+import { DetailedAct11 } from '../../components/detailed/DetailedAct11'
+import { DetailedAct12 } from '../../components/detailed/DetailedAct12'
+import { DetailedAct13 } from '../../components/detailed/DetailedAct13'
+import { DetailedAct14 } from '../../components/detailed/DetailedAct14'
+import { HybridApproach } from '../../components/detailed/HybridApproach'
+import { AppendixDivider } from '../../components/detailed/AppendixDivider'
+import { DetailedSummary } from '../../components/detailed/DetailedSummary'
+import { DetailedReferences } from '../../components/detailed/DetailedReferences'
+import { Comments } from '../../components/Comments'
+import { ContactForm } from '../../components/ContactForm'
 
 const DETAILED_ITEMS = [
   { id: '_home', label: 'Home' },
@@ -63,15 +63,15 @@ export default function DetailedVersion() {
         <DetailedAct7 />
         <DetailedAct8 />
         <DetailedAct9 />
+        <DetailedAct10 />
         <DetailedAct11 />
+        <DetailedAct12 />
         <DetailedAct13 />
         <DetailedAct14 />
         <HybridApproach />
         <DetailedSummary />
         <DetailedReferences />
         <AppendixDivider />
-        <DetailedAct10 />
-        <DetailedAct12 />
         <Comments />
         <ContactForm />
       </main>

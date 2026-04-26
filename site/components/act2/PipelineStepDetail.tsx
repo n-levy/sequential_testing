@@ -1,7 +1,7 @@
 'use client'
 
 import { motion, AnimatePresence } from 'framer-motion'
-import { InlineMath, BlockMath } from '@/components/ui/Math'
+import { InlineMath, BlockMath } from '../ui/Math'
 
 interface StepDetail {
   id: string

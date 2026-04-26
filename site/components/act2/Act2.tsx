@@ -1,11 +1,11 @@
 'use client'
 
 import { useState } from 'react'
-import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/Card'
-import { InlineMath, BlockMath } from '@/components/ui/Math'
+import { Card, CardHeader, CardTitle, CardContent } from '../ui/Card'
+import { InlineMath, BlockMath } from '../ui/Math'
 import { PipelineDiagram } from './PipelineDiagram'
 import { PipelineStepDetail } from './PipelineStepDetail'
-import { CoinFlipMeanSim } from '@/components/shared/CoinFlipMeanSim'
+import { CoinFlipMeanSim } from '../shared/CoinFlipMeanSim'
 
 export function Act2() {
   const [activeStep, setActiveStep] = useState<string | null>(null)

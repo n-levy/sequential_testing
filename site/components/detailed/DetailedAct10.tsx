@@ -1,6 +1,6 @@
 'use client'
 
-import { InlineMath, BlockMath } from '@/components/ui/Math'
+import { InlineMath, BlockMath } from '../ui/Math'
 import { NoiseDemoSim } from './sims/NoiseDemoSim'
 
 export function DetailedAct10() {

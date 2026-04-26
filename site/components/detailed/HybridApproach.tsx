@@ -1,4 +1,4 @@
-import { InlineMath } from '@/components/ui/Math'
+import { InlineMath } from '../ui/Math'
 
 export function HybridApproach() {
   return (

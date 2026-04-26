@@ -1,6 +1,6 @@
 'use client'
 
-import { InlineMath, BlockMath } from '@/components/ui/Math'
+import { InlineMath, BlockMath } from '../ui/Math'
 import { SequentialMultiplierSim } from './sims/SequentialMultiplierSim'
 
 export function DetailedAct13() {

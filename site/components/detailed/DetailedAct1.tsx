@@ -1,7 +1,7 @@
 'use client'
 
-import { InlineMath, BlockMath } from '@/components/ui/Math'
-import { PeekingSimulation } from '@/components/act1/PeekingSimulation'
+import { InlineMath, BlockMath } from '../ui/Math'
+import { PeekingSimulation } from '../act1/PeekingSimulation'
 
 export function DetailedAct1() {
   return (

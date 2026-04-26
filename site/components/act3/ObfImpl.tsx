@@ -1,7 +1,7 @@
 'use client'
 
-import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/Card'
-import { InlineMath, BlockMath } from '@/components/ui/Math'
+import { Card, CardHeader, CardTitle, CardContent } from '../ui/Card'
+import { InlineMath, BlockMath } from '../ui/Math'
 
 export function ObfImpl() {
   return (

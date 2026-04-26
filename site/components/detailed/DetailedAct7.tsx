@@ -1,6 +1,6 @@
 'use client'
 
-import { InlineMath, BlockMath } from '@/components/ui/Math'
+import { InlineMath, BlockMath } from '../ui/Math'
 import { SPRTSim } from './sims/SPRTSim'
 
 export function DetailedAct7() {

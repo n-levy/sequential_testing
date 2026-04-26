@@ -3,7 +3,7 @@
 import { useState, useRef, useEffect, useCallback } from 'react'
 import * as d3 from 'd3'
 import katex from 'katex'
-import { InlineMath } from '@/components/ui/Math'
+import { InlineMath } from '../../ui/Math'
 
 const COLORS = ['#3b82f6', '#ef4444', '#22c55e', '#f59e0b', '#8b5cf6', '#ec4899', '#14b8a6', '#f97316']
 

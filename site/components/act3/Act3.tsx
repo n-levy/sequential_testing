@@ -1,12 +1,12 @@
 "use client";
 import React, { useState } from 'react';
 import { EppoFPRReport } from './EppoFPRReport'
-import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/Card'
-import { InlineMath, BlockMath } from '@/components/ui/Math'
+import { Card, CardHeader, CardTitle, CardContent } from '../ui/Card'
+import { InlineMath, BlockMath } from '../ui/Math'
 import { BonferroniImpl } from './BonferroniImpl'
 import { PocockImpl } from './PocockImpl'
 import { ObfImpl } from './ObfImpl'
-import { CoinFlipMeanSim } from '@/components/shared/CoinFlipMeanSim'
+import { CoinFlipMeanSim } from '../shared/CoinFlipMeanSim'
 
 export function Act3() {
   const [selectedMethod, setSelectedMethod] = useState<string | null>(null)

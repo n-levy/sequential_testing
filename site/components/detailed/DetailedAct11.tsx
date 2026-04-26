@@ -1,7 +1,7 @@
 'use client'
 
-import { InlineMath, BlockMath } from '@/components/ui/Math'
-import { EppoPipelineSim } from '@/components/act2/EppoPipelineSim'
+import { InlineMath, BlockMath } from '../ui/Math'
+import { EppoPipelineSim } from '../act2/EppoPipelineSim'
 
 export function DetailedAct11() {
 

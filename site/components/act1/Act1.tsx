@@ -1,7 +1,7 @@
 'use client'
 
-import { CoinFlipMeanSim } from '@/components/shared/CoinFlipMeanSim'
-import { InlineMath } from '@/components/ui/Math'
+import { CoinFlipMeanSim } from '../shared/CoinFlipMeanSim'
+import { InlineMath } from '../ui/Math'
 
 export function Act1() {
   return (
