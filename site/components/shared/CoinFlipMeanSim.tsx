@@ -532,9 +532,8 @@ export function CoinFlipMeanSim({
           Analogy to A/B Testing
         </div>
         <div className="text-sm text-yellow-900">
-          In this simulation, each coin flip is analogous to a single user or observation in an A/B test. If you imagine running an online experiment, each flip could represent one user being assigned to a treatment (e.g., a new feature) or control (e.g., the current version). Alternatively, each flip could represent one additional day of data collection, if you aggregate results daily.<br /><br />
-          The <b>treatment</b> in this analogy is the coin having a bias (i.e., probability of heads different from 0.5). The <b>null hypothesis</b> is that the coin is fair (no treatment effect, bias = 0). The simulation tracks how the running mean (conversion rate) and confidence intervals evolve as more data (users or days) accumulate.<br /><br />
-          This helps illustrate why peeking at results in A/B tests can inflate false positive rates, and how sequential methods can help control error rates even with continuous monitoring.
+          In this simulation, each coin flip is analogous to a single user or observation in an A/B test.<br /><br />
+          The treatment in this analogy is the coin having a bias (i.e., probability of heads different from 0.5). The null hypothesis is that the treatment has no effect (bias = 0, fair coin). The simulation tracks how the running mean (estimated treatment effect) and confidence intervals evolve as more data (e.g. users) accumulates.
         </div>
       </div>
     </div>
