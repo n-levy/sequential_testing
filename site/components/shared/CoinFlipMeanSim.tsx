@@ -184,7 +184,7 @@ export function CoinFlipMeanSim({
           let sum = 0
           let crossed = false
           let step = 1;
-          if (layer === 'fixed-ci') {
+          if (layer === 'fixed-ci' || layer === 'sequential-ci') {
             step = Math.max(1, Math.floor(n / PEEK_LOOKS));
           } else if (layer === 'pocock' || layer === 'obf' || layer === 'bonferroni') {
             step = Math.floor(n / N_LOOKS);
@@ -192,10 +192,8 @@ export function CoinFlipMeanSim({
           for (let i = 1; i <= n && !crossed; i++) {
             sum += rand() < pHeads ? 1 : 0;
             let check = false;
-            if (layer === 'fixed-ci') {
+            if (layer === 'fixed-ci' || layer === 'sequential-ci') {
               if (i % step === 0 || i === n) check = true;
-            } else if (layer === 'sequential-ci') {
-              check = true;
             } else if (layer === 'pocock' || layer === 'obf' || layer === 'bonferroni') {
               if (i % step === 0 || i === n) check = true;
             }
