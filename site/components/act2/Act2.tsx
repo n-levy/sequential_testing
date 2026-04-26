@@ -183,27 +183,16 @@ export function Act2() {
             <BlockMath>{`E = mc^2`}</BlockMath>
           </div>
         </DisplayMathBox>
-        {/* Step 7 and remaining JSX go here */}
-        {/* ...existing code... */}
-        <a href="#ref-howard-2021" className="text-blue-600 hover:text-blue-800">Howard et al. (2021)</a>, specifically the Normal mixture boundary. The
-        mathematical guarantee: the true treatment effect lies inside the CI at{' '}
-        <em>all times simultaneously</em> with probability{' '}
-        <InlineMath>{`\geq 1 - \alpha`}</InlineMath>.
-      </div>
-    )
-}
-        {/* Step 7 */}
-        <h4 className="text-xl font-bold text-neutral-900 mb-3">Step 7: Decide</h4>
+        <div className="bg-white border border-neutral-400 rounded-lg p-5 mb-6">
+          <p className="text-neutral-700 mb-2">
             <a href="#ref-howard-2021" className="text-blue-600 hover:text-blue-800">Howard et al. (2021)</a>, specifically the Normal mixture boundary. The
             mathematical guarantee: the true treatment effect lies inside the CI at{' '}
             <em>all times simultaneously</em> with probability{' '}
-            <InlineMath>{`\\geq 1 - \\alpha`}</InlineMath>.
+            <InlineMath>{`\geq 1 - \alpha`}</InlineMath>.
           </p>
         </div>
-
         {/* Step 7 */}
         <h4 className="text-xl font-bold text-neutral-900 mb-3">Step 7: Decide</h4>
-
         <div className="overflow-x-auto mb-4">
           <table className="w-full min-w-[640px] text-sm border-collapse border border-neutral-300">
             <thead>
@@ -218,6 +207,14 @@ export function Act2() {
                 <td className="border border-neutral-300 p-3">CI entirely above 0</td>
                 <td className="border border-neutral-300 p-3"><span className="inline-block w-4 h-4 bg-green-600 rounded mr-2 align-middle"></span>Green</td>
                 <td className="border border-neutral-300 p-3">Positive effect. Ship the feature.</td>
+              </tr>
+              {/* ...rest of table rows... */}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    )
+}
               </tr>
               <tr className="bg-neutral-50">
                 <td className="border border-neutral-300 p-3">CI entirely below 0</td>
