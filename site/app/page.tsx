@@ -63,15 +63,14 @@ export default function Home() {
                 <span className="text-blue-600 font-medium group-hover:underline">
                   Start &rarr;
                 </span>
+              </Link>
+              {/* In-Depth version card */}
               <Link
                 href="/in-depth"
                 className="group block bg-white border-2 border-green-200 rounded-xl p-8 hover:border-green-500 hover:shadow-lg transition-all"
               >
                 <h3 className="text-2xl font-bold text-neutral-900 mb-3 group-hover:text-green-700 transition-colors">
                   In-Depth
-                </h3>
-                <h3 className="text-2xl font-bold text-neutral-900 mb-3 group-hover:text-purple-700 transition-colors">
-                  In-depth
                 </h3>
                 <p className="text-neutral-600 mb-4">
                   For those who want to understand the <strong>historical origins and
