@@ -20,25 +20,7 @@ export function Act2() {
           <p className="text-neutral-500 text-sm">(Schmit &amp; Miller, 2024)</p>
         </div>
 
-        {/* ── Big Idea ── */}
-        <h3 className="text-2xl font-bold text-neutral-900 mb-4">The Big Idea</h3>
 
-        <div className="bg-blue-50 border border-blue-400 rounded-lg p-6 mb-8">
-          <div className="text-neutral-800 space-y-3">
-            <p>
-              Eppo replaces the standard confidence interval with a{' '}
-              <strong>sequential confidence interval</strong> (confidence sequence) &mdash;
-              a band around the estimated treatment effect that maintains coverage at{' '}
-              <em>every analysis time</em>, not just at a single pre-planned endpoint.
-            </p>
-            <p>
-              The trade-off: a sequential CI is wider than a fixed-horizon CI at any given
-              sample size (the &ldquo;price of peeking&rdquo;). In exchange, its error guarantee
-              holds under arbitrary stopping rules. Eppo mitigates the width penalty through
-              CUPED-style variance reduction using pre-experiment covariates.
-            </p>
-          </div>
-        </div>
 
         {/* ── Simulation ── */}
 

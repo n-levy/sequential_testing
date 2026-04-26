@@ -256,8 +256,8 @@ export function CoinFlipMeanSim({
       .attr('y1', y(0)).attr('y2', y(0))
       .attr('stroke', '#525252').attr('stroke-width', 1).attr('stroke-dasharray', '4 3')
     g.append('text')
-      .attr('x', innerW - 4).attr('y', y(0) - 4)
-      .style('text-anchor', 'end').style('font-size', '11px').style('fill', '#525252')
+      .attr('x', 8).attr('y', y(0) - 8)
+      .style('text-anchor', 'start').style('font-size', '11px').style('fill', '#525252')
       .text('Null (fair coin)')
 
     // True bias line if non-zero
@@ -417,7 +417,9 @@ export function CoinFlipMeanSim({
         {showPeekStats && (
           <div className="bg-amber-50 border border-amber-200 rounded-lg p-3 col-span-2 sm:col-span-4">
             <div className="text-[11px] font-medium text-amber-700 uppercase">
-              False positive rate when peeking after every batch (true bias = 0)
+              {bias === 0
+                ? 'False positive rate when peeking after every batch (true bias = 0)'
+                : `Crossing rate when peeking after every batch (true bias = ${(bias > 0 ? '+' : '') + bias.toFixed(2)})`}
             </div>
             <div className="text-lg font-semibold text-amber-900">
               {peekFPR == null
@@ -425,8 +427,9 @@ export function CoinFlipMeanSim({
                 : `${(peekFPR * 100).toFixed(1)}% of ${PEEK_N_SIMS} simulated A/A tests crossed the standard CI at some point.`}
             </div>
             <div className="text-xs text-amber-800 mt-1">
-              Compare with the nominal {(alpha * 100).toFixed(0)}% — peeking inflates the
-              error rate well beyond what a single look would give.
+              {bias === 0
+                ? `Compare with the alpha of ${(alpha * 100).toFixed(0)}% — peeking inflates the error rate well beyond what a single look would give.`
+                : 'With nonzero bias, this is not a false positive rate but the probability of crossing the standard CI at some point.'}
             </div>
           </div>
         )}

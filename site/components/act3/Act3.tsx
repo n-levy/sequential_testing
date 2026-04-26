@@ -1,6 +1,6 @@
-'use client'
-
-import { useState } from 'react'
+"use client";
+import React, { useState } from 'react';
+import { EppoFPRReport } from './EppoFPRReport'
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/Card'
 import { InlineMath, BlockMath } from '@/components/ui/Math'
 import { BonferroniImpl } from './BonferroniImpl'
@@ -50,17 +50,9 @@ export function Act3() {
           </div>
         </div>
 
-        {/* ── Method Cards ── */}
-        <h3 className="text-2xl font-bold text-neutral-900 mb-6 text-center">
-          Choose a Method to Explore
-        </h3>
+        {/* ── All Methods ── */}
         <div className="grid md:grid-cols-3 gap-6 mb-8">
-          <Card
-            className={`cursor-pointer transition-all ${
-              selectedMethod === 'bonferroni' ? 'ring-2 ring-blue-500 bg-blue-50' : 'hover:shadow-lg'
-            }`}
-            onClick={() => setSelectedMethod(selectedMethod === 'bonferroni' ? null : 'bonferroni')}
-          >
+          <Card className="bg-blue-50">
             <CardHeader>
               <CardTitle className="text-blue-700">Method 1: Bonferroni</CardTitle>
             </CardHeader>
@@ -70,14 +62,9 @@ export function Act3() {
                 <InlineMath>{`K`}</InlineMath>. One line of code.
               </p>
             </CardContent>
+            <BonferroniImpl />
           </Card>
-
-          <Card
-            className={`cursor-pointer transition-all ${
-              selectedMethod === 'pocock' ? 'ring-2 ring-orange-500 bg-orange-50' : 'hover:shadow-lg'
-            }`}
-            onClick={() => setSelectedMethod(selectedMethod === 'pocock' ? null : 'pocock')}
-          >
+          <Card className="bg-orange-50">
             <CardHeader>
               <CardTitle className="text-orange-700">Method 2: <a href="#ref-pocock-1977" className="text-blue-600 hover:text-blue-800">Pocock (1977)</a></CardTitle>
             </CardHeader>
@@ -86,32 +73,20 @@ export function Act3() {
                 Constant critical boundary. Tighter than Bonferroni by exploiting correlation.
               </p>
             </CardContent>
+            <PocockImpl />
           </Card>
-
-          <Card
-            className={`cursor-pointer transition-all ${
-              selectedMethod === 'obf' ? 'ring-2 ring-blue-500 bg-blue-50' : 'hover:shadow-lg'
-            }`}
-            onClick={() => setSelectedMethod(selectedMethod === 'obf' ? null : 'obf')}
-          >
+          <Card className="bg-blue-50">
             <CardHeader>
-              <CardTitle className="text-blue-700">Method 3: <a href="#ref-obrien-fleming-1979" className="text-blue-600 hover:text-blue-800">O&apos;Brien&ndash;Fleming (1979)</a></CardTitle>
+              <CardTitle className="text-blue-700">Method 3: <a href="#ref-obrien-fleming-1979" className="text-blue-600 hover:text-blue-800">O'Brien–Fleming (1979)</a></CardTitle>
             </CardHeader>
             <CardContent>
               <p className="text-sm text-neutral-600">
                 Decreasing threshold. Nearly no penalty at the final analysis.
               </p>
             </CardContent>
+            <ObfImpl />
           </Card>
         </div>
-
-        {selectedMethod && (
-          <div className="mb-12">
-            {selectedMethod === 'bonferroni' && <BonferroniImpl />}
-            {selectedMethod === 'pocock' && <PocockImpl />}
-            {selectedMethod === 'obf' && <ObfImpl />}
-          </div>
-        )}
 
         {/* ── Head-to-Head Comparison ── */}
         <h3 className="text-2xl font-bold text-neutral-900 mb-4">Head-to-Head Comparison</h3>
@@ -297,14 +272,17 @@ export function Act3() {
 
         <CoinFlipMeanSim
           layers={['fixed-ci', 'sequential-ci', 'pocock', 'obf', 'bonferroni']}
+          showPeekStats
           takeaway={
             <>
               <strong>Simulation takeaway.</strong> The standard CI (red) is the
               narrowest but its peeking guarantee is broken. Eppo&apos;s sequential CI
               (blue) is the tightest valid band for continuous monitoring. Among the
               DIY methods, O&apos;Brien&ndash;Fleming is conservative early and tight at
-              the end; Pocock is uniformly wider; Bonferroni is the simplest but
-              loosest.
+              <br />
+              <span className="block mt-2 text-blue-900 text-sm">
+                <strong>Share of false positives in 500 runs using sequential testing (Eppo approach):</strong> <EppoFPRReport />
+              </span>
             </>
           }
         />
