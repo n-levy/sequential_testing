@@ -52,12 +52,14 @@ export function Act1() {
         <CoinFlipMeanSim
           layers={['fixed-ci']}
           showPeekStats
-            defaultBias={0}
-            takeaway={
-              <>
-                <strong>Simulation takeaway.</strong> With a fair coin (bias = 0), the standard
-                CI is calibrated to fail to cover only <InlineMath>{`\\alpha = 5\\%`}</InlineMath> of
-                the time at one specific look. But under <em>continuous peeking</em>, far
+          defaultBias={0}
+          showAnalogy={false}
+          analogyNote={"This is analogous to peeking at results while using fixed-horizon confidence intervals in an A/B test."}
+          takeaway={
+            <>
+              Simulation takeaway. With a fair coin (bias = 0), the standard
+              CI is calibrated to fail to cover only <InlineMath>{`\\alpha = 5\\%`}</InlineMath> of
+              the time at one specific look. But under <em>continuous peeking</em>, far
                 more than 5% of trajectories will cross the boundary at some point. If you set the bias away from zero, the stat box below reports the probability of crossing the CI at some point under the simulated bias.
               </>
             }
