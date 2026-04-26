@@ -211,10 +211,6 @@ export function Act2() {
               {/* ...rest of table rows... */}
             </tbody>
           </table>
-        </div>
-      </div>
-    )
-}
               </tr>
               <tr className="bg-neutral-50">
                 <td className="border border-neutral-300 p-3">CI entirely below 0</td>
@@ -228,6 +224,15 @@ export function Act2() {
               </tr>
               <tr className="bg-neutral-50">
                 <td className="border border-neutral-300 p-3">CI crosses 0, experiment ended</td>
+                <td className="border border-neutral-300 p-3"><span className="inline-block w-4 h-4 bg-yellow-400 rounded mr-2 align-middle"></span>Yellow</td>
+                <td className="border border-neutral-300 p-3">Inconclusive. Stop and report.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    )
+}
                 <td className="border border-neutral-300 p-3"><span className="inline-block w-4 h-4 bg-gray-400 rounded mr-2 align-middle"></span>Grey</td>
                 <td className="border border-neutral-300 p-3">No significant effect. Decide pragmatically.</td>
               </tr>
