@@ -84,17 +84,24 @@ export function ABTestSim({
   // Trajectory recomputed automatically whenever the controls change.
   const traj = useMemo(() => simulateABTestTrajectory(n, clampedEffect, seed), [n, clampedEffect, seed])
 
-  // Compute the running difference in means
-  const diffMeans = useMemo(() => {
+
+  // Compute the running effect in percent: (meanB - meanA) / meanA
+  const effectPct = useMemo(() => {
     const arr = new Float64Array(n)
-    for (let i = 0; i < n; i++) arr[i] = traj.meansB[i] - traj.meansA[i]
+    for (let i = 0; i < n; i++) {
+      const denom = traj.meansA[i]
+      arr[i] = denom !== 0 ? 100 * (traj.meansB[i] - denom) / denom : 0
+    }
     return arr
   }, [traj, n])
 
-  // Compute the per-step CI half-width for the fixed CI
-  const ciHalfWidth = useMemo(() => {
+  // Compute the per-step CI half-width for the fixed CI (in percent)
+  const ciHalfWidthPct = useMemo(() => {
     const arr = new Float64Array(n)
-    for (let i = 0; i < n; i++) arr[i] = Z_975 * traj.ses[i]
+    for (let i = 0; i < n; i++) {
+      const denom = traj.meansA[i]
+      arr[i] = denom !== 0 ? 100 * Z_975 * traj.ses[i] / denom : 0
+    }
     return arr
   }, [traj, n])
 
@@ -108,13 +115,13 @@ export function ABTestSim({
     const margin = { top: 20, right: 16, bottom: 44, left: 56 }
     const innerW = W - margin.left - margin.right
     const innerH = H - margin.top - margin.bottom
-    // Y-axis: include all values of the diff and all CI bands
+    // Y-axis: include all values of the effect and all CI bands
     let allBounds: number[] = []
-    for (let i = 0; i < diffMeans.length; i++) {
-      const v = diffMeans[i]
+    for (let i = 0; i < effectPct.length; i++) {
+      const v = effectPct[i]
       allBounds.push(v)
-      allBounds.push(v - ciHalfWidth[i])
-      allBounds.push(v + ciHalfWidth[i])
+      allBounds.push(v - ciHalfWidthPct[i])
+      allBounds.push(v + ciHalfWidthPct[i])
     }
     let minY = Math.min(...allBounds)
     let maxY = Math.max(...allBounds)
@@ -126,7 +133,7 @@ export function ABTestSim({
     const g = svg.append('g').attr('transform', `translate(${margin.left},${margin.top})`)
     // Axes
     g.append('g').attr('transform', `translate(0,${innerH})`).call(d3.axisBottom(x).ticks(6))
-    g.append('g').call(d3.axisLeft(y).ticks(6).tickFormat(d3.format('+.2f')))
+    g.append('g').call(d3.axisLeft(y).ticks(6).tickFormat(d => `${(d as number).toFixed(1)}%`))
     g.append('text')
       .attr('transform', `translate(${innerW / 2}, ${innerH + 36})`)
       .style('text-anchor', 'middle').style('font-size', '12px').style('fill', '#525252')
@@ -135,7 +142,7 @@ export function ABTestSim({
       .attr('transform', 'rotate(-90)')
       .attr('x', -innerH / 2).attr('y', -42)
       .style('text-anchor', 'middle').style('font-size', '12px').style('fill', '#525252')
-      .text('Difference in means (B − A)')
+      .text('Effect: (B − A) / A (%)')
     // Reference line: null hypothesis at 0
     g.append('line')
       .attr('x1', 0).attr('x2', innerW)
@@ -144,9 +151,9 @@ export function ABTestSim({
     // CI band
     const area = d3.area<number>()
       .x((_d, i) => x(i + 1))
-      .y0((_d, i) => y(diffMeans[i] - ciHalfWidth[i]))
-      .y1((_d, i) => y(diffMeans[i] + ciHalfWidth[i]))
-      .defined((_d, i) => i >= 5 && Number.isFinite(ciHalfWidth[i]))
+      .y0((_d, i) => y(effectPct[i] - ciHalfWidthPct[i]))
+      .y1((_d, i) => y(effectPct[i] + ciHalfWidthPct[i]))
+      .defined((_d, i) => i >= 5 && Number.isFinite(ciHalfWidthPct[i]))
     g.append('path')
       .datum(Array.from({ length: n }, (_, i) => i))
       .attr('fill', LAYER_STYLE['fixed-ci'].color)
@@ -155,34 +162,34 @@ export function ABTestSim({
       .attr('stroke-width', 1.2)
       .attr('stroke-opacity', 0.7)
       .attr('d', area as d3.Area<number>)
-    // Mean diff trajectory
+    // Mean effect trajectory
     const line = d3.line<number>()
       .x((_d, i) => x(i + 1))
-      .y((_d, i) => y(diffMeans[i]))
+      .y((_d, i) => y(effectPct[i]))
     g.append('path')
       .datum(Array.from({ length: n }, (_, i) => i))
       .attr('fill', 'none')
       .attr('stroke', '#0f172a')
       .attr('stroke-width', 1.6)
       .attr('d', line as d3.Line<number>)
-  }, [diffMeans, ciHalfWidth, n])
+  }, [effectPct, ciHalfWidthPct, n])
 
-  // Decision at the final time step
+  // Decision at the final time step (in percent)
   const decision = useMemo(() => {
     const last = n - 1
-    const est = diffMeans[last]
-    const w = ciHalfWidth[last]
+    const est = effectPct[last]
+    const w = ciHalfWidthPct[last]
     const lo = est - w
     const hi = est + w
     if (lo > 0) return { label: 'Reject null — B > A', color: 'text-green-700' }
     if (hi < 0) return { label: 'Reject null — B < A', color: 'text-rose-700' }
     return { label: 'Inconclusive', color: 'text-neutral-600' }
-  }, [diffMeans, ciHalfWidth, n])
+  }, [effectPct, ciHalfWidthPct, n])
 
   return (
     <div className="bg-white border border-neutral-300 rounded-lg p-4 my-6">
       <div className="mb-2 text-base font-semibold text-blue-900">
-        Difference in means, null hypothesis = 0.
+        Effect: (B − A) / A, null hypothesis = 0%.
       </div>
       <div className="mb-3 text-sm text-blue-900 font-semibold">
         Effect size: <span className="font-mono">{clampedEffect >= 0 ? '+' : ''}{clampedEffect.toFixed(2)}</span>
@@ -265,15 +272,15 @@ export function ABTestSim({
       {/* Stats / decision panel */}
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mt-4">
         <div className="bg-neutral-50 border border-neutral-200 rounded-lg p-3">
-          <div className="text-[11px] font-medium text-neutral-500 uppercase">Sample diff</div>
+          <div className="text-[11px] font-medium text-neutral-500 uppercase">Sample effect</div>
           <div className="text-lg font-semibold text-neutral-900 font-mono">
-            {diffMeans[n - 1].toFixed(3)}
+            {(effectPct[n - 1] >= 0 ? '+' : '')}{effectPct[n - 1].toFixed(2)}%
           </div>
         </div>
         <div className="bg-neutral-50 border border-neutral-200 rounded-lg p-3">
-          <div className="text-[11px] font-medium text-neutral-500 uppercase">Effect size</div>
+          <div className="text-[11px] font-medium text-neutral-500 uppercase">CI half-width</div>
           <div className="text-lg font-semibold text-neutral-900 font-mono">
-            {(diffMeans[n - 1] >= 0 ? '+' : '')}{diffMeans[n - 1].toFixed(3)}
+            ±{ciHalfWidthPct[n - 1].toFixed(2)}%
           </div>
         </div>
         {decision && (
