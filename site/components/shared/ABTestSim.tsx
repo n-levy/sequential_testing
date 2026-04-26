@@ -146,7 +146,7 @@ export function ABTestSim({
       .attr('transform', 'rotate(-90)')
       .attr('x', -innerH / 2).attr('y', -42)
       .style('text-anchor', 'middle').style('font-size', '12px').style('fill', '#525252')
-      .text('Effect: (B − A) / A (%)')
+      .text('Effect (%)')
     // Reference line: null hypothesis at 0
     g.append('line')
       .attr('x1', 0).attr('x2', innerW)
@@ -256,13 +256,57 @@ export function ABTestSim({
               className="inline-block w-3 h-3 rounded-sm"
               style={{ background: LAYER_STYLE['fixed-ci'].color, opacity: 0.45 }}
             />
-            {LAYER_STYLE['fixed-ci'].label}
-          </span>
-          <span className="inline-flex items-center gap-1.5 text-neutral-700">
-            <span className="inline-block w-3 h-px bg-neutral-900" />
-            Sample diff
+            Standard 95% CI
           </span>
         </div>
+        // Compute the probability of crossing the CI at any point for all selected layers
+        const [peekProbs, setPeekProbs] = useState<Record<string, number> | null>(null)
+        useEffect(() => {
+          if (!showPeekStats) return
+          const results: Record<string, number> = {}
+          for (const layer of layers) {
+            let count = 0
+            for (let sim = 0; sim < PEEK_N_SIMS; ++sim) {
+              const t = simulateABTestTrajectory(n, clampedEffect, seed + sim)
+              let crossed = false
+              for (let i = 0; i < n; ++i) {
+                const denom = t.meansA[i]
+                const est = denom !== 0 ? 100 * (t.meansB[i] - denom) / denom : 0
+                let w = 0
+                if (layer === 'fixed-ci') {
+                  w = denom !== 0 ? 100 * Z_975 * t.ses[i] / denom : 0
+                } else if (layer === 'sequential-ci') {
+                  // Eppo/Howard mixture boundary (approximate)
+                  const nu = n * 0.25 // tuning parameter, can be adjusted
+                  w = denom !== 0 ? 100 * t.ses[i] * Math.sqrt(((i+1) + nu) / (i+1) * Math.log(((i+1) + nu) / (nu * alpha * alpha))) / denom : 0
+                } else if (layer === 'pocock') {
+                  // Pocock critical value (approximate)
+                  const K = 6
+                  const cP = [null, null, 2.18, 2.36, 2.51, 2.60, 2.69][K] || 2.36
+                  w = denom !== 0 ? 100 * t.ses[i] * cP / denom : 0
+                } else if (layer === 'obf') {
+                  // O'Brien–Fleming critical value (approximate)
+                  const K = 6
+                  const k = Math.max(1, Math.round((i+1) / n * K))
+                  const z = 1.96 * Math.sqrt(K / k)
+                  w = denom !== 0 ? 100 * t.ses[i] * z / denom : 0
+                } else if (layer === 'bonferroni') {
+                  // Bonferroni critical value (approximate)
+                  const K = 6
+                  const z = 2.50 // for K=4, alpha=0.05
+                  w = denom !== 0 ? 100 * t.ses[i] * z / denom : 0
+                }
+                if (est - w > 0 || est + w < 0) {
+                  crossed = true
+                  break
+                }
+              }
+              if (crossed) count++
+            }
+            results[layer] = count / PEEK_N_SIMS
+          }
+          setPeekProbs(results)
+        }, [n, clampedEffect, seed, showPeekStats, layers, alpha])
       </div>
       {/* Plot */}
       <div style={{ width: '100%', overflowX: 'auto' }}>
@@ -301,6 +345,32 @@ export function ABTestSim({
       {takeaway && (
         <div className="bg-blue-50 border border-blue-200 rounded-lg p-3 mt-3 text-sm text-blue-900">
           {takeaway}
+        </div>
+      )}
+      {/* Probability of crossing CI at some point for all layers */}
+      {showPeekStats && peekProbs && (
+        <div className="bg-white border border-blue-400 rounded-lg p-5 mb-8 mt-4 text-center">
+          <span className="text-blue-900 font-semibold">Probability of crossing the CI at some point:</span>
+          {Object.keys(peekProbs).length === 1 ? (
+            <span className="ml-2 text-blue-700 font-mono" id="peek-prob-box">{(Object.values(peekProbs)[0] * 100).toFixed(1)}%</span>
+          ) : (
+            <table className="mx-auto mt-2 text-sm">
+              <thead>
+                <tr>
+                  <th className="px-3 py-1 text-left">Method</th>
+                  <th className="px-3 py-1 text-right">Share crossing</th>
+                </tr>
+              </thead>
+              <tbody>
+                {layers.map(layer => (
+                  <tr key={layer}>
+                    <td className="px-3 py-1 text-left">{LAYER_STYLE[layer].label}</td>
+                    <td className="px-3 py-1 text-right text-blue-700 font-mono">{(peekProbs[layer] * 100).toFixed(1)}%</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          )}
         </div>
       )}
     </div>

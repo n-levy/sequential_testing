@@ -43,7 +43,7 @@ export function Act2() {
             <>
               Simulation takeaway. With no true effect, the standard CI (red) crosses the null line in many
               trajectories &mdash; the peeking problem. The sequential CI (blue) is wider but
-              its boundary is calibrated to keep the false positive rate at <InlineMath>{`\\alpha`}</InlineMath> across <em>every</em> peek. If you set the effect away from zero, the stat box below reports the probability of crossing the CI at some point under the simulated effect.
+              its boundary is calibrated to keep the false positive rate at <InlineMath>{`\\alpha`}</InlineMath> across <em>every</em> peek. The table below shows the share of 500 runs in which the estimate was significant at least once during the test for each method. If you set the effect away from zero, the table updates to show the probability of crossing the CI at some point under the simulated effect.
             </>
           }
         />
@@ -127,6 +127,9 @@ export function Act2() {
           Compute the adjusted group means and the <strong>relative lift</strong>:
         </p>
         <BlockMath>{`\\hat{\\tau}(t) = \\hat{\\mu}_1(t) - \\hat{\\mu}_0(t), \\qquad \\text{Relative lift}(t) = \\frac{\\hat{\\tau}(t)}{\\hat{\\mu}_0(t)}`}</BlockMath>
+        <DisplayMathBox>
+          <BlockMath>{`\\hat{\\tau}(t) = \\hat{\\mu}_1(t) - \\hat{\\mu}_0(t), \\qquad \\text{Relative lift}(t) = \\frac{\\hat{\\tau}(t)}{\\hat{\\mu}_0(t)}`}</BlockMath>
+        </DisplayMathBox>
 
         <div className="bg-white border border-neutral-400 rounded-lg p-5 mb-6">
           <p className="text-neutral-700 mb-2">
@@ -145,6 +148,9 @@ export function Act2() {
         {/* Step 5 */}
         <h4 className="text-xl font-bold text-neutral-900 mb-3">Step 5: Estimate the variance</h4>
         <BlockMath>{`\\hat{\\sigma}_{\\hat{\\tau}}^2(t) = \\frac{s_0^2(t)}{n_0(t)} + \\frac{s_1^2(t)}{n_1(t)}`}</BlockMath>
+        <DisplayMathBox>
+          <BlockMath>{`\\hat{\\sigma}_{\\hat{\\tau}}^2(t) = \\frac{s_0^2(t)}{n_0(t)} + \\frac{s_1^2(t)}{n_1(t)}`}</BlockMath>
+        </DisplayMathBox>
 
         <div className="bg-white border border-neutral-400 rounded-lg p-5 mb-6">
           <p className="text-neutral-700">
@@ -165,7 +171,18 @@ export function Act2() {
         <div className="bg-neutral-100 border border-neutral-300 rounded-lg p-4 mb-4">
           <BlockMath>{`\\text{CI}(t) = \\hat{\\tau}(t) \\;\\pm\\; \\hat{\\sigma}_{\\hat{\\tau}}(t) \\cdot \\underbrace{\\sqrt{\\frac{n + \\nu}{n} \\cdot \\log\\!\\frac{n + \\nu}{\\nu \\alpha^2}}}_{\\text{sequential multiplier}}`}</BlockMath>
         </div>
+        <DisplayMathBox>
+          <div className="bg-neutral-100 border border-neutral-300 rounded-lg p-4 mb-4">
+            <BlockMath>{`\\text{CI}(t) = \\hat{\\tau}(t) \\;\\pm\\; \\hat{\\sigma}_{\\hat{\\tau}}(t) \\cdot \\underbrace{\\sqrt{\\frac{n + \\nu}{n} \\cdot \\log\\!\\frac{n + \\nu}{\\nu \\alpha^2}}}_{\\text{sequential multiplier}}`}</BlockMath>
+          </div>
+        </DisplayMathBox>
 
+// --- DisplayMathBox helper ---
+function DisplayMathBox({ children }: { children: React.ReactNode }) {
+  const [show, setShow] = useState(false)
+  if (show) return <>{children}</>
+  return <button className="px-4 py-2 bg-blue-600 text-white rounded mb-6" onClick={() => setShow(true)}>Display the math</button>
+}
         <div className="bg-white border border-neutral-400 rounded-lg p-5 mb-6">
           <p className="font-semibold text-neutral-800 mb-3">Unpacking the formula:</p>
           <ul className="list-disc list-inside space-y-2 text-neutral-700">

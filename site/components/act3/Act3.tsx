@@ -107,6 +107,7 @@ export function Act3() {
         <div className="mb-10">
           <ABTestSim
             layers={['fixed-ci', 'sequential-ci', 'pocock', 'obf', 'bonferroni']}
+            showPeekStats
             defaultEffect={0}
             K={K}
             takeaway={<>
