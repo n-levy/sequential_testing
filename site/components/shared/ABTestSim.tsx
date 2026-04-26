@@ -81,6 +81,7 @@ export function ABTestSim({
   const [peekProbs, setPeekProbs] = useState<Record<string, number> | null>(null)
   const svgRef = useRef<SVGSVGElement | null>(null)
 
+  // Compute the probability of crossing the CI at any point for all selected layers
   useEffect(() => {
     if (!showPeekStats) return;
     const results: Record<string, number> = {};
