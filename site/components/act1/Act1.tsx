@@ -25,19 +25,19 @@ export function Act1() {
               In A/B testing, it’s the same idea. The “coin” is treatment versus control. A bias of zero means no real effect.
             </p>
             <p>
-              Standard confidence intervals only guarantee 95% coverage if the sample size is fixed in advance. If we stop early based on the data, that guarantee no longer applies. The issue is not with confidence intervals themselves, but with using them outside their intended assumptions.
+              Standard confidence intervals guarantee 95% coverage only if the sample size is fixed in advance. If we monitor continuously and stop based on the data, that guarantee no longer holds. The issue is not with confidence intervals themselves, but with using them outside their intended assumptions.
             </p>
             <p>
-              By checking repeatedly and stopping when results look good, we give ourselves multiple chances to get lucky. The probability increases substantially and can become very large if we keep checking.
+              By checking repeatedly and stopping when results look good, we give ourselves multiple chances to get a lucky fluctuation. The probability can become very large if we keep checking.
             </p>
             <p>
-              There’s a core distinction: there’s a 5% error at a fixed sample size, but a higher chance of error if we can stop at any time.
+              At a fixed sample size, the error rate is 5%. If we can stop at any time, the chance of ever making an error is much higher.
             </p>
             <p>
-              The issue isn’t peeking itself — it’s that standard statistical tools weren’t designed for continuous monitoring.
+              The issue isn’t peeking itself — it’s that standard statistical tools weren’t designed for continuous monitoring. We need methods that remain valid no matter when we stop.
             </p>
             <p>
-              We need methods that remain valid no matter when we stop. That’s the motivation for sequential testing.
+              These methods control the probability of ever making a false positive, even if we keep checking.
             </p>
           </div>
         </div>
