@@ -25,16 +25,16 @@ export function Act1() {
               In A/B testing, it’s the same idea. The “coin” is treatment versus control. A bias of zero means no real effect.
             </p>
             <p>
-              Standard confidence intervals only guarantee 95% coverage if we fix the sample size in advance. If we keep checking and stop early, that guarantee no longer holds. The issue is not with the method itself, but with using it outside its intended assumptions.
+              Standard confidence intervals only guarantee 95% coverage if the sample size is fixed in advance. If we stop early based on the data, that guarantee no longer applies. The issue is not with confidence intervals themselves, but with using them outside their intended assumptions.
             </p>
             <p>
-              Each time we check, we give ourselves another chance to get lucky. These checks are not independent, but the overall chance of a false positive still increases. The probability of a false positive increases substantially and can approach 1 if we keep checking long enough.
+              By checking repeatedly and stopping when results look good, we give ourselves multiple chances to get lucky. The probability increases substantially and can become very large if we keep checking.
+            </p>
+            <p>
+              There’s a core distinction: there’s a 5% error at a fixed sample size, but a higher chance of error if we can stop at any time.
             </p>
             <p>
               The issue isn’t peeking itself — it’s that standard statistical tools weren’t designed for continuous monitoring.
-            </p>
-            <p>
-              There’s a core distinction: with a fixed sample size, there’s a 5% chance of error at that point. If we can stop at any time, the chance of error is much higher.
             </p>
             <p>
               We need methods that remain valid no matter when we stop. That’s the motivation for sequential testing.
