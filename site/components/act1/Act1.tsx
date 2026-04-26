@@ -38,7 +38,7 @@ import { useState } from 'react'
               </tbody>
             </table>
           </div>
-        </DisplayMathBox>
+        {/* End DisplayMathBox */}
 
         <DisplayMathBox>
           <div className="bg-white border border-neutral-400 rounded-lg p-5 mb-8">
@@ -46,7 +46,7 @@ import { useState } from 'react'
               With daily checks over a 4-week experiment, about one in four “significant” results will be a false positive. Features shipped on this basis may have no real effect—or may even degrade your metrics.
             </p>
           </div>
-        </DisplayMathBox>
+        {/* End DisplayMathBox */}
 
         {/* ── Key Takeaway ── */}
         <DisplayMathBox>
@@ -58,7 +58,7 @@ import { useState } from 'react'
               </p>
             </div>
           </div>
-        </DisplayMathBox>
+        {/* End DisplayMathBox */}
       </div>
     )
 }

@@ -304,7 +304,7 @@ export function ABTestSim({
         </div>
 
   // Compute the probability of crossing the CI at any point for all selected layers
-  const [peekProbs, setPeekProbs] = useState<Record<string, number> | null>(null);
+  // Removed duplicate peekProbs state
   useEffect(() => {
     if (!showPeekStats) return;
     const results: Record<string, number> = {};
