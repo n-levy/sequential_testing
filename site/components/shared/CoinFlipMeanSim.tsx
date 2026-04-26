@@ -309,17 +309,7 @@ export function CoinFlipMeanSim({
         .text(nullLabel);
     }
 
-    // True bias line if non-zero
-    if (bias !== 0) {
-      g.append('line')
-        .attr('x1', 0).attr('x2', innerW)
-        .attr('y1', y(bias)).attr('y2', y(bias))
-        .attr('stroke', '#16a34a').attr('stroke-width', 1).attr('stroke-dasharray', '6 3')
-      g.append('text')
-        .attr('x', innerW - 4).attr('y', y(bias) - 4)
-        .style('text-anchor', 'end').style('font-size', '11px').style('fill', '#16a34a')
-        .text(`True bias = ${bias > 0 ? '+' : ''}${bias.toFixed(2)}`)
-    }
+    // True bias line if non-zero (removed: bias is always 0)
 
     // Band layers (lower → upper draw order).
     // Draw outermost bands first so inner bands overlay.
