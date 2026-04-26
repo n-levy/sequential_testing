@@ -106,8 +106,9 @@ export function VilleInequalitySim() {
     g.append('line').attr('x1', 0).attr('x2', width)
       .attr('y1', y(threshold)).attr('y2', y(threshold))
       .attr('stroke', '#dc2626').attr('stroke-dasharray', '6,4').attr('stroke-width', 2)
-    g.append('text').attr('x', width + 4).attr('y', y(threshold) + 4)
-      .text(`1/α = ${threshold}`).attr('fill', '#dc2626').attr('font-size', '10px')
+    g.append('text').attr('x', width - 4).attr('y', y(threshold) - 6)
+      .attr('text-anchor', 'end')
+      .text(`1/α = ${threshold}`).attr('fill', '#dc2626').attr('font-size', '11px')
 
     // Λ = 1 line
     g.append('line').attr('x1', 0).attr('x2', width)
@@ -169,8 +170,9 @@ export function VilleInequalitySim() {
     g.append('line').attr('x1', 0).attr('x2', width)
       .attr('y1', y(alpha)).attr('y2', y(alpha))
       .attr('stroke', '#dc2626').attr('stroke-dasharray', '6,4').attr('stroke-width', 1.5)
-    g.append('text').attr('x', width + 4).attr('y', y(alpha) + 4)
-      .text(`α = ${(alpha * 100).toFixed(0)}%`).attr('fill', '#dc2626').attr('font-size', '10px')
+    g.append('text').attr('x', width - 4).attr('y', y(alpha) - 6)
+      .attr('text-anchor', 'end')
+      .text(`α = ${(alpha * 100).toFixed(0)}%`).attr('fill', '#dc2626').attr('font-size', '11px')
 
     g.selectAll('.bar').data(data).enter().append('rect')
       .attr('x', d => x(d.label)!)

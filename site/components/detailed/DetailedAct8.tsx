@@ -77,6 +77,34 @@ export function DetailedAct8() {
           </p>
         </div>
 
+        <div className="bg-amber-50 border border-amber-300 rounded-lg p-4 mb-6 text-neutral-800">
+          <p className="font-semibold mb-2">What is the &ldquo;mixture <InlineMath>{`\\tau`}</InlineMath>&rdquo;?</p>
+          <p className="mb-2">
+            The mixing distribution <InlineMath>{`H`}</InlineMath> is your <em>prior belief</em> about
+            how big the true effect could plausibly be. A common choice is{' '}
+            <InlineMath>{`H = \\mathcal{N}(0, \\tau^2 \\sigma^2)`}</InlineMath> &mdash; a Normal centred at zero
+            with spread controlled by the parameter <InlineMath>{`\\tau`}</InlineMath>.
+          </p>
+          <ul className="list-disc ml-6 space-y-1">
+            <li>
+              <strong>Small <InlineMath>{`\\tau`}</InlineMath></strong> &mdash; you assume the effect
+              (if any) is small. The test is most powerful for small effects, less powerful for
+              large ones.
+            </li>
+            <li>
+              <strong>Large <InlineMath>{`\\tau`}</InlineMath></strong> &mdash; you allow for
+              potentially large effects. The test gains power against big effects but pays for it
+              with wider confidence intervals.
+            </li>
+          </ul>
+          <p className="mt-2">
+            <InlineMath>{`\\tau`}</InlineMath> is therefore a <em>tuning knob</em>: pick it to match
+            the smallest effect size you genuinely care about detecting. In Act 9 we will see that
+            Eppo exposes this as the <em>target sample size</em> <InlineMath>{`\\nu`}</InlineMath>,
+            which plays the same role under a different parameterisation.
+          </p>
+        </div>
+
         {/* Interactive Simulation */}
         <MixtureSPRTSim />
 

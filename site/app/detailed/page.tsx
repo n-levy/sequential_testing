@@ -15,6 +15,8 @@ import { DetailedAct11 } from '@/components/detailed/DetailedAct11'
 import { DetailedAct12 } from '@/components/detailed/DetailedAct12'
 import { DetailedAct13 } from '@/components/detailed/DetailedAct13'
 import { DetailedAct14 } from '@/components/detailed/DetailedAct14'
+import { HybridApproach } from '@/components/detailed/HybridApproach'
+import { AppendixDivider } from '@/components/detailed/AppendixDivider'
 import { DetailedSummary } from '@/components/detailed/DetailedSummary'
 import { DetailedReferences } from '@/components/detailed/DetailedReferences'
 import { Comments } from '@/components/Comments'
@@ -32,13 +34,15 @@ const DETAILED_ITEMS = [
   { id: 'act-7', label: 'Act 7 – Wald\'s SPRT' },
   { id: 'act-8', label: 'Act 8 – Mixture / mSPRT' },
   { id: 'act-9', label: 'Act 9 – Confidence Sequences' },
-  { id: 'act-10', label: 'Act 10 – Problem Eppo Solves' },
-  { id: 'act-11', label: 'Act 11 – Eppo Pipeline' },
-  { id: 'act-12', label: 'Act 12 – Variance Reduction' },
-  { id: 'act-13', label: 'Act 13 – Sequential CI' },
-  { id: 'act-14', label: 'Act 14 – DIY Alternatives' },
+  { id: 'act-11', label: 'Act 10 – Eppo Pipeline' },
+  { id: 'act-13', label: 'Act 11 – Sequential CI' },
+  { id: 'act-14', label: 'Act 12 – DIY Alternatives' },
+  { id: 'hybrid', label: 'Hybrid Approach' },
   { id: 'summary', label: 'Summary' },
   { id: 'references', label: 'References' },
+  { id: 'appendix', label: 'Appendix' },
+  { id: 'act-10', label: 'A1 – Problem Eppo Solves' },
+  { id: 'act-12', label: 'A2 – Variance Reduction' },
   { id: 'comments', label: 'Comments' },
   { id: 'contact', label: 'Contact us' },
 ]
@@ -59,13 +63,15 @@ export default function DetailedVersion() {
         <DetailedAct7 />
         <DetailedAct8 />
         <DetailedAct9 />
-        <DetailedAct10 />
         <DetailedAct11 />
-        <DetailedAct12 />
         <DetailedAct13 />
         <DetailedAct14 />
+        <HybridApproach />
         <DetailedSummary />
         <DetailedReferences />
+        <AppendixDivider />
+        <DetailedAct10 />
+        <DetailedAct12 />
         <Comments />
         <ContactForm />
       </main>
