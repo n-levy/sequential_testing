@@ -286,25 +286,28 @@ export function CoinFlipMeanSim({
       .attr('y', y(0) - 8)
       .style('font-size', `${nullFontSize}px`)
       .text(nullLabel);
-    const bbox = tempText.node().getBBox();
-    tempText.remove();
-    g.append('rect')
-      .attr('x', innerW - 8 - bbox.width - nullPaddingX)
-      .attr('y', y(0) - 8 - bbox.height + nullPaddingY)
-      .attr('width', bbox.width + 2 * nullPaddingX)
-      .attr('height', bbox.height + 2 * nullPaddingY)
-      .attr('fill', 'white')
-      .attr('stroke', '#e5e7eb')
-      .attr('rx', 3)
-      .attr('ry', 3)
-      .attr('opacity', 0.95);
-    g.append('text')
-      .attr('x', innerW - 8)
-      .attr('y', y(0) - 8)
-      .style('text-anchor', 'end')
-      .style('font-size', `${nullFontSize}px`)
-      .style('fill', '#525252')
-      .text(nullLabel);
+    const node = tempText.node();
+    if (node) {
+      const bbox = node.getBBox();
+      tempText.remove();
+      g.append('rect')
+        .attr('x', innerW - 8 - bbox.width - nullPaddingX)
+        .attr('y', y(0) - 8 - bbox.height + nullPaddingY)
+        .attr('width', bbox.width + 2 * nullPaddingX)
+        .attr('height', bbox.height + 2 * nullPaddingY)
+        .attr('fill', 'white')
+        .attr('stroke', '#e5e7eb')
+        .attr('rx', 3)
+        .attr('ry', 3)
+        .attr('opacity', 0.95);
+      g.append('text')
+        .attr('x', innerW - 8)
+        .attr('y', y(0) - 8)
+        .style('text-anchor', 'end')
+        .style('font-size', `${nullFontSize}px`)
+        .style('fill', '#525252')
+        .text(nullLabel);
+    }
 
     // True bias line if non-zero
     if (bias !== 0) {
