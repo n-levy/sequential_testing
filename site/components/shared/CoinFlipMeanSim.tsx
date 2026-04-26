@@ -445,9 +445,7 @@ export function CoinFlipMeanSim({
         {showPeekStats && (
           <div className="bg-amber-50 border border-amber-200 rounded-lg p-3 col-span-2 sm:col-span-4">
             <div className="text-[11px] font-medium text-amber-700 uppercase">
-              {bias === 0
-                ? 'False positive rate when peeking after every batch (true bias = 0)'
-                : `Crossing rate when peeking after every batch (true bias = ${(bias > 0 ? '+' : '') + bias.toFixed(2)})`}
+              False positive rate when peeking after every batch (true bias = 0)
             </div>
             <div className="text-lg font-semibold text-amber-900">
               {peekFPR == null
