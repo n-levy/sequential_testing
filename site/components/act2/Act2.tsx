@@ -183,6 +183,8 @@ export function Act2() {
             <BlockMath>{`\text{CI}(t) = \hat{\tau}(t) \;\pm\; \hat{\sigma}_{\hat{\tau}}(t) \cdot \underbrace{\sqrt{\frac{n + \nu}{n} \cdot \log\!\frac{n + \nu}{\nu \alpha^2}}}_{\text{sequential multiplier}}`}</BlockMath>
           </div>
         </DisplayMathBox>
+        {/* Step 7 and remaining JSX go here */}
+        {/* ...existing code... */}
       </div>
     )
 }
