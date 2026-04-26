@@ -13,20 +13,20 @@ export function DetailedAct3() {
           </h2>
         </div>
 
-        {/* Simulation */}
-
-        <div className="bg-blue-50 border border-blue-200 rounded-lg p-6 mb-8">
-          <h4 className="font-bold text-blue-900 mb-3">Simulation</h4>
+        {/* Intuition: Why can’t you beat a fair game? */}
+        <div className="bg-blue-50 border border-blue-400 rounded-lg p-6 mb-8">
           <div className="text-neutral-800 space-y-3">
             <p>
-              The same random walk relabelled as cumulative profit/loss in a fair game.
-              The horizontal line at zero represents break-even.
+              Imagine flipping a fair coin, winning <InlineMath>{`+1`}</InlineMath> for heads and losing <InlineMath>{`-1`}</InlineMath> for tails. Can you walk away a winner by picking the perfect moment to stop?
             </p>
             <p>
-              <strong>Doubling strategy mode:</strong> Simulates 10,000 gamblers using
-              the martingale betting strategy. The resulting histogram shows the
-              characteristic heavy left tail: many small winners, a few catastrophic
-              losers. The sample mean converges to zero.
+              <strong>No.</strong> No matter what clever stopping rule you use, the expected profit is always zero. This is the martingale property: the best prediction for your future winnings, given the entire past, is just your current total.
+            </p>
+            <p>
+              The “doubling” (martingale) betting strategy looks unbeatable—until you hit a long losing streak. The sample mean converges to zero, but the risk of catastrophic loss is real.
+            </p>
+            <p>
+              <strong>Key takeaway:</strong> In a fair game, you can’t beat the system by peeking or stopping at the “right” time. The expected value at any stopping time is still zero.
             </p>
           </div>
         </div>
@@ -34,50 +34,20 @@ export function DetailedAct3() {
         {/* Interactive Simulation */}
         <MartingaleSim />
 
-        {/* Intuitive Explanation */}
-
-        <div className="bg-blue-50 border border-blue-400 rounded-lg p-6 mb-8">
-          <div className="text-neutral-800 space-y-3">
-            <p>
-              A fair game pays <InlineMath>{`+1`}</InlineMath> for heads and{' '}
-              <InlineMath>{`-1`}</InlineMath> for tails. Cumulative winnings trace the
-              same random walk from Act 2.
-            </p>
-            <p>
-              A natural question: can you beat a fair game by choosing a clever stopping
-              rule &mdash; e.g. quitting as soon as cumulative winnings exceed some
-              threshold? The answer is no.
-            </p>
-            <p>
-              A fair random walk does eventually return to positive territory (by
-              recurrence), but the expected waiting time is infinite. No stopping
-              strategy can generate positive expected profit in a fair game.
-            </p>
-            <p>
-              <strong>Central insight:</strong> Under mild regularity conditions, the
-              expected value of a martingale at any stopping time equals its initial
-              value. This is a theorem, not an approximation.
-            </p>
-          </div>
+        {/* Simulation takeaway */}
+        <div className="bg-amber-50 border border-amber-200 rounded-lg p-4 mt-6">
+          <p className="text-sm text-amber-800">
+            <strong>Simulation takeaway:</strong> The martingale/doubling strategy produces many small winners and a few huge losers, but the average profit is always zero. No stopping rule can turn a fair game into a winning one.
+          </p>
         </div>
 
-        <div className="bg-blue-50 border border-blue-400 rounded-lg p-6 mb-8">
-          <h4 className="font-bold text-blue-900 mb-3">The doubling strategy (Martingale betting), exposed</h4>
-          <div className="text-neutral-800 space-y-3">
-            <p>
-              The martingale betting strategy doubles the stake after each loss until a
-              win recovers all previous losses plus one unit. It produces a profit of{' '}
-              <InlineMath>{`+1`}</InlineMath> with high probability.
-            </p>
-            <p>
-              However, a sequence of <InlineMath>{`k`}</InlineMath> consecutive losses
-              requires a stake of <InlineMath>{`2^k`}</InlineMath>. Ten consecutive losses
-              demand a bet of 1,024 to recover 1. The distribution of outcomes has
-              extreme negative skew: the expected value is exactly zero, consistent with
-              the martingale property.
-            </p>
-          </div>
-        </div>
+
+
+        {/* Verifying martingale */}
+        <h4 className="text-lg font-semibold text-neutral-800 mb-3">
+          Verifying: the coin-flip game is a martingale
+        </h4>
+        <div className="text-neutral-700 space-y-3 mb-6">
 
         {/* Mathematical Formulation */}
         <h3 className="text-2xl font-bold text-neutral-900 mb-4">Mathematical Formulation</h3>

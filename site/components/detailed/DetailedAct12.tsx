@@ -4,6 +4,7 @@ import { InlineMath, BlockMath } from '@/components/ui/Math'
 import { VarianceReductionSim } from './sims/VarianceReductionSim'
 
 export function DetailedAct12() {
+
   return (
     <section id="act-12" className="py-16 bg-neutral-50">
       <div className="max-w-4xl mx-auto px-4">
@@ -13,26 +14,14 @@ export function DetailedAct12() {
           </h2>
         </div>
 
-        {/* Intuition */}
+        {/* Intuition: How do you make experiments faster? */}
         <div className="bg-blue-50 border border-blue-400 rounded-lg p-6 mb-8">
           <div className="text-neutral-800 space-y-3">
             <p>
-              The raw outcome <InlineMath>{`Y_i`}</InlineMath> for each user reflects both
-              the treatment effect and substantial baseline heterogeneity.
-              If pre-experiment behaviour <InlineMath>{`X_i`}</InlineMath> predicts a large
-              share of <InlineMath>{`Y_i`}</InlineMath>, subtracting that prediction reduces
-              variance without altering the expected treatment effect.
+              User outcomes are noisy. If you can predict some of that noise using pre-experiment data, you can subtract it out and make your experiment much more efficient.
             </p>
             <p>
-              Regression adjustment exploits this structure. A model trained on
-              pre-experiment covariates produces fitted values{' '}
-              <InlineMath>{`\hat{f}(X_i)`}</InlineMath>. The adjusted outcome{' '}
-              <InlineMath>{`Y^*_i = Y_i - \hat{f}(X_i)`}</InlineMath> retains the signal
-              but removes the predictable component of the noise.
-            </p>
-            <p>
-              <strong>The result:</strong> lower variance, unchanged signal, tighter confidence
-              intervals, and faster decisions.
+              <strong>Key point:</strong> Regression adjustment removes predictable noise, leaving only the unpredictable part. This shrinks the confidence interval and speeds up decisions.
             </p>
           </div>
         </div>

@@ -4,13 +4,29 @@ import { InlineMath, BlockMath } from '@/components/ui/Math'
 import { SPRTSim } from './sims/SPRTSim'
 
 export function DetailedAct7() {
+
   return (
     <section id="act-7" className="py-16 bg-white">
       <div className="max-w-4xl mx-auto px-4">
         <div className="text-center mb-12">
           <h2 className="text-3xl font-bold text-neutral-900 mb-4">
-            Act 7 &mdash; SPRT: Wald&apos;s Sequential Probability Ratio Test (1945)
+            Act 7 &mdash; SPRT: Wald's Sequential Probability Ratio Test (1945)
           </h2>
+        </div>
+
+        {/* Intuition: How do you make the most efficient sequential decision? */}
+        <div className="bg-blue-50 border border-blue-400 rounded-lg p-6 mb-8">
+          <div className="text-neutral-800 space-y-3">
+            <p>
+              Imagine you have a coin, but you don't know if it's fair (<InlineMath>{`H_0`}</InlineMath>) or biased (<InlineMath>{`H_1`}</InlineMath>). You want to decide as quickly as possible, but you can peek after every flip.
+            </p>
+            <p>
+              <strong>Wald's answer:</strong> After each observation, compute <InlineMath>{`\Lambda_n`}</InlineMath>. If it gets high enough, call the coin biased. If it drops low enough, call it fair. Otherwise, keep flipping.
+            </p>
+            <p>
+              <strong>Key point:</strong> This is the most efficient way to decide between two hypotheses with error guarantees. On average, it needs far fewer observations than any fixed-sample test.
+            </p>
+          </div>
         </div>
 
         {/* Simulation */}
@@ -18,15 +34,7 @@ export function DetailedAct7() {
           <h4 className="font-bold text-blue-900 mb-3">Simulation</h4>
           <div className="text-neutral-800 space-y-3">
             <p>
-              Two coins: one fair (<InlineMath>{`H_0`}</InlineMath>), one biased (<InlineMath>{`H_1`}</InlineMath>).
-              You do not know which you have.
-            </p>
-            <p>
-              <InlineMath>{`\\Lambda_n`}</InlineMath> is plotted as a path. Two thresholds:
-              <strong> Upper</strong> at <InlineMath>{`\\Lambda_n = B`}</InlineMath>: cross this
-              &rArr; &ldquo;coin is biased.&rdquo;{' '}
-              <strong>Lower</strong> at <InlineMath>{`\\Lambda_n = A`}</InlineMath>: fall below this
-              &rArr; &ldquo;coin is fair.&rdquo;
+              Flip a coin and watch <InlineMath>{`\Lambda_n`}</InlineMath> move. If it crosses the upper threshold (<InlineMath>{`B`}</InlineMath>), you call the coin biased. If it falls below the lower threshold (<InlineMath>{`A`}</InlineMath>), you call it fair. Otherwise, keep going.
             </p>
           </div>
         </div>
@@ -34,25 +42,11 @@ export function DetailedAct7() {
         {/* Interactive Simulation */}
         <SPRTSim />
 
-        {/* Intuition */}
-        <div className="bg-blue-50 border border-blue-400 rounded-lg p-6 mb-8">
-          <div className="text-neutral-800 space-y-3">
-            <p>
-              <a href="#ref-wald-1945" className="text-blue-600 hover:text-blue-800">Abraham Wald</a> (1943, published 1945) asked: given that we can peek at the data
-              anytime, what is the most <em>efficient</em> way to decide between two hypotheses?
-            </p>
-            <p>
-              His answer: compute <InlineMath>{`\\Lambda_n`}</InlineMath> after each observation.
-              If it gets high enough, conclude <InlineMath>{`H_1`}</InlineMath>. Low enough,
-              conclude <InlineMath>{`H_0`}</InlineMath>. Otherwise, keep collecting.
-            </p>
-            <p>
-              Wald proved this is <strong>optimal</strong>: no other sequential test with the same
-              error guarantees needs fewer observations on average. In fact, the SPRT typically
-              requires <strong>47&ndash;63% fewer observations</strong> than the best
-              fixed-sample test with the same error rates.
-            </p>
-          </div>
+        {/* Simulation takeaway */}
+        <div className="bg-amber-50 border border-amber-200 rounded-lg p-4 mt-6">
+          <p className="text-sm text-amber-800">
+            <strong>Simulation takeaway:</strong> The SPRT lets you decide as soon as the evidence is strong enough, saving time and samples. But it requires you to pick the effect size in advance.
+          </p>
         </div>
 
         {/* Mathematical Formulation */}

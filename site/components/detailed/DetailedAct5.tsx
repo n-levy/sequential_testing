@@ -4,6 +4,7 @@ import { InlineMath, BlockMath } from '@/components/ui/Math'
 import { LRMartingaleSim } from './sims/LRMartingaleSim'
 
 export function DetailedAct5() {
+
   return (
     <section id="act-5" className="py-16 bg-white">
       <div className="max-w-4xl mx-auto px-4">
@@ -13,22 +14,24 @@ export function DetailedAct5() {
           </h2>
         </div>
 
+        {/* Intuition: Why is the likelihood ratio a martingale? */}
+        <div className="bg-blue-50 border border-blue-400 rounded-lg p-6 mb-8">
+          <div className="text-neutral-800 space-y-3">
+            <p>
+              Under <InlineMath>{`H_0`}</InlineMath> (the coin is fair), the likelihood ratio <InlineMath>{`\Lambda_n`}</InlineMath> bounces up and down, but on average stays at 1. No matter how you peek or stop, you can’t systematically make it large. This is the martingale property in action.
+            </p>
+            <p>
+              <strong>Key point:</strong> The likelihood ratio is just like the gambler’s winnings in Act 3. No clever strategy can beat the system if the coin is fair.
+            </p>
+          </div>
+        </div>
+
         {/* Simulation */}
         <div className="bg-blue-50 border border-blue-200 rounded-lg p-6 mb-8">
           <h4 className="font-bold text-blue-900 mb-3">Simulation</h4>
           <div className="text-neutral-800 space-y-3">
             <p>
-              The likelihood ratio <InlineMath>{`\\Lambda_n`}</InlineMath> is plotted as a path
-              over time &mdash; like the random walk from Act 2.
-            </p>
-            <p>
-              <strong>Left panel:</strong> 100 paths of <InlineMath>{`\\Lambda_n`}</InlineMath> when
-              the coin is truly <em>fair</em> (<InlineMath>{`H_0`}</InlineMath> true).
-              Paths wander with no systematic trend.
-            </p>
-            <p>
-              <strong>Right panel:</strong> 100 paths when the coin is truly <em>biased</em>
-              (<InlineMath>{`H_1`}</InlineMath> true). Paths drift upward.
+              The plot shows 100 paths of <InlineMath>{`\Lambda_n`}</InlineMath> over time. When the coin is fair (<InlineMath>{`H_0`}</InlineMath>), the paths wander with no trend. When the coin is biased (<InlineMath>{`H_1`}</InlineMath>), the paths drift upward.
             </p>
           </div>
         </div>
@@ -36,20 +39,11 @@ export function DetailedAct5() {
         {/* Interactive Simulation */}
         <LRMartingaleSim />
 
-        {/* Intuition */}
-        <div className="bg-blue-50 border border-blue-400 rounded-lg p-6 mb-8">
-          <div className="text-neutral-800 space-y-3">
-            <p>
-              Under <InlineMath>{`H_0`}</InlineMath>, the likelihood ratio wanders up and down but
-              never develops a consistent trend. On average, it stays at 1.
-            </p>
-            <p>
-              This <em>is</em> a martingale &mdash; exactly like the gambler&apos;s cumulative
-              winnings. Everything from Act 3 applies: <a href="#ref-doob-1953" className="text-blue-600 hover:text-blue-800">Doob&apos;s theorem</a> says you cannot
-              systematically make <InlineMath>{`\\Lambda_n`}</InlineMath> large by choosing clever
-              peeking times.
-            </p>
-          </div>
+        {/* Simulation takeaway */}
+        <div className="bg-amber-50 border border-amber-200 rounded-lg p-4 mt-6">
+          <p className="text-sm text-amber-800">
+            <strong>Simulation takeaway:</strong> If the coin is fair, the likelihood ratio stays around 1, no matter how you peek. If the coin is biased, it grows. This is the core of sequential testing.
+          </p>
         </div>
 
         {/* Proof */}

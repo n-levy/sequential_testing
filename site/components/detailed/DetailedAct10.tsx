@@ -4,6 +4,7 @@ import { InlineMath, BlockMath } from '@/components/ui/Math'
 import { NoiseDemoSim } from './sims/NoiseDemoSim'
 
 export function DetailedAct10() {
+
   return (
     <section id="act-10" className="py-16 bg-neutral-50">
       <div className="max-w-4xl mx-auto px-4">
@@ -13,28 +14,16 @@ export function DetailedAct10() {
           </h2>
         </div>
 
-        {/* Intuition */}
+        {/* Intuition: What makes real A/B testing hard? */}
         <div className="bg-blue-50 border border-blue-400 rounded-lg p-6 mb-8">
           <div className="text-neutral-800 space-y-3">
-            <p>A real A/B testing platform faces three problems simultaneously:</p>
+            <p>
+              Real A/B testing faces three problems at once:
+            </p>
             <ol className="list-decimal ml-6 space-y-3">
-              <li>
-                <strong>The peeking problem</strong> (Act 1): Product managers check results
-                daily. Classical tests break under repeated checking.
-              </li>
-              <li>
-                <strong>High variance:</strong> Outcome metrics typically exhibit extreme
-                heterogeneity across users. Revenue per user, for example, can range from
-                &euro;0 to &euro;500+. The coefficient of variation often exceeds 200%,
-                meaning a 2% treatment effect is buried in noise. Without variance
-                reduction, experiments require weeks to reach significance.
-              </li>
-              <li>
-                <strong>Heterogeneous users:</strong> Treatment effects vary across user
-                segments. Pre-experiment covariates &mdash; past purchase behaviour, device
-                type, geography &mdash; carry predictive information that can be exploited
-                to separate signal from noise.
-              </li>
+              <li><strong>The peeking problem:</strong> People check results often. Classical tests break under repeated checking.</li>
+              <li><strong>High variance:</strong> User outcomes are extremely variable. Small effects are buried in noise, so experiments take a long time.</li>
+              <li><strong>Heterogeneous users:</strong> Treatment effects differ across user segments. Pre-experiment data can help separate signal from noise.</li>
             </ol>
           </div>
         </div>

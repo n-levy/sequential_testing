@@ -4,6 +4,7 @@ import { InlineMath, BlockMath } from '@/components/ui/Math'
 import { VilleInequalitySim } from './sims/VilleInequalitySim'
 
 export function DetailedAct6() {
+
   return (
     <section id="act-6" className="py-16 bg-neutral-50">
       <div className="max-w-4xl mx-auto px-4">
@@ -11,7 +12,25 @@ export function DetailedAct6() {
           <h2 className="text-3xl font-bold text-neutral-900 mb-4">
             Act 6 &mdash; Markov, Ville, and the Anytime-Valid Guarantee
           </h2>
-          <p className="text-neutral-600">This is the pivotal act of the entire presentation.</p>
+        </div>
+
+        {/* Intuition: Why is peeking safe? */}
+        <div className="bg-blue-50 border border-blue-400 rounded-lg p-6 mb-8">
+          <div className="text-neutral-800 space-y-3">
+            <p>
+              This is the pivotal act: why can you peek at your test statistic after every observation, and still control the false positive rate?
+            </p>
+            <p>
+              <strong>Two steps:</strong>
+            </p>
+            <ol className="list-decimal ml-6 space-y-1">
+              <li><strong>Markov’s inequality:</strong> gives a bound at a single, fixed time.</li>
+              <li><strong>Ville’s inequality:</strong> extends the bound to all times, no matter how often you peek.</li>
+            </ol>
+            <p>
+              <strong>Ville’s inequality is the reason sequential testing works.</strong> It’s the mathematical engine behind the anytime-valid guarantee.
+            </p>
+          </div>
         </div>
 
         {/* Simulation */}
@@ -19,20 +38,13 @@ export function DetailedAct6() {
           <h4 className="font-bold text-blue-900 mb-3">Simulation</h4>
           <div className="text-neutral-800 space-y-3">
             <p>
-              <strong>Panel 1 &mdash; Markov (single time):</strong>{' '}
-              10,000 fair-coin paths of <InlineMath>{`\\Lambda_n`}</InlineMath>. A threshold at{' '}
-              <InlineMath>{`\\Lambda = 1/\\alpha = 20`}</InlineMath>. Count: how many paths are
-              above the threshold at step 200? Fraction <InlineMath>{`\\leq 5\\%`}</InlineMath>.
+              <strong>Panel 1 &mdash; Markov (single time):</strong> 10,000 fair-coin paths of <InlineMath>{`\Lambda_n`}</InlineMath>. Threshold at <InlineMath>{`\Lambda = 1/\alpha = 20`}</InlineMath>. How many are above the threshold at step 200? Fraction <InlineMath>{`\leq 5\%`}</InlineMath>.
             </p>
             <p>
-              <strong>Panel 2 &mdash; Ville (any time):</strong>{' '}
-              Same paths. Count: how many <em>ever</em> crossed the threshold at <em>any</em> step?
-              Also <InlineMath>{`\\leq 5\\%`}</InlineMath> &mdash; but requires a stronger theorem.
+              <strong>Panel 2 &mdash; Ville (any time):</strong> Same paths. How many ever cross the threshold at any step? Also <InlineMath>{`\leq 5\%`}</InlineMath>—but this needs a stronger theorem.
             </p>
             <p>
-              <strong>Panel 3 &mdash; Comparison:</strong>{' '}
-              Standard <InlineMath>{`z`}</InlineMath>-score checked at every step. Count how many
-              ever show significance. Much higher than 5% &mdash; the peeking problem.
+              <strong>Panel 3 &mdash; Comparison:</strong> Standard <InlineMath>{`z`}</InlineMath>-score checked at every step. How many ever show significance? Much higher than 5%—the peeking problem.
             </p>
           </div>
         </div>
@@ -40,19 +52,11 @@ export function DetailedAct6() {
         {/* Interactive Simulation */}
         <VilleInequalitySim />
 
-        {/* Intuition */}
-        <div className="bg-blue-50 border border-blue-400 rounded-lg p-6 mb-8">
-          <div className="text-neutral-800 space-y-3">
-            <p>We are about to prove the most important result in this entire presentation:
-              the <strong>anytime-valid guarantee</strong>.
-            </p>
-            <p>Two steps:</p>
-            <ol className="list-decimal ml-6 space-y-1">
-              <li><strong>Markov&apos;s inequality</strong> &mdash; a simple bound at one point in time.</li>
-              <li><strong>Ville&apos;s inequality</strong> &mdash; extends the bound to all points in time simultaneously.</li>
-            </ol>
-            <p>Ville&apos;s inequality is <em>the reason</em> sequential testing works.</p>
-          </div>
+        {/* Simulation takeaway */}
+        <div className="bg-amber-50 border border-amber-200 rounded-lg p-4 mt-6">
+          <p className="text-sm text-amber-800">
+            <strong>Simulation takeaway:</strong> Markov’s inequality controls the false positive rate at a single time. Ville’s inequality controls it across all times—even if you peek after every flip. This is the anytime-valid guarantee.
+          </p>
         </div>
 
         {/* Step 1: Markov */}

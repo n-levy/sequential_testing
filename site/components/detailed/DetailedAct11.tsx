@@ -4,6 +4,7 @@ import { InlineMath, BlockMath } from '@/components/ui/Math'
 import { EppoPipelineSim } from '@/components/act2/EppoPipelineSim'
 
 export function DetailedAct11() {
+
   return (
     <section id="act-11" className="py-16 bg-white">
       <div className="max-w-4xl mx-auto px-4">
@@ -11,15 +12,12 @@ export function DetailedAct11() {
           <h2 className="text-3xl font-bold text-neutral-900 mb-4">
             Act 11 &mdash; The Eppo Pipeline, Step by Step
           </h2>
-          <p className="text-neutral-600">(Schmit &amp; Miller, 2024)</p>
         </div>
 
-        {/* Intuition */}
+        {/* Intuition: How does Eppo put it all together? */}
         <div className="bg-blue-50 border border-blue-400 rounded-lg p-6 mb-8">
           <p className="text-neutral-800">
-            Eppo&apos;s statistical pipeline consists of six stages. Raw data enters,
-            passes through regression adjustment and sequential inference, and exits
-            as an anytime-valid confidence interval for the treatment effect.
+            Eppo's pipeline takes raw data, removes predictable noise, and produces an anytime-valid confidence interval for the treatment effect. Each step builds on the previous acts.
           </p>
         </div>
 

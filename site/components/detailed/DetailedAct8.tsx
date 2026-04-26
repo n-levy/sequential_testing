@@ -4,6 +4,7 @@ import { InlineMath, BlockMath } from '@/components/ui/Math'
 import { MixtureSPRTSim } from './sims/MixtureSPRTSim'
 
 export function DetailedAct8() {
+
   return (
     <section id="act-8" className="py-16 bg-neutral-50">
       <div className="max-w-4xl mx-auto px-4">
@@ -11,32 +12,16 @@ export function DetailedAct8() {
           <h2 className="text-3xl font-bold text-neutral-900 mb-4">
             Act 8 &mdash; The Mixture Approach: From Robbins (1970) to the mSPRT
           </h2>
-          <p className="text-neutral-600">
-            Two parts: Robbins&apos; key idea, then Johari et al.&apos;s application to A/B testing.
-          </p>
         </div>
 
-        {/* Part A: Robbins */}
-        <h3 className="text-2xl font-bold text-neutral-900 mb-4">Part A: Robbins&apos; Mixture Approach (1970)</h3>
-
+        {/* Intuition: What if you don't know the effect size? */}
         <div className="bg-blue-50 border border-blue-400 rounded-lg p-6 mb-8">
           <div className="text-neutral-800 space-y-3">
             <p>
-              Wald&apos;s SPRT commits to a single point alternative: you specify an
-              effect size <InlineMath>{`\delta`}</InlineMath> and compute evidence against that
-              specific value. If the true effect is close to <InlineMath>{`\delta`}</InlineMath>,
-              the test is efficient. If not, it can be substantially slower.
+              The SPRT is powerful, but it requires you to pick a single effect size in advance. What if you don't know it? Robbins' idea: average the likelihood ratio over a range of plausible effect sizes.
             </p>
             <p>
-              <a href="#ref-robbins-1970" className="text-blue-600 hover:text-blue-800">Herbert Robbins</a> proposed a fundamentally different approach in 1970:{' '}
-              <strong>average the likelihood ratio over a distribution of effect sizes.</strong>{' '}
-              Instead of choosing one <InlineMath>{`\delta`}</InlineMath>, assign a mixing
-              distribution <InlineMath>{`H`}</InlineMath> over the plausible range and integrate.
-            </p>
-            <p>
-              The key insight: this average likelihood ratio is <em>still</em> a non-negative
-              martingale under <InlineMath>{`H_0`}</InlineMath>. Ville&apos;s inequality still
-              applies. The anytime-valid guarantee is preserved.
+              <strong>Key point:</strong> This "mixture" likelihood ratio is still a martingale under <InlineMath>{`H_0`}</InlineMath>. Ville's inequality still applies. You get the anytime-valid guarantee, but now the test is robust to a range of effect sizes.
             </p>
           </div>
         </div>
@@ -105,8 +90,16 @@ export function DetailedAct8() {
           </p>
         </div>
 
+
         {/* Interactive Simulation */}
         <MixtureSPRTSim />
+
+        {/* Simulation takeaway */}
+        <div className="bg-amber-50 border border-amber-200 rounded-lg p-4 mt-6">
+          <p className="text-sm text-amber-800">
+            <strong>Simulation takeaway:</strong> The mixture approach lets you test for a range of effect sizes, not just one. The anytime-valid guarantee is preserved.
+          </p>
+        </div>
 
         {/* Part B: mSPRT */}
         <h3 className="text-2xl font-bold text-neutral-900 mb-4">

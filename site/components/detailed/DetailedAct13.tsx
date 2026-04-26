@@ -4,6 +4,7 @@ import { InlineMath, BlockMath } from '@/components/ui/Math'
 import { SequentialMultiplierSim } from './sims/SequentialMultiplierSim'
 
 export function DetailedAct13() {
+
   return (
     <section id="act-13" className="py-16 bg-white">
       <div className="max-w-4xl mx-auto px-4">
@@ -13,24 +14,14 @@ export function DetailedAct13() {
           </h2>
         </div>
 
-        {/* Intuition */}
+        {/* Intuition: How does Eppo report results you can trust? */}
         <div className="bg-blue-50 border border-blue-400 rounded-lg p-6 mb-8">
           <div className="text-neutral-800 space-y-3">
             <p>
-              A standard 95% confidence interval is valid at one pre-specified analysis
-              time. If the experimenter checks multiple times, the coverage guarantee
-              degrades.
+              Eppo's confidence interval is valid at every time you check, not just one. This lets you monitor continuously and make decisions as soon as the evidence is clear.
             </p>
             <p>
-              Eppo&apos;s sequential CI is a <strong>confidence sequence</strong>: it
-              maintains <InlineMath>{`(1-\alpha)`}</InlineMath> coverage <em>uniformly</em>{' '}
-              over all analysis times from the start of the experiment onward.
-            </p>
-            <p>
-              The cost is a wider interval. At typical sample sizes the sequential CI is
-              roughly 10&ndash;40% wider than the classical CI. This is the{' '}
-              <strong>price of continuous monitoring</strong>, enabling the experimenter
-              to stop at any point and draw valid conclusions.
+              <strong>Key point:</strong> The interval is a bit wider than a classical CI, but you can stop at any time and the guarantee still holds.
             </p>
           </div>
         </div>

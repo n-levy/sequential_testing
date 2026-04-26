@@ -4,6 +4,7 @@ import { InlineMath, BlockMath } from '@/components/ui/Math'
 import { ConfidenceSequenceSim } from './sims/ConfidenceSequenceSim'
 
 export function DetailedAct9() {
+
   return (
     <section id="act-9" className="py-16 bg-white">
       <div className="max-w-4xl mx-auto px-4">
@@ -11,7 +12,21 @@ export function DetailedAct9() {
           <h2 className="text-3xl font-bold text-neutral-900 mb-4">
             Act 9 &mdash; Confidence Sequences: The Modern Framework
           </h2>
-          <p className="text-neutral-600">(Howard et al., 2021)</p>
+        </div>
+
+        {/* Intuition: How do you estimate with peeking? */}
+        <div className="bg-blue-50 border border-blue-400 rounded-lg p-6 mb-8">
+          <div className="text-neutral-800 space-y-3">
+            <p>
+              A confidence sequence is the answer to the peeking problem for estimation. It gives you a range that is valid at every single time you check, not just one.
+            </p>
+            <p>
+              <strong>Key point:</strong> A standard 95% confidence interval is only valid at one pre-specified time. If you check repeatedly, the guarantee breaks. A confidence sequence is valid at all times, no matter how often you look.
+            </p>
+            <p>
+              The price: the band is wider than a fixed CI at any single time. But you are free to monitor continuously, stop whenever you want, and report at any time.
+            </p>
+          </div>
         </div>
 
         {/* Simulation */}
@@ -19,11 +34,7 @@ export function DetailedAct9() {
           <h4 className="font-bold text-blue-900 mb-3">Simulation</h4>
           <div className="text-neutral-800 space-y-3">
             <p>
-              Data arrives one observation at a time. Two bands track the estimated mean:
-              a <strong>fixed 95% CI</strong> (recomputed at each step) &mdash; shrinks as{' '}
-              <InlineMath>{`1/\\sqrt{n}`}</InlineMath>, but invalidated by peeking &mdash; and
-              a <strong>confidence sequence</strong> &mdash; wider at first, but valid at{' '}
-              <em>all</em> times simultaneously.
+              Watch how a fixed 95% CI shrinks as more data arrives, but is invalid if you peek. The confidence sequence is wider at first, but always valid.
             </p>
           </div>
         </div>
@@ -31,30 +42,11 @@ export function DetailedAct9() {
         {/* Interactive Simulation */}
         <ConfidenceSequenceSim />
 
-        {/* Intuition */}
-        <div className="bg-blue-50 border border-blue-400 rounded-lg p-6 mb-8">
-          <div className="text-neutral-800 space-y-3">
-            <p>
-              A confidence sequence is the natural answer to the peeking problem for
-              estimation (not just testing).
-            </p>
-            <p>
-              A standard 95% confidence interval refers to just one specific number of
-              observations. It fits when checking the results one time. But if you check
-              again tomorrow with new data, the guarantee resets. Check 100 times and you
-              are almost guaranteed to be wrong at least once.
-            </p>
-            <p>
-              A confidence sequence says: &ldquo;We are 95% confident the true value has been
-              in this range <em>at every single time we have ever checked, and at every
-              time we will ever check in the future</em>.&rdquo;
-            </p>
-            <p>
-              This is a strictly stronger guarantee. The price: the band is wider than a
-              fixed CI at any single time. But in exchange, you are free to monitor
-              continuously, stop whenever you want, and report at any time.
-            </p>
-          </div>
+        {/* Simulation takeaway */}
+        <div className="bg-amber-50 border border-amber-200 rounded-lg p-4 mt-6">
+          <p className="text-sm text-amber-800">
+            <strong>Simulation takeaway:</strong> Confidence sequences let you estimate with valid coverage at every time, no matter how often you peek. This is the modern solution for sequential estimation.
+          </p>
         </div>
 
         {/* Mathematical Formulation */}

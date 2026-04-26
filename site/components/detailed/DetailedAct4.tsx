@@ -4,6 +4,7 @@ import { InlineMath, BlockMath } from '@/components/ui/Math'
 import { LikelihoodRatioSim } from './sims/LikelihoodRatioSim'
 
 export function DetailedAct4() {
+
   return (
     <section id="act-4" className="py-16 bg-neutral-50">
       <div className="max-w-4xl mx-auto px-4">
@@ -13,15 +14,35 @@ export function DetailedAct4() {
           </h2>
         </div>
 
+        {/* Intuition: How do you tell two coins apart? */}
+        <div className="bg-blue-50 border border-blue-400 rounded-lg p-6 mb-8">
+          <div className="text-neutral-800 space-y-3">
+            <p>
+              You’re handed a coin. Is it fair (<InlineMath>{`p = 0.5`}</InlineMath>) or biased (<InlineMath>{`p = 0.5 + \delta`}</InlineMath>)? With just a few flips, the difference is invisible. With hundreds, the truth emerges.
+            </p>
+            <p>
+              <strong>Null hypothesis <InlineMath>{`H_0`}</InlineMath>:</strong> The coin is fair. <br />
+              <strong>Alternative hypothesis <InlineMath>{`H_1`}</InlineMath>:</strong> The coin is biased.
+            </p>
+            <p>
+              <strong>Type I error (false positive):</strong> You call the coin biased when it’s actually fair.<br />
+              <strong>Type II error (false negative):</strong> You call the coin fair when it’s actually biased.
+            </p>
+            <p>
+              Standard thresholds: <InlineMath>{`\alpha = 0.05`}</InlineMath> (max false positive rate), <InlineMath>{`\beta = 0.20`}</InlineMath> (max false negative rate). <strong>Power</strong> = <InlineMath>{`1 - \beta = 0.80`}</InlineMath>.
+            </p>
+            <p>
+              The more data you collect, the easier it is to tell the difference. But with small bias, even long sequences can be ambiguous.
+            </p>
+          </div>
+        </div>
+
         {/* Simulation */}
         <div className="bg-blue-50 border border-blue-200 rounded-lg p-6 mb-8">
           <h4 className="font-bold text-blue-900 mb-3">Simulation</h4>
           <div className="text-neutral-800 space-y-3">
             <p>
-              You are presented with a coin and must determine whether it is fair
-              (<InlineMath>{`p = 0.5`}</InlineMath>) or biased
-              (<InlineMath>{`p = 0.5 + \delta`}</InlineMath>). With small bias, sequences
-              from the two hypotheses are nearly indistinguishable over short horizons.
+              Flip a coin and try to decide: is it fair or biased? The simulation shows how hard it is to distinguish the two, especially when the bias is small. Over short runs, the sequences look nearly identical.
             </p>
           </div>
         </div>
@@ -29,30 +50,11 @@ export function DetailedAct4() {
         {/* Interactive Simulation */}
         <LikelihoodRatioSim />
 
-        {/* Intuition */}
-        <div className="bg-blue-50 border border-blue-400 rounded-lg p-6 mb-8">
-          <div className="text-neutral-800 space-y-3">
-            <p>
-              Given a sequence of coin flips, the goal is to discriminate between
-              two hypotheses. With 10 flips and 6 heads, the evidence is ambiguous.
-              With 1,000 flips and 600 heads, the evidence is overwhelming.
-            </p>
-            <p>The framework:</p>
-            <ul className="list-disc ml-6 space-y-1">
-              <li><strong>Null hypothesis <InlineMath>{`H_0`}</InlineMath>:</strong> The coin is fair (<InlineMath>{`p = 0.5`}</InlineMath>). No effect.</li>
-              <li><strong>Alternative hypothesis <InlineMath>{`H_1`}</InlineMath>:</strong> The coin is biased (<InlineMath>{`p = 0.5 + \delta`}</InlineMath>). A real effect exists.</li>
-            </ul>
-            <p>Two error types:</p>
-            <ol className="list-decimal ml-6 space-y-1">
-              <li><strong>False positive</strong> (Type I): conclude biased when it is fair.</li>
-              <li><strong>False negative</strong> (Type II): conclude fair when it is biased.</li>
-            </ol>
-            <p>
-              Traditionally: <InlineMath>{`\\alpha = 0.05`}</InlineMath> (max false positive rate),{' '}
-              <InlineMath>{`\\beta = 0.20`}</InlineMath> (max false negative rate).{' '}
-              <strong>Power</strong> <InlineMath>{`= 1 - \\beta = 0.80`}</InlineMath>.
-            </p>
-          </div>
+        {/* Simulation takeaway */}
+        <div className="bg-amber-50 border border-amber-200 rounded-lg p-4 mt-6">
+          <p className="text-sm text-amber-800">
+            <strong>Simulation takeaway:</strong> Even with a real bias, it takes a lot of data to reliably tell the difference. Short sequences are noisy; long sequences reveal the truth.
+          </p>
         </div>
 
         {/* Mathematical Formulation */}
@@ -61,23 +63,22 @@ export function DetailedAct4() {
         <h4 className="text-lg font-semibold text-neutral-800 mb-3">The likelihood</h4>
         <div className="text-neutral-700 space-y-3 mb-6">
           <p>
-            Suppose <InlineMath>{`n`}</InlineMath> flips produce <InlineMath>{`k`}</InlineMath> heads.
+            Suppose you flip the coin <InlineMath>{`n`}</InlineMath> times and see <InlineMath>{`k`}</InlineMath> heads.
           </p>
-          <p>The likelihood of <InlineMath>{`p = 0.5`}</InlineMath> (fair coin, <InlineMath>{`H_0`}</InlineMath>) given <InlineMath>{`k`}</InlineMath> heads is:</p>
+          <p>The likelihood if the coin is fair (<InlineMath>{`H_0`}</InlineMath>):</p>
           <BlockMath>{`\mathcal{L}_0 = (0.5)^k \times (0.5)^{n-k} = (0.5)^n`}</BlockMath>
-          <p>The likelihood of <InlineMath>{`p = 0.5 + \delta`}</InlineMath> (<InlineMath>{`H_1`}</InlineMath>, biased coin) is:</p>
-          <BlockMath>{`\\mathcal{L}_1 = (0.5 + \\delta)^k \\times (0.5 - \\delta)^{n-k}`}</BlockMath>
+          <p>The likelihood if the coin is biased (<InlineMath>{`H_1`}</InlineMath>):</p>
+          <BlockMath>{`\mathcal{L}_1 = (0.5 + \delta)^k \times (0.5 - \delta)^{n-k}`}</BlockMath>
         </div>
 
         <h4 className="text-lg font-semibold text-neutral-800 mb-3">The likelihood ratio</h4>
         <div className="text-neutral-700 space-y-3 mb-6">
           <div className="bg-white border border-neutral-300 rounded-lg p-4">
-            <BlockMath>{`\\Lambda_n = \\frac{\\mathcal{L}_1}{\\mathcal{L}_0} = \\frac{(0.5+\\delta)^k \\;(0.5-\\delta)^{n-k}}{(0.5)^n}`}</BlockMath>
+            <BlockMath>{`\Lambda_n = \frac{\mathcal{L}_1}{\mathcal{L}_0} = \frac{(0.5+\delta)^k \;(0.5-\delta)^{n-k}}{(0.5)^n}`}</BlockMath>
           </div>
           <div className="bg-white border border-neutral-200 rounded-lg p-4 text-neutral-600">
             <p>
-              The likelihood ratio quantifies how many times more probable the observed data are
-              under <InlineMath>{`H_1`}</InlineMath> (biased coin) relative to <InlineMath>{`H_0`}</InlineMath> (fair coin).
+              The likelihood ratio tells you how much more likely the data are if the coin is biased versus fair.
             </p>
           </div>
         </div>
