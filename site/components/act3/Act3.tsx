@@ -6,7 +6,7 @@ import { InlineMath, BlockMath } from '@/components/ui/Math'
 import { BonferroniImpl } from './BonferroniImpl'
 import { PocockImpl } from './PocockImpl'
 import { ObfImpl } from './ObfImpl'
-import { ComparisonSim } from './ComparisonSim'
+import { CoinFlipMeanSim } from '@/components/shared/CoinFlipMeanSim'
 
 export function Act3() {
   const [selectedMethod, setSelectedMethod] = useState<string | null>(null)
@@ -285,9 +285,29 @@ export function Act3() {
           </div>
         </div>
 
-        <div className="mb-12">
-          <ComparisonSim />
+        <div className="bg-orange-50 border border-orange-400 rounded-lg p-6 mb-2">
+          <h4 className="font-bold text-orange-900 mb-2">Simulation &mdash; All Methods Side by Side</h4>
+          <p className="text-neutral-800">
+            The same coin-flip example, now with all three group-sequential bands
+            (Pocock, O&apos;Brien&ndash;Fleming, Bonferroni) drawn alongside Eppo&apos;s
+            sequential CI and the standard fixed-n CI. Compare how wide each method
+            is at every step.
+          </p>
         </div>
+
+        <CoinFlipMeanSim
+          layers={['fixed-ci', 'sequential-ci', 'pocock', 'obf', 'bonferroni']}
+          takeaway={
+            <>
+              <strong>Simulation takeaway.</strong> The standard CI (red) is the
+              narrowest but its peeking guarantee is broken. Eppo&apos;s sequential CI
+              (blue) is the tightest valid band for continuous monitoring. Among the
+              DIY methods, O&apos;Brien&ndash;Fleming is conservative early and tight at
+              the end; Pocock is uniformly wider; Bonferroni is the simplest but
+              loosest.
+            </>
+          }
+        />
       </div>
     </section>
   )

@@ -1,8 +1,7 @@
 'use client'
 
-import { PeekingSimulation } from './PeekingSimulation'
-import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/Card'
-import { InlineMath, BlockMath } from '@/components/ui/Math'
+import { CoinFlipMeanSim } from '@/components/shared/CoinFlipMeanSim'
+import { InlineMath } from '@/components/ui/Math'
 
 export function Act1() {
   return (
@@ -20,63 +19,64 @@ export function Act1() {
         <div className="bg-blue-50 border border-blue-400 rounded-lg p-6 mb-8">
           <div className="text-neutral-800 space-y-3">
             <p>
-              Consider a standard A/B test comparing a control experience against a new
-              variant. After a week of data collection, you check the results and observe{' '}
-              <InlineMath>{`p = 0.03`}</InlineMath>. At{' '}
-              <InlineMath>{`\alpha = 0.05`}</InlineMath>, this is statistically significant,
-              so you declare the variant a winner and ship it.
+              Throughout this guide we use a single running example: <strong>flipping a coin
+              many times to decide whether it is fair</strong>. After each flip we compute the
+              running sample mean and ask: is the bias zero, or not?
             </p>
             <p>
-              But here is the problem: if you monitored the test daily before that decision,
-              the actual false positive rate may be far higher than the nominal 5%.{' '}
-              <strong>
-                Repeated testing on accumulating data inflates the Type I error rate
-                to 20&ndash;30%.
-              </strong>{' '}
-              A substantial fraction of &ldquo;significant&rdquo; results under this practice
-              are false positives &mdash; driven by random fluctuation rather than a genuine
-              treatment effect.
+              In an A/B test this is exactly the same question. The &ldquo;coin&rdquo; is the
+              treatment-versus-control assignment; &ldquo;heads&rdquo; means the user&apos;s
+              outcome was higher under treatment than control. A bias of zero means no
+              real effect.
+            </p>
+            <p>
+              In the simulation below, set the bias to <strong>0</strong> (the null is true)
+              and watch the running sample mean. Each time you peek and the standard 95%
+              confidence interval excludes zero, you would (wrongly) declare a winner.
             </p>
           </div>
         </div>
 
         {/* ── Simulation ── */}
 
-        <div className="bg-orange-50 border border-orange-400 rounded-lg p-6 mb-8">
-          <h4 className="font-bold text-orange-900 mb-3">Simulation</h4>
-          <div className="text-neutral-800 space-y-3">
-            <p>
-              <strong>Setup:</strong>{' '}
-              1,000 A/B experiments simulated under the null hypothesis (zero treatment
-              effect). Both groups are drawn from identical distributions.
-            </p>
-            <p>
-              A standard <InlineMath>{`t`}</InlineMath>-test is recomputed after every new
-              observation. The counter tracks how many times{' '}
-              <InlineMath>{`p < 0.05`}</InlineMath> has been observed so far. Each occurrence
-              is a false positive.
-            </p>
-          </div>
+        <div className="bg-orange-50 border border-orange-400 rounded-lg p-6 mb-2">
+          <h4 className="font-bold text-orange-900 mb-2">Simulation</h4>
+          <p className="text-neutral-800">
+            Use the sliders to set the coin bias and the number of flips. The plot shows
+            the running sample mean and the standard 95% CI around it. The amber stat box
+            below the plot reports, under the null (bias = 0), how often the standard CI
+            crosses the &ldquo;reject&rdquo; threshold at <em>some</em> point during peeking.
+          </p>
         </div>
 
-        <div className="mb-12">
-          <PeekingSimulation />
-        </div>
+        <CoinFlipMeanSim
+          layers={['fixed-ci']}
+          showPeekStats
+          takeaway={
+            <>
+              <strong>Simulation takeaway.</strong> With a fair coin (bias = 0), the standard
+              CI is calibrated to fail to cover only <InlineMath>{`\\alpha = 5\\%`}</InlineMath> of
+              the time at one specific look. But under <em>continuous peeking</em>, far
+              more than 5% of trajectories will cross the boundary at some point —
+              that&apos;s the peeking problem.
+            </>
+          }
+        />
 
         {/* ── Why Does This Happen? ── */}
-        <h3 className="text-2xl font-bold text-neutral-900 mb-4">Why Does This Happen?</h3>
+        <h3 className="text-2xl font-bold text-neutral-900 mb-4 mt-12">Why Does This Happen?</h3>
 
         <div className="bg-blue-50 border border-blue-400 rounded-lg p-6 mb-8">
           <div className="text-neutral-800 space-y-3">
             <p>
               When you run a standard hypothesis test with{' '}
-              <InlineMath>{`\alpha = 0.05`}</InlineMath>, you are guaranteed a 5% false positive
+              <InlineMath>{`\\alpha = 0.05`}</InlineMath>, you are guaranteed a 5% false positive
               rate only if you commit to a fixed sample size and analyse the result once.
             </p>
             <p>
               If you monitor your experiment and repeatedly check for significance, that
-              guarantee no longer holds. Each time you look at the data, you give random
-              variation another opportunity to cross the significance threshold.
+              guarantee no longer holds. Each interim analysis gives random fluctuations
+              another opportunity to cross the significance threshold.
             </p>
             <p>
               The tests across these interim looks are not independent, but the overall
@@ -112,7 +112,7 @@ export function Act1() {
                 <td className="border border-neutral-300 p-3"><InlineMath>{`\\sim 19\\%`}</InlineMath></td>
               </tr>
               <tr className="bg-neutral-50">
-                <td className="border border-neutral-300 p-3">Daily for 4 weeks</td>
+                <td className="border border-neutral-300 p-3">Daily for 4 weeks (28 looks)</td>
                 <td className="border border-neutral-300 p-3"><InlineMath>{`\\sim 25\\%`}</InlineMath></td>
               </tr>
               <tr>
@@ -137,11 +137,10 @@ export function Act1() {
           <h4 className="font-bold text-yellow-900 mb-3">Key Takeaway</h4>
           <div className="text-neutral-800 space-y-3">
             <p>
-              <strong>The peeking problem:</strong> Repeated interim analyses of a standard
-              hypothesis test inflate the Type I error rate well beyond its nominal level.
-              Valid continuous monitoring requires a fundamentally different testing
-              framework &mdash; one whose error guarantees hold regardless of the number or
-              timing of analyses.
+              Repeated interim analyses of a standard hypothesis test inflate the Type I
+              error rate well beyond its nominal level. Valid continuous monitoring
+              requires a fundamentally different testing framework &mdash; one whose error
+              guarantees hold regardless of the number or timing of analyses.
             </p>
             <p>
               That framework is <strong>sequential testing</strong>, and it is
