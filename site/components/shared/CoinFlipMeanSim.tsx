@@ -275,15 +275,16 @@ export function CoinFlipMeanSim({
       .attr('x1', 0).attr('x2', innerW)
       .attr('y1', y(0)).attr('y2', y(0))
       .attr('stroke', '#525252').attr('stroke-width', 1).attr('stroke-dasharray', '4 3')
-    // Draw white rectangle behind the label
+    // Draw white rectangle behind the label, higher (about +0.2)
     const nullLabel = 'Null (fair coin)';
     const nullFontSize = 11;
     const nullPaddingX = 6;
     const nullPaddingY = 2;
+    const nullLabelY = y(0.2) - 8;
     // Temporary text to measure width
     const tempText = g.append('text')
       .attr('x', innerW - 8)
-      .attr('y', y(0) - 8)
+      .attr('y', nullLabelY)
       .style('font-size', `${nullFontSize}px`)
       .text(nullLabel);
     const node = tempText.node();
@@ -292,7 +293,7 @@ export function CoinFlipMeanSim({
       tempText.remove();
       g.append('rect')
         .attr('x', innerW - 8 - bbox.width - nullPaddingX)
-        .attr('y', y(0) - 8 - bbox.height + nullPaddingY)
+        .attr('y', nullLabelY - bbox.height + nullPaddingY)
         .attr('width', bbox.width + 2 * nullPaddingX)
         .attr('height', bbox.height + 2 * nullPaddingY)
         .attr('fill', 'white')
@@ -302,7 +303,7 @@ export function CoinFlipMeanSim({
         .attr('opacity', 0.95);
       g.append('text')
         .attr('x', innerW - 8)
-        .attr('y', y(0) - 8)
+        .attr('y', nullLabelY)
         .style('text-anchor', 'end')
         .style('font-size', `${nullFontSize}px`)
         .style('fill', '#525252')
