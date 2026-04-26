@@ -30,9 +30,9 @@ interface CoinFlipMeanSimProps {
 const Z_975 = 1.959964               // standard normal quantile
 const POCOCK_C = 2.555               // K=10 looks, α=0.05, two-sided
 const OBF_C = 2.024                  // K=10 looks, α=0.05, two-sided
-const N_LOOKS = 10                   // group-sequential schedule
+const N_LOOKS = 6                    // group-sequential schedule
 const PEEK_N_SIMS = 500              // simulations behind the peeking stat
-const PEEK_LOOKS = 50                // continuous peeking schedule for the stat
+const PEEK_LOOKS = 6                 // number of peeks for the stat
 
 const LAYER_STYLE: Record<SimLayer, { color: string; label: string }> = {
   'fixed-ci':        { color: '#ef4444', label: 'Standard 95% CI' },

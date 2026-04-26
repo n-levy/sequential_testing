@@ -96,7 +96,8 @@ export function Act3() {
             layers={['fixed-ci', 'sequential-ci', 'pocock', 'obf', 'bonferroni']}
             defaultBias={0}
             takeaway={<>
-              <strong>Simulation takeaway.</strong> For each method, this shows the share of 500 simulated tests that crossed the respective threshold at any point. When bias = 0, this is an A/A test; otherwise, it shows the probability of crossing under the simulated bias. This demonstrates how each correction controls the error rate under peeking.
+              Simulation takeaway. For each method, this shows the share of 500 simulated tests that crossed the respective threshold at any point. When bias = 0, this is an A/A test; otherwise, it shows the probability of crossing under the simulated bias.<br /><br />
+              Note: The Eppo/Howard sequential CI is very conservative in this setting, with a type I error rate often well below 1%. One of the group sequential alternatives, especially O'Brien–Fleming or Pocock, may be a better choice for most practical A/B tests, as they are not overly conservative and still control the error rate under peeking.
             </>}
           />
         </div>
