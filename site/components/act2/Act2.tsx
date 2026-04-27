@@ -1,3 +1,4 @@
+"use client"
 import { ABTestSim } from '../shared/ABTestSim'
 import { InlineMath } from '../ui/Math'
 import { useState } from 'react'
@@ -37,7 +38,7 @@ export function Act2() {
             <InlineMath>{`\left[ \bar{X}_n - c_n,\ \bar{X}_n + c_n \right]`}</InlineMath>
           </p>
           <p className="mb-2">
-            where <InlineMath>\bar{X}_n</InlineMath> is the running mean and <InlineMath>c_n</InlineMath> is a time-dependent width chosen so that the interval covers the true mean with at least 95% probability, no matter when you stop.
+            where <InlineMath>{`\\bar{X}_n`}</InlineMath> is the running mean and <InlineMath>{`c_n`}</InlineMath> is a time-dependent width chosen so that the interval covers the true mean with at least 95% probability, no matter when you stop.
           </p>
         </div>
       </DisplayMathBox>
