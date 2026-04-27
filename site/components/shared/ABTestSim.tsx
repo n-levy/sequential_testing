@@ -105,7 +105,9 @@ export function ABTestSim({
             w = denom !== 0 ? 100 * Z_975 * t.ses[i] / denom : 0;
           } else if (layer === 'sequential-ci') {
             const nu = n * 0.25;
-            w = denom !== 0 ? 100 * t.ses[i] * Math.sqrt(((i+1) + nu) / (i+1) * Math.log(((i+1) + nu) / (nu * alpha * alpha))) / denom : 0;
+            const t_i = i + 1;
+            const logTerm = Math.log((t_i + nu) / (nu * alpha));
+            w = denom !== 0 ? 100 * t.ses[i] * Math.sqrt((t_i + nu) / t_i * logTerm) / denom : 0;
           } else if (layer === 'pocock') {
             const K = 6;
             const cP = [null, null, 2.18, 2.36, 2.51, 2.60, 2.69][K] || 2.36;
