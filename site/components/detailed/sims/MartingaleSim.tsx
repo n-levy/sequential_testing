@@ -175,7 +175,7 @@ export function MartingaleSim() {
             </p>
             <svg ref={histRef} viewBox="0 0 550 250" className="w-full" />
             <button onClick={runDoublingStrategy}
-              className="mt-2 px-4 py-2 bg-purple-600 text-white rounded-lg text-sm font-medium hover:bg-purple-700 transition-colors">
+              className="mt-2 px-4 py-2 bg-blue-600 text-white rounded-lg text-sm font-medium hover:bg-blue-700 transition-colors">
               Run simulation
             </button>
           </div>
@@ -187,14 +187,14 @@ export function MartingaleSim() {
               Gamblers: {nGamblers.toLocaleString()}
             </label>
             <input type="range" min={1000} max={10000} step={1000} value={nGamblers}
-              onChange={e => setNGamblers(+e.target.value)} className="w-full accent-purple-600" />
+              onChange={e => setNGamblers(+e.target.value)} className="w-full accent-blue-600" />
           </div>
           <div>
             <label className="block text-sm font-medium text-neutral-700 mb-1">
               Max rounds: {maxRounds}
             </label>
             <input type="range" min={50} max={500} step={50} value={maxRounds}
-              onChange={e => setMaxRounds(+e.target.value)} className="w-full accent-purple-600" />
+              onChange={e => setMaxRounds(+e.target.value)} className="w-full accent-blue-600" />
           </div>
         </div>
 
@@ -216,8 +216,8 @@ export function MartingaleSim() {
         )}
       </div>
 
-      <div className="bg-purple-50 border border-purple-200 rounded-lg p-4">
-        <p className="text-sm text-purple-800">
+      <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+        <p className="text-sm text-blue-800">
           <strong>What you&apos;re seeing:</strong> Left: a single gambler&apos;s profit/loss over time — a random walk
           re-labelled as money. Right: the doubling strategy histogram — many small winners, a few
           catastrophic losers. The average profit converges to €0 (martingale property). No strategy

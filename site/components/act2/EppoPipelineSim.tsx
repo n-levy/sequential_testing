@@ -240,7 +240,7 @@ export function EppoPipelineSim() {
     // SE line
     const seLine = d3.line<TimePoint>().x(d => x(d.n)).y(d => y(d.se))
     g.append('path').datum(tp).attr('d', seLine)
-      .attr('fill', 'none').attr('stroke', '#8b5cf6').attr('stroke-width', 2.5)
+      .attr('fill', 'none').attr('stroke', '#1d4ed8').attr('stroke-width', 2.5)
 
     // SE without CUPED (approx: SE_raw ~ SE_adj / sqrt(1 - rho^2), rho=0.7)
     const rawFactor = 1 / Math.sqrt(1 - 0.7 * 0.7)
@@ -271,7 +271,7 @@ export function EppoPipelineSim() {
 
     const leg = g.append('g').attr('transform', `translate(${width - 180}, 5)`)
     const legItems = [
-      { label: 'With CUPED', color: '#8b5cf6', dash: '' },
+      { label: 'With CUPED', color: '#1d4ed8', dash: '' },
       { label: 'Without CUPED', color: '#d946ef', dash: '6,4' },
     ]
     legItems.forEach((item, i) => {
@@ -287,7 +287,7 @@ export function EppoPipelineSim() {
     const midTP = tp[Math.floor(tp.length / 2)]
     g.append('text')
       .attr('x', x(midTP.n)).attr('y', y((midTP.se + midTP.se * rawFactor) / 2))
-      .attr('text-anchor', 'middle').attr('font-size', '10px').attr('fill', '#7c3aed')
+      .attr('text-anchor', 'middle').attr('font-size', '10px').attr('fill', '#1d4ed8')
       .text('Variance reduction')
   }, [simState, maxN])
 

@@ -112,7 +112,7 @@ export function MixtureSPRTSim() {
     // mSPRT path
     const p2 = g.append('path').datum(data.msprtPath)
       .attr('d', line).attr('fill', 'none')
-      .attr('stroke', '#8b5cf6').attr('stroke-width', 2.5)
+      .attr('stroke', '#1d4ed8').attr('stroke-width', 2.5)
     const l2 = (p2.node() as SVGPathElement)?.getTotalLength() || 0
     p2.attr('stroke-dasharray', `${l2} ${l2}`).attr('stroke-dashoffset', l2)
       .transition().duration(1500).delay(300).attr('stroke-dashoffset', 0)
@@ -121,7 +121,7 @@ export function MixtureSPRTSim() {
     const legend = g.append('g').attr('transform', `translate(10, 10)`)
     const items = [
       { label: `SPRT (δ = ${wrongDelta}, wrong)`, color: '#f59e0b' },
-      { label: `mSPRT (τ = ${tau.toFixed(2)}, mixture)`, color: '#8b5cf6' },
+      { label: `mSPRT (τ = ${tau.toFixed(2)}, mixture)`, color: '#1d4ed8' },
     ]
     items.forEach((item, i) => {
       const row = legend.append('g').attr('transform', `translate(0, ${i * 20})`)
@@ -155,7 +155,7 @@ export function MixtureSPRTSim() {
             </p>
           </div>
           <button onClick={simulate}
-            className="px-5 py-2.5 bg-purple-600 text-white rounded-lg font-medium hover:bg-purple-700 transition-colors whitespace-nowrap">
+            className="px-5 py-2.5 bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700 transition-colors whitespace-nowrap">
             Run simulation
           </button>
         </div>
@@ -166,21 +166,21 @@ export function MixtureSPRTSim() {
               True effect: {trueEffect.toFixed(2)}
             </label>
             <input type="range" min={0.05} max={0.5} step={0.05} value={trueEffect}
-              onChange={e => setTrueEffect(+e.target.value)} className="w-full accent-purple-600" />
+              onChange={e => setTrueEffect(+e.target.value)} className="w-full accent-blue-600" />
           </div>
           <div>
             <label className="block text-sm font-medium text-neutral-700 mb-1">
               Mixture τ: {tau.toFixed(2)}
             </label>
             <input type="range" min={0.1} max={1.0} step={0.05} value={tau}
-              onChange={e => setTau(+e.target.value)} className="w-full accent-purple-600" />
+              onChange={e => setTau(+e.target.value)} className="w-full accent-blue-600" />
           </div>
           <div>
             <label className="block text-sm font-medium text-neutral-700 mb-1">
               Observations: {nObs}
             </label>
             <input type="range" min={50} max={500} step={50} value={nObs}
-              onChange={e => setNObs(+e.target.value)} className="w-full accent-purple-600" />
+              onChange={e => setNObs(+e.target.value)} className="w-full accent-blue-600" />
           </div>
         </div>
 
@@ -192,16 +192,16 @@ export function MixtureSPRTSim() {
               <div className="text-sm font-bold text-amber-700">SPRT (wrong δ)</div>
               <div className="text-xs text-amber-600">{data.sprtDecision}</div>
             </div>
-            <div className="bg-purple-50 border border-purple-200 rounded-lg p-3 text-center">
-              <div className="text-sm font-bold text-purple-700">mSPRT (mixture)</div>
-              <div className="text-xs text-purple-600">{data.msprtDecision}</div>
+            <div className="bg-blue-50 border border-blue-200 rounded-lg p-3 text-center">
+              <div className="text-sm font-bold text-blue-700">mSPRT (mixture)</div>
+              <div className="text-xs text-blue-600">{data.msprtDecision}</div>
             </div>
           </div>
         )}
       </div>
 
-      <div className="bg-purple-50 border border-purple-200 rounded-lg p-4">
-        <p className="text-sm text-purple-800">
+      <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+        <p className="text-sm text-blue-800">
           <strong>Key insight:</strong> When the true effect size differs from the SPRT&apos;s assumed δ,
           the SPRT can be slow or erratic. The mSPRT hedges across many effect sizes via the
           mixture, making it robust. Both are anytime-valid — the difference is power and speed.

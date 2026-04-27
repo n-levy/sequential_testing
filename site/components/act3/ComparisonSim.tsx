@@ -124,7 +124,7 @@ function runComparison(trueEffect: number, nPerGroup: number): {
     }
     return { k: i + 1, n: tp.n, halfWidth: hw }
   })
-  methods.push({ name: 'Pocock', color: '#8b5cf6', boundaries: pBounds, decision: pDec === 'continue' ? 'Continue' : pDec, decisionAt: pDecAt })
+  methods.push({ name: 'Pocock', color: '#1d4ed8', boundaries: pBounds, decision: pDec === 'continue' ? 'Continue' : pDec, decisionAt: pDecAt })
 
   // 3. O'Brien-Fleming
   let oDec = 'continue', oDecAt: number | null = null
@@ -302,7 +302,7 @@ export function ComparisonSim() {
 
     const allSeries: { data: CritEntry[]; color: string; label: string }[] = [
       { data: bfData, color: '#f59e0b', label: 'Bonferroni' },
-      { data: pkData, color: '#8b5cf6', label: 'Pocock' },
+      { data: pkData, color: '#1d4ed8', label: 'Pocock' },
       { data: obfData, color: '#06b6d4', label: "O'Brien-Fleming" },
       { data: csData, color: '#3b82f6', label: 'Conf. Sequences' },
     ]

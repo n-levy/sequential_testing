@@ -156,7 +156,7 @@ export function VarianceReductionSim() {
   useEffect(() => {
     if (!data) return
     drawHist(rawRef.current, data.rawDiffs, data.rawMean, data.rawSE, data.rawSig, 'Raw (no adjustment)', '#3b82f6')
-    drawHist(adjRef.current, data.adjDiffs, data.adjMean, data.adjSE, data.adjSig, `CUPED-adjusted (ρ = ${rho})`, '#8b5cf6')
+    drawHist(adjRef.current, data.adjDiffs, data.adjMean, data.adjSE, data.adjSig, `CUPED-adjusted (ρ = ${rho})`, '#1d4ed8')
   }, [data, drawHist, rho])
 
   const reductionPct = data ? ((1 - data.adjVar / data.rawVar) * 100).toFixed(1) : '—'
@@ -175,7 +175,7 @@ export function VarianceReductionSim() {
             </p>
           </div>
           <button onClick={generate}
-            className="px-5 py-2.5 bg-purple-600 text-white rounded-lg font-medium hover:bg-purple-700 transition-colors whitespace-nowrap">
+            className="px-5 py-2.5 bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700 transition-colors whitespace-nowrap">
             Run simulation
           </button>
         </div>
@@ -186,21 +186,21 @@ export function VarianceReductionSim() {
               Correlation ρ: {rho.toFixed(2)}
             </label>
             <input type="range" min={0} max={0.95} step={0.05} value={rho}
-              onChange={e => setRho(+e.target.value)} className="w-full accent-purple-600" />
+              onChange={e => setRho(+e.target.value)} className="w-full accent-blue-600" />
           </div>
           <div>
             <label className="block text-sm font-medium text-neutral-700 mb-1">
               True effect: {trueEffect}%
             </label>
             <input type="range" min={0} max={10} step={0.5} value={trueEffect}
-              onChange={e => setTrueEffect(+e.target.value)} className="w-full accent-purple-600" />
+              onChange={e => setTrueEffect(+e.target.value)} className="w-full accent-blue-600" />
           </div>
           <div>
             <label className="block text-sm font-medium text-neutral-700 mb-1">
               Users per group: {nUsers}
             </label>
             <input type="range" min={50} max={2000} step={50} value={nUsers}
-              onChange={e => setNUsers(+e.target.value)} className="w-full accent-purple-600" />
+              onChange={e => setNUsers(+e.target.value)} className="w-full accent-blue-600" />
           </div>
         </div>
 
@@ -215,9 +215,9 @@ export function VarianceReductionSim() {
               <div className="text-sm font-bold text-blue-700">±{(1.96 * data.rawSE).toFixed(2)}</div>
               <div className="text-xs text-blue-600">Raw CI width</div>
             </div>
-            <div className="bg-purple-50 border border-purple-200 rounded-lg p-3 text-center">
-              <div className="text-sm font-bold text-purple-700">±{(1.96 * data.adjSE).toFixed(2)}</div>
-              <div className="text-xs text-purple-600">Adjusted CI width</div>
+            <div className="bg-blue-50 border border-blue-200 rounded-lg p-3 text-center">
+              <div className="text-sm font-bold text-blue-700">±{(1.96 * data.adjSE).toFixed(2)}</div>
+              <div className="text-xs text-blue-600">Adjusted CI width</div>
             </div>
             <div className="bg-green-50 border border-green-200 rounded-lg p-3 text-center">
               <div className="text-sm font-bold text-green-700">{reductionPct}%</div>

@@ -67,9 +67,9 @@ export default function Home() {
               {/* In-Depth version card */}
               <Link
                 href="/in-depth"
-                className="group block bg-white border-2 border-green-200 rounded-xl p-8 hover:border-green-500 hover:shadow-lg transition-all"
+                className="group block bg-white border-2 border-blue-200 rounded-xl p-8 hover:border-blue-500 hover:shadow-lg transition-all"
               >
-                <h3 className="text-2xl font-bold text-neutral-900 mb-3 group-hover:text-green-700 transition-colors">
+                <h3 className="text-2xl font-bold text-neutral-900 mb-3 group-hover:text-blue-700 transition-colors">
                   In-Depth
                 </h3>
                 <p className="text-neutral-600 mb-4">
@@ -79,23 +79,23 @@ export default function Home() {
                 </p>
                 <ul className="text-sm text-neutral-500 space-y-1.5 mb-6">
                   <li className="flex items-start gap-2">
-                    <span className="text-purple-500 mt-0.5">&#x2713;</span>
+                    <span className="text-blue-500 mt-0.5">&#x2713;</span>
                     14 acts covering the full mathematical story
                   </li>
                   <li className="flex items-start gap-2">
-                    <span className="text-purple-500 mt-0.5">&#x2713;</span>
+                    <span className="text-blue-500 mt-0.5">&#x2713;</span>
                     Interactive simulations for each key concept
                   </li>
                   <li className="flex items-start gap-2">
-                    <span className="text-purple-500 mt-0.5">&#x2713;</span>
+                    <span className="text-blue-500 mt-0.5">&#x2713;</span>
                     Ville, Wald, Robbins, Howard &mdash; the full lineage
                   </li>
                   <li className="flex items-start gap-2">
-                    <span className="text-purple-500 mt-0.5">&#x2713;</span>
+                    <span className="text-blue-500 mt-0.5">&#x2713;</span>
                     ~60 minute read
                   </li>
                 </ul>
-                <span className="text-purple-600 font-medium group-hover:underline">
+                <span className="text-blue-600 font-medium group-hover:underline">
                   Start &rarr;
                 </span>
               </Link>

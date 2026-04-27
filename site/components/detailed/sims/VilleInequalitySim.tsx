@@ -116,7 +116,7 @@ export function VilleInequalitySim() {
       .attr('stroke', '#9ca3af').attr('stroke-dasharray', '3,3').attr('stroke-width', 1)
 
     const line = d3.line<number>().x((_, i) => x(i)).y(d => y(Math.min(d, yMax * 1.2)))
-    const colors = ['#3b82f6', '#22c55e', '#f59e0b', '#8b5cf6', '#ec4899', '#14b8a6', '#f97316', '#6366f1', '#84cc16', '#06b6d4']
+    const colors = ['#3b82f6', '#22c55e', '#f59e0b', '#1d4ed8', '#ec4899', '#14b8a6', '#f97316', '#6366f1', '#84cc16', '#06b6d4']
 
     results.examplePaths.forEach((path, pIdx) => {
       g.append('path').datum(path)
@@ -154,7 +154,7 @@ export function VilleInequalitySim() {
 
     const data = [
       { label: 'Markov\n(end only)', rate: results.markovCount / nPaths, color: '#3b82f6' },
-      { label: 'Ville\n(LR any time)', rate: results.villeCount / nPaths, color: '#8b5cf6' },
+      { label: 'Ville\n(LR any time)', rate: results.villeCount / nPaths, color: '#1d4ed8' },
       { label: 'z-test peek\n(every step)', rate: results.zPeekCount / nPaths, color: '#ef4444' },
     ]
 
@@ -218,7 +218,7 @@ export function VilleInequalitySim() {
             </p>
           </div>
           <button onClick={simulate}
-            className="px-5 py-2.5 bg-purple-600 text-white rounded-lg font-medium hover:bg-purple-700 transition-colors whitespace-nowrap">
+            className="px-5 py-2.5 bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700 transition-colors whitespace-nowrap">
             Run simulation
           </button>
         </div>
@@ -227,12 +227,12 @@ export function VilleInequalitySim() {
           <div>
             <label className="block text-sm font-medium text-neutral-700 mb-1">Paths: {nPaths.toLocaleString()}</label>
             <input type="range" min={100} max={5000} step={100} value={nPaths}
-              onChange={e => setNPaths(+e.target.value)} className="w-full accent-purple-600" />
+              onChange={e => setNPaths(+e.target.value)} className="w-full accent-blue-600" />
           </div>
           <div>
             <label className="block text-sm font-medium text-neutral-700 mb-1">Flips: {nFlips}</label>
             <input type="range" min={50} max={500} step={50} value={nFlips}
-              onChange={e => setNFlips(+e.target.value)} className="w-full accent-purple-600" />
+              onChange={e => setNFlips(+e.target.value)} className="w-full accent-blue-600" />
           </div>
         </div>
 

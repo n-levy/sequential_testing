@@ -103,7 +103,7 @@ export function ConfidenceSequenceSim() {
       .y0(i => y(data.csLower[i]))
       .y1(i => y(data.csUpper[i]))
     g.append('path').datum(indices)
-      .attr('d', csArea).attr('fill', '#8b5cf6').attr('opacity', 0.15)
+      .attr('d', csArea).attr('fill', '#1d4ed8').attr('opacity', 0.15)
 
     // CI band
     const ciArea = d3.area<number>()
@@ -117,9 +117,9 @@ export function ConfidenceSequenceSim() {
     const csUpperLine = d3.line<number>().x(i => x(i + 1)).y(i => y(data.csUpper[i]))
     const csLowerLine = d3.line<number>().x(i => x(i + 1)).y(i => y(data.csLower[i]))
     g.append('path').datum(indices).attr('d', csUpperLine)
-      .attr('fill', 'none').attr('stroke', '#8b5cf6').attr('stroke-width', 2)
+      .attr('fill', 'none').attr('stroke', '#1d4ed8').attr('stroke-width', 2)
     g.append('path').datum(indices).attr('d', csLowerLine)
-      .attr('fill', 'none').attr('stroke', '#8b5cf6').attr('stroke-width', 2)
+      .attr('fill', 'none').attr('stroke', '#1d4ed8').attr('stroke-width', 2)
 
     // CI boundary lines
     const ciUpperLine = d3.line<number>().x(i => x(i + 1)).y(i => y(data.ciUpper[i]))
@@ -137,7 +137,7 @@ export function ConfidenceSequenceSim() {
     // Legend
     const legend = g.append('g').attr('transform', `translate(${width - 220}, 10)`)
     const items = [
-      { label: 'Confidence Sequence (anytime-valid)', color: '#8b5cf6', dash: '' },
+      { label: 'Confidence Sequence (anytime-valid)', color: '#1d4ed8', dash: '' },
       { label: 'Fixed CI (single-time valid)', color: '#3b82f6', dash: '4,3' },
       { label: 'Sample mean', color: '#374151', dash: '' },
     ]
@@ -175,12 +175,12 @@ export function ConfidenceSequenceSim() {
           <div className="flex-1">
             <h4 className="font-bold text-neutral-900 mb-1">Confidence Sequence vs Fixed CI</h4>
             <p className="text-sm text-neutral-600">
-              The CS (purple) is wider than the fixed CI (blue) — the &ldquo;price of peeking&rdquo; —
+              The CS (blue) is wider than the fixed CI (blue) — the &ldquo;price of peeking&rdquo; —
               but valid at all times simultaneously.
             </p>
           </div>
           <button onClick={simulate}
-            className="px-5 py-2.5 bg-purple-600 text-white rounded-lg font-medium hover:bg-purple-700 transition-colors whitespace-nowrap">
+            className="px-5 py-2.5 bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700 transition-colors whitespace-nowrap">
             Run simulation
           </button>
         </div>
@@ -191,21 +191,21 @@ export function ConfidenceSequenceSim() {
               True effect μ: {trueEffect.toFixed(2)}
             </label>
             <input type="range" min={0} max={1.0} step={0.05} value={trueEffect}
-              onChange={e => setTrueEffect(+e.target.value)} className="w-full accent-purple-600" />
+              onChange={e => setTrueEffect(+e.target.value)} className="w-full accent-blue-600" />
           </div>
           <div>
             <label className="block text-sm font-medium text-neutral-700 mb-1">
               Tuning ν: {nu}
             </label>
             <input type="range" min={10} max={500} step={10} value={nu}
-              onChange={e => setNu(+e.target.value)} className="w-full accent-purple-600" />
+              onChange={e => setNu(+e.target.value)} className="w-full accent-blue-600" />
           </div>
           <div>
             <label className="block text-sm font-medium text-neutral-700 mb-1">
               Observations: {nObs}
             </label>
             <input type="range" min={50} max={1000} step={50} value={nObs}
-              onChange={e => setNObs(+e.target.value)} className="w-full accent-purple-600" />
+              onChange={e => setNObs(+e.target.value)} className="w-full accent-blue-600" />
           </div>
         </div>
 
@@ -216,9 +216,9 @@ export function ConfidenceSequenceSim() {
             <div className="text-sm font-bold text-blue-700">{ciWidth}</div>
             <div className="text-xs text-blue-600">Fixed CI width at n={nObs}</div>
           </div>
-          <div className="bg-purple-50 border border-purple-200 rounded-lg p-3 text-center">
-            <div className="text-sm font-bold text-purple-700">{csWidth}</div>
-            <div className="text-xs text-purple-600">CS width at n={nObs}</div>
+          <div className="bg-blue-50 border border-blue-200 rounded-lg p-3 text-center">
+            <div className="text-sm font-bold text-blue-700">{csWidth}</div>
+            <div className="text-xs text-blue-600">CS width at n={nObs}</div>
           </div>
           <div className="bg-neutral-50 border border-neutral-200 rounded-lg p-3 text-center">
             <div className="text-sm font-bold text-neutral-700">{ratio}×</div>

@@ -1,6 +1,6 @@
 export function DetailedHero() {
   return (
-    <section id="intro" className="bg-gradient-to-br from-purple-50 to-blue-50 py-20">
+    <section id="intro" className="bg-gradient-to-br from-blue-50 to-blue-50 py-20">
       <div className="max-w-4xl mx-auto px-4 text-center">
         <h1 className="text-4xl md:text-6xl font-bold text-neutral-900 mb-6">
           From Random Walks to Sequential Testing

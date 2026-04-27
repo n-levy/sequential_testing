@@ -127,7 +127,7 @@ export function SPRTSim() {
       .y(d => y(Math.max(d, 0.01)))
     const path = g.append('path').datum(data.examplePath)
       .attr('d', line).attr('fill', 'none')
-      .attr('stroke', '#8b5cf6').attr('stroke-width', 2.5)
+      .attr('stroke', '#1d4ed8').attr('stroke-width', 2.5)
 
     const totalLength = (path.node() as SVGPathElement)?.getTotalLength() || 0
     path.attr('stroke-dasharray', `${totalLength} ${totalLength}`)
@@ -179,7 +179,7 @@ export function SPRTSim() {
       .attr('width', d => Math.max(0, x(d.x1!) - x(d.x0!) - 1))
       .attr('y', d => y(d.length))
       .attr('height', d => height - y(d.length))
-      .attr('fill', '#8b5cf6').attr('opacity', 0.7).attr('rx', 2)
+      .attr('fill', '#1d4ed8').attr('opacity', 0.7).attr('rx', 2)
 
     // Mean line
     const meanStop = stops.reduce((a, b) => a + b, 0) / stops.length
@@ -219,7 +219,7 @@ export function SPRTSim() {
             </p>
           </div>
           <button onClick={simulate}
-            className="px-5 py-2.5 bg-purple-600 text-white rounded-lg font-medium hover:bg-purple-700 transition-colors whitespace-nowrap">
+            className="px-5 py-2.5 bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700 transition-colors whitespace-nowrap">
             Run simulation
           </button>
         </div>
@@ -228,17 +228,17 @@ export function SPRTSim() {
           <div>
             <label className="block text-xs font-medium text-neutral-700 mb-1">δ: {delta.toFixed(2)}</label>
             <input type="range" min={0.02} max={0.3} step={0.02} value={delta}
-              onChange={e => setDelta(+e.target.value)} className="w-full accent-purple-600" />
+              onChange={e => setDelta(+e.target.value)} className="w-full accent-blue-600" />
           </div>
           <div>
             <label className="block text-xs font-medium text-neutral-700 mb-1">α: {alphaVal.toFixed(2)}</label>
             <input type="range" min={0.01} max={0.10} step={0.01} value={alphaVal}
-              onChange={e => setAlphaVal(+e.target.value)} className="w-full accent-purple-600" />
+              onChange={e => setAlphaVal(+e.target.value)} className="w-full accent-blue-600" />
           </div>
           <div>
             <label className="block text-xs font-medium text-neutral-700 mb-1">β: {betaVal.toFixed(2)}</label>
             <input type="range" min={0.05} max={0.30} step={0.05} value={betaVal}
-              onChange={e => setBetaVal(+e.target.value)} className="w-full accent-purple-600" />
+              onChange={e => setBetaVal(+e.target.value)} className="w-full accent-blue-600" />
           </div>
           <div>
             <label className="block text-xs font-medium text-neutral-700 mb-1">True coin:</label>
@@ -269,9 +269,9 @@ export function SPRTSim() {
               <div className="text-lg font-bold text-green-700">{acceptCount}</div>
               <div className="text-xs text-green-600">Accept H₀ ({((acceptCount / nTrials) * 100).toFixed(1)}%)</div>
             </div>
-            <div className="bg-purple-50 border border-purple-200 rounded-lg p-3 text-center">
-              <div className="text-lg font-bold text-purple-700">{data.stoppingTime}</div>
-              <div className="text-xs text-purple-600">Example stop: {data.decision}</div>
+            <div className="bg-blue-50 border border-blue-200 rounded-lg p-3 text-center">
+              <div className="text-lg font-bold text-blue-700">{data.stoppingTime}</div>
+              <div className="text-xs text-blue-600">Example stop: {data.decision}</div>
             </div>
           </div>
         )}

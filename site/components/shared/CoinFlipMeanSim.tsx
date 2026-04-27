@@ -35,7 +35,7 @@ const LAYER_STYLE: Record<SimLayer, { color: string; label: string }> = {
   'fixed-ci':        { color: '#ef4444', label: 'Standard 95% CI' },
   'sequential-ci':   { color: '#2563eb', label: 'Sequential CI (Eppo)' },
   'pocock':          { color: '#f59e0b', label: 'Pocock (K=10)' },
-  'obf':             { color: '#8b5cf6', label: "O'Brien–Fleming (K=10)" },
+  'obf':             { color: '#1d4ed8', label: "O'Brien–Fleming (K=10)" },
   'bonferroni':      { color: '#0d9488', label: 'Bonferroni (K=10)' },
 }
 

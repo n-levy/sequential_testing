@@ -62,7 +62,7 @@ export function SequentialMultiplierSim() {
       .y(d => y(d))
     g.append('path').datum(seqMults)
       .attr('d', line).attr('fill', 'none')
-      .attr('stroke', '#8b5cf6').attr('stroke-width', 3)
+      .attr('stroke', '#1d4ed8').attr('stroke-width', 3)
 
     // Area between sequential and fixed
     const area = d3.area<number>()
@@ -70,7 +70,7 @@ export function SequentialMultiplierSim() {
       .y0(() => y(fixedMult))
       .y1(d => y(d))
     g.append('path').datum(seqMults)
-      .attr('d', area).attr('fill', '#8b5cf6').attr('opacity', 0.08)
+      .attr('d', area).attr('fill', '#1d4ed8').attr('opacity', 0.08)
 
     // Mark where ν is tuned (n = nuFactor * maxN)
     const nuN = nuFactor * maxN
@@ -122,7 +122,7 @@ export function SequentialMultiplierSim() {
     // Legend
     const leg = g.append('g').attr('transform', `translate(${width - 230}, 10)`)
     const items = [
-      { label: 'Sequential multiplier m(n)', color: '#8b5cf6', dash: '' },
+      { label: 'Sequential multiplier m(n)', color: '#1d4ed8', dash: '' },
       { label: 'Classical z = 1.96', color: '#3b82f6', dash: '6,4' },
       { label: 'ν tuning point', color: '#f59e0b', dash: '4,3' },
     ]
@@ -153,7 +153,7 @@ export function SequentialMultiplierSim() {
           <div className="flex-1">
             <h4 className="font-bold text-neutral-900 mb-1">Sequential Multiplier m(n)</h4>
             <p className="text-sm text-neutral-600">
-              The purple curve shows how the sequential CI multiplier approaches — but 
+              The blue curve shows how the sequential CI multiplier approaches — but 
               never reaches — the classical 1.96. The shaded area is the &ldquo;price of peeking.&rdquo;
             </p>
           </div>
@@ -165,14 +165,14 @@ export function SequentialMultiplierSim() {
               ν tuning: {nuFactor.toFixed(1)}× planned N → tightest at n = {Math.round(nuFactor * maxN).toLocaleString()}
             </label>
             <input type="range" min={0.1} max={3.0} step={0.1} value={nuFactor}
-              onChange={e => setNuFactor(+e.target.value)} className="w-full accent-purple-600" />
+              onChange={e => setNuFactor(+e.target.value)} className="w-full accent-blue-600" />
           </div>
           <div>
             <label className="block text-sm font-medium text-neutral-700 mb-1">
               Max sample size: {maxN.toLocaleString()}
             </label>
             <input type="range" min={1000} max={100000} step={1000} value={maxN}
-              onChange={e => setMaxN(+e.target.value)} className="w-full accent-purple-600" />
+              onChange={e => setMaxN(+e.target.value)} className="w-full accent-blue-600" />
           </div>
         </div>
 
@@ -180,9 +180,9 @@ export function SequentialMultiplierSim() {
 
         <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 mt-4">
           {exampleNs.map((n, i) => (
-            <div key={n} className="bg-purple-50 border border-purple-200 rounded-lg p-3 text-center">
-              <div className="text-sm font-bold text-purple-700">{exampleMults[i].toFixed(2)}</div>
-              <div className="text-xs text-purple-600">
+            <div key={n} className="bg-blue-50 border border-blue-200 rounded-lg p-3 text-center">
+              <div className="text-sm font-bold text-blue-700">{exampleMults[i].toFixed(2)}</div>
+              <div className="text-xs text-blue-600">
                 m({n.toLocaleString()}) — {((exampleMults[i] / 1.96 - 1) * 100).toFixed(0)}% wider than classical
               </div>
             </div>
