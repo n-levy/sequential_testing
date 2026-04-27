@@ -108,19 +108,43 @@ export function Act1() {
         <div className="bg-neutral-100 border border-neutral-300 rounded-lg p-6 mt-8">
           <h4 className="font-bold mb-3">Why peeking inflates Type I error</h4>
           <p className="mb-3 text-neutral-800">
-            A 95% confidence interval is calibrated for a single, pre-specified analysis:
+            In a fixed-horizon A/B test (one planned analysis), we test:
           </p>
           <p className="mb-3">
-            <InlineMath>{`P(\\text{false positive}) = \\alpha = 0.05`}</InlineMath>
+            <InlineMath>{`H_0:\\ \\tau = 0,\\qquad \\hat{\\tau}_n = \\bar X_{B,n} - \\bar X_{A,n}`}</InlineMath>
+          </p>
+          <p className="mb-3 text-neutral-800">
+            With a standard 95% CI,
+          </p>
+          <p className="mb-3">
+            <InlineMath>{`\\hat{\\tau}_n \\pm 1.96\\,\\widehat{\\mathrm{SE}}_n`}</InlineMath>
+          </p>
+          <p className="mb-3 text-neutral-800">
+            the false positive rate is controlled at one pre-specified look:
+          </p>
+          <p className="mb-3">
+            <InlineMath>{`\\Pr(\\text{reject }H_0\\text{ at one look}) = \\alpha = 0.05`}</InlineMath>
           </p>
           <p className="mb-3 text-neutral-800">
             If we repeatedly check the data, we effectively run many tests. The probability of at least one false positive becomes:
           </p>
           <p className="mb-3">
-            <InlineMath>{`P(\\text{false positive at any look}) > \\alpha`}</InlineMath>
+            <InlineMath>{`\\Pr(\\text{at least one false positive in }K\\text{ looks})`}</InlineMath>
+          </p>
+          <p className="mb-3 text-neutral-800">
+            Under independence this is:
+          </p>
+          <p className="mb-3">
+            <InlineMath>{`1-(1-\\alpha)^K`}</InlineMath>
+          </p>
+          <p className="mb-3 text-neutral-800">
+            and a useful approximation for small <InlineMath>{`\\alpha`}</InlineMath> is:
+          </p>
+          <p className="mb-3">
+            <InlineMath>{`1-(1-\\alpha)^K \\approx K\\alpha`}</InlineMath>
           </p>
           <p className="text-neutral-800">
-            Each additional look adds another chance to make an error, inflating the overall Type I error rate.
+            Real interim looks are positively correlated, so the exact value is lower than the independence formula, but still substantially above <InlineMath>{`\\alpha`}</InlineMath>. That is why repeated peeking inflates Type I error.
           </p>
         </div>
       </DisplayMathBox>

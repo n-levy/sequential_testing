@@ -62,7 +62,37 @@ export function Act2() {
         <div className="bg-neutral-100 border border-neutral-300 rounded-lg p-6 mt-8">
           <h4 className="font-bold mb-3">Mathematical Formulation</h4>
           <p className="mb-2">
-            The sequential confidence interval is based on a mixture boundary. For each time <InlineMath>n</InlineMath>, the interval is:
+            Let <InlineMath>{`\\hat{\\tau}_n = \\bar X_{B,n} - \\bar X_{A,n}`}</InlineMath> be the running treatment effect estimate and <InlineMath>{`\\widehat{\\mathrm{SE}}_n`}</InlineMath> its running standard error.
+          </p>
+          <p className="mb-2">
+            A fixed-horizon 95% CI uses
+          </p>
+          <p className="mb-2">
+            <InlineMath>{`\\hat{\\tau}_n \\pm 1.96\\,\\widehat{\\mathrm{SE}}_n`}</InlineMath>
+          </p>
+          <p className="mb-2">
+            and is valid at one pre-specified analysis.
+          </p>
+          <p className="mb-2">
+            A sequential CI replaces 1.96 with a time-dependent multiplier:
+          </p>
+          <p className="mb-2">
+            <InlineMath>{`\\hat{\\tau}_n \\pm \\widehat{\\mathrm{SE}}_n\\,\\sqrt{\\frac{n+\\nu}{n}\\log\\!\\left(\\frac{n+\\nu}{\\nu\\alpha}\\right)}`}</InlineMath>
+          </p>
+          <p className="mb-2">
+            where <InlineMath>{`\\nu`}</InlineMath> is a tuning parameter and <InlineMath>{`\\alpha`}</InlineMath> is the target Type I error level.
+          </p>
+          <p className="mb-2">
+            This yields time-uniform coverage:
+          </p>
+          <p className="mb-2">
+            <InlineMath>{`\\Pr\\!\\left(\\tau \\in \\mathrm{CI}_n\\ \\text{for all } n\\ge1\\right)\\ge 1-\\alpha`}</InlineMath>
+          </p>
+          <p className="mb-2">
+            So unlike fixed-horizon CIs, the guarantee still holds under continuous monitoring.
+          </p>
+          <p className="mb-2">
+            In this app, the sequential interval is based on this mixture-boundary form. For each time <InlineMath>n</InlineMath>, the interval is:
           </p>
           <p className="mb-2">
             <InlineMath>{`\left[ \bar{X}_n - c_n,\ \bar{X}_n + c_n \right]`}</InlineMath>
