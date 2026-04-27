@@ -15,9 +15,10 @@ function DisplayMathBox({ children }: { children: React.ReactNode }) {
 
 export function Act1() {
   return (
-    <div>
-      <div style={{ background: 'red', padding: '10px', color: 'white', marginBottom: '10px' }}>
-        ACT 1 IS RENDERING
+    <div id="act-1">
+      {/* Simulation */}
+      <div className="mb-8">
+        <ABTestSim />
       </div>
       {/* Simulation and explanation always visible */}
       <div className="overflow-x-auto mb-6">
@@ -31,23 +32,23 @@ export function Act1() {
           <tbody>
             <tr>
               <td className="border border-neutral-300 p-3">Once at the end (as designed)</td>
-              <td className="border border-neutral-300 p-3"><InlineMath>{`$\\sim 5\\%$`}</InlineMath></td>
+              <td className="border border-neutral-300 p-3"><InlineMath>{`\\sim 5\\%`}</InlineMath></td>
             </tr>
             <tr className="bg-neutral-50">
               <td className="border border-neutral-300 p-3">Daily for 1 week</td>
-              <td className="border border-neutral-300 p-3"><InlineMath>{`$\\sim 13\\%$`}</InlineMath></td>
+              <td className="border border-neutral-300 p-3"><InlineMath>{`\\sim 13\\%`}</InlineMath></td>
             </tr>
             <tr>
               <td className="border border-neutral-300 p-3">Daily for 2 weeks</td>
-              <td className="border border-neutral-300 p-3"><InlineMath>{`$\\sim 19\\%$`}</InlineMath></td>
+              <td className="border border-neutral-300 p-3"><InlineMath>{`\\sim 19\\%`}</InlineMath></td>
             </tr>
             <tr className="bg-neutral-50">
               <td className="border border-neutral-300 p-3">Daily for 4 weeks (28 looks)</td>
-              <td className="border border-neutral-300 p-3"><InlineMath>{`$\\sim 25\\%$`}</InlineMath></td>
+              <td className="border border-neutral-300 p-3"><InlineMath>{`\\sim 25\\%`}</InlineMath></td>
             </tr>
             <tr>
               <td className="border border-neutral-300 p-3">Continuously (every observation)</td>
-              <td className="border border-neutral-300 p-3">Can exceed <InlineMath>{`$30\\%$`}</InlineMath></td>
+              <td className="border border-neutral-300 p-3">Can exceed <InlineMath>{`30\\%`}</InlineMath></td>
             </tr>
           </tbody>
         </table>
