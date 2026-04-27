@@ -27,6 +27,12 @@ interface ABTestSimProps {
 const Z_975 = 1.959964
 const PEEK_N_SIMS = 1000 // number of re-randomizations used to estimate crossing probabilities
 const PEEK_LOOKS = 6
+const ALPHA_MIN = 0.01
+const ALPHA_MAX = 0.1
+const ALPHA_DEFAULT = 0.05
+const POWER_MIN = 0.5
+const POWER_MAX = 0.99
+const POWER_DEFAULT = 0.8
 
 // Normal quantile approximation
 function erfinv(x: number) {
@@ -92,8 +98,8 @@ export function ABTestSim({
 }: ABTestSimProps) {
   const [effect, setEffect] = useState(defaultEffect)
   const [n, setN] = useState(defaultN)
-  const [alpha, setAlpha] = useState(0.05)
-  const [power, setPower] = useState(powerProp ?? 0.8)
+  const [alpha, setAlpha] = useState(ALPHA_DEFAULT)
+  const [power, setPower] = useState(powerProp ?? POWER_DEFAULT)
   const [seed, setSeed] = useState(1)
   const [kState, setK] = useState(KProp)
   const [peekProbs, setPeekProbs] = useState<Record<string, number> | null>(null)
@@ -187,14 +193,16 @@ export function ABTestSim({
     // Y-axis: force to -100 to +100
     const yMin = -100
     const yMax = 100
-    const x = d3.scaleLinear().domain([50, n]).range([0, innerW])
+    const xUpper = Math.max(1, n)
+    const x = d3.scaleLinear().domain([0, xUpper]).range([0, innerW])
     const y = d3.scaleLinear().domain([yMin, yMax]).range([innerH, 0])
     const g = svg.append('g').attr('transform', `translate(${margin.left},${margin.top})`)
+    const xAxisY = y(0)
     // Axes
-    g.append('g').attr('transform', `translate(0,${innerH})`).call(d3.axisBottom(x).ticks(6))
+    g.append('g').attr('transform', `translate(0,${xAxisY})`).call(d3.axisBottom(x).ticks(6).tickFormat(d => `${Math.round(d as number)}`))
     g.append('g').call(d3.axisLeft(y).ticks(6).tickFormat(d => `${Math.round(d as number)}%`))
     g.append('text')
-      .attr('transform', `translate(${innerW / 2}, ${innerH + 36})`)
+      .attr('transform', `translate(${innerW / 2}, ${innerH + 34})`)
       .style('text-anchor', 'middle').style('font-size', '12px').style('fill', '#525252')
       .text('Number of users (n)')
     g.append('text')
@@ -207,6 +215,13 @@ export function ABTestSim({
       .attr('x1', 0).attr('x2', innerW)
       .attr('y1', y(0)).attr('y2', y(0))
       .attr('stroke', '#525252').attr('stroke-width', 1).attr('stroke-dasharray', '4 3')
+    g.append('text')
+      .attr('x', x(0))
+      .attr('y', xAxisY + 16)
+      .style('text-anchor', 'middle')
+      .style('font-size', '11px')
+      .style('fill', '#525252')
+      .text('0')
     // CI band
     const area = d3.area<number>()
       .x((_d, i) => x(i + 1))
@@ -347,52 +362,63 @@ export function ABTestSim({
       .attr('stroke', '#0f172a')
       .attr('stroke-width', 1.6)
       .attr('d', line as d3.Line<number>)
-  }, [effectPct, ciHalfWidthPct, n, layers, traj, alpha])
+  }, [effectPct, ciHalfWidthPct, n, layers, traj, alpha, kState])
 
   // Decision at the final time step (in percent)
   const decision = useMemo(() => {
+    if (n <= 0) return null
     const last = n - 1
     const est = effectPct[last]
     const w = ciHalfWidthPct[last]
     const lo = est - w
     const hi = est + w
-    if (lo > 0) return { label: 'Reject null — B > A', color: 'text-green-700' }
-    if (hi < 0) return { label: 'Reject null — B < A', color: 'text-rose-700' }
-    return { label: 'Inconclusive', color: 'text-neutral-600' }
+    if (lo > 0) return { label: 'Yes' }
+    if (hi < 0) return { label: 'Yes' }
+    return { label: 'No' }
   }, [effectPct, ciHalfWidthPct, n])
 
   return (
     <div className="bg-white border border-neutral-300 rounded-lg p-4 my-6">
       <div className="mb-2 text-base font-semibold text-blue-900">
-        Effect: (B − A) / A, null hypothesis = 0%.
+        Effect: (Treatment mean − Control mean) / Control mean, null hypothesis = 0%.
       </div>
       <div className="mb-3 text-sm text-blue-900 font-semibold">
-        Effect size: <span className="font-mono">{effectiveEffect >= 0 ? '+' : ''}{effectiveEffect.toFixed(2)}</span>
+        Relative effect size (%): <span className="font-mono">{(effectiveEffect * 100 >= 0 ? '+' : '')}{(effectiveEffect * 100).toFixed(1)}%</span>
       </div>
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-4">
-        <div>
+      <div className="flex flex-wrap items-start gap-4 mb-4">
+        <div className="w-full sm:w-[210px]">
           <label className="block text-xs font-medium text-neutral-600 mb-1">
             Number of users <span className="font-mono">(n = {n})</span>
           </label>
           <input
-            type="range" min={50} max={100000} step={50}
+            type="range" min={0} max={100000} step={50}
             value={n} onChange={e => setN(parseInt(e.target.value, 10))}
             className="w-full"
           />
         </div>
-        <div>
+        <div className="w-full sm:w-[210px]">
           <label className="block text-xs font-medium text-neutral-600 mb-1">
             <InlineMath>{`\\alpha`}</InlineMath> <span className="font-mono">({alpha.toFixed(2)})</span>
           </label>
-          <input
-            type="range" min={0.01} max={0.10} step={0.01}
-            value={alpha} onChange={e => setAlpha(parseFloat(e.target.value))}
-            className="w-full"
-          />
+          <div className="relative">
+            <input
+              type="range" min={ALPHA_MIN} max={ALPHA_MAX} step={0.01}
+              value={alpha} onChange={e => setAlpha(parseFloat(e.target.value))}
+              className="w-full"
+            />
+            <div
+              className="pointer-events-none absolute top-0 bottom-0 border-l border-neutral-500"
+              style={{ left: `${((ALPHA_DEFAULT - ALPHA_MIN) / (ALPHA_MAX - ALPHA_MIN)) * 100}%` }}
+              aria-hidden
+            />
+          </div>
+          <div className="text-[11px] text-neutral-500 mt-1">
+            Default marker: α = 0.05
+          </div>
         </div>
-        <div>
+        <div className="w-full sm:w-[210px]">
           <label className="block text-xs font-medium text-neutral-600 mb-1">
-            Effect size <span className="font-mono">({clampedEffect >= 0 ? '+' : ''}{clampedEffect.toFixed(2)})</span>
+            Relative effect size (%) <span className="font-mono">({clampedEffect * 100 >= 0 ? '+' : ''}{(clampedEffect * 100).toFixed(1)}%)</span>
           </label>
           <input
             type="range" min={-0.5} max={0.5} step={0.01}
@@ -400,35 +426,44 @@ export function ABTestSim({
             className="w-full"
           />
         </div>
-      </div>
-      {/* K slider */}
-      <div>
-        <label className="block text-xs font-medium text-neutral-600 mb-1">
-          Number of peeks (K) <span className="font-mono">({kState})</span>
-        </label>
-        <input
-          type="range" min={2} max={10} step={1}
-          value={kState}
-          onChange={e => {
-            const newK = parseInt(e.target.value, 10)
-            setK(newK)
-            setPeekProbs(null)
-          }}
-          className="w-full"
-        />
-      </div>
-      {showPowerControl && (
-        <div className="mb-4">
+        <div className="w-full sm:w-[210px]">
           <label className="block text-xs font-medium text-neutral-600 mb-1">
-            Power (1 - β) <span className="font-mono">({power.toFixed(2)})</span>
+            Number of peeks (K) <span className="font-mono">({kState})</span>
           </label>
           <input
-            type="range" min={0.5} max={0.99} step={0.01}
-            value={power} onChange={e => setPower(parseFloat(e.target.value))}
+            type="range" min={2} max={10} step={1}
+            value={kState}
+            onChange={e => {
+              const newK = parseInt(e.target.value, 10)
+              setK(newK)
+              setPeekProbs(null)
+            }}
             className="w-full"
           />
         </div>
-      )}
+        {showPowerControl && (
+          <div className="w-full sm:w-[210px]">
+            <label className="block text-xs font-medium text-neutral-600 mb-1">
+              Power (1 - β) <span className="font-mono">({power.toFixed(2)})</span>
+            </label>
+            <div className="relative">
+              <input
+                type="range" min={POWER_MIN} max={POWER_MAX} step={0.01}
+                value={power} onChange={e => setPower(parseFloat(e.target.value))}
+                className="w-full"
+              />
+              <div
+                className="pointer-events-none absolute top-0 bottom-0 border-l border-neutral-500"
+                style={{ left: `${((POWER_DEFAULT - POWER_MIN) / (POWER_MAX - POWER_MIN)) * 100}%` }}
+                aria-hidden
+              />
+            </div>
+            <div className="text-[11px] text-neutral-500 mt-1">
+              Default marker: power = 0.8
+            </div>
+          </div>
+        )}
+      </div>
       <div className="flex flex-wrap items-center justify-between gap-2 mb-3">
         <button
           type="button"
@@ -462,10 +497,10 @@ export function ABTestSim({
       {decision && (
         <div className="mt-4">
           <div className="bg-neutral-50 border border-neutral-200 rounded-lg p-3">
-            <div className="text-[11px] font-medium text-neutral-500 uppercase">
+            <div className="text-sm font-semibold text-black">
               Would peeking daily for two weeks (14 peeks) show at least one statistically significant result?
             </div>
-            <div className={`text-base font-semibold ${decision.color}`}>{decision.label.includes('Reject') ? 'Yes' : 'No'}</div>
+            <div className="text-sm text-neutral-500">{decision.label}</div>
           </div>
         </div>
       )}

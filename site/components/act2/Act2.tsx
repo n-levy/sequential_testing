@@ -11,7 +11,7 @@ function DisplayMathBox({ children }: { children: React.ReactNode }) {
 
 export function Act2() {
   return (
-    <div>
+    <div id="act2">
       <h2 className="text-2xl font-bold mb-2">Act 2 — The Eppo Solution</h2>
       <p className="text-neutral-600 mb-6">(Schmit & Miller, 2024)</p>
 

@@ -15,7 +15,7 @@ const SHORT_ITEMS = [
   { id: 'intro', label: 'Introduction' },
   { id: 'act1', label: 'Act 1 – Peeking Problem' },
   { id: 'act2', label: 'Act 2 – Eppo Solution' },
-  { id: 'act3', label: 'Act 3 – DIY Alternatives' },
+  { id: 'act3', label: 'Act 3 – Alternative Methods' },
   { id: 'summary', label: 'Summary' },
   { id: 'math-reference', label: 'Math Reference' },
   { id: 'references', label: 'References' },

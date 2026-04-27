@@ -15,7 +15,7 @@ function DisplayMathBox({ children }: { children: React.ReactNode }) {
 
 export function Act1() {
   return (
-    <div id="act-1" className="max-w-3xl mx-auto px-4">
+    <div id="act1" className="max-w-3xl mx-auto px-4">
       <h2 className="text-2xl font-bold mb-1">Act 1 — The Peeking Problem</h2>
 
       {/* Simulation intro */}

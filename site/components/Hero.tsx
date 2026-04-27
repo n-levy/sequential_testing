@@ -13,6 +13,7 @@ export function Hero() {
       </div>
 
       <div className="max-w-3xl mx-auto px-4 mt-10 text-neutral-700 space-y-4">
+        <h2 className="text-2xl font-bold text-neutral-900">Introduction</h2>
         <p>
           <strong>The problem.</strong>{' '}
           Standard hypothesis tests guarantee a controlled false positive rate only when
@@ -37,7 +38,7 @@ export function Hero() {
           <li><strong>The Peeking Problem</strong> &mdash; Why interim analyses invalidate standard tests.</li>
           <li><strong>The Eppo Solution</strong> &mdash; Confidence sequences, variance reduction,
               and the recommended <strong>hybrid approach</strong>.</li>
-          <li><strong>DIY Alternatives</strong> &mdash; Bonferroni, Pocock, and O&apos;Brien&ndash;Fleming
+          <li><strong>Alternative Methods</strong> &mdash; Bonferroni, Pocock, and O&apos;Brien&ndash;Fleming
               corrections for teams without a sequential testing platform.</li>
         </ol>
         <p>
