@@ -38,7 +38,7 @@ export function Act2() {
       <div className="bg-white border border-neutral-300 rounded-lg p-5 mb-6">
         <h4 className="font-semibold mb-2">Why does this work?</h4>
         <p className="text-neutral-700 mb-2">
-          The fixed-horizon CI controls error for one planned analysis. Eppo&apos;s sequential CI uses
+          The fixed-horizon confidence interval controls error for one planned analysis. Eppo&apos;s sequential confidence interval uses
           a time-dependent boundary, so the guarantee is valid no matter when or how often you peek.
         </p>
         <p className="text-neutral-700">
@@ -58,8 +58,8 @@ export function Act2() {
           <thead>
             <tr className="bg-neutral-100">
               <th className="border border-neutral-300 p-3 text-left font-semibold">Checking schedule</th>
-              <th className="border border-neutral-300 p-3 text-left font-semibold">Standard 95% CI</th>
-              <th className="border border-neutral-300 p-3 text-left font-semibold">Sequential CI (Eppo)</th>
+              <th className="border border-neutral-300 p-3 text-left font-semibold">Standard 95% confidence interval</th>
+              <th className="border border-neutral-300 p-3 text-left font-semibold">Sequential confidence interval (Eppo)</th>
             </tr>
           </thead>
           <tbody>
@@ -94,7 +94,7 @@ export function Act2() {
 
       <div className="bg-neutral-50 border border-neutral-300 rounded-lg p-5 mb-8">
         <p className="text-neutral-700">
-          Under repeated peeking, the standard CI inflates false positives substantially, while the sequential CI stays close to the target error level.
+          Under repeated peeking, the standard confidence interval inflates false positives substantially, while the sequential confidence interval stays close to the target error level.
         </p>
       </div>
 
@@ -112,7 +112,7 @@ export function Act2() {
       <h3 className="text-xl font-bold mb-4">The Hybrid Approach</h3>
 
       <p className="text-neutral-700 mb-4">
-        The sequential CI is always wider than a fixed-horizon CI at any given sample size. For the{' '}
+        The sequential confidence interval is always wider than a fixed-horizon confidence interval at any given sample size. For the{' '}
         <strong>primary KPI</strong> — the metric the experiment is designed to move — this width
         penalty reduces statistical power.
       </p>
@@ -126,12 +126,12 @@ export function Act2() {
         <ul className="list-disc pl-5 space-y-2 text-neutral-700">
           <li>
             <strong>Guardrail KPIs</strong> (revenue, error rate, latency, etc.): monitored
-            continuously with a <strong>sequential CI</strong>. If the CI excludes zero on the
+            continuously with a <strong>sequential confidence interval</strong>. If the confidence interval excludes zero on the
             harmful side, abort the experiment immediately.
           </li>
           <li>
             <strong>Primary KPI</strong> (the metric the experiment targets): analysed with a{' '}
-            <strong>standard fixed-horizon CI</strong> at the pre-planned end date. No peeking
+            <strong>standard fixed-horizon confidence interval</strong> at the pre-planned end date. No peeking
             penalty. Full statistical power.
           </li>
         </ul>
@@ -149,7 +149,7 @@ export function Act2() {
           </thead>
           <tbody>
             <tr>
-              <td className="border border-neutral-300 p-3">Primary KPI CI width</td>
+              <td className="border border-neutral-300 p-3">Primary KPI confidence interval width</td>
               <td className="border border-neutral-300 p-3">Wider (~10–40%)</td>
               <td className="border border-neutral-300 p-3">Standard (no penalty)</td>
             </tr>
@@ -187,7 +187,7 @@ export function Act2() {
         <div className="text-neutral-800 space-y-3">
           <p>
             <strong>The hybrid approach in one sentence:</strong> Monitor guardrail KPIs with a
-            sequential CI for early abort; analyse the primary KPI with a standard CI at the planned
+            sequential confidence interval for early abort; analyse the primary KPI with a standard confidence interval at the planned
             end-date.
           </p>
           <p>
@@ -205,14 +205,14 @@ export function Act2() {
         <div className="bg-neutral-100 border border-neutral-300 rounded-lg p-6 mt-8 mb-16">
           <h4 className="font-bold mb-3">Mathematical Formulation</h4>
           <p className="mb-2">
-            In this simulation, the displayed effect and the CI boundaries are both expressed as percentage uplift:
+            In this simulation, the displayed effect and the confidence interval boundaries are both expressed as percentage uplift:
           </p>
           <p className="mb-2">
             <InlineMath>{`\\hat u_n = 100\\cdot\\frac{\\bar X_{B,n}-\\bar X_{A,n}}{\\bar X_{A,n}}`}</InlineMath>
           </p>
           <p className="mb-2">
-            The CI half-width is computed from the running standard error <InlineMath>{`\\widehat{\\mathrm{SE}}_n`}</InlineMath> of the difference in means, then divided by the control mean to convert to percentage scale.
-            A fixed-horizon 95% CI uses
+            The confidence interval half-width is computed from the running standard error <InlineMath>{`\\widehat{\\mathrm{SE}}_n`}</InlineMath> of the difference in means, then divided by the control mean to convert to percentage scale.
+            A fixed-horizon 95% confidence interval uses
           </p>
           <p className="mb-2">
             <InlineMath>{`\\hat u_n \\pm 100\\cdot\\frac{1.96\\,\\widehat{\\mathrm{SE}}_n}{\\bar X_{A,n}}`}</InlineMath>
@@ -221,7 +221,7 @@ export function Act2() {
             and is valid at one pre-specified analysis.
           </p>
           <p className="mb-2">
-            A sequential CI replaces 1.96 with a time-dependent multiplier:
+            A sequential confidence interval replaces 1.96 with a time-dependent multiplier:
           </p>
           <p className="mb-2">
             <InlineMath>{`\\hat u_n \\pm 100\\cdot\\frac{\\widehat{\\mathrm{SE}}_n}{\\bar X_{A,n}}\\,\\sqrt{\\frac{n+\\nu}{n}\\log\\!\\left(\\frac{n+\\nu}{\\nu\\alpha}\\right)}`}</InlineMath>
@@ -236,7 +236,7 @@ export function Act2() {
             <InlineMath>{`\\Pr\\!\\left(\\tau \\in \\mathrm{CI}_n\\ \\text{for all } n\\ge1\\right)\\ge 1-\\alpha`}</InlineMath>
           </p>
           <p className="mb-2">
-            So unlike fixed-horizon CIs, the guarantee still holds under continuous monitoring.
+            So unlike fixed-horizon confidence intervals, the guarantee still holds under continuous monitoring.
           </p>
         </div>
       </DisplayMathBox>

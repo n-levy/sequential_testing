@@ -33,7 +33,7 @@ export function MathReference() {
                 ['n_0(t),\\ n_1(t)', 'Number of users in control / treatment at time t', 'Throughout'],
                 ['n', 'Total observations: n_0(t) + n_1(t)', 'Act 2, Step 6'],
                 ['\\alpha', 'Significance level (typically 0.05)', 'Throughout'],
-                ['\\nu', 'Tuning parameter: \\nu = M \\cdot \\hat{\\sigma}^2', 'Act 2, Step 6 (sequential CI)'],
+                ['\\nu', 'Tuning parameter: \\nu = M \\cdot \\hat{\\sigma}^2', 'Act 2, Step 6 (sequential confidence interval)'],
                 ['M', 'Expected total sample size', 'Act 2, Step 6'],
                 ['K', 'Number of pre-planned analysis times (peeks)', 'Act 3'],
                 ['k', 'Current peek number (1 \\leq k \\leq K)', 'Act 3'],
@@ -64,7 +64,7 @@ export function MathReference() {
           <div className="bg-white border border-neutral-300 rounded-lg p-5">
             <h4 className="font-bold text-neutral-900 mb-2">Standard Confidence Interval</h4>
             <BlockMath>{`\\text{CI} = \\hat{\\tau} \\;\\pm\\; z_{\\alpha/2} \\cdot \\text{SE}`}</BlockMath>
-            <p className="text-sm text-neutral-600 mt-2">Valid only at one pre-specified time. The constant <InlineMath>{`z_{\\alpha/2} \\approx 1.96`}</InlineMath> for a 95% CI.</p>
+            <p className="text-sm text-neutral-600 mt-2">Valid only at one pre-specified time. The constant <InlineMath>{`z_{\\alpha/2} \\approx 1.96`}</InlineMath> for a 95% confidence interval.</p>
           </div>
 
           <div className="bg-white border border-neutral-300 rounded-lg p-5">
@@ -85,7 +85,7 @@ export function MathReference() {
           </div>
 
           <div className="bg-white border border-neutral-300 rounded-lg p-5">
-            <h4 className="font-bold text-neutral-900 mb-2">Bonferroni Adjusted CI</h4>
+            <h4 className="font-bold text-neutral-900 mb-2">Bonferroni Adjusted Confidence Interval</h4>
             <BlockMath>{`\\text{CI}_k = \\hat{\\tau}(t_k) \\;\\pm\\; z_{\\alpha/(2K)} \\cdot \\text{SE}(t_k)`}</BlockMath>
           </div>
 
@@ -114,7 +114,7 @@ export function MathReference() {
               <InlineMath>{`(C_t)_{t \\geq 1}`}</InlineMath> such that the true parameter lies
               in <InlineMath>{`C_t`}</InlineMath> for <em>all</em>{' '}
               <InlineMath>{`t`}</InlineMath> simultaneously with high probability. Unlike a
-              standard CI (valid at one time), a confidence sequence allows continuous
+              standard confidence interval (valid at one time), a confidence sequence allows continuous
               monitoring. The price: wider intervals, especially early on.
             </p>
           </div>

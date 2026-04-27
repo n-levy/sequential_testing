@@ -114,7 +114,7 @@ export function Act1() {
             <InlineMath>{`H_0:\\ \\tau = 0,\\qquad \\hat{\\tau}_n = \\bar X_{B,n} - \\bar X_{A,n}`}</InlineMath>
           </p>
           <p className="mb-3 text-neutral-800">
-            With a standard 95% CI,
+            With a standard 95% confidence interval,
           </p>
           <p className="mb-3">
             <InlineMath>{`\\hat{\\tau}_n \\pm 1.96\\,\\widehat{\\mathrm{SE}}_n`}</InlineMath>

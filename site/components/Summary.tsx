@@ -18,11 +18,11 @@ export function Summary() {
             </thead>
             <tbody>
               <tr><td className="border border-neutral-300 p-3 text-center font-bold">1</td><td className="border border-neutral-300 p-3">Peeking inflates false positives. You need a test that is valid at every time you check.</td></tr>
-              <tr className="bg-neutral-50"><td className="border border-neutral-300 p-3 text-center font-bold">2</td><td className="border border-neutral-300 p-3">Sequential confidence intervals (CIs) are valid at every moment. The hybrid approach uses sequential CIs for guardrails and classical CIs for the primary KPI.</td></tr>
-              <tr><td className="border border-neutral-300 p-3 text-center font-bold">3</td><td className="border border-neutral-300 p-3">DIY alternatives: Bonferroni, Pocock, O'Brien–Fleming. All widen the CI to control error when peeking.</td></tr>
+              <tr className="bg-neutral-50"><td className="border border-neutral-300 p-3 text-center font-bold">2</td><td className="border border-neutral-300 p-3">Sequential confidence intervals are valid at every moment. The hybrid approach uses sequential confidence intervals for guardrails and classical confidence intervals for the primary KPI.</td></tr>
+              <tr><td className="border border-neutral-300 p-3 text-center font-bold">3</td><td className="border border-neutral-300 p-3">DIY alternatives: Bonferroni, Pocock, O'Brien–Fleming. All widen the confidence interval to control error when peeking.</td></tr>
               <tr className="bg-neutral-50"><td className="border border-neutral-300 p-3 text-center font-bold">4–6</td><td className="border border-neutral-300 p-3">Martingales and Ville's inequality: the math that makes peeking safe.</td></tr>
               <tr><td className="border border-neutral-300 p-3 text-center font-bold">7–9</td><td className="border border-neutral-300 p-3">SPRT, mixture, and confidence sequences: the evolution of sequential testing and estimation.</td></tr>
-              <tr className="bg-neutral-50"><td className="border border-neutral-300 p-3 text-center font-bold">10–13</td><td className="border border-neutral-300 p-3">Eppo's pipeline: regression adjustment, sequential CIs, and actionable decisions.</td></tr>
+              <tr className="bg-neutral-50"><td className="border border-neutral-300 p-3 text-center font-bold">10–13</td><td className="border border-neutral-300 p-3">Eppo's pipeline: regression adjustment, sequential confidence intervals, and actionable decisions.</td></tr>
             </tbody>
           </table>
         </div>
@@ -41,10 +41,10 @@ export function Summary() {
             </thead>
             <tbody>
               <tr><td className="border border-neutral-300 p-3 font-medium">No correction (naive)</td><td className="border border-neutral-300 p-3 text-amber-700">Invalid inference (20–30% false positives)</td></tr>
-              <tr className="bg-neutral-50"><td className="border border-neutral-300 p-3 font-medium">Bonferroni</td><td className="border border-neutral-300 p-3">CI ~28–68% wider (depending on <InlineMath>{`K`}</InlineMath>)</td></tr>
-              <tr><td className="border border-neutral-300 p-3 font-medium">Pocock</td><td className="border border-neutral-300 p-3">CI ~20–37% wider</td></tr>
-              <tr className="bg-neutral-50"><td className="border border-neutral-300 p-3 font-medium">O'Brien–Fleming</td><td className="border border-neutral-300 p-3">CI ~3% wider at final analysis</td></tr>
-              <tr><td className="border border-neutral-300 p-3 font-medium">Eppo (sequential CI)</td><td className="border border-neutral-300 p-3">CI ~10–40% wider, valid <em>continuously</em></td></tr>
+              <tr className="bg-neutral-50"><td className="border border-neutral-300 p-3 font-medium">Bonferroni</td><td className="border border-neutral-300 p-3">Confidence interval ~28–68% wider (depending on <InlineMath>{`K`}</InlineMath>)</td></tr>
+              <tr><td className="border border-neutral-300 p-3 font-medium">Pocock</td><td className="border border-neutral-300 p-3">Confidence interval ~20–37% wider</td></tr>
+              <tr className="bg-neutral-50"><td className="border border-neutral-300 p-3 font-medium">O'Brien–Fleming</td><td className="border border-neutral-300 p-3">Confidence interval ~3% wider at final analysis</td></tr>
+              <tr><td className="border border-neutral-300 p-3 font-medium">Eppo (sequential confidence interval)</td><td className="border border-neutral-300 p-3">Confidence interval ~10–40% wider, valid <em>continuously</em></td></tr>
               <tr className="bg-neutral-50"><td className="border border-neutral-300 p-3 font-medium text-green-700">Hybrid (recommended)</td><td className="border border-neutral-300 p-3 text-green-700 font-medium">No penalty on primary KPI; sequential penalty on guardrails only</td></tr>
             </tbody>
           </table>

@@ -442,7 +442,7 @@ export function Act3() {
               <strong>Bonferroni:</strong> most conservative among the three DIY methods (lowest crossing share).<br />
               <strong>Pocock:</strong> less conservative than Bonferroni with the same threshold at each look.<br />
               <strong>O&apos;Brien&ndash;Fleming:</strong> very strict early, then close to classical thresholds at later looks.<br />
-              <strong>Sequential CI (Eppo):</strong> anytime-valid and typically conservative in this setup.
+              <strong>Sequential confidence interval (Eppo):</strong> anytime-valid and typically conservative in this setup.
             </>}
           />
         </div>
@@ -451,7 +451,7 @@ export function Act3() {
         <h3 className="text-2xl font-bold text-neutral-900 mb-4">Comparison</h3>
         <div className="overflow-x-auto mb-6">
           <p className="text-xs text-neutral-500 mb-2">
-            The CI-width rows below are illustrative values for <InlineMath>{`K = 4`}</InlineMath>, independent of the slider above.
+            The confidence interval width rows below are illustrative values for <InlineMath>{`K = 4`}</InlineMath>, independent of the slider above.
           </p>
           <table className="w-full min-w-[640px] text-sm border-collapse border border-neutral-300">
             <thead>
@@ -479,14 +479,14 @@ export function Act3() {
                 <td className="border border-neutral-300 p-3 text-center">Continuous</td>
               </tr>
               <tr>
-                <td className="border border-neutral-300 p-3 font-medium">CI at peek 1 (K=4)</td>
+                <td className="border border-neutral-300 p-3 font-medium">Confidence interval at peek 1 (K=4)</td>
                 <td className="border border-neutral-300 p-3 text-center"><InlineMath>{`2.50 \\times \\hat{\\sigma}`}</InlineMath></td>
                 <td className="border border-neutral-300 p-3 text-center"><InlineMath>{`2.36 \\times \\hat{\\sigma}`}</InlineMath></td>
                 <td className="border border-neutral-300 p-3 text-center"><InlineMath>{`4.05 \\times \\hat{\\sigma}`}</InlineMath></td>
                 <td className="border border-neutral-300 p-3 text-center"><InlineMath>{`{\\sim}3.8 \\times \\hat{\\sigma}`}</InlineMath></td>
               </tr>
               <tr className="bg-neutral-50">
-                <td className="border border-neutral-300 p-3 font-medium">CI at final analysis (K=4)</td>
+                <td className="border border-neutral-300 p-3 font-medium">Confidence interval at final analysis (K=4)</td>
                 <td className="border border-neutral-300 p-3 text-center"><InlineMath>{`2.50 \\times \\hat{\\sigma}`}</InlineMath></td>
                 <td className="border border-neutral-300 p-3 text-center"><InlineMath>{`2.36 \\times \\hat{\\sigma}`}</InlineMath></td>
                 <td className="border border-neutral-300 p-3 text-center"><InlineMath>{`2.02 \\times \\hat{\\sigma}`}</InlineMath></td>
@@ -540,8 +540,8 @@ export function Act3() {
         </h3>
 
         <p className="mb-4 text-neutral-700">
-          Act 2 introduced the hybrid approach: sequential CI on guardrail KPIs for early
-          abort, standard CI on the primary KPI at the planned end date. Below is how to
+          Act 2 introduced the hybrid approach: sequential confidence interval on guardrail KPIs for early
+          abort, standard confidence interval on the primary KPI at the planned end date. Below is how to
           implement it using any of the three correction methods above.
         </p>
 
@@ -588,18 +588,18 @@ export function Act3() {
         <h4 className="text-lg font-bold text-neutral-900 mb-3 mt-6">Step 3: Run the experiment</h4>
         <p className="mb-2 text-neutral-700">At each scheduled peek:</p>
         <ol className="list-decimal list-inside ml-4 mb-4 text-neutral-700 space-y-1">
-          <li>For <strong>each guardrail KPI</strong>: compute the CI using your chosen sequential method.</li>
-          <li>If <strong>any</strong> guardrail CI is entirely on the harmful side of zero: <span className="text-amber-600 font-bold">ABORT</span> the experiment.</li>
+          <li>For <strong>each guardrail KPI</strong>: compute the confidence interval using your chosen sequential method.</li>
+          <li>If <strong>any</strong> guardrail confidence interval is entirely on the harmful side of zero: <span className="text-amber-600 font-bold">ABORT</span> the experiment.</li>
           <li>Otherwise: continue.</li>
         </ol>
 
         <p className="mb-2 text-neutral-700">At the <strong>end</strong> of the experiment:</p>
         <ol className="list-decimal list-inside ml-4 mb-4 text-neutral-700 space-y-1">
-          <li>For the <strong>primary KPI</strong>: compute a standard CI with the full <InlineMath>{`\\alpha`}</InlineMath>:</li>
+          <li>For the <strong>primary KPI</strong>: compute a standard confidence interval with the full <InlineMath>{`\\alpha`}</InlineMath>:</li>
         </ol>
         <BlockMath>{`\\text{CI}_{\\text{primary}} = \\hat{\\tau} \\;\\pm\\; z_{\\alpha/2} \\cdot \\text{SE}`}</BlockMath>
         <p className="mb-6 text-neutral-700">
-          <span className="text-green-700 font-bold">SHIP</span> if the CI excludes zero.
+          <span className="text-green-700 font-bold">SHIP</span> if the confidence interval excludes zero.
           Otherwise: no significant effect.
         </p>
 
@@ -610,7 +610,7 @@ export function Act3() {
             <ul className="list-disc list-inside ml-4 space-y-1">
               <li>Apply Bonferroni across your <InlineMath>{`G`}</InlineMath> guardrail KPIs: <InlineMath>{`\\alpha_g = \\alpha / G`}</InlineMath>.</li>
               <li>Within each guardrail, use O&apos;Brien&ndash;Fleming (best) or Bonferroni (simplest).</li>
-              <li>Test the primary KPI once at the end with a standard CI &mdash; no correction needed.</li>
+              <li>Test the primary KPI once at the end with a standard confidence interval &mdash; no correction needed.</li>
               <li><strong>This is the recommended approach for teams without a sequential testing platform.</strong></li>
             </ul>
           </div>

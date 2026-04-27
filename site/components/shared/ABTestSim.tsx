@@ -645,7 +645,7 @@ export function ABTestSim({
                   <li>Control conversion baseline is user-specified via slider.</li>
                   <li>Independent users/events within and across arms (no clustering or interference).</li>
                   <li>No missing data, no delayed outcomes, and no sample-ratio mismatch.</li>
-                  <li>Two-sided significance check at each look: CI crossing zero is treated as significant.</li>
+                  <li>Two-sided significance check at each look: confidence interval crossing zero is treated as significant.</li>
                   <li>Peeks occur at exactly K equal time intervals over the test duration.</li>
                 </ul>
               </div>
