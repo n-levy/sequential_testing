@@ -24,7 +24,7 @@ interface ABTestSimProps {
 }
 
 const Z_975 = 1.959964
-const PEEK_N_SIMS = 500
+const PEEK_N_SIMS = 500 // number of re-randomizations used to estimate crossing probabilities
 const PEEK_LOOKS = 6
 
 // Normal quantile approximation
@@ -468,7 +468,7 @@ export function ABTestSim({
       {/* Probability of crossing CI at some point for all layers */}
       {showPeekStats && peekProbs && (
         <div className="bg-white border border-blue-400 rounded-lg p-5 mb-8 mt-4 text-center">
-          <span className="text-blue-900 font-semibold">Probability of crossing the CI at some point:</span>
+          <span className="text-blue-900 font-semibold">Probability of crossing the CI at some point, based on 500 simulation repetitions:</span>
           {Object.keys(peekProbs).length === 1 ? (
             <span className="ml-2 text-blue-700 font-mono" id="peek-prob-box">{(Object.values(peekProbs)[0] * 100).toFixed(1)}%</span>
           ) : (
