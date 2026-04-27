@@ -29,18 +29,11 @@ export function Act1() {
 
       {/* Simulation */}
       <div className="mb-8 max-w-2xl mx-auto">
-        <ABTestSim layers={['fixed-ci']} power={0.8} />
-      </div>
-
-      {/* Probability of crossing */}
-      <div className="bg-blue-50 border border-blue-200 rounded-lg p-5 mb-6">
-        <h4 className="font-semibold mb-2">
-          Probability of crossing the CI at some point:
-        </h4>
-        <div className="flex justify-between text-sm">
-          <span>Standard 95% CI</span>
-          <span className="font-semibold">68.8%</span>
-        </div>
+        <ABTestSim 
+          layers={['fixed-ci']} 
+          power={0.8} 
+          showPeekStats={true}
+        />
       </div>
 
       {/* Why does this happen */}
@@ -93,7 +86,7 @@ export function Act1() {
 
       <div className="bg-neutral-50 border border-neutral-300 rounded-lg p-5 mb-8">
         <p className="text-neutral-700">
-          With daily checks over a 4-week experiment, about one in four “significant” results will be a false positive. Features shipped on this basis may have no real effect—or may even degrade your metrics.
+          With daily checks over a 2-week experiment, about one in five “significant” results will be a false positive. Features released on this basis may have no real effect.
         </p>
       </div>
 
@@ -112,19 +105,19 @@ export function Act1() {
         <div className="bg-neutral-100 border border-neutral-300 rounded-lg p-6 mt-8">
           <h4 className="font-bold mb-3">Why peeking inflates Type I error</h4>
           <p className="mb-3 text-neutral-800">
-            At a fixed sample size n, a 95% confidence interval satisfies:
+            A 95% confidence interval is calibrated for a single, pre-specified analysis:
           </p>
           <p className="mb-3">
-            <InlineMath>{`P(\\text{CI}_n \\text{ contains } \\theta) = 0.95`}</InlineMath>
+            <InlineMath>{`P(\\text{false positive}) = \\alpha = 0.05`}</InlineMath>
           </p>
           <p className="mb-3 text-neutral-800">
-            This guarantee holds only for a single, pre-specified analysis. If we look repeatedly at times n = 1, 2, ..., N, the relevant probability becomes:
+            If we repeatedly check the data, we effectively run many tests. The probability of at least one false positive becomes:
           </p>
           <p className="mb-3">
-            <InlineMath>{`P(\\exists n \\leq N : \\theta \\notin \\text{CI}_n)`}</InlineMath>
+            <InlineMath>{`P(\\text{false positive at any look}) > \\alpha`}</InlineMath>
           </p>
           <p className="text-neutral-800">
-            Each additional look adds another chance to make an error. As a result, the probability of ever seeing a false positive becomes much larger than 5%.
+            Each additional look adds another chance to make an error, inflating the overall Type I error rate.
           </p>
         </div>
       </DisplayMathBox>
