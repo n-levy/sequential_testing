@@ -380,8 +380,8 @@ export function ComparisonSim() {
                 style={{ borderColor: m.color }}>
                 <div className="text-sm font-bold" style={{ color: m.color }}>{m.name}</div>
                 <div className={`text-lg font-bold mt-1 ${
-                  m.decision === 'Ship' ? 'text-green-600' :
-                  m.decision === 'Revert' ? 'text-amber-600' : 'text-neutral-500'
+                  m.decision === 'Ship' ? 'text-blue-700' :
+                  m.decision === 'Revert' ? 'text-blue-700' : 'text-neutral-500'
                 }`}>
                   {m.decision}
                 </div>

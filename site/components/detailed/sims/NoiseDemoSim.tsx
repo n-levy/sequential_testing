@@ -179,8 +179,8 @@ export function NoiseDemoSim() {
               <div className="text-sm font-bold text-neutral-700">±{(1.96 * data.se).toFixed(2)}</div>
               <div className="text-xs text-neutral-500">95% CI half-width</div>
             </div>
-            <div className={`border rounded-lg p-3 text-center ${data.significant ? 'bg-green-50 border-green-200' : 'bg-amber-50 border-amber-200'}`}>
-              <div className={`text-sm font-bold ${data.significant ? 'text-green-700' : 'text-amber-700'}`}>
+            <div className="border rounded-lg p-3 text-center bg-blue-50 border-blue-200">
+              <div className={`text-sm font-bold text-blue-700`}>
                 {data.significant ? 'Significant' : 'Not significant'}
               </div>
               <div className="text-xs text-neutral-500">p &lt; 0.05?</div>

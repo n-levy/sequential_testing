@@ -40,12 +40,12 @@ export function Summary() {
               </tr>
             </thead>
             <tbody>
-              <tr><td className="border border-neutral-300 p-3 font-medium">No correction (naive)</td><td className="border border-neutral-300 p-3 text-amber-700">Invalid inference (20–30% false positives)</td></tr>
+              <tr><td className="border border-neutral-300 p-3 font-medium">No correction (naive)</td><td className="border border-neutral-300 p-3 text-blue-700">Invalid inference (20–30% false positives)</td></tr>
               <tr className="bg-neutral-50"><td className="border border-neutral-300 p-3 font-medium">Bonferroni</td><td className="border border-neutral-300 p-3">Confidence interval ~28–68% wider (depending on <InlineMath>{`K`}</InlineMath>)</td></tr>
               <tr><td className="border border-neutral-300 p-3 font-medium">Pocock</td><td className="border border-neutral-300 p-3">Confidence interval ~20–37% wider</td></tr>
               <tr className="bg-neutral-50"><td className="border border-neutral-300 p-3 font-medium">O'Brien–Fleming</td><td className="border border-neutral-300 p-3">Confidence interval ~3% wider at final analysis</td></tr>
               <tr><td className="border border-neutral-300 p-3 font-medium">Eppo (sequential confidence interval)</td><td className="border border-neutral-300 p-3">Confidence interval ~10–40% wider, valid <em>continuously</em></td></tr>
-              <tr className="bg-neutral-50"><td className="border border-neutral-300 p-3 font-medium text-green-700">Hybrid (recommended)</td><td className="border border-neutral-300 p-3 text-green-700 font-medium">No penalty on primary KPI; sequential penalty on guardrails only</td></tr>
+              <tr className="bg-neutral-50"><td className="border border-neutral-300 p-3 font-medium text-blue-700">Hybrid (recommended)</td><td className="border border-neutral-300 p-3 text-blue-700 font-medium">No penalty on primary KPI; sequential penalty on guardrails only</td></tr>
             </tbody>
           </table>
         </div>

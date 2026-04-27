@@ -309,7 +309,7 @@ export function DetailedAct14() {
         <p className="mb-2 text-neutral-700">At each scheduled peek:</p>
         <ol className="list-decimal list-inside ml-4 mb-4 text-neutral-700 space-y-1">
           <li>For <strong>each guardrail KPI</strong>: compute the confidence interval using your chosen sequential method.</li>
-          <li>If <strong>any</strong> guardrail confidence interval is entirely on the harmful side of zero: <span className="text-amber-600 font-bold">ABORT</span> the experiment.</li>
+          <li>If <strong>any</strong> guardrail confidence interval is entirely on the harmful side of zero: <span className="text-blue-700 font-bold">ABORT</span> the experiment.</li>
           <li>Otherwise: continue.</li>
         </ol>
 

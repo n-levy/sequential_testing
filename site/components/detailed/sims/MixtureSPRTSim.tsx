@@ -188,9 +188,9 @@ export function MixtureSPRTSim() {
 
         {data && (
           <div className="grid grid-cols-2 gap-3 mt-4">
-            <div className="bg-amber-50 border border-amber-200 rounded-lg p-3 text-center">
-              <div className="text-sm font-bold text-amber-700">SPRT (wrong δ)</div>
-              <div className="text-xs text-amber-600">{data.sprtDecision}</div>
+            <div className="bg-blue-50 border border-blue-200 rounded-lg p-3 text-center">
+              <div className="text-sm font-bold text-blue-700">SPRT (wrong δ)</div>
+              <div className="text-xs text-blue-600">{data.sprtDecision}</div>
             </div>
             <div className="bg-blue-50 border border-blue-200 rounded-lg p-3 text-center">
               <div className="text-sm font-bold text-blue-700">mSPRT (mixture)</div>

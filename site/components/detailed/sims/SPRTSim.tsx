@@ -261,13 +261,13 @@ export function SPRTSim() {
 
         {data && (
           <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 mt-4">
-            <div className="bg-amber-50 border border-amber-200 rounded-lg p-3 text-center">
-              <div className="text-lg font-bold text-amber-700">{rejectCount}</div>
-              <div className="text-xs text-amber-600">Reject H₀ ({((rejectCount / nTrials) * 100).toFixed(1)}%)</div>
+            <div className="bg-blue-50 border border-blue-200 rounded-lg p-3 text-center">
+              <div className="text-lg font-bold text-blue-700">{rejectCount}</div>
+              <div className="text-xs text-blue-600">Reject H₀ ({((rejectCount / nTrials) * 100).toFixed(1)}%)</div>
             </div>
-            <div className="bg-green-50 border border-green-200 rounded-lg p-3 text-center">
-              <div className="text-lg font-bold text-green-700">{acceptCount}</div>
-              <div className="text-xs text-green-600">Accept H₀ ({((acceptCount / nTrials) * 100).toFixed(1)}%)</div>
+            <div className="bg-blue-50 border border-blue-200 rounded-lg p-3 text-center">
+              <div className="text-lg font-bold text-blue-700">{acceptCount}</div>
+              <div className="text-xs text-blue-600">Accept H₀ ({((acceptCount / nTrials) * 100).toFixed(1)}%)</div>
             </div>
             <div className="bg-blue-50 border border-blue-200 rounded-lg p-3 text-center">
               <div className="text-lg font-bold text-blue-700">{data.stoppingTime}</div>

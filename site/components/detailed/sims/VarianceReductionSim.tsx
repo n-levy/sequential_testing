@@ -219,13 +219,13 @@ export function VarianceReductionSim() {
               <div className="text-sm font-bold text-blue-700">±{(1.96 * data.adjSE).toFixed(2)}</div>
               <div className="text-xs text-blue-600">Adjusted CI width</div>
             </div>
-            <div className="bg-green-50 border border-green-200 rounded-lg p-3 text-center">
-              <div className="text-sm font-bold text-green-700">{reductionPct}%</div>
-              <div className="text-xs text-green-600">Variance reduced (theory: {theoreticalPct}%)</div>
+            <div className="bg-blue-50 border border-blue-200 rounded-lg p-3 text-center">
+              <div className="text-sm font-bold text-blue-700">{reductionPct}%</div>
+              <div className="text-xs text-blue-600">Variance reduced (theory: {theoreticalPct}%)</div>
             </div>
-            <div className="bg-amber-50 border border-amber-200 rounded-lg p-3 text-center">
-              <div className="text-sm font-bold text-amber-700">{speedup}×</div>
-              <div className="text-xs text-amber-600">Effective sample multiplier</div>
+            <div className="bg-blue-50 border border-blue-200 rounded-lg p-3 text-center">
+              <div className="text-sm font-bold text-blue-700">{speedup}×</div>
+              <div className="text-xs text-blue-600">Effective sample multiplier</div>
             </div>
           </div>
         )}
