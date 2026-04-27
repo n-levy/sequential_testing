@@ -53,6 +53,9 @@ export function Act1() {
       </div>
       {/* Simulation and explanation always visible */}
       <div className="overflow-x-auto mb-6">
+        <p className="text-xs text-neutral-500 mb-2">
+          Values below are calibrated to the default simulation settings (<InlineMath>{`\\alpha = 0.05`}</InlineMath>, <InlineMath>{`n = 500`}</InlineMath>) using equal-interval peeks.
+        </p>
         <table className="w-full min-w-[640px] text-sm border-collapse border border-neutral-300">
           <thead>
             <tr className="bg-neutral-100">
@@ -67,19 +70,19 @@ export function Act1() {
             </tr>
             <tr className="bg-neutral-50">
               <td className="border border-neutral-300 p-3">Daily for 1 week</td>
-              <td className="border border-neutral-300 p-3"><InlineMath>{`\\sim 13\\%`}</InlineMath></td>
+              <td className="border border-neutral-300 p-3"><InlineMath>{`\\sim 17\\%`}</InlineMath></td>
             </tr>
             <tr>
               <td className="border border-neutral-300 p-3">Daily for 2 weeks</td>
-              <td className="border border-neutral-300 p-3"><InlineMath>{`\\sim 19\\%`}</InlineMath></td>
+              <td className="border border-neutral-300 p-3"><InlineMath>{`\\sim 22\\%`}</InlineMath></td>
             </tr>
             <tr className="bg-neutral-50">
               <td className="border border-neutral-300 p-3">Daily for 4 weeks (28 looks)</td>
-              <td className="border border-neutral-300 p-3"><InlineMath>{`\\sim 25\\%`}</InlineMath></td>
+              <td className="border border-neutral-300 p-3"><InlineMath>{`\\sim 29\\%`}</InlineMath></td>
             </tr>
             <tr>
               <td className="border border-neutral-300 p-3">Continuously (every observation)</td>
-              <td className="border border-neutral-300 p-3">Can exceed <InlineMath>{`30\\%`}</InlineMath></td>
+              <td className="border border-neutral-300 p-3">Can exceed <InlineMath>{`60\\%`}</InlineMath></td>
             </tr>
           </tbody>
         </table>
@@ -87,7 +90,7 @@ export function Act1() {
 
       <div className="bg-neutral-50 border border-neutral-300 rounded-lg p-5 mb-8">
         <p className="text-neutral-700">
-          With daily checks over a 2-week experiment, about one in five “significant” results will be a false positive. Features released on this basis may have no real effect.
+          With daily checks over a 2-week experiment, about one in four “significant” results will be a false positive. Features released on this basis may have no real effect.
         </p>
       </div>
 

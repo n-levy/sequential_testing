@@ -46,6 +46,16 @@ function normInv(p: number) {
   return Math.sqrt(2) * erfinv(2 * p - 1)
 }
 
+function getPeekIndices(n: number, k: number): number[] {
+  if (n <= 0 || k <= 0) return []
+  const uniqueLooks = new Set<number>()
+  for (let j = 1; j <= k; j++) {
+    const look = Math.round((j * n) / k)
+    uniqueLooks.add(Math.max(1, Math.min(n, look)))
+  }
+  return Array.from(uniqueLooks).sort((a, b) => a - b)
+}
+
 const LAYER_STYLE: Record<SimLayer, { color: string; label: string }> = {
   'fixed-ci':        { color: '#ef4444', label: 'Standard 95% CI' },
   'sequential-ci':   { color: '#2563eb', label: 'Sequential CI (Eppo)' },
@@ -108,6 +118,7 @@ export function ABTestSim({
   // Clamp effect to [-0.5, 0.5]
   const clampedEffect = Math.max(-0.5, Math.min(0.5, effect))
   const effectiveEffect = clampedEffect * power
+  const peekIndices = useMemo(() => getPeekIndices(n, kState), [n, kState])
 
   // Compute the probability of crossing the CI at any point for all selected layers
   useEffect(() => {
@@ -118,10 +129,12 @@ export function ABTestSim({
       for (let sim = 0; sim < PEEK_N_SIMS; ++sim) {
         const t = simulateABTestTrajectory(n, 0, seed + sim + runSimulationsTrigger * 10000);
         let crossed = false;
-        const lookSpacing = Math.max(1, Math.floor(n / kState));
-        for (let i = 0; i < n; ++i) {
-          // Only evaluate at discrete looks
-          if ((i + 1) % lookSpacing !== 0 && i !== n - 1) continue;
+        if (peekIndices.length === 0) continue;
+        let lookPtr = 0
+        const lastLookPtr = peekIndices.length - 1
+        for (let i = 0; i < n && lookPtr <= lastLookPtr; ++i) {
+          // Evaluate only at exactly k equal-interval peeks.
+          if ((i + 1) !== peekIndices[lookPtr]) continue;
           const denom = t.meansA[i];
           const est = denom !== 0 ? 100 * (t.meansB[i] - denom) / denom : 0;
           let w = 0;
@@ -145,14 +158,16 @@ export function ABTestSim({
           }
           if (est - w > 0 || est + w < 0) {
             crossed = true;
+            break
           }
+          lookPtr++
         }
         if (crossed) count++;
       }
       results[layer] = count / PEEK_N_SIMS;
     }
     setPeekProbs(results);
-  }, [showPeekStats, layers, n, clampedEffect, seed, alpha, power, kState, runSimulationsTrigger]);
+  }, [showPeekStats, layers, n, clampedEffect, seed, alpha, power, kState, runSimulationsTrigger, peekIndices]);
 
   // Trajectory recomputed automatically whenever the controls change.
   const traj = useMemo(() => simulateABTestTrajectory(n, effectiveEffect, seed), [n, effectiveEffect, seed])
@@ -366,9 +381,9 @@ export function ABTestSim({
   // Decision at the final time step (in percent)
   const decision = useMemo(() => {
     if (n <= 0) return null
-    const lookSpacing = Math.max(1, Math.floor(n / kState))
-    for (let i = 0; i < n; i++) {
-      if ((i + 1) % lookSpacing !== 0 && i !== n - 1) continue
+    if (peekIndices.length === 0) return null
+    for (const look of peekIndices) {
+      const i = look - 1
       const est = effectPct[i]
       const w = ciHalfWidthPct[i]
       const lo = est - w
@@ -376,7 +391,7 @@ export function ABTestSim({
       if (lo > 0 || hi < 0) return { label: 'Yes' }
     }
     return { label: 'No' }
-  }, [effectPct, ciHalfWidthPct, n, kState])
+  }, [effectPct, ciHalfWidthPct, n, peekIndices])
 
   return (
     <div className="bg-white border border-neutral-300 rounded-lg p-4 my-6">
