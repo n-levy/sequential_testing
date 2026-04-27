@@ -94,8 +94,7 @@ export function ABTestSim({
     for (const layer of layers) {
       let count = 0;
       for (let sim = 0; sim < PEEK_N_SIMS; ++sim) {
-        const effectiveEffect = clampedEffect * power;
-        const t = simulateABTestTrajectory(n, effectiveEffect, seed + sim);
+        const t = simulateABTestTrajectory(n, 0, seed + sim);
         let crossed = false;
         for (let i = 0; i < n; ++i) {
           const denom = t.meansA[i];
@@ -215,6 +214,41 @@ export function ABTestSim({
       .attr('stroke-width', 1.2)
       .attr('stroke-opacity', 0.7)
       .attr('d', area as d3.Area<number>)
+
+    if (layers.includes('sequential-ci')) {
+      const seqArea = d3.area<number>()
+        .x((_d, i) => x(i + 1))
+        .y0((_d, i) => {
+          const denom = traj.meansA[i]
+          const nu = n * 0.25
+          const t_i = i + 1
+          const logTerm = Math.log((t_i + nu) / (nu * alpha))
+          const w = denom !== 0
+            ? 100 * traj.ses[i] * Math.sqrt((t_i + nu) / t_i * logTerm) / denom
+            : 0
+          return y(effectPct[i] - w)
+        })
+        .y1((_d, i) => {
+          const denom = traj.meansA[i]
+          const nu = n * 0.25
+          const t_i = i + 1
+          const logTerm = Math.log((t_i + nu) / (nu * alpha))
+          const w = denom !== 0
+            ? 100 * traj.ses[i] * Math.sqrt((t_i + nu) / t_i * logTerm) / denom
+            : 0
+          return y(effectPct[i] + w)
+        })
+
+      g.append('path')
+        .datum(Array.from({ length: n }, (_, i) => i))
+        .attr('fill', LAYER_STYLE['sequential-ci'].color)
+        .attr('fill-opacity', 0.15)
+        .attr('stroke', LAYER_STYLE['sequential-ci'].color)
+        .attr('stroke-width', 1.2)
+        .attr('stroke-opacity', 0.8)
+        .attr('d', seqArea as d3.Area<number>)
+    }
+
     // Mean effect trajectory
     const line = d3.line<number>()
       .x((_d, i) => x(i + 1))
@@ -225,7 +259,7 @@ export function ABTestSim({
       .attr('stroke', '#0f172a')
       .attr('stroke-width', 1.6)
       .attr('d', line as d3.Line<number>)
-  }, [effectPct, ciHalfWidthPct, n])
+  }, [effectPct, ciHalfWidthPct, n, layers, traj, alpha])
 
   // Decision at the final time step (in percent)
   const decision = useMemo(() => {
@@ -307,6 +341,15 @@ export function ABTestSim({
             />
             Standard 95% CI
           </span>
+          {layers.includes('sequential-ci') && (
+            <span className="inline-flex items-center gap-1.5 text-neutral-700">
+              <span
+                className="inline-block w-3 h-3 rounded-sm"
+                style={{ background: LAYER_STYLE['sequential-ci'].color, opacity: 0.45 }}
+              />
+              Sequential CI (Eppo)
+            </span>
+          )}
         </div>
       </div>
       {/* Plot */}
