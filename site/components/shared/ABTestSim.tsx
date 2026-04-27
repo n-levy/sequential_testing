@@ -24,7 +24,7 @@ interface ABTestSimProps {
 }
 
 const Z_975 = 1.959964
-const PEEK_N_SIMS = 500 // number of re-randomizations used to estimate crossing probabilities
+const PEEK_N_SIMS = 1000 // number of re-randomizations used to estimate crossing probabilities
 const PEEK_LOOKS = 6
 
 // Normal quantile approximation
@@ -43,9 +43,9 @@ function normInv(p: number) {
 const LAYER_STYLE: Record<SimLayer, { color: string; label: string }> = {
   'fixed-ci':        { color: '#ef4444', label: 'Standard 95% CI' },
   'sequential-ci':   { color: '#2563eb', label: 'Sequential CI (Eppo)' },
-  'pocock':          { color: '#f59e0b', label: 'Pocock (K=10)' },
-  'obf':             { color: '#8b5cf6', label: "O'Brien–Fleming (K=10)" },
-  'bonferroni':      { color: '#0d9488', label: 'Bonferroni (K=10)' },
+  'pocock':          { color: '#f59e0b', label: 'Pocock' },
+  'obf':             { color: '#8b5cf6', label: "O'Brien–Fleming" },
+  'bonferroni':      { color: '#0d9488', label: 'Bonferroni' },
 }
 
 function mulberry32(seed: number) {
@@ -109,7 +109,7 @@ export function ABTestSim({
     for (const layer of layers) {
       let count = 0;
       for (let sim = 0; sim < PEEK_N_SIMS; ++sim) {
-        const t = simulateABTestTrajectory(n, 0, seed + sim);
+        const t = simulateABTestTrajectory(n, 0, seed + sim + runSimulationsTrigger * 10000);
         let crossed = false;
         const lookSpacing = Math.floor(n / K);
         for (let i = 0; i < n; ++i) {
@@ -409,6 +409,23 @@ export function ABTestSim({
           />
         </div>
       </div>
+      {/* K slider */}
+      <div>
+        <label className="block text-xs font-medium text-neutral-600 mb-1">
+          Number of peeks (K) <span className="font-mono">({K})</span>
+        </label>
+        <input
+          type="range" min={2} max={10} step={1}
+          value={K}
+          onChange={e => {
+            const newK = parseInt(e.target.value, 10)
+            // @ts-ignore local override
+            K = newK
+            setPeekProbs(null)
+          }}
+          className="w-full"
+        />
+      </div>
       {showPowerControl && (
         <div className="mb-4">
           <label className="block text-xs font-medium text-neutral-600 mb-1">
@@ -436,7 +453,7 @@ export function ABTestSim({
                 className="inline-block w-3 h-3 rounded-sm"
                 style={{ background: LAYER_STYLE[layer].color, opacity: 0.45 }}
               />
-              {LAYER_STYLE[layer].label}
+              {LAYER_STYLE[layer].label}{['pocock','obf','bonferroni'].includes(layer) ? ` (K=${K})` : ''}
             </span>
           ))}
         </div>
@@ -471,7 +488,7 @@ export function ABTestSim({
         <div className="bg-white border border-blue-400 rounded-lg p-5 mb-8 mt-4 text-center">
           <div className="flex flex-col items-center gap-2">
             <span className="text-blue-900 font-semibold">
-              Probability of crossing the CI at some point, based on 500 simulation repetitions:
+              Probability of crossing the CI at some point, based on 1000 simulation repetitions:
             </span>
             <button
               type="button"
@@ -481,7 +498,7 @@ export function ABTestSim({
               }}
               className="px-3 py-1.5 text-sm bg-blue-600 text-white rounded hover:bg-blue-700"
             >
-              Run 500 repetitions
+              Run 1000 repetitions
             </button>
           </div>
           {peekProbs === null ? (
@@ -499,7 +516,7 @@ export function ABTestSim({
               <tbody>
                 {layers.map(layer => (
                   <tr key={layer}>
-                    <td className="px-3 py-1 text-left">{LAYER_STYLE[layer].label}</td>
+                    <td className="px-3 py-1 text-left">{LAYER_STYLE[layer].label}{['pocock','obf','bonferroni'].includes(layer) ? ` (K=${K})` : ''}</td>
                     <td className="px-3 py-1 text-right text-blue-700 font-mono">{(peekProbs[layer] * 100).toFixed(1)}%</td>
                   </tr>
                 ))}
