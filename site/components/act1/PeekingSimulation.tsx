@@ -331,8 +331,8 @@ export function PeekingSimulation() {
             </div>
           </div>
 
-          <div className="bg-amber-50 border border-amber-200 rounded-lg p-4">
-            <p className="text-sm text-amber-800">
+          <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+            <p className="text-sm text-blue-800">
               <strong>Simulation takeaway:</strong> Under the null hypothesis (no real effect),
               the more often you peek at p-values, the more likely you are to see a
               &ldquo;significant&rdquo; result by chance. This is the core problem that sequential
