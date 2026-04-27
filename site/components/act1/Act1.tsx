@@ -105,7 +105,7 @@ export function Act1() {
 
       {/* Math section with DisplayMathBox */}
       <DisplayMathBox>
-        <div className="bg-neutral-100 border border-neutral-300 rounded-lg p-6 mt-8">
+        <div className="bg-neutral-100 border border-neutral-300 rounded-lg p-6 mt-8 mb-16">
           <h4 className="font-bold mb-3">Why peeking inflates Type I error</h4>
           <p className="mb-3 text-neutral-800">
             In a fixed-horizon A/B test (one planned analysis), we test:

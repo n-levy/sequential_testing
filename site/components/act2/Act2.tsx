@@ -202,19 +202,20 @@ export function Act2() {
 
       {/* Math section with DisplayMathBox */}
       <DisplayMathBox>
-        <div className="bg-neutral-100 border border-neutral-300 rounded-lg p-6 mt-8">
+        <div className="bg-neutral-100 border border-neutral-300 rounded-lg p-6 mt-8 mb-16">
           <h4 className="font-bold mb-3">Mathematical Formulation</h4>
           <p className="mb-2">
-            In this simulation, the displayed effect is percentage uplift:
-            <InlineMath>{`\\hat u_n = \\frac{\\bar X_{B,n}-\\bar X_{A,n}}{\\bar X_{A,n}}`}</InlineMath>.
-            The CI construction is based on the underlying difference in means
-            <InlineMath>{`\\hat\\tau_n = \\bar X_{B,n}-\\bar X_{A,n}`}</InlineMath> and its running standard error <InlineMath>{`\\widehat{\\mathrm{SE}}_n`}</InlineMath>.
+            In this simulation, the displayed effect and the CI boundaries are both expressed as percentage uplift:
           </p>
           <p className="mb-2">
+            <InlineMath>{`\\hat u_n = 100\\cdot\\frac{\\bar X_{B,n}-\\bar X_{A,n}}{\\bar X_{A,n}}`}</InlineMath>
+          </p>
+          <p className="mb-2">
+            The CI half-width is computed from the running standard error <InlineMath>{`\\widehat{\\mathrm{SE}}_n`}</InlineMath> of the difference in means, then divided by the control mean to convert to percentage scale.
             A fixed-horizon 95% CI uses
           </p>
           <p className="mb-2">
-            <InlineMath>{`\\hat{\\tau}_n \\pm 1.96\\,\\widehat{\\mathrm{SE}}_n`}</InlineMath>
+            <InlineMath>{`\\hat u_n \\pm 100\\cdot\\frac{1.96\\,\\widehat{\\mathrm{SE}}_n}{\\bar X_{A,n}}`}</InlineMath>
           </p>
           <p className="mb-2">
             and is valid at one pre-specified analysis.
@@ -223,7 +224,7 @@ export function Act2() {
             A sequential CI replaces 1.96 with a time-dependent multiplier:
           </p>
           <p className="mb-2">
-            <InlineMath>{`\\hat{\\tau}_n \\pm \\widehat{\\mathrm{SE}}_n\\,\\sqrt{\\frac{n+\\nu}{n}\\log\\!\\left(\\frac{n+\\nu}{\\nu\\alpha}\\right)}`}</InlineMath>
+            <InlineMath>{`\\hat u_n \\pm 100\\cdot\\frac{\\widehat{\\mathrm{SE}}_n}{\\bar X_{A,n}}\\,\\sqrt{\\frac{n+\\nu}{n}\\log\\!\\left(\\frac{n+\\nu}{\\nu\\alpha}\\right)}`}</InlineMath>
           </p>
           <p className="mb-2">
             where <InlineMath>{`\\nu`}</InlineMath> is a tuning parameter and <InlineMath>{`\\alpha`}</InlineMath> is the target Type I error level.
