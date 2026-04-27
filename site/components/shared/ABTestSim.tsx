@@ -16,6 +16,7 @@ interface ABTestSimProps {
   layers: SimLayer[]
   showPeekStats?: boolean
   takeaway?: ReactNode
+  simulationTitle?: string
   defaultEffect?: number // difference in means between B and A
   defaultN?: number
   showPowerControl?: boolean
@@ -114,6 +115,7 @@ export function ABTestSim({
   layers,
   showPeekStats = false,
   takeaway,
+  simulationTitle = 'Simulation 1: fixed-horizon confidence intervals.',
   defaultEffect = 0,
   defaultN = 10000,
   showPowerControl = true,
@@ -432,7 +434,7 @@ export function ABTestSim({
   return (
     <div className="bg-white border border-neutral-300 rounded-lg p-4 my-6">
       <div className="mb-2 text-base font-semibold text-blue-900">
-        Simulation 1: fixed-horizon confidence intervals.
+        {simulationTitle}
       </div>
       <div className="mb-3 text-sm text-blue-900 font-semibold">
         Relative effect size (%): <span className="font-mono">{effectPercent}%</span>

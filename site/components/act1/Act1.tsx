@@ -53,7 +53,7 @@ export function Act1() {
       {/* Simulation and explanation always visible */}
       <div className="overflow-x-auto mb-6">
         <p className="text-xs text-neutral-500 mb-2">
-          Values below are calibrated to the default simulation settings (<InlineMath>{`\\alpha = 0.05`}</InlineMath>, <InlineMath>{`n = 500`}</InlineMath>) using equal-interval peeks.
+          Values below are calibrated to the default simulation settings (<InlineMath>{`\\alpha = 0.05`}</InlineMath>, <InlineMath>{`n = 10000`}</InlineMath>) using equal-interval peeks.
         </p>
         <table className="w-full min-w-[640px] text-sm border-collapse border border-neutral-300">
           <thead>
@@ -89,7 +89,7 @@ export function Act1() {
 
       <div className="bg-neutral-50 border border-neutral-300 rounded-lg p-5 mb-8">
         <p className="text-neutral-700">
-          With daily checks over a 2-week experiment, about one in four “significant” results will be a false positive. Features released on this basis may have no real effect.
+          With daily checks over a 2-week experiment, about one in five “significant” results will be a false positive. Features released on this basis may have no real effect.
         </p>
       </div>
 

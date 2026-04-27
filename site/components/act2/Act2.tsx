@@ -29,6 +29,7 @@ export function Act2() {
         <ABTestSim
           layers={['fixed-ci', 'sequential-ci']}
           showPeekStats={true}
+          simulationTitle="Simulation 2: fixed-horizon + Eppo sequential confidence intervals."
           K={14}
         />
       </div>

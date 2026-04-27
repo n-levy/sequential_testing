@@ -107,6 +107,7 @@ export function Act3() {
           <ABTestSim
             layers={['fixed-ci', 'sequential-ci', 'pocock', 'obf', 'bonferroni']}
             showPeekStats
+            simulationTitle="Simulation 3: fixed-horizon, Eppo, and three alternative sequential methods."
             defaultEffect={0}
             K={K}
             takeaway={<>
@@ -122,6 +123,9 @@ export function Act3() {
         {/* ── Head-to-Head Comparison ── */}
         <h3 className="text-2xl font-bold text-neutral-900 mb-4">Comparison</h3>
         <div className="overflow-x-auto mb-6">
+          <p className="text-xs text-neutral-500 mb-2">
+            The CI-width rows below are illustrative values for <InlineMath>{`K = 4`}</InlineMath>, independent of the slider above.
+          </p>
           <table className="w-full min-w-[640px] text-sm border-collapse border border-neutral-300">
             <thead>
               <tr className="bg-neutral-100">
