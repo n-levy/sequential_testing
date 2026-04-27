@@ -582,7 +582,8 @@ export function ABTestSim({
           <div className="bg-white border border-blue-400 rounded-lg p-5 text-center">
             <div className="flex flex-col items-center gap-2">
               <span className="text-blue-900 font-semibold">
-                Share of simulations in which peeking {kState} times at equal time intervals during the test would show at least one statistically significant result, across 1000 repetitions:
+                Share of simulations in which peeking {kState} times at equal time intervals during the test would show at least one statistically significant result,<br />
+                across 1000 repetitions:
               </span>
               <button
                 type="button"

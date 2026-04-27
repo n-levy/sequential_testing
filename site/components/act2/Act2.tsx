@@ -112,7 +112,10 @@ export function Act2() {
         <div className="bg-neutral-100 border border-neutral-300 rounded-lg p-6 mt-8">
           <h4 className="font-bold mb-3">Mathematical Formulation</h4>
           <p className="mb-2">
-            Let <InlineMath>{`\\hat{\\tau}_n = \\bar X_{B,n} - \\bar X_{A,n}`}</InlineMath> be the running treatment effect estimate and <InlineMath>{`\\widehat{\\mathrm{SE}}_n`}</InlineMath> its running standard error.
+            In this simulation, the displayed effect is percentage uplift:
+            <InlineMath>{`\\hat u_n = \\frac{\\bar X_{B,n}-\\bar X_{A,n}}{\\bar X_{A,n}}`}</InlineMath>.
+            The CI construction is based on the underlying difference in means
+            <InlineMath>{`\\hat\\tau_n = \\bar X_{B,n}-\\bar X_{A,n}`}</InlineMath> and its running standard error <InlineMath>{`\\widehat{\\mathrm{SE}}_n`}</InlineMath>.
           </p>
           <p className="mb-2">
             A fixed-horizon 95% CI uses
