@@ -27,6 +27,17 @@ const Z_975 = 1.959964
 const PEEK_N_SIMS = 500
 const PEEK_LOOKS = 6
 const LAYER_STYLE: Record<SimLayer, { color: string; label: string }> = {
+// Normal quantile approximation
+function normInv(p: number) {
+  return Math.sqrt(2) * erfinv(2 * p - 1)
+}
+function erfinv(x: number) {
+  const a = 0.147
+  const ln = Math.log(1 - x * x)
+  const part1 = 2 / (Math.PI * a) + ln / 2
+  const part2 = ln / a
+  return Math.sign(x) * Math.sqrt(Math.sqrt(part1 * part1 - part2) - part1)
+}
   'fixed-ci':        { color: '#ef4444', label: 'Standard 95% CI' },
   'sequential-ci':   { color: '#2563eb', label: 'Sequential CI (Eppo)' },
   'pocock':          { color: '#f59e0b', label: 'Pocock (K=10)' },
@@ -96,7 +107,10 @@ export function ABTestSim({
       for (let sim = 0; sim < PEEK_N_SIMS; ++sim) {
         const t = simulateABTestTrajectory(n, 0, seed + sim);
         let crossed = false;
+        const lookSpacing = Math.floor(n / K);
         for (let i = 0; i < n; ++i) {
+          // Only evaluate at discrete looks
+          if ((i + 1) % lookSpacing !== 0 && i !== n - 1) continue;
           const denom = t.meansA[i];
           const est = denom !== 0 ? 100 * (t.meansB[i] - denom) / denom : 0;
           let w = 0;
@@ -108,17 +122,14 @@ export function ABTestSim({
             const logTerm = Math.log((t_i + nu) / (nu * alpha));
             w = denom !== 0 ? 100 * t.ses[i] * Math.sqrt((t_i + nu) / t_i * logTerm) / denom : 0;
           } else if (layer === 'pocock') {
-            const K = 6;
-            const cP = [null, null, 2.18, 2.36, 2.51, 2.60, 2.69][K] || 2.36;
+            const cP = 2.41; // good approx for K≈6
             w = denom !== 0 ? 100 * t.ses[i] * cP / denom : 0;
           } else if (layer === 'obf') {
-            const K = 6;
-            const k = Math.max(1, Math.round((i+1) / n * K));
-            const z = 1.96 * Math.sqrt(K / k);
+            const k = Math.max(1, Math.round((i + 1) / n * K));
+            const z = normInv(1 - alpha / (2 * K / k));
             w = denom !== 0 ? 100 * t.ses[i] * z / denom : 0;
           } else if (layer === 'bonferroni') {
-            const K = 6;
-            const z = 2.50;
+            const z = normInv(1 - alpha / (2 * K));
             w = denom !== 0 ? 100 * t.ses[i] * z / denom : 0;
           }
           if (est - w > 0 || est + w < 0) {
@@ -130,7 +141,7 @@ export function ABTestSim({
       results[layer] = count / PEEK_N_SIMS;
     }
     setPeekProbs(results);
-  }, [showPeekStats, layers, n, clampedEffect, seed, alpha, power]);
+  }, [showPeekStats, layers, n, clampedEffect, seed, alpha, power, K]);
 
   // Trajectory recomputed automatically whenever the controls change.
   const traj = useMemo(() => simulateABTestTrajectory(n, effectiveEffect, seed), [n, effectiveEffect, seed])
@@ -251,7 +262,7 @@ export function ABTestSim({
 
     // Pocock CI band
     if (layers.includes('pocock')) {
-      const cP = [null, null, 2.18, 2.36, 2.51, 2.60, 2.69][K] || 2.36
+      const cP = 2.41
       const pocockArea = d3.area<number>()
         .x((_d, i) => x(i + 1))
         .y0((_d, i) => {
@@ -282,14 +293,14 @@ export function ABTestSim({
         .y0((_d, i) => {
           const denom = traj.meansA[i]
           const k = Math.max(1, Math.round((i + 1) / n * K))
-          const z = 1.96 * Math.sqrt(K / k)
+          const z = normInv(1 - alpha / (2 * K / k))
           const w = denom !== 0 ? 100 * traj.ses[i] * z / denom : 0
           return y(effectPct[i] - w)
         })
         .y1((_d, i) => {
           const denom = traj.meansA[i]
           const k = Math.max(1, Math.round((i + 1) / n * K))
-          const z = 1.96 * Math.sqrt(K / k)
+          const z = normInv(1 - alpha / (2 * K / k))
           const w = denom !== 0 ? 100 * traj.ses[i] * z / denom : 0
           return y(effectPct[i] + w)
         })
@@ -306,7 +317,7 @@ export function ABTestSim({
 
     // Bonferroni CI band
     if (layers.includes('bonferroni')) {
-      const z = 2.50
+      const z = normInv(1 - alpha / (2 * K))
       const bonfArea = d3.area<number>()
         .x((_d, i) => x(i + 1))
         .y0((_d, i) => {
