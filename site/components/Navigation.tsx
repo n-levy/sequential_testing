@@ -4,42 +4,42 @@ import Link from 'next/link'
 import { useState } from 'react'
 
 interface NavigationProps {
-  variant?: 'landing' | 'short' | 'detailed'
+  variant?: 'landing' | 'focused' | 'in-depth'
 }
 
 export function Navigation({ variant = 'landing' }: NavigationProps) {
   const [isOpen, setIsOpen] = useState(false)
 
-  const shortActs = [
-    { id: 'act1', title: 'The Problem', href: '/short#act1' },
-    { id: 'act2', title: 'EPPO Solution', href: '/short#act2' },
-    { id: 'act3', title: 'DIY Implementation', href: '/short#act3' },
+  const focusedActs = [
+    { id: 'act1', title: 'The Problem', href: '/focused#act1' },
+    { id: 'act2', title: 'EPPO Solution', href: '/focused#act2' },
+    { id: 'act3', title: 'DIY Implementation', href: '/focused#act3' },
   ]
 
-  const detailedActs = [
-    { id: 'act-1', title: 'Act 1: Peeking', href: '/detailed#act-1' },
-    { id: 'act-2', title: 'Act 2: Random Walk', href: '/detailed#act-2' },
-    { id: 'act-3', title: 'Act 3: Martingale', href: '/detailed#act-3' },
-    { id: 'act-4', title: 'Act 4: Likelihood', href: '/detailed#act-4' },
-    { id: 'act-5', title: 'Act 5: LR = Martingale', href: '/detailed#act-5' },
-    { id: 'act-6', title: 'Act 6: Ville', href: '/detailed#act-6' },
-    { id: 'act-7', title: 'Act 7: SPRT', href: '/detailed#act-7' },
-    { id: 'act-8', title: 'Act 8: mSPRT', href: '/detailed#act-8' },
-    { id: 'act-9', title: 'Act 9: Conf. Sequences', href: '/detailed#act-9' },
-    { id: 'act-10', title: 'Act 10: Eppo Problem', href: '/detailed#act-10' },
-    { id: 'act-11', title: 'Act 11: Pipeline', href: '/detailed#act-11' },
-    { id: 'act-12', title: 'Act 12: CUPED', href: '/detailed#act-12' },
-    { id: 'act-13', title: 'Act 13: Sequential CI', href: '/detailed#act-13' },
-    { id: 'act-14', title: 'Act 14: DIY', href: '/detailed#act-14' },
+  const inDepthActs = [
+    { id: 'act-1', title: 'Act 1: Peeking', href: '/in-depth#act-1' },
+    { id: 'act-2', title: 'Act 2: Random Walk', href: '/in-depth#act-2' },
+    { id: 'act-3', title: 'Act 3: Martingale', href: '/in-depth#act-3' },
+    { id: 'act-4', title: 'Act 4: Likelihood', href: '/in-depth#act-4' },
+    { id: 'act-5', title: 'Act 5: LR = Martingale', href: '/in-depth#act-5' },
+    { id: 'act-6', title: 'Act 6: Ville', href: '/in-depth#act-6' },
+    { id: 'act-7', title: 'Act 7: SPRT', href: '/in-depth#act-7' },
+    { id: 'act-8', title: 'Act 8: mSPRT', href: '/in-depth#act-8' },
+    { id: 'act-9', title: 'Act 9: Conf. Sequences', href: '/in-depth#act-9' },
+    { id: 'act-10', title: 'Act 10: Eppo Problem', href: '/in-depth#act-10' },
+    { id: 'act-11', title: 'Act 11: Pipeline', href: '/in-depth#act-11' },
+    { id: 'act-12', title: 'Act 12: CUPED', href: '/in-depth#act-12' },
+    { id: 'act-13', title: 'Act 13: Sequential CI', href: '/in-depth#act-13' },
+    { id: 'act-14', title: 'Act 14: DIY', href: '/in-depth#act-14' },
   ]
 
   const landingLinks = [
-    { id: 'short', title: 'Focused', href: '/short' },
-    { id: 'detailed', title: 'In-depth', href: '/detailed' },
+    { id: 'focused', title: 'Focused', href: '/focused' },
+    { id: 'in-depth', title: 'In-depth', href: '/in-depth' },
   ]
 
-  const links = variant === 'short' ? shortActs
-    : variant === 'detailed' ? detailedActs
+  const links = variant === 'focused' ? focusedActs
+    : variant === 'in-depth' ? inDepthActs
     : landingLinks
 
   return (
@@ -52,18 +52,18 @@ export function Navigation({ variant = 'landing' }: NavigationProps) {
             </Link>
             {variant !== 'landing' && (
               <span className={`ml-3 text-xs font-semibold uppercase tracking-wide px-2 py-0.5 rounded ${
-                variant === 'short'
+                variant === 'focused'
                   ? 'bg-blue-100 text-blue-700'
                   : 'bg-purple-100 text-purple-700'
               }`}>
-                {variant === 'short' ? 'Focused' : 'In-depth'}
+                {variant === 'focused' ? 'Focused' : 'In-depth'}
               </span>
             )}
           </div>
 
           {/* Desktop navigation */}
           <div className="hidden md:flex items-center space-x-8">
-            {variant === 'detailed' ? (
+            {variant === 'in-depth' ? (
               <>
                 <div className="relative group">
                   <button className="text-neutral-600 hover:text-primary-600 transition-colors flex items-center gap-1">
@@ -98,10 +98,10 @@ export function Navigation({ variant = 'landing' }: NavigationProps) {
             )}
             {variant !== 'landing' && (
               <Link
-                href={variant === 'short' ? '/detailed' : '/short'}
+                href={variant === 'focused' ? '/in-depth' : '/focused'}
                 className="text-neutral-400 hover:text-primary-600 transition-colors text-sm"
               >
-                Switch to {variant === 'short' ? 'In-depth' : 'Focused'} Version
+                Switch to {variant === 'focused' ? 'In-depth' : 'Focused'} Version
               </Link>
             )}
           </div>
@@ -138,7 +138,7 @@ export function Navigation({ variant = 'landing' }: NavigationProps) {
                     Home
                   </Link>
                   <Link
-                    href={variant === 'short' ? '/short#intro' : '/detailed#intro'}
+                    href={variant === 'focused' ? '/focused#intro' : '/in-depth#intro'}
                     className="block px-3 py-2 text-neutral-600 hover:text-primary-600"
                     onClick={() => setIsOpen(false)}
                   >
@@ -158,11 +158,11 @@ export function Navigation({ variant = 'landing' }: NavigationProps) {
               ))}
               {variant !== 'landing' && (
                 <Link
-                  href={variant === 'short' ? '/detailed' : '/short'}
+                  href={variant === 'focused' ? '/in-depth' : '/focused'}
                   className="block px-3 py-2 text-neutral-400 hover:text-primary-600"
                   onClick={() => setIsOpen(false)}
                 >
-                  Switch to {variant === 'short' ? 'In-depth' : 'Focused'} Version
+                  Switch to {variant === 'focused' ? 'In-depth' : 'Focused'} Version
                 </Link>
               )}
             </div>
