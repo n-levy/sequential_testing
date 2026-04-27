@@ -17,20 +17,19 @@ export function Act1() {
   return (
     <div id="act-1" className="max-w-3xl mx-auto px-4">
       <h2 className="text-2xl font-bold mb-1">Act 1 — The Peeking Problem</h2>
-      <p className="text-neutral-600 mb-6">Peeking without adjustments</p>
 
       {/* Simulation intro */}
       <div className="mb-6">
         <h3 className="text-xl font-semibold mb-2">Simulation</h3>
         <p className="text-neutral-700">
-          Simulate an A/B test. Specify the effect size, number of users, and significance level.
+          Below is a simulation of an A/B test. Specify the effect size, number of users, and significance level.
           The plot shows the running difference in means and the standard 95% confidence interval.
         </p>
       </div>
 
       {/* Simulation */}
       <div className="mb-8 max-w-2xl mx-auto">
-        <ABTestSim layers={['fixed-ci']} />
+        <ABTestSim layers={['fixed-ci']} power={0.8} />
       </div>
 
       {/* Probability of crossing */}
@@ -41,10 +40,6 @@ export function Act1() {
         <div className="flex justify-between text-sm">
           <span>Standard 95% CI</span>
           <span className="font-semibold">68.8%</span>
-        </div>
-        <div className="flex justify-between text-sm">
-          <span>Sequential CI (Eppo)</span>
-          <span className="font-semibold">25.8%</span>
         </div>
       </div>
 
@@ -115,25 +110,21 @@ export function Act1() {
       {/* Math section with DisplayMathBox */}
       <DisplayMathBox>
         <div className="bg-neutral-100 border border-neutral-300 rounded-lg p-6 mt-8">
-          <h4 className="font-bold mb-3">Mathematical Formulation</h4>
-          <p className="mb-2">
-            Let <InlineMath>{`X_i`}</InlineMath> represent the outcome of the <InlineMath>{`i`}</InlineMath>th coin flip. We assign:
+          <h4 className="font-bold mb-3">Why peeking inflates Type I error</h4>
+          <p className="mb-3 text-neutral-800">
+            At a fixed sample size n, a 95% confidence interval satisfies:
           </p>
-          <ul className="list-disc ml-6 mb-2">
-            <li><InlineMath>{`X_i = +1`}</InlineMath> if the flip is heads (step forward)</li>
-            <li><InlineMath>{`X_i = -1`}</InlineMath> if the flip is tails (step backward)</li>
-          </ul>
-          <p className="mb-2">
-            The probability of heads is written <InlineMath>{`p`}</InlineMath>. For a fair coin, <InlineMath>{`p = 0.5`}</InlineMath>.
+          <p className="mb-3">
+            <InlineMath>{`P(\\text{CI}_n \\text{ contains } \\theta) = 0.95`}</InlineMath>
           </p>
-          <p className="mb-2">
-            <strong>Position after n steps:</strong>
+          <p className="mb-3 text-neutral-800">
+            This guarantee holds only for a single, pre-specified analysis. If we look repeatedly at times n = 1, 2, ..., N, the relevant probability becomes:
           </p>
-          <p className="mb-2">
-            The person&apos;s position after <InlineMath>{`n`}</InlineMath> steps is the sum of all the individual steps:
+          <p className="mb-3">
+            <InlineMath>{`P(\\exists n \\leq N : \\theta \\notin \\text{CI}_n)`}</InlineMath>
           </p>
-          <p className="mb-2">
-            <InlineMath>{`S_n = X_1 + X_2 + X_3 + ... + X_n`}</InlineMath>
+          <p className="text-neutral-800">
+            Each additional look adds another chance to make an error. As a result, the probability of ever seeing a false positive becomes much larger than 5%.
           </p>
         </div>
       </DisplayMathBox>

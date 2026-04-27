@@ -69,7 +69,7 @@ export function ABTestSim({
   takeaway,
   defaultEffect = 0,
   defaultN = 500,
-  showPowerControl = false,
+  showPowerControl = true,
   K = 6,
   hideEffectStats = false,
 }: ABTestSimProps) {
@@ -83,6 +83,7 @@ export function ABTestSim({
 
   // Clamp effect to [-0.5, 0.5]
   const clampedEffect = Math.max(-0.5, Math.min(0.5, effect))
+  const effectiveEffect = clampedEffect * power
 
   // Compute the probability of crossing the CI at any point for all selected layers
   useEffect(() => {
@@ -91,7 +92,8 @@ export function ABTestSim({
     for (const layer of layers) {
       let count = 0;
       for (let sim = 0; sim < PEEK_N_SIMS; ++sim) {
-        const t = simulateABTestTrajectory(n, clampedEffect, seed + sim);
+        const effectiveEffect = clampedEffect * power;
+        const t = simulateABTestTrajectory(n, effectiveEffect, seed + sim);
         let crossed = false;
         for (let i = 0; i < n; ++i) {
           const denom = t.meansA[i];
@@ -125,10 +127,10 @@ export function ABTestSim({
       results[layer] = count / PEEK_N_SIMS;
     }
     setPeekProbs(results);
-  }, [showPeekStats, layers, n, clampedEffect, seed, alpha]);
+  }, [showPeekStats, layers, n, clampedEffect, seed, alpha, power]);
 
   // Trajectory recomputed automatically whenever the controls change.
-  const traj = useMemo(() => simulateABTestTrajectory(n, clampedEffect, seed), [n, clampedEffect, seed])
+  const traj = useMemo(() => simulateABTestTrajectory(n, effectiveEffect, seed), [n, effectiveEffect, seed])
 
   // Compute the running effect in percent: (meanB - meanA) / meanA
   const effectPct = useMemo(() => {
@@ -239,7 +241,7 @@ export function ABTestSim({
         Effect: (B − A) / A, null hypothesis = 0%.
       </div>
       <div className="mb-3 text-sm text-blue-900 font-semibold">
-        Effect size: <span className="font-mono">{clampedEffect >= 0 ? '+' : ''}{clampedEffect.toFixed(2)}</span>
+        Effect size: <span className="font-mono">{effectiveEffect >= 0 ? '+' : ''}{effectiveEffect.toFixed(2)}</span>
       </div>
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-4">
         <div>
@@ -313,28 +315,14 @@ export function ABTestSim({
         />
       </div>
       {/* Stats / decision panel */}
-      {!hideEffectStats && (
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mt-4">
+      {decision && (
+        <div className="mt-4">
           <div className="bg-neutral-50 border border-neutral-200 rounded-lg p-3">
-            <div className="text-[11px] font-medium text-neutral-500 uppercase">Sample effect</div>
-            <div className="text-lg font-semibold text-neutral-900 font-mono">
-              {(effectPct[n - 1] >= 0 ? '+' : '')}{effectPct[n - 1].toFixed(2)}%
+            <div className="text-[11px] font-medium text-neutral-500 uppercase">
+              Decision at n = {n}
             </div>
+            <div className={`text-base font-semibold ${decision.color}`}>{decision.label}</div>
           </div>
-          <div className="bg-neutral-50 border border-neutral-200 rounded-lg p-3">
-            <div className="text-[11px] font-medium text-neutral-500 uppercase">CI half-width</div>
-            <div className="text-lg font-semibold text-neutral-900 font-mono">
-              ±{ciHalfWidthPct[n - 1].toFixed(2)}%
-            </div>
-          </div>
-          {decision && (
-            <div className="bg-neutral-50 border border-neutral-200 rounded-lg p-3 col-span-2">
-              <div className="text-[11px] font-medium text-neutral-500 uppercase">
-                Decision at n = {n}
-              </div>
-              <div className={`text-base font-semibold ${decision.color}`}>{decision.label}</div>
-            </div>
-          )}
         </div>
       )}
       {takeaway && (
