@@ -121,6 +121,7 @@ export function ABTestSim({
   const [kState, setK] = useState(KProp)
   const [peekProbs, setPeekProbs] = useState<Record<string, number> | null>(null)
   const [runSimulationsTrigger, setRunSimulationsTrigger] = useState(0)
+  const [showSimulationNotes, setShowSimulationNotes] = useState(false)
   const svgRef = useRef<SVGSVGElement | null>(null)
 
   // Clamp effect to [-0.5, 0.5]
@@ -540,43 +541,79 @@ export function ABTestSim({
       )}
       {/* Probability of crossing CI at some point for all layers */}
       {showPeekStats && (
-        <div className="bg-white border border-blue-400 rounded-lg p-5 mb-8 mt-4 text-center">
-          <div className="flex flex-col items-center gap-2">
-            <span className="text-blue-900 font-semibold">
-              Share of simulations in which peeking {kState} times at equal time intervals during the test would show at least one statistically significant result, across 1000 repetitions:
-            </span>
+        <div className="mb-8 mt-4">
+          <div className="bg-white border border-blue-400 rounded-lg p-5 text-center">
+            <div className="flex flex-col items-center gap-2">
+              <span className="text-blue-900 font-semibold">
+                Share of simulations in which peeking {kState} times at equal time intervals during the test would show at least one statistically significant result, across 1000 repetitions:
+              </span>
+              <button
+                type="button"
+                onClick={() => {
+                  setPeekProbs(null)
+                  setRunSimulationsTrigger(t => t + 1)
+                }}
+                className="px-3 py-1.5 text-sm bg-blue-600 text-white rounded hover:bg-blue-700"
+              >
+                Run 1000 repetitions
+              </button>
+            </div>
+            {peekProbs === null ? (
+              <div className="mt-2 text-sm text-neutral-500">Click the button to run simulations</div>
+            ) : Object.keys(peekProbs).length === 1 ? (
+              <span className="ml-2 text-blue-700 font-mono" id="peek-prob-box">{(Object.values(peekProbs)[0] * 100).toFixed(1)}%</span>
+            ) : (
+              <table className="mx-auto mt-2 text-sm">
+                <thead>
+                  <tr>
+                    <th className="px-3 py-1 text-left">Method</th>
+                    <th className="px-3 py-1 text-right">Share crossing</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {layers.map(layer => (
+                    <tr key={layer}>
+                      <td className="px-3 py-1 text-left">{LAYER_STYLE[layer].label}{['pocock','obf','bonferroni'].includes(layer) ? ` (K=${kState})` : ''}</td>
+                      <td className="px-3 py-1 text-right text-blue-700 font-mono">{(peekProbs[layer] * 100).toFixed(1)}%</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            )}
+          </div>
+
+          <div className="mt-3">
             <button
               type="button"
-              onClick={() => {
-                setPeekProbs(null)
-                setRunSimulationsTrigger(t => t + 1)
-              }}
-              className="px-3 py-1.5 text-sm bg-blue-600 text-white rounded hover:bg-blue-700"
+              onClick={() => setShowSimulationNotes(v => !v)}
+              className="px-3 py-1.5 text-sm bg-neutral-100 text-neutral-800 rounded border border-neutral-300 hover:bg-neutral-200"
             >
-              Run 1000 repetitions
+              Simulation assumptions and notes
             </button>
           </div>
-          {peekProbs === null ? (
-            <div className="mt-2 text-sm text-neutral-500">Click the button to run simulations</div>
-          ) : Object.keys(peekProbs).length === 1 ? (
-            <span className="ml-2 text-blue-700 font-mono" id="peek-prob-box">{(Object.values(peekProbs)[0] * 100).toFixed(1)}%</span>
-          ) : (
-            <table className="mx-auto mt-2 text-sm">
-              <thead>
-                <tr>
-                  <th className="px-3 py-1 text-left">Method</th>
-                  <th className="px-3 py-1 text-right">Share crossing</th>
-                </tr>
-              </thead>
-              <tbody>
-                {layers.map(layer => (
-                  <tr key={layer}>
-                    <td className="px-3 py-1 text-left">{LAYER_STYLE[layer].label}{['pocock','obf','bonferroni'].includes(layer) ? ` (K=${kState})` : ''}</td>
-                    <td className="px-3 py-1 text-right text-blue-700 font-mono">{(peekProbs[layer] * 100).toFixed(1)}%</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+
+          {showSimulationNotes && (
+            <div className="mt-3 bg-neutral-50 border border-neutral-300 rounded-lg p-4 text-left text-sm text-neutral-700 space-y-4">
+              <div>
+                <h5 className="font-semibold text-neutral-900 mb-2">Assumptions</h5>
+                <ul className="list-disc list-inside space-y-1">
+                  <li>Binary outcome metric (Bernoulli), modeled as conversion in each arm.</li>
+                  <li>Equal traffic split: 50% control and 50% treatment.</li>
+                  <li>Independent users/events within and across arms (no clustering or interference).</li>
+                  <li>No missing data, no delayed outcomes, and no sample-ratio mismatch.</li>
+                  <li>Two-sided significance check at each look: CI crossing zero is treated as significant.</li>
+                  <li>Peeks occur at exactly K equal time intervals over the test duration.</li>
+                </ul>
+              </div>
+              <div>
+                <h5 className="font-semibold text-neutral-900 mb-2">Notes</h5>
+                <ul className="list-disc list-inside space-y-1">
+                  <li>The Monte Carlo estimate uses 1000 repetitions, so displayed rates include simulation noise.</li>
+                  <li>The slider is labeled as relative effect, but the generator currently applies it as an additive probability-point shift from a 50% baseline (for example, slider +0.05 sets treatment from 50% to 55%).</li>
+                  <li>This modeling choice is mainly to keep the simulation simple and fast for interactive use; it is a practical approximation rather than a full production experiment model.</li>
+                </ul>
+              </div>
+            </div>
           )}
         </div>
       )}
