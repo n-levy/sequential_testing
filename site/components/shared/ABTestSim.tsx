@@ -447,7 +447,7 @@ export function ABTestSim({
             Number of peeks (K) <span className="font-mono">({kState})</span>
           </label>
           <input
-            type="range" min={2} max={20} step={1}
+            type="range" min={2} max={50} step={1}
             value={kState}
             onChange={e => {
               const newK = parseInt(e.target.value, 10)
