@@ -26,12 +26,19 @@ export function Act1() {
       </div>
 
       {/* Simulation */}
-      <div className="mb-8 max-w-2xl">
+      <div className="mb-8 max-w-2xl mx-auto">
         <ABTestSim layers={['fixed-ci']} />
       </div>
 
-      {/* Why explanation */}
+      {/* Simulation takeaway */}
       <div className="bg-blue-50 border border-blue-200 rounded-lg p-5 mb-6">
+        <p className="text-neutral-700">
+          <strong>Simulation takeaway.</strong> With no true effect (effect = 0), the standard CI is calibrated to fail only about 5% of the time at one specific look. But if you peek along the way, far more than 5% of trajectories will cross the boundary at some point—leading to false positives.
+        </p>
+      </div>
+
+      {/* Why does this happen */}
+      <div className="bg-white border border-neutral-300 rounded-lg p-5 mb-6">
         <h4 className="font-semibold mb-2">Why does this happen?</h4>
         <p className="text-neutral-700">
           Standard confidence intervals only control the false positive rate if you look once
@@ -78,7 +85,7 @@ export function Act1() {
         </table>
       </div>
 
-      <div className="bg-white border border-neutral-400 rounded-lg p-5 mb-8">
+      <div className="bg-neutral-50 border border-neutral-300 rounded-lg p-5 mb-8">
         <p className="text-neutral-700">
           With daily checks over a 4-week experiment, about one in four “significant” results will be a false positive. Features shipped on this basis may have no real effect—or may even degrade your metrics.
         </p>
