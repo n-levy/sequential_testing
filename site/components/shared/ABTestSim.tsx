@@ -26,7 +26,6 @@ interface ABTestSimProps {
 
 const Z_975 = 1.959964
 const PEEK_N_SIMS = 1000 // number of re-randomizations used to estimate crossing probabilities
-const PEEK_LOOKS = 6
 const ALPHA_MIN = 0.01
 const ALPHA_MAX = 0.1
 const ALPHA_DEFAULT = 0.05
@@ -119,7 +118,7 @@ export function ABTestSim({
       for (let sim = 0; sim < PEEK_N_SIMS; ++sim) {
         const t = simulateABTestTrajectory(n, 0, seed + sim + runSimulationsTrigger * 10000);
         let crossed = false;
-        const lookSpacing = Math.floor(n / kState);
+        const lookSpacing = Math.max(1, Math.floor(n / kState));
         for (let i = 0; i < n; ++i) {
           // Only evaluate at discrete looks
           if ((i + 1) % lookSpacing !== 0 && i !== n - 1) continue;
@@ -367,15 +366,17 @@ export function ABTestSim({
   // Decision at the final time step (in percent)
   const decision = useMemo(() => {
     if (n <= 0) return null
-    const last = n - 1
-    const est = effectPct[last]
-    const w = ciHalfWidthPct[last]
-    const lo = est - w
-    const hi = est + w
-    if (lo > 0) return { label: 'Yes' }
-    if (hi < 0) return { label: 'Yes' }
+    const lookSpacing = Math.max(1, Math.floor(n / kState))
+    for (let i = 0; i < n; i++) {
+      if ((i + 1) % lookSpacing !== 0 && i !== n - 1) continue
+      const est = effectPct[i]
+      const w = ciHalfWidthPct[i]
+      const lo = est - w
+      const hi = est + w
+      if (lo > 0 || hi < 0) return { label: 'Yes' }
+    }
     return { label: 'No' }
-  }, [effectPct, ciHalfWidthPct, n])
+  }, [effectPct, ciHalfWidthPct, n, kState])
 
   return (
     <div className="bg-white border border-neutral-300 rounded-lg p-4 my-6">
@@ -413,7 +414,7 @@ export function ABTestSim({
             />
           </div>
           <div className="text-[11px] text-neutral-500 mt-1">
-            Default marker: α = 0.05
+            Default: α = 0.05
           </div>
         </div>
         <div className="w-full sm:w-[210px]">
@@ -431,7 +432,7 @@ export function ABTestSim({
             Number of peeks (K) <span className="font-mono">({kState})</span>
           </label>
           <input
-            type="range" min={2} max={10} step={1}
+            type="range" min={2} max={20} step={1}
             value={kState}
             onChange={e => {
               const newK = parseInt(e.target.value, 10)
@@ -459,7 +460,7 @@ export function ABTestSim({
               />
             </div>
             <div className="text-[11px] text-neutral-500 mt-1">
-              Default marker: power = 0.8
+              Default: power = 0.8
             </div>
           </div>
         )}
@@ -498,7 +499,7 @@ export function ABTestSim({
         <div className="mt-4">
           <div className="bg-neutral-50 border border-neutral-200 rounded-lg p-3">
             <div className="text-sm font-semibold text-black">
-              Would peeking daily for two weeks (14 peeks) show at least one statistically significant result?
+              In this simulation, would peeking {kState} times at equal time intervals during the test show at least one statistically significant result?
             </div>
             <div className="text-sm text-neutral-500">{decision.label}</div>
           </div>
@@ -514,7 +515,7 @@ export function ABTestSim({
         <div className="bg-white border border-blue-400 rounded-lg p-5 mb-8 mt-4 text-center">
           <div className="flex flex-col items-center gap-2">
             <span className="text-blue-900 font-semibold">
-              Share of simulations in which peeking daily for two weeks (14 peeks) would show at least one statistically significant result, across 1000 repetitions:
+              Share of simulations in which peeking {kState} times at equal time intervals during the test would show at least one statistically significant result, across 1000 repetitions:
             </span>
             <button
               type="button"

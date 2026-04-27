@@ -33,6 +33,7 @@ export function Act1() {
           layers={['fixed-ci']} 
           power={0.8} 
           showPeekStats={true}
+          K={14}
         />
       </div>
 
