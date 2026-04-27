@@ -15,9 +15,9 @@ function DisplayMathBox({ children }: { children: React.ReactNode }) {
 
 export function Act1() {
   return (
-    <div id="act-1">
+    <div id="act-1" className="max-w-3xl mx-auto px-4">
       {/* Simulation */}
-      <div className="mb-8">
+      <div className="mb-8 max-w-2xl">
         <ABTestSim layers={['fixed-ci']} />
       </div>
       {/* Simulation and explanation always visible */}
