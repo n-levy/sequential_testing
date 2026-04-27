@@ -1,6 +1,5 @@
 "use client";
 import React, { useState } from 'react';
-import { EppoFPRReport } from './EppoFPRReport'
 import { Card, CardHeader, CardTitle, CardContent } from '../ui/Card'
 import { InlineMath, BlockMath } from '../ui/Math'
 import { BonferroniImpl } from './BonferroniImpl'
@@ -9,24 +8,19 @@ import { ObfImpl } from './ObfImpl'
 import { ABTestSim } from '../shared/ABTestSim'
 
 export function Act3() {
-  const [selectedMethod, setSelectedMethod] = useState<string | null>(null)
   const [K, setK] = useState(6)
 
   return (
-    <section id="act3" className="py-16 bg-white">
-      <div className="max-w-4xl mx-auto px-4">
-        <div className="text-center mb-12">
-          <h2 className="text-3xl font-bold text-neutral-900 mb-4">
-            Act 3 &mdash; Alternative Methods
-          </h2>
-          <p className="text-neutral-600">
-            Three group sequential methods for controlling the family-wise error rate
-            under interim analyses, implementable without a dedicated platform.
-          </p>
-        </div>
+    <div id="act3" className="max-w-3xl mx-auto px-4">
+      <h2 className="text-2xl font-bold mb-1">Act 3 — Alternative Methods</h2>
+      <p className="text-neutral-700 mb-6">
+        Three group sequential methods for controlling false positives under interim analyses,
+        for teams implementing sequential monitoring without a dedicated platform.
+      </p>
 
         {/* ── Intuition ── */}
-        <div className="bg-blue-50 border border-blue-400 rounded-lg p-6 mb-8">
+        <div className="bg-white border border-neutral-300 rounded-lg p-5 mb-6">
+          <h4 className="font-semibold mb-2">How these methods differ</h4>
           <div className="text-neutral-800 space-y-3">
             <p>
               Suppose you plan to analyse your experiment at <InlineMath>{`K`}</InlineMath> pre-specified
@@ -53,6 +47,11 @@ export function Act3() {
 
         {/* ── K slider ── */}
         <div className="mb-6">
+          <h3 className="text-xl font-semibold mb-2">Simulation</h3>
+          <p className="text-neutral-700 mb-3">
+            This extends the Act 1/2 simulation by adding Bonferroni, Pocock, and O&apos;Brien&ndash;Fleming
+            confidence intervals, so you can compare all methods under the same settings.
+          </p>
           <label className="block text-sm font-medium text-neutral-700 mb-1">
             Number of planned analyses (K): <span className="font-mono">{K}</span>
           </label>
@@ -65,7 +64,7 @@ export function Act3() {
 
         {/* ── All Methods ── */}
         <div className="flex flex-col gap-6 mb-8">
-          <Card className="bg-blue-50">
+          <Card className="bg-white border border-neutral-300">
             <CardHeader>
               <CardTitle className="text-blue-700">Method 1: Bonferroni</CardTitle>
             </CardHeader>
@@ -77,7 +76,7 @@ export function Act3() {
             </CardContent>
             <BonferroniImpl />
           </Card>
-          <Card className="bg-orange-50">
+          <Card className="bg-white border border-neutral-300">
             <CardHeader>
               <CardTitle className="text-orange-700">Method 2: <a href="#ref-pocock-1977" className="text-blue-600 hover:text-blue-800">Pocock (1977)</a></CardTitle>
             </CardHeader>
@@ -88,7 +87,7 @@ export function Act3() {
             </CardContent>
             <PocockImpl />
           </Card>
-          <Card className="bg-blue-50">
+          <Card className="bg-white border border-neutral-300">
             <CardHeader>
               <CardTitle className="text-blue-700">Method 3: <a href="#ref-obrien-fleming-1979" className="text-blue-600 hover:text-blue-800">O'Brien–Fleming (1979)</a></CardTitle>
             </CardHeader>
@@ -103,7 +102,7 @@ export function Act3() {
 
 
         {/* ── Simulation: Share crossing each threshold ── */}
-        <h3 className="text-2xl font-bold text-neutral-900 mb-4">Simulation: Share Crossing Each Threshold</h3>
+        <h4 className="font-semibold mb-2">How methods compare in simulation</h4>
         <div className="mb-10">
           <ABTestSim
             layers={['fixed-ci', 'sequential-ci', 'pocock', 'obf', 'bonferroni']}
@@ -111,8 +110,11 @@ export function Act3() {
             defaultEffect={0}
             K={K}
             takeaway={<>
-              Simulation takeaway. For each method, this shows the share of 500 simulated A/B tests (effect = 0) that crossed the respective threshold at any point. When effect = 0, this is an A/A test; otherwise, it shows the probability of crossing under the simulated effect.<br /><br />
-              Note: The Eppo/Howard sequential CI is very conservative in this setting, with a type I error rate often well below 1%. One of the group sequential alternatives, especially O'Brien–Fleming or Pocock, may be a better choice for most practical A/B tests, as they are not overly conservative and still control the error rate under peeking.
+              <strong>Result interpretation:</strong> click &ldquo;Run 1000 repetitions&rdquo; to estimate how often each method crosses significance under the current settings.<br /><br />
+              <strong>Bonferroni:</strong> most conservative among the three DIY methods (lowest crossing share).<br />
+              <strong>Pocock:</strong> less conservative than Bonferroni with the same threshold at each look.<br />
+              <strong>O&apos;Brien&ndash;Fleming:</strong> very strict early, then close to classical thresholds at later looks.<br />
+              <strong>Sequential CI (Eppo):</strong> anytime-valid and typically conservative in this setup.
             </>}
           />
         </div>
@@ -185,7 +187,7 @@ export function Act3() {
         </div>
 
         {/* ── Key Takeaway ── */}
-        <div className="bg-yellow-50 border border-yellow-600 rounded-lg p-6 mb-10">
+        <div className="bg-yellow-50 border border-yellow-600 rounded-lg p-6 mb-8">
           <h4 className="font-bold text-yellow-900 mb-3">Key Takeaway</h4>
           <div className="text-neutral-800 space-y-3">
             <p><strong>Which method to use:</strong></p>
@@ -289,7 +291,6 @@ export function Act3() {
         </div>
 
         {/* (Removed duplicate CoinFlipMeanSim simulation; see ABTestSim block above) */}
-      </div>
-    </section>
+    </div>
   )
 }
