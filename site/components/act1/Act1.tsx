@@ -16,6 +16,9 @@ function DisplayMathBox({ children }: { children: React.ReactNode }) {
 export function Act1() {
   return (
     <div>
+      <div style={{ background: 'red', padding: '10px', color: 'white', marginBottom: '10px' }}>
+        ACT 1 IS RENDERING
+      </div>
       {/* Simulation and explanation always visible */}
       <div className="overflow-x-auto mb-6">
         <table className="w-full min-w-[640px] text-sm border-collapse border border-neutral-300">
