@@ -302,6 +302,7 @@ export function ABTestSim({
             Standard 95% CI
           </span>
         </div>
+      </div>
       {/* Plot */}
       <div style={{ width: '100%', overflowX: 'auto' }}>
         <svg
