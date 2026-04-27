@@ -16,9 +16,33 @@ function DisplayMathBox({ children }: { children: React.ReactNode }) {
 export function Act1() {
   return (
     <div id="act-1" className="max-w-3xl mx-auto px-4">
+      {/* Simulation intro */}
+      <div className="mb-6">
+        <h3 className="text-xl font-semibold mb-2">Simulation</h3>
+        <p className="text-neutral-700">
+          Simulate an A/B test. Specify the effect size, number of users, and significance level.
+          The plot shows the running difference in means and the standard 95% confidence interval.
+        </p>
+      </div>
+
       {/* Simulation */}
       <div className="mb-8 max-w-2xl">
         <ABTestSim layers={['fixed-ci']} />
+      </div>
+
+      {/* Why explanation */}
+      <div className="bg-blue-50 border border-blue-200 rounded-lg p-5 mb-6">
+        <h4 className="font-semibold mb-2">Why does this happen?</h4>
+        <p className="text-neutral-700">
+          Standard confidence intervals only control the false positive rate if you look once
+          at a pre-specified sample size. Each additional peek gives another chance to get
+          a “significant” result by luck.
+        </p>
+      </div>
+
+      {/* How bad is it */}
+      <div className="mb-4">
+        <h4 className="font-semibold mb-2">How bad is it?</h4>
       </div>
       {/* Simulation and explanation always visible */}
       <div className="overflow-x-auto mb-6">
