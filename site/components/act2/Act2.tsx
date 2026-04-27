@@ -11,50 +11,100 @@ function DisplayMathBox({ children }: { children: React.ReactNode }) {
 
 export function Act2() {
   return (
-    <div id="act2">
-      <h2 className="text-2xl font-bold mb-2">Act 2 — The Eppo Solution</h2>
-      <p className="text-neutral-600 mb-6">(Schmit & Miller, 2024)</p>
+    <div id="act2" className="max-w-3xl mx-auto px-4">
+      <h2 className="text-2xl font-bold mb-1">Act 2 — The Eppo Solution</h2>
 
       {/* Simulation intro */}
-      <div className="mb-4 text-neutral-700">
-        Simulate an A/B test with no true effect (effect = 0). The plot below adds Eppo's sequential confidence interval (blue band) on top of the standard 95% CI (red band) you saw in Act 1. The sequential CI is wider at any single look — that is the price of peeking — but its 95% coverage holds simultaneously at every look.
+      <div className="mb-6">
+        <h3 className="text-xl font-semibold mb-2">Simulation</h3>
+        <p className="text-neutral-700">
+          This is the same simulation as Act 1, plus Eppo&apos;s sequential confidence interval (blue)
+          on top of the standard fixed-horizon confidence interval (red). The blue interval is typically
+          wider at any single look, but it keeps error control valid under repeated monitoring.
+        </p>
       </div>
 
       {/* Simulation */}
       <div className="mb-8 max-w-2xl mx-auto">
-        <ABTestSim layers={['fixed-ci', 'sequential-ci']} showPeekStats={true} showPowerControl={false} />
+        <ABTestSim
+          layers={['fixed-ci', 'sequential-ci']}
+          showPeekStats={true}
+          K={14}
+        />
       </div>
 
-      {/* Probability of crossing */}
+      {/* Why does this work */}
+      <div className="bg-white border border-neutral-300 rounded-lg p-5 mb-6">
+        <h4 className="font-semibold mb-2">Why does this work?</h4>
+        <p className="text-neutral-700 mb-2">
+          The fixed-horizon CI controls error for one planned analysis. Eppo&apos;s sequential CI uses
+          a time-dependent boundary, so the guarantee is valid no matter when or how often you peek.
+        </p>
+        <p className="text-neutral-700">
+          Tradeoff: at any single look, the interval is wider; benefit: no hidden inflation from repeated checks.
+        </p>
+      </div>
+
+      {/* How different is it */}
+      <div className="mb-4">
+        <h4 className="font-semibold mb-2">How different is it?</h4>
+      </div>
       <div className="overflow-x-auto mb-6">
-        <table className="w-full border border-neutral-300 text-sm">
-          <thead className="bg-neutral-100">
-            <tr>
-              <th className="border border-neutral-300 p-3 text-left">Method</th>
-              <th className="border border-neutral-300 p-3 text-left">Share crossing</th>
+        <p className="text-xs text-neutral-500 mb-2">
+          Values below are calibrated to default settings (<InlineMath>{`\\alpha = 0.05`}</InlineMath>, <InlineMath>{`n = 10000`}</InlineMath>, baseline 10%, no true effect) using equal-interval peeks.
+        </p>
+        <table className="w-full min-w-[640px] text-sm border-collapse border border-neutral-300">
+          <thead>
+            <tr className="bg-neutral-100">
+              <th className="border border-neutral-300 p-3 text-left font-semibold">Checking schedule</th>
+              <th className="border border-neutral-300 p-3 text-left font-semibold">Standard 95% CI</th>
+              <th className="border border-neutral-300 p-3 text-left font-semibold">Sequential CI (Eppo)</th>
             </tr>
           </thead>
           <tbody>
             <tr>
-              <td className="border border-neutral-300 p-3">Standard 95% CI</td>
-              <td className="border border-neutral-300 p-3">~68%</td>
+              <td className="border border-neutral-300 p-3">Once at the end (1 look)</td>
+              <td className="border border-neutral-300 p-3"><InlineMath>{`\\sim 5\\%`}</InlineMath></td>
+              <td className="border border-neutral-300 p-3"><InlineMath>{`\\sim 2\\%`}</InlineMath></td>
             </tr>
             <tr className="bg-neutral-50">
-              <td className="border border-neutral-300 p-3">Sequential CI (Eppo)</td>
-              <td className="border border-neutral-300 p-3">~26%</td>
+              <td className="border border-neutral-300 p-3">Daily for 1 week (7 looks)</td>
+              <td className="border border-neutral-300 p-3"><InlineMath>{`\\sim 16\\%`}</InlineMath></td>
+              <td className="border border-neutral-300 p-3"><InlineMath>{`\\sim 4\\%`}</InlineMath></td>
+            </tr>
+            <tr>
+              <td className="border border-neutral-300 p-3">Daily for 2 weeks (14 looks)</td>
+              <td className="border border-neutral-300 p-3"><InlineMath>{`\\sim 22\\%`}</InlineMath></td>
+              <td className="border border-neutral-300 p-3"><InlineMath>{`\\sim 5\\%`}</InlineMath></td>
+            </tr>
+            <tr className="bg-neutral-50">
+              <td className="border border-neutral-300 p-3">Daily for 4 weeks (28 looks)</td>
+              <td className="border border-neutral-300 p-3"><InlineMath>{`\\sim 28\\%`}</InlineMath></td>
+              <td className="border border-neutral-300 p-3"><InlineMath>{`\\sim 5\\%`}</InlineMath></td>
+            </tr>
+            <tr>
+              <td className="border border-neutral-300 p-3">Very frequent checks (50 looks)</td>
+              <td className="border border-neutral-300 p-3"><InlineMath>{`\\sim 33\\%`}</InlineMath></td>
+              <td className="border border-neutral-300 p-3"><InlineMath>{`\\sim 6\\%`}</InlineMath></td>
             </tr>
           </tbody>
         </table>
       </div>
 
-      {/* Intuitive explanation always visible */}
-      <div className="bg-white border border-neutral-400 rounded-lg p-5 mb-8">
-        <p className="text-neutral-700 mb-2">
-          Eppo's sequential confidence interval lets you peek as often as you want, while still controlling the false positive rate. The band is wider at any given time — that is the price of peeking — but its coverage is valid simultaneously at every look.
-        </p>
+      <div className="bg-neutral-50 border border-neutral-300 rounded-lg p-5 mb-8">
         <p className="text-neutral-700">
-          This method is more conservative than the standard 95% CI, but it remains valid no matter when you stop.
+          Under repeated peeking, the standard CI inflates false positives substantially, while the sequential CI stays close to the target error level.
         </p>
+      </div>
+
+      {/* ── Key Takeaway ── */}
+      <div className="bg-yellow-50 border border-yellow-600 rounded-lg p-6 mb-8">
+        <h4 className="font-bold text-yellow-900 mb-3">Key Takeaway</h4>
+        <div className="text-neutral-800 space-y-3">
+          <p>
+            Sequential intervals trade narrowness at a single look for validity across all looks. If your team monitors live, this is the right tradeoff.
+          </p>
+        </div>
       </div>
 
       {/* Math section with DisplayMathBox */}
@@ -90,15 +140,6 @@ export function Act2() {
           </p>
           <p className="mb-2">
             So unlike fixed-horizon CIs, the guarantee still holds under continuous monitoring.
-          </p>
-          <p className="mb-2">
-            In this app, the sequential interval is based on this mixture-boundary form. For each time <InlineMath>n</InlineMath>, the interval is:
-          </p>
-          <p className="mb-2">
-            <InlineMath>{`\left[ \bar{X}_n - c_n,\ \bar{X}_n + c_n \right]`}</InlineMath>
-          </p>
-          <p className="mb-2">
-            where <InlineMath>{`\\bar{X}_n`}</InlineMath> is the running mean and <InlineMath>{`c_n`}</InlineMath> is a time-dependent width chosen so that the interval covers the true mean with at least 95% probability, no matter when you stop.
           </p>
         </div>
       </DisplayMathBox>

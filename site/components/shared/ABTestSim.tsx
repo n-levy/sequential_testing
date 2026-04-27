@@ -115,7 +115,7 @@ export function ABTestSim({
   showPeekStats = false,
   takeaway,
   defaultEffect = 0,
-  defaultN = 500,
+  defaultN = 10000,
   showPowerControl = true,
   K: KProp = 6,
   hideEffectStats = false,
@@ -134,6 +134,7 @@ export function ABTestSim({
   // Clamp effect to [-0.5, 0.5]
   const clampedEffect = Math.max(-0.5, Math.min(0.5, effect))
   const effectiveEffect = clampedEffect
+  const effectPercent = Math.round(effectiveEffect * 100)
   const clampedBaseline = clampProbability(baselineRate)
   const peekIndices = useMemo(() => getPeekIndices(n, kState), [n, kState])
 
@@ -434,7 +435,7 @@ export function ABTestSim({
         Simulation 1: fixed-horizon confidence intervals.
       </div>
       <div className="mb-3 text-sm text-blue-900 font-semibold">
-        Relative effect size (%): <span className="font-mono">{(effectiveEffect * 100 >= 0 ? '+' : '')}{(effectiveEffect * 100).toFixed(1)}%</span>
+        Relative effect size (%): <span className="font-mono">{effectPercent}%</span>
       </div>
       <div className="flex flex-wrap items-start gap-4 mb-4">
         <div className="w-full sm:w-[210px]">
@@ -479,13 +480,23 @@ export function ABTestSim({
         </div>
         <div className="w-full sm:w-[210px]">
           <label className="block text-xs font-medium text-neutral-600 mb-1">
-            Relative effect size (%) <span className="font-mono">({clampedEffect * 100 >= 0 ? '+' : ''}{(clampedEffect * 100).toFixed(1)}%)</span>
+            Relative effect size (%) <span className="font-mono">({Math.round(clampedEffect * 100)}%)</span>
           </label>
-          <input
-            type="range" min={-0.5} max={0.5} step={0.01}
-            value={clampedEffect} onChange={e => setEffect(parseFloat(e.target.value))}
-            className="w-full"
-          />
+          <div className="relative">
+            <input
+              type="range" min={-0.5} max={0.5} step={0.01}
+              value={clampedEffect} onChange={e => setEffect(parseFloat(e.target.value))}
+              className="w-full"
+            />
+            <div
+              className="pointer-events-none absolute top-0 bottom-0 border-l border-neutral-500"
+              style={{ left: '50%' }}
+              aria-hidden
+            />
+          </div>
+          <div className="text-[11px] text-neutral-500 mt-1">
+            Default: effect size = 0%
+          </div>
         </div>
         <div className="w-full sm:w-[210px]">
           <label className="block text-xs font-medium text-neutral-600 mb-1">
