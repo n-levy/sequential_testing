@@ -109,8 +109,8 @@ export function ObfImpl() {
             </ol>
           </div>
 
-          <div className="bg-purple-50 border border-purple-300 rounded-lg p-4">
-            <h5 className="font-bold text-purple-900 mb-2">Practical tips</h5>
+          <div className="bg-blue-50 border border-blue-300 rounded-lg p-4">
+            <h5 className="font-bold text-blue-900 mb-2">Practical tips</h5>
             <p className="text-neutral-700 text-sm">
               The exact O&apos;Brien&ndash;Fleming boundaries (computed via multivariate Normal
               integration) differ slightly from the <InlineMath>{`z_{\\alpha/2}/\\sqrt{t_k}`}</InlineMath>{' '}

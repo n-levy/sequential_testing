@@ -406,7 +406,7 @@ export function Act3() {
           </Card>
           <Card className="bg-white border border-neutral-300">
             <CardHeader>
-              <CardTitle className="text-orange-700">Method 2: <a href="#ref-pocock-1977" className="text-blue-600 hover:text-blue-800">Pocock (1977)</a></CardTitle>
+              <CardTitle className="text-neutral-900">Method 2: <a href="#ref-pocock-1977" className="text-blue-600 hover:text-blue-800">Pocock (1977)</a></CardTitle>
             </CardHeader>
             <CardContent>
               <p className="text-sm text-neutral-600">
@@ -457,10 +457,10 @@ export function Act3() {
             <thead>
               <tr className="bg-neutral-100">
                 <th className="border border-neutral-300 p-3 text-left font-semibold"></th>
-                <th className="border border-neutral-300 p-3 font-semibold text-blue-700">Bonferroni</th>
-                <th className="border border-neutral-300 p-3 font-semibold text-orange-700">Pocock</th>
-                <th className="border border-neutral-300 p-3 font-semibold text-blue-700">OBF</th>
-                <th className="border border-neutral-300 p-3 font-semibold text-green-700">Eppo</th>
+                <th className="border border-neutral-300 p-3 font-semibold text-neutral-900">Bonferroni</th>
+                <th className="border border-neutral-300 p-3 font-semibold text-neutral-900">Pocock</th>
+                <th className="border border-neutral-300 p-3 font-semibold text-neutral-900">OBF</th>
+                <th className="border border-neutral-300 p-3 font-semibold text-neutral-900">Eppo</th>
               </tr>
             </thead>
             <tbody>

@@ -54,7 +54,7 @@ export function Navigation({ variant = 'landing' }: NavigationProps) {
               <span className={`ml-3 text-xs font-semibold uppercase tracking-wide px-2 py-0.5 rounded ${
                 variant === 'focused'
                   ? 'bg-blue-100 text-blue-700'
-                  : 'bg-purple-100 text-purple-700'
+                  : 'bg-blue-100 text-blue-700'
               }`}>
                 {variant === 'focused' ? 'Focused' : 'In-depth'}
               </span>

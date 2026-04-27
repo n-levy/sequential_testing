@@ -7,7 +7,7 @@ export function PocockImpl() {
   return (
     <Card>
       <CardHeader>
-        <CardTitle className="text-orange-700">Method 2: Pocock Boundaries (1977)</CardTitle>
+        <CardTitle className="text-neutral-900">Method 2: Pocock Boundaries (1977)</CardTitle>
       </CardHeader>
       <CardContent>
         <div className="space-y-6">

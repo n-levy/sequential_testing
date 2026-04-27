@@ -175,10 +175,10 @@ export function DetailedAct14() {
             <thead>
               <tr className="bg-neutral-100">
                 <th className="border border-neutral-300 p-3 text-left font-semibold"></th>
-                <th className="border border-neutral-300 p-3 font-semibold text-blue-700">Bonferroni</th>
-                <th className="border border-neutral-300 p-3 font-semibold text-orange-700">Pocock</th>
-                <th className="border border-neutral-300 p-3 font-semibold text-blue-700">OBF</th>
-                <th className="border border-neutral-300 p-3 font-semibold text-green-700">Eppo</th>
+                <th className="border border-neutral-300 p-3 font-semibold text-neutral-900">Bonferroni</th>
+                <th className="border border-neutral-300 p-3 font-semibold text-neutral-900">Pocock</th>
+                <th className="border border-neutral-300 p-3 font-semibold text-neutral-900">OBF</th>
+                <th className="border border-neutral-300 p-3 font-semibold text-neutral-900">Eppo</th>
               </tr>
             </thead>
             <tbody>
