@@ -249,6 +249,87 @@ export function ABTestSim({
         .attr('d', seqArea as d3.Area<number>)
     }
 
+    // Pocock CI band
+    if (layers.includes('pocock')) {
+      const cP = [null, null, 2.18, 2.36, 2.51, 2.60, 2.69][K] || 2.36
+      const pocockArea = d3.area<number>()
+        .x((_d, i) => x(i + 1))
+        .y0((_d, i) => {
+          const denom = traj.meansA[i]
+          const w = denom !== 0 ? 100 * traj.ses[i] * cP / denom : 0
+          return y(effectPct[i] - w)
+        })
+        .y1((_d, i) => {
+          const denom = traj.meansA[i]
+          const w = denom !== 0 ? 100 * traj.ses[i] * cP / denom : 0
+          return y(effectPct[i] + w)
+        })
+
+      g.append('path')
+        .datum(Array.from({ length: n }, (_, i) => i))
+        .attr('fill', LAYER_STYLE['pocock'].color)
+        .attr('fill-opacity', 0.12)
+        .attr('stroke', LAYER_STYLE['pocock'].color)
+        .attr('stroke-width', 1.2)
+        .attr('stroke-opacity', 0.8)
+        .attr('d', pocockArea as d3.Area<number>)
+    }
+
+    // O'Brien–Fleming CI band
+    if (layers.includes('obf')) {
+      const obfArea = d3.area<number>()
+        .x((_d, i) => x(i + 1))
+        .y0((_d, i) => {
+          const denom = traj.meansA[i]
+          const k = Math.max(1, Math.round((i + 1) / n * K))
+          const z = 1.96 * Math.sqrt(K / k)
+          const w = denom !== 0 ? 100 * traj.ses[i] * z / denom : 0
+          return y(effectPct[i] - w)
+        })
+        .y1((_d, i) => {
+          const denom = traj.meansA[i]
+          const k = Math.max(1, Math.round((i + 1) / n * K))
+          const z = 1.96 * Math.sqrt(K / k)
+          const w = denom !== 0 ? 100 * traj.ses[i] * z / denom : 0
+          return y(effectPct[i] + w)
+        })
+
+      g.append('path')
+        .datum(Array.from({ length: n }, (_, i) => i))
+        .attr('fill', LAYER_STYLE['obf'].color)
+        .attr('fill-opacity', 0.12)
+        .attr('stroke', LAYER_STYLE['obf'].color)
+        .attr('stroke-width', 1.2)
+        .attr('stroke-opacity', 0.8)
+        .attr('d', obfArea as d3.Area<number>)
+    }
+
+    // Bonferroni CI band
+    if (layers.includes('bonferroni')) {
+      const z = 2.50
+      const bonfArea = d3.area<number>()
+        .x((_d, i) => x(i + 1))
+        .y0((_d, i) => {
+          const denom = traj.meansA[i]
+          const w = denom !== 0 ? 100 * traj.ses[i] * z / denom : 0
+          return y(effectPct[i] - w)
+        })
+        .y1((_d, i) => {
+          const denom = traj.meansA[i]
+          const w = denom !== 0 ? 100 * traj.ses[i] * z / denom : 0
+          return y(effectPct[i] + w)
+        })
+
+      g.append('path')
+        .datum(Array.from({ length: n }, (_, i) => i))
+        .attr('fill', LAYER_STYLE['bonferroni'].color)
+        .attr('fill-opacity', 0.12)
+        .attr('stroke', LAYER_STYLE['bonferroni'].color)
+        .attr('stroke-width', 1.2)
+        .attr('stroke-opacity', 0.8)
+        .attr('d', bonfArea as d3.Area<number>)
+    }
+
     // Mean effect trajectory
     const line = d3.line<number>()
       .x((_d, i) => x(i + 1))
@@ -334,22 +415,15 @@ export function ABTestSim({
           Re-randomize
         </button>
         <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-xs">
-          <span className="inline-flex items-center gap-1.5 text-neutral-700">
-            <span
-              className="inline-block w-3 h-3 rounded-sm"
-              style={{ background: LAYER_STYLE['fixed-ci'].color, opacity: 0.45 }}
-            />
-            Standard 95% CI
-          </span>
-          {layers.includes('sequential-ci') && (
-            <span className="inline-flex items-center gap-1.5 text-neutral-700">
+          {layers.map(layer => (
+            <span key={layer} className="inline-flex items-center gap-1.5 text-neutral-700">
               <span
                 className="inline-block w-3 h-3 rounded-sm"
-                style={{ background: LAYER_STYLE['sequential-ci'].color, opacity: 0.45 }}
+                style={{ background: LAYER_STYLE[layer].color, opacity: 0.45 }}
               />
-              Sequential CI (Eppo)
+              {LAYER_STYLE[layer].label}
             </span>
-          )}
+          ))}
         </div>
       </div>
       {/* Plot */}
