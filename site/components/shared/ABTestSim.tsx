@@ -11,6 +11,7 @@ export type SimLayer =
   | 'obf'
   | 'bonferroni'
 
+type KProp = number;
 interface ABTestSimProps {
   layers: SimLayer[]
   showPeekStats?: boolean
@@ -19,7 +20,7 @@ interface ABTestSimProps {
   defaultN?: number
   showPowerControl?: boolean
   power?: number
-  K?: number // number of peeks for group sequential methods
+  K?: KProp // number of peeks for group sequential methods
   hideEffectStats?: boolean // hide sample effect and CI half-width boxes
 }
 
@@ -86,7 +87,7 @@ export function ABTestSim({
   defaultN = 500,
   showPowerControl = true,
   power: powerProp,
-  K = 6,
+  K: KProp = 6,
   hideEffectStats = false,
 }: ABTestSimProps) {
   const [effect, setEffect] = useState(defaultEffect)
@@ -94,6 +95,7 @@ export function ABTestSim({
   const [alpha, setAlpha] = useState(0.05)
   const [power, setPower] = useState(powerProp ?? 0.8)
   const [seed, setSeed] = useState(1)
+  const [kState, setK] = useState(KProp)
   const [peekProbs, setPeekProbs] = useState<Record<string, number> | null>(null)
   const [runSimulationsTrigger, setRunSimulationsTrigger] = useState(0)
   const svgRef = useRef<SVGSVGElement | null>(null)
@@ -111,7 +113,7 @@ export function ABTestSim({
       for (let sim = 0; sim < PEEK_N_SIMS; ++sim) {
         const t = simulateABTestTrajectory(n, 0, seed + sim + runSimulationsTrigger * 10000);
         let crossed = false;
-        const lookSpacing = Math.floor(n / K);
+        const lookSpacing = Math.floor(n / kState);
         for (let i = 0; i < n; ++i) {
           // Only evaluate at discrete looks
           if ((i + 1) % lookSpacing !== 0 && i !== n - 1) continue;
@@ -129,11 +131,11 @@ export function ABTestSim({
             const cP = 2.41; // good approx for K≈6
             w = denom !== 0 ? 100 * t.ses[i] * cP / denom : 0;
           } else if (layer === 'obf') {
-            const k = Math.max(1, Math.round((i + 1) / n * K));
-            const z = normInv(1 - alpha / (2 * K / k));
+            const k = Math.max(1, Math.round((i + 1) / n * kState));
+            const z = normInv(1 - alpha / (2 * kState / k));
             w = denom !== 0 ? 100 * t.ses[i] * z / denom : 0;
           } else if (layer === 'bonferroni') {
-            const z = normInv(1 - alpha / (2 * K));
+            const z = normInv(1 - alpha / (2 * kState));
             w = denom !== 0 ? 100 * t.ses[i] * z / denom : 0;
           }
           if (est - w > 0 || est + w < 0) {
@@ -145,7 +147,7 @@ export function ABTestSim({
       results[layer] = count / PEEK_N_SIMS;
     }
     setPeekProbs(results);
-  }, [showPeekStats, layers, n, clampedEffect, seed, alpha, power, K, runSimulationsTrigger]);
+  }, [showPeekStats, layers, n, clampedEffect, seed, alpha, power, kState, runSimulationsTrigger]);
 
   // Trajectory recomputed automatically whenever the controls change.
   const traj = useMemo(() => simulateABTestTrajectory(n, effectiveEffect, seed), [n, effectiveEffect, seed])
@@ -182,25 +184,15 @@ export function ABTestSim({
     const margin = { top: 20, right: 16, bottom: 44, left: 56 }
     const innerW = W - margin.left - margin.right
     const innerH = H - margin.top - margin.bottom
-    // Y-axis: include all values of the effect and all CI bands
-    let allBounds: number[] = []
-    for (let i = 0; i < effectPct.length; i++) {
-      const v = effectPct[i]
-      allBounds.push(v)
-      allBounds.push(v - ciHalfWidthPct[i])
-      allBounds.push(v + ciHalfWidthPct[i])
-    }
-    let minY = Math.min(...allBounds)
-    let maxY = Math.max(...allBounds)
-    const yMargin = 0.02 * Math.max(1, Math.abs(maxY - minY))
-    const yMin = minY - yMargin
-    const yMax = maxY + yMargin
-    const x = d3.scaleLinear().domain([1, n]).range([0, innerW])
+    // Y-axis: force to -100 to +100
+    const yMin = -100
+    const yMax = 100
+    const x = d3.scaleLinear().domain([50, n]).range([0, innerW])
     const y = d3.scaleLinear().domain([yMin, yMax]).range([innerH, 0])
     const g = svg.append('g').attr('transform', `translate(${margin.left},${margin.top})`)
     // Axes
     g.append('g').attr('transform', `translate(0,${innerH})`).call(d3.axisBottom(x).ticks(6))
-    g.append('g').call(d3.axisLeft(y).ticks(6).tickFormat(d => `${(d as number).toFixed(1)}%`))
+    g.append('g').call(d3.axisLeft(y).ticks(6).tickFormat(d => `${Math.round(d as number)}%`))
     g.append('text')
       .attr('transform', `translate(${innerW / 2}, ${innerH + 36})`)
       .style('text-anchor', 'middle').style('font-size', '12px').style('fill', '#525252')
@@ -296,15 +288,15 @@ export function ABTestSim({
         .x((_d, i) => x(i + 1))
         .y0((_d, i) => {
           const denom = traj.meansA[i]
-          const k = Math.max(1, Math.round((i + 1) / n * K))
-          const z = normInv(1 - alpha / (2 * K / k))
+          const k = Math.max(1, Math.round((i + 1) / n * kState))
+          const z = normInv(1 - alpha / (2 * kState / k))
           const w = denom !== 0 ? 100 * traj.ses[i] * z / denom : 0
           return y(effectPct[i] - w)
         })
         .y1((_d, i) => {
           const denom = traj.meansA[i]
-          const k = Math.max(1, Math.round((i + 1) / n * K))
-          const z = normInv(1 - alpha / (2 * K / k))
+          const k = Math.max(1, Math.round((i + 1) / n * kState))
+          const z = normInv(1 - alpha / (2 * kState / k))
           const w = denom !== 0 ? 100 * traj.ses[i] * z / denom : 0
           return y(effectPct[i] + w)
         })
@@ -321,7 +313,7 @@ export function ABTestSim({
 
     // Bonferroni CI band
     if (layers.includes('bonferroni')) {
-      const z = normInv(1 - alpha / (2 * K))
+      const z = normInv(1 - alpha / (2 * kState))
       const bonfArea = d3.area<number>()
         .x((_d, i) => x(i + 1))
         .y0((_d, i) => {
@@ -412,15 +404,14 @@ export function ABTestSim({
       {/* K slider */}
       <div>
         <label className="block text-xs font-medium text-neutral-600 mb-1">
-          Number of peeks (K) <span className="font-mono">({K})</span>
+          Number of peeks (K) <span className="font-mono">({kState})</span>
         </label>
         <input
           type="range" min={2} max={10} step={1}
-          value={K}
+          value={kState}
           onChange={e => {
             const newK = parseInt(e.target.value, 10)
-            // @ts-ignore local override
-            K = newK
+            setK(newK)
             setPeekProbs(null)
           }}
           className="w-full"
@@ -453,7 +444,7 @@ export function ABTestSim({
                 className="inline-block w-3 h-3 rounded-sm"
                 style={{ background: LAYER_STYLE[layer].color, opacity: 0.45 }}
               />
-              {LAYER_STYLE[layer].label}{['pocock','obf','bonferroni'].includes(layer) ? ` (K=${K})` : ''}
+              {LAYER_STYLE[layer].label}{['pocock','obf','bonferroni'].includes(layer) ? ` (K=${kState})` : ''}
             </span>
           ))}
         </div>
@@ -472,9 +463,9 @@ export function ABTestSim({
         <div className="mt-4">
           <div className="bg-neutral-50 border border-neutral-200 rounded-lg p-3">
             <div className="text-[11px] font-medium text-neutral-500 uppercase">
-              Decision at n = {n}
+              Would peeking daily for two weeks (14 peeks) show at least one statistically significant result?
             </div>
-            <div className={`text-base font-semibold ${decision.color}`}>{decision.label}</div>
+            <div className={`text-base font-semibold ${decision.color}`}>{decision.label.includes('Reject') ? 'Yes' : 'No'}</div>
           </div>
         </div>
       )}
@@ -488,7 +479,7 @@ export function ABTestSim({
         <div className="bg-white border border-blue-400 rounded-lg p-5 mb-8 mt-4 text-center">
           <div className="flex flex-col items-center gap-2">
             <span className="text-blue-900 font-semibold">
-              Probability of crossing the CI at some point, based on 1000 simulation repetitions:
+              Share of simulations in which peeking daily for two weeks (14 peeks) would show at least one statistically significant result, across 1000 repetitions:
             </span>
             <button
               type="button"
@@ -516,7 +507,7 @@ export function ABTestSim({
               <tbody>
                 {layers.map(layer => (
                   <tr key={layer}>
-                    <td className="px-3 py-1 text-left">{LAYER_STYLE[layer].label}{['pocock','obf','bonferroni'].includes(layer) ? ` (K=${K})` : ''}</td>
+                    <td className="px-3 py-1 text-left">{LAYER_STYLE[layer].label}{['pocock','obf','bonferroni'].includes(layer) ? ` (K=${kState})` : ''}</td>
                     <td className="px-3 py-1 text-right text-blue-700 font-mono">{(peekProbs[layer] * 100).toFixed(1)}%</td>
                   </tr>
                 ))}
