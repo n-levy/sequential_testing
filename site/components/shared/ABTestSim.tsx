@@ -130,13 +130,14 @@ export function ABTestSim({
   const peekIndices = useMemo(() => getPeekIndices(n, kState), [n, kState])
 
   // Classical power approximation for two-sided difference-in-proportions test.
-  const estimatedPower = useMemo(() => {
-    if (n <= 0) return 0
+  const estimatedPower = useMemo<number | null>(() => {
+    if (n <= 0) return null
+    if (Math.abs(clampedEffect) < 1e-12) return null
     const pA = 0.5
     const pB = Math.max(1e-6, Math.min(1 - 1e-6, 0.5 + clampedEffect))
     const delta = Math.abs(pB - pA)
     const seAlt = Math.sqrt((pA * (1 - pA) + pB * (1 - pB)) / n)
-    if (seAlt <= 0) return 0
+    if (seAlt <= 0) return null
     const mu = delta / seAlt
     const zCrit = normInv(1 - alpha / 2)
     const powerVal = normalCDF(mu - zCrit) + normalCDF(-mu - zCrit)
@@ -150,7 +151,7 @@ export function ABTestSim({
     for (const layer of layers) {
       let count = 0;
       for (let sim = 0; sim < PEEK_N_SIMS; ++sim) {
-        const t = simulateABTestTrajectory(n, 0, seed + sim + runSimulationsTrigger * 10000);
+        const t = simulateABTestTrajectory(n, effectiveEffect, seed + sim + runSimulationsTrigger * 10000);
         let crossed = false;
         if (peekIndices.length === 0) continue;
         let lookPtr = 0
@@ -190,7 +191,7 @@ export function ABTestSim({
       results[layer] = count / PEEK_N_SIMS;
     }
     setPeekProbs(results);
-  }, [showPeekStats, layers, n, clampedEffect, seed, alpha, kState, runSimulationsTrigger, peekIndices]);
+  }, [showPeekStats, layers, n, clampedEffect, effectiveEffect, seed, alpha, kState, runSimulationsTrigger, peekIndices]);
 
   // Trajectory recomputed automatically whenever the controls change.
   const traj = useMemo(() => simulateABTestTrajectory(n, effectiveEffect, seed), [n, effectiveEffect, seed])
@@ -486,10 +487,10 @@ export function ABTestSim({
               Estimated Power (1 - β)
             </label>
             <div className="h-9 px-3 flex items-center rounded border border-neutral-300 bg-neutral-50 text-neutral-800 font-mono text-sm">
-              {(estimatedPower * 100).toFixed(1)}%
+              {estimatedPower === null ? 'Inapplicable (no effect)' : `${(estimatedPower * 100).toFixed(1)}%`}
             </div>
             <div className="text-[11px] text-neutral-500 mt-1">
-              Computed from effect size, n, and α (two-sided z-test approximation).
+              Computed from effect size, n, and α (two-sided z-test approximation). Shown as N/A when effect size is 0.
             </div>
           </div>
         )}
@@ -598,6 +599,7 @@ export function ABTestSim({
                 <h5 className="font-semibold text-neutral-900 mb-2">Assumptions</h5>
                 <ul className="list-disc list-inside space-y-1">
                   <li>Binary outcome metric (Bernoulli), modeled as conversion in each arm.</li>
+                  <li>Standard deviation follows Bernoulli variance in each arm: <InlineMath>{`\\sigma_A = \\sqrt{p_A(1-p_A)},\\ \\sigma_B = \\sqrt{p_B(1-p_B)}`}</InlineMath>, so <InlineMath>{`\\mathrm{SE}(\\hat p_B-\\hat p_A)=\\sqrt{(\\sigma_A^2+\\sigma_B^2)/n}`}</InlineMath>.</li>
                   <li>Equal traffic split: 50% control and 50% treatment.</li>
                   <li>Independent users/events within and across arms (no clustering or interference).</li>
                   <li>No missing data, no delayed outcomes, and no sample-ratio mismatch.</li>
@@ -609,8 +611,7 @@ export function ABTestSim({
                 <h5 className="font-semibold text-neutral-900 mb-2">Notes</h5>
                 <ul className="list-disc list-inside space-y-1">
                   <li>The Monte Carlo estimate uses 1000 repetitions, so displayed rates include simulation noise.</li>
-                  <li>The slider is labeled as relative effect, but the generator currently applies it as an additive probability-point shift from a 50% baseline (for example, slider +0.05 sets treatment from 50% to 55%).</li>
-                  <li>This modeling choice is mainly to keep the simulation simple and fast for interactive use; it is a practical approximation rather than a full production experiment model.</li>
+                  <li>The slider is labeled as relative effect, but the generator currently applies it as an additive probability-point shift from a 50% baseline (for example, slider +0.05 sets treatment from 50% to 55%); this is mainly to keep the simulation simple and fast for interactive use, and is a practical approximation rather than a full production experiment model.</li>
                 </ul>
               </div>
             </div>
