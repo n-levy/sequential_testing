@@ -2,6 +2,7 @@
 
 import { InlineMath, BlockMath } from '../ui/Math'
 import { EppoPipelineSim } from '../act2/EppoPipelineSim'
+import { DisplayMathBox } from '../ui/DisplayMathBox'
 
 export function DetailedAct11() {
 
@@ -49,6 +50,7 @@ export function DetailedAct11() {
           </p>
         </div>
 
+        <DisplayMathBox>
         {/* Step 2 */}
         <h3 className="text-xl font-bold text-neutral-900 mb-3">Step 2: Collect data over time</h3>
         <div className="text-neutral-700 space-y-3 mb-8">
@@ -158,6 +160,8 @@ export function DetailedAct11() {
             pre-specify an analysis time.
           </p>
         </div>
+
+        </DisplayMathBox>
 
         {/* Interactive Pipeline Simulation */}
         <h3 className="text-xl font-bold text-neutral-900 mb-3">Try It: Interactive Pipeline</h3>

@@ -2,6 +2,7 @@
 
 import { InlineMath, BlockMath } from '../ui/Math'
 import { SPRTSim } from './sims/SPRTSim'
+import { DisplayMathBox } from '../ui/DisplayMathBox'
 
 export function DetailedAct7() {
 
@@ -50,6 +51,7 @@ export function DetailedAct7() {
         </div>
 
         {/* Mathematical Formulation */}
+        <DisplayMathBox>
         <h3 className="text-2xl font-bold text-neutral-900 mb-4">Mathematical Formulation</h3>
 
         <h4 className="text-lg font-semibold text-neutral-800 mb-3">Decision rule</h4>
@@ -129,6 +131,8 @@ export function DetailedAct7() {
             serious limitation. The next two acts address this.
           </p>
         </div>
+
+        </DisplayMathBox>
 
         {/* Historical Note */}
         <div className="bg-neutral-100 border border-neutral-300 rounded-lg p-6 mb-8">

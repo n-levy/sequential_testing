@@ -19,6 +19,7 @@ import { HybridApproach } from '../../components/detailed/HybridApproach'
 import { AppendixDivider } from '../../components/detailed/AppendixDivider'
 import { DetailedSummary } from '../../components/detailed/DetailedSummary'
 import { DetailedReferences } from '../../components/detailed/DetailedReferences'
+import { DetailedAppendixCode } from '../../components/detailed/DetailedAppendixCode'
 import { Comments } from '../../components/Comments'
 import { ContactForm } from '../../components/ContactForm'
 
@@ -72,6 +73,7 @@ export default function InDepthVersion() {
         <DetailedSummary />
         <DetailedReferences />
         <AppendixDivider />
+        <DetailedAppendixCode />
         <Comments />
         <ContactForm />
       </main>

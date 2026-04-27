@@ -2,6 +2,7 @@
 
 import { InlineMath, BlockMath } from '../ui/Math'
 import { LikelihoodRatioSim } from './sims/LikelihoodRatioSim'
+import { DisplayMathBox } from '../ui/DisplayMathBox'
 
 export function DetailedAct4() {
 
@@ -58,6 +59,7 @@ export function DetailedAct4() {
         </div>
 
         {/* Mathematical Formulation */}
+        <DisplayMathBox>
         <h3 className="text-2xl font-bold text-neutral-900 mb-4">Mathematical Formulation</h3>
 
         <h4 className="text-lg font-semibold text-neutral-800 mb-3">The likelihood</h4>
@@ -149,6 +151,8 @@ export function DetailedAct4() {
             (which requires the starting value to equal 1).
           </p>
         </div>
+
+        </DisplayMathBox>
 
         {/* Key Takeaway */}
         <div className="bg-green-50 border border-green-200 rounded-lg p-6 mb-8">

@@ -2,6 +2,7 @@
 
 import { InlineMath, BlockMath } from '../ui/Math'
 import { ConfidenceSequenceSim } from './sims/ConfidenceSequenceSim'
+import { DisplayMathBox } from '../ui/DisplayMathBox'
 
 export function DetailedAct9() {
 
@@ -50,6 +51,7 @@ export function DetailedAct9() {
         </div>
 
         {/* Mathematical Formulation */}
+        <DisplayMathBox>
         <h3 className="text-2xl font-bold text-neutral-900 mb-4">Mathematical Formulation</h3>
 
         <h4 className="text-lg font-semibold text-neutral-800 mb-3">Definition</h4>
@@ -179,6 +181,8 @@ export function DetailedAct9() {
             <li><strong>Produces a confidence interval:</strong> Experimenters need to report &ldquo;the lift is +3% &plusmn; 1.5%&rdquo;, not just &ldquo;significant / not significant.&rdquo; &#10003;</li>
           </ol>
         </div>
+
+        </DisplayMathBox>
 
         {/* Key Takeaway */}
         <div className="bg-green-50 border border-green-200 rounded-lg p-6 mb-8">

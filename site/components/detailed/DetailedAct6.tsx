@@ -2,6 +2,7 @@
 
 import { InlineMath, BlockMath } from '../ui/Math'
 import { VilleInequalitySim } from './sims/VilleInequalitySim'
+import { DisplayMathBox } from '../ui/DisplayMathBox'
 
 export function DetailedAct6() {
 
@@ -60,6 +61,7 @@ export function DetailedAct6() {
         </div>
 
         {/* Step 1: Markov */}
+        <DisplayMathBox>
         <h3 className="text-2xl font-bold text-neutral-900 mb-4">Mathematical Formulation</h3>
 
         <h4 className="text-lg font-semibold text-neutral-800 mb-3">Step 1: Markov&apos;s Inequality</h4>
@@ -198,6 +200,8 @@ export function DetailedAct6() {
             <strong>peeking is safe.</strong>
           </p>
         </div>
+
+        </DisplayMathBox>
 
         {/* Historical Note */}
         <div className="bg-neutral-100 border border-neutral-300 rounded-lg p-6 mb-8">

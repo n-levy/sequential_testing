@@ -2,6 +2,7 @@
 
 import { InlineMath, BlockMath } from '../ui/Math'
 import { SequentialMultiplierSim } from './sims/SequentialMultiplierSim'
+import { DisplayMathBox } from '../ui/DisplayMathBox'
 
 export function DetailedAct13() {
 
@@ -27,6 +28,7 @@ export function DetailedAct13() {
         </div>
 
         {/* The formula */}
+        <DisplayMathBox>
         <h3 className="text-2xl font-bold text-neutral-900 mb-4">The Formula, Revisited</h3>
 
         <div className="text-neutral-700 space-y-3 mb-6">
@@ -72,6 +74,8 @@ export function DetailedAct13() {
             thousands of observations), the price is modest: 10&ndash;40% wider than a classical CI.
           </p>
         </div>
+
+        </DisplayMathBox>
 
         {/* Interactive Simulation */}
         <SequentialMultiplierSim />

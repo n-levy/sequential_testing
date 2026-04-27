@@ -2,6 +2,7 @@
 
 import { InlineMath, BlockMath } from '../ui/Math'
 import { MixtureSPRTSim } from './sims/MixtureSPRTSim'
+import { DisplayMathBox } from '../ui/DisplayMathBox'
 
 export function DetailedAct8() {
 
@@ -26,6 +27,7 @@ export function DetailedAct8() {
           </div>
         </div>
 
+        <DisplayMathBox>
         <h4 className="text-lg font-semibold text-neutral-800 mb-3">The fundamental result</h4>
 
         <div className="text-neutral-700 space-y-3 mb-6">
@@ -205,6 +207,8 @@ export function DetailedAct8() {
             A/B testing), the approximation is excellent.
           </p>
         </div>
+
+        </DisplayMathBox>
 
         {/* Key Takeaway */}
         <div className="bg-green-50 border border-green-200 rounded-lg p-6 mb-8">

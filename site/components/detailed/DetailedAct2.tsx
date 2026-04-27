@@ -2,6 +2,7 @@
 
 import { InlineMath, BlockMath } from '../ui/Math'
 import { RandomWalkSim } from './sims/RandomWalkSim'
+import { DisplayMathBox } from '../ui/DisplayMathBox'
 
 export function DetailedAct2() {
   return (
@@ -49,6 +50,7 @@ export function DetailedAct2() {
         </div>
 
         {/* Mathematical Formulation */}
+        <DisplayMathBox>
         <h3 className="text-2xl font-bold text-neutral-900 mb-4">Mathematical Formulation</h3>
 
         <h4 className="text-lg font-semibold text-neutral-800 mb-3">Setting up the notation</h4>
@@ -163,6 +165,8 @@ export function DetailedAct2() {
           <BlockMath>{`\\EE[S_n] = n(2p - 1)`}</BlockMath>
           <p>This is a systematic <em>drift</em> &mdash; the random walk now has a trend.</p>
         </div>
+
+        </DisplayMathBox>
 
         {/* Key Takeaway */}
         <div className="bg-green-50 border border-green-200 rounded-lg p-6 mb-8">
