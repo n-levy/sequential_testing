@@ -18,6 +18,7 @@ interface ABTestSimProps {
   defaultEffect?: number // difference in means between B and A
   defaultN?: number
   showPowerControl?: boolean
+  power?: number
   K?: number // number of peeks for group sequential methods
   hideEffectStats?: boolean // hide sample effect and CI half-width boxes
 }
@@ -70,13 +71,14 @@ export function ABTestSim({
   defaultEffect = 0,
   defaultN = 500,
   showPowerControl = true,
+  power: powerProp,
   K = 6,
   hideEffectStats = false,
 }: ABTestSimProps) {
   const [effect, setEffect] = useState(defaultEffect)
   const [n, setN] = useState(defaultN)
   const [alpha, setAlpha] = useState(0.05)
-  const [power, setPower] = useState(0.8)
+  const [power, setPower] = useState(powerProp ?? 0.8)
   const [seed, setSeed] = useState(1)
   const [peekProbs, setPeekProbs] = useState<Record<string, number> | null>(null)
   const svgRef = useRef<SVGSVGElement | null>(null)
