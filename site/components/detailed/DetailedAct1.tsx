@@ -47,7 +47,7 @@ export function DetailedAct1() {
             <p>
               The cumulative fraction of experiments that show{' '}
               <InlineMath>{`p < 0.05`}</InlineMath> at some point during monitoring
-              climbs well above 5%.
+              tends to climb well above 5%.
             </p>
           </div>
         </div>
@@ -95,7 +95,7 @@ export function DetailedAct1() {
             <thead>
               <tr className="bg-neutral-100">
                 <th className="border border-neutral-300 p-3 text-left font-semibold">Checking schedule</th>
-                <th className="border border-neutral-300 p-3 text-left font-semibold">Actual false positive rate</th>
+                <th className="border border-neutral-300 p-3 text-left font-semibold">Estimated probability of at least one false positive across repeated looks</th>
               </tr>
             </thead>
             <tbody>

@@ -188,9 +188,9 @@ export function DetailedAct6() {
         <h4 className="text-lg font-semibold text-neutral-800 mb-3">Connecting back to Act 1</h4>
         <div className="text-neutral-700 space-y-3 mb-6">
           <p>
-            Standard test statistics (like <InlineMath>{`p`}</InlineMath>-values from a{' '}
-            <InlineMath>{`t`}</InlineMath>-test) are <em>not</em> martingales. Checking
-            repeatedly gives many independent chances to be fooled.
+            <InlineMath>{`p`}</InlineMath>-values are not martingales and do not provide
+            guarantees that hold under repeated checking. Each interim look gives random
+            fluctuations another opportunity to cross the significance threshold.
           </p>
           <p>
             The likelihood ratio <em>is</em> a martingale under <InlineMath>{`H_0`}</InlineMath>.

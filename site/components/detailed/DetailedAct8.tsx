@@ -54,7 +54,7 @@ export function DetailedAct8() {
           <ul className="list-disc ml-6 space-y-1 mt-2">
             <li><InlineMath>{`\\Lambda_n^{\\delta}`}</InlineMath> = the likelihood ratio assuming effect size <InlineMath>{`\\delta`}</InlineMath>.</li>
             <li><InlineMath>{`dH(\\delta)`}</InlineMath> = how much weight to give effect size <InlineMath>{`\\delta`}</InlineMath>.</li>
-            <li><InlineMath>{`\int`}</InlineMath> = the integral &mdash; averages over all possible <InlineMath>{`\delta`}</InlineMath>.</li>
+            <li><InlineMath>{`\int`}</InlineMath> = the integral &mdash; takes a weighted average (mixture) over all possible <InlineMath>{`\delta`}</InlineMath>.</li>
           </ul>
           <p className="mt-2">
             The result is the expected likelihood ratio under the mixing distribution{' '}
