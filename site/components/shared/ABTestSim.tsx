@@ -26,11 +26,8 @@ interface ABTestSimProps {
 const Z_975 = 1.959964
 const PEEK_N_SIMS = 500
 const PEEK_LOOKS = 6
-const LAYER_STYLE: Record<SimLayer, { color: string; label: string }> = {
+
 // Normal quantile approximation
-function normInv(p: number) {
-  return Math.sqrt(2) * erfinv(2 * p - 1)
-}
 function erfinv(x: number) {
   const a = 0.147
   const ln = Math.log(1 - x * x)
@@ -38,6 +35,12 @@ function erfinv(x: number) {
   const part2 = ln / a
   return Math.sign(x) * Math.sqrt(Math.sqrt(part1 * part1 - part2) - part1)
 }
+
+function normInv(p: number) {
+  return Math.sqrt(2) * erfinv(2 * p - 1)
+}
+
+const LAYER_STYLE: Record<SimLayer, { color: string; label: string }> = {
   'fixed-ci':        { color: '#ef4444', label: 'Standard 95% CI' },
   'sequential-ci':   { color: '#2563eb', label: 'Sequential CI (Eppo)' },
   'pocock':          { color: '#f59e0b', label: 'Pocock (K=10)' },
