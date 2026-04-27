@@ -8,7 +8,7 @@ import { ObfImpl } from './ObfImpl'
 import { ABTestSim } from '../shared/ABTestSim'
 
 export function Act3() {
-  const [K, setK] = useState(6)
+  const [showSimCode, setShowSimCode] = useState(false)
 
   return (
     <div id="act3" className="max-w-3xl mx-auto px-4">
@@ -45,21 +45,13 @@ export function Act3() {
           </div>
         </div>
 
-        {/* ── K slider ── */}
+        {/* ── Simulation Intro ── */}
         <div className="mb-6">
           <h3 className="text-xl font-semibold mb-2">Simulation</h3>
           <p className="text-neutral-700 mb-3">
             This extends the Act 1/2 simulation by adding Bonferroni, Pocock, and O&apos;Brien&ndash;Fleming
             confidence intervals, so you can compare all methods under the same settings.
           </p>
-          <label className="block text-sm font-medium text-neutral-700 mb-1">
-            Number of planned analyses (K): <span className="font-mono">{K}</span>
-          </label>
-          <input
-            type="range" min={2} max={20} step={1}
-            value={K} onChange={e => setK(Number(e.target.value))}
-            className="w-full max-w-xs"
-          />
         </div>
 
         {/* ── All Methods ── */}
@@ -109,7 +101,6 @@ export function Act3() {
             showPeekStats
             simulationTitle="Simulation 3: fixed-horizon, Eppo, and three alternative sequential methods."
             defaultEffect={0}
-            K={K}
             takeaway={<>
               <strong>Result interpretation:</strong> click &ldquo;Run 1000 repetitions&rdquo; to estimate how often each method crosses significance under the current settings.<br /><br />
               <strong>Bonferroni:</strong> most conservative among the three DIY methods (lowest crossing share).<br />
@@ -196,18 +187,13 @@ export function Act3() {
           <div className="text-neutral-800 space-y-3">
             <p><strong>Which method to use:</strong></p>
             <ul className="list-disc list-inside ml-4 space-y-1">
-              <li><strong>Minimal implementation effort:</strong> Bonferroni. Replace 1.96 with{' '}
-                <InlineMath>{`z_{\\alpha/(2K)}`}</InlineMath>.</li>
-              <li><strong>Best efficiency at the final analysis:</strong> O&apos;Brien&ndash;Fleming.
-                The final-analysis critical value is within 3% of the unadjusted value, but
-                requires pre-specifying <InlineMath>{`K`}</InlineMath>.</li>
-              <li><strong>Continuous monitoring or built-in variance reduction:</strong> Use Eppo
-                or an equivalent platform.</li>
+              <li><strong>Closest to Eppo in these simulations:</strong> Pocock is usually the best match among the DIY options.</li>
+              <li><strong>Avoid over-correction:</strong> Bonferroni is often too conservative, reducing sensitivity more than needed.</li>
+              <li><strong>Avoid early over-triggering:</strong> O&apos;Brien&ndash;Fleming can produce too many early significant crossings in this setup.</li>
+              <li><strong>Practical recommendation:</strong> if you are choosing one DIY method for this workflow, use Pocock.</li>
             </ul>
             <p>
-              <strong>Bottom line:</strong> even the simplest correction (Bonferroni) eliminates
-              the bulk of the peeking-induced inflation. Any correction is vastly better than
-              none.
+              <strong>Timing insight:</strong> the method choice matters most at the beginning of tests, when monitoring is mostly for implementation issues. As sample size grows, interval widths become more similar across methods.
             </p>
           </div>
         </div>
@@ -292,6 +278,49 @@ export function Act3() {
               <li><strong>This is the recommended approach for teams without a sequential testing platform.</strong></li>
             </ul>
           </div>
+        </div>
+
+        {/* ── Appendix ── */}
+        <h3 className="text-2xl font-bold text-neutral-900 mb-4">Appendix</h3>
+        <div className="mb-8">
+          <button
+            type="button"
+            onClick={() => setShowSimCode(v => !v)}
+            className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+          >
+            Show the code of the simulations
+          </button>
+          {showSimCode && (
+            <pre className="mt-3 bg-neutral-100 border border-neutral-300 rounded-lg p-4 text-xs overflow-x-auto">
+{`// Core simulation (simplified)
+function simulateABTestTrajectory(n, relativeLift, controlRate, seed) {
+  const pA = clampProbability(controlRate)
+  const pB = clampProbability(pA * (1 + relativeLift))
+  // generate Bernoulli outcomes for control and treatment
+  // track running means and running SE
+}
+
+// Equal-interval peeks
+function getPeekIndices(n, k) {
+  const looks = []
+  for (let j = 1; j <= k; j++) looks.push(Math.round((j * n) / k))
+  return uniqueSortedClamped(looks, 1, n)
+}
+
+// Crossing logic per method at each look i
+// est_i = 100 * (meanB_i - meanA_i) / meanA_i
+// Standard:   width_i = 100 * 1.96 * se_i / meanA_i
+// Sequential: width_i = 100 * se_i * sqrt(((i+nu)/i) * log((i+nu)/(nu*alpha))) / meanA_i
+// Pocock:     width_i = 100 * cP * se_i / meanA_i
+// OBF:        width_i = 100 * z_i * se_i / meanA_i
+// Bonferroni: width_i = 100 * z_{alpha/(2K)} * se_i / meanA_i
+//
+// if (est_i - width_i > 0 || est_i + width_i < 0) => crossed significance
+//
+// Repeated simulation:
+// run 1000 trajectories and report crossing share per method.`}
+            </pre>
+          )}
         </div>
 
         {/* (Removed duplicate CoinFlipMeanSim simulation; see ABTestSim block above) */}
