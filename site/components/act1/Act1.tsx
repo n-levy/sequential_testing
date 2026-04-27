@@ -18,7 +18,7 @@ export function Act1() {
     <div id="act-1">
       {/* Simulation */}
       <div className="mb-8">
-        <ABTestSim />
+        <ABTestSim layers={['fixed-ci']} />
       </div>
       {/* Simulation and explanation always visible */}
       <div className="overflow-x-auto mb-6">
