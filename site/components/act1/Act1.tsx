@@ -16,6 +16,9 @@ function DisplayMathBox({ children }: { children: React.ReactNode }) {
 export function Act1() {
   return (
     <div id="act-1" className="max-w-3xl mx-auto px-4">
+      <h2 className="text-2xl font-bold mb-1">Act 1 — The Peeking Problem</h2>
+      <p className="text-neutral-600 mb-6">Peeking without adjustments</p>
+
       {/* Simulation intro */}
       <div className="mb-6">
         <h3 className="text-xl font-semibold mb-2">Simulation</h3>
@@ -30,11 +33,19 @@ export function Act1() {
         <ABTestSim layers={['fixed-ci']} />
       </div>
 
-      {/* Simulation takeaway */}
+      {/* Probability of crossing */}
       <div className="bg-blue-50 border border-blue-200 rounded-lg p-5 mb-6">
-        <p className="text-neutral-700">
-          <strong>Simulation takeaway.</strong> With no true effect (effect = 0), the standard CI is calibrated to fail only about 5% of the time at one specific look. But if you peek along the way, far more than 5% of trajectories will cross the boundary at some point—leading to false positives.
-        </p>
+        <h4 className="font-semibold mb-2">
+          Probability of crossing the CI at some point:
+        </h4>
+        <div className="flex justify-between text-sm">
+          <span>Standard 95% CI</span>
+          <span className="font-semibold">68.8%</span>
+        </div>
+        <div className="flex justify-between text-sm">
+          <span>Sequential CI (Eppo)</span>
+          <span className="font-semibold">25.8%</span>
+        </div>
       </div>
 
       {/* Why does this happen */}
@@ -106,23 +117,23 @@ export function Act1() {
         <div className="bg-neutral-100 border border-neutral-300 rounded-lg p-6 mt-8">
           <h4 className="font-bold mb-3">Mathematical Formulation</h4>
           <p className="mb-2">
-            Let <InlineMath>X_i</InlineMath> represent the outcome of the <InlineMath>i</InlineMath>th coin flip. We assign:
+            Let <InlineMath>{`X_i`}</InlineMath> represent the outcome of the <InlineMath>{`i`}</InlineMath>th coin flip. We assign:
           </p>
           <ul className="list-disc ml-6 mb-2">
-            <li><InlineMath>X_i = +1</InlineMath> if the flip is heads (step forward)</li>
-            <li><InlineMath>X_i = -1</InlineMath> if the flip is tails (step backward)</li>
+            <li><InlineMath>{`X_i = +1`}</InlineMath> if the flip is heads (step forward)</li>
+            <li><InlineMath>{`X_i = -1`}</InlineMath> if the flip is tails (step backward)</li>
           </ul>
           <p className="mb-2">
-            The probability of heads is written <InlineMath>p</InlineMath>. For a fair coin, <InlineMath>p = 0.5</InlineMath>.
+            The probability of heads is written <InlineMath>{`p`}</InlineMath>. For a fair coin, <InlineMath>{`p = 0.5`}</InlineMath>.
           </p>
           <p className="mb-2">
             <strong>Position after n steps:</strong>
           </p>
           <p className="mb-2">
-            The person&apos;s position after <InlineMath>n</InlineMath> steps is the sum of all the individual steps:
+            The person&apos;s position after <InlineMath>{`n`}</InlineMath> steps is the sum of all the individual steps:
           </p>
           <p className="mb-2">
-            <InlineMath>S_n = X_1 + X_2 + X_3 + ... + X_n</InlineMath>
+            <InlineMath>{`S_n = X_1 + X_2 + X_3 + ... + X_n`}</InlineMath>
           </p>
         </div>
       </DisplayMathBox>
