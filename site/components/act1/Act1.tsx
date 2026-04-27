@@ -31,7 +31,6 @@ export function Act1() {
       <div className="mb-8 max-w-2xl mx-auto">
         <ABTestSim 
           layers={['fixed-ci']} 
-          power={0.8} 
           showPeekStats={true}
           K={14}
         />

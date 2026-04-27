@@ -19,7 +19,6 @@ interface ABTestSimProps {
   defaultEffect?: number // difference in means between B and A
   defaultN?: number
   showPowerControl?: boolean
-  power?: number
   K?: KProp // number of peeks for group sequential methods
   hideEffectStats?: boolean // hide sample effect and CI half-width boxes
 }
@@ -29,9 +28,6 @@ const PEEK_N_SIMS = 1000 // number of re-randomizations used to estimate crossin
 const ALPHA_MIN = 0.01
 const ALPHA_MAX = 0.1
 const ALPHA_DEFAULT = 0.05
-const POWER_MIN = 0.5
-const POWER_MAX = 0.99
-const POWER_DEFAULT = 0.8
 
 // Normal quantile approximation
 function erfinv(x: number) {
@@ -44,6 +40,20 @@ function erfinv(x: number) {
 
 function normInv(p: number) {
   return Math.sqrt(2) * erfinv(2 * p - 1)
+}
+
+function normalCDF(x: number) {
+  const a1 = 0.254829592
+  const a2 = -0.284496736
+  const a3 = 1.421413741
+  const a4 = -1.453152027
+  const a5 = 1.061405429
+  const p = 0.3275911
+  const sign = x < 0 ? -1 : 1
+  const ax = Math.abs(x) / Math.SQRT2
+  const t = 1 / (1 + p * ax)
+  const y = 1 - (((((a5 * t + a4) * t) + a3) * t + a2) * t + a1) * t * Math.exp(-ax * ax)
+  return 0.5 * (1 + sign * y)
 }
 
 function getPeekIndices(n: number, k: number): number[] {
@@ -101,14 +111,12 @@ export function ABTestSim({
   defaultEffect = 0,
   defaultN = 500,
   showPowerControl = true,
-  power: powerProp,
   K: KProp = 6,
   hideEffectStats = false,
 }: ABTestSimProps) {
   const [effect, setEffect] = useState(defaultEffect)
   const [n, setN] = useState(defaultN)
   const [alpha, setAlpha] = useState(ALPHA_DEFAULT)
-  const [power, setPower] = useState(powerProp ?? POWER_DEFAULT)
   const [seed, setSeed] = useState(1)
   const [kState, setK] = useState(KProp)
   const [peekProbs, setPeekProbs] = useState<Record<string, number> | null>(null)
@@ -117,8 +125,22 @@ export function ABTestSim({
 
   // Clamp effect to [-0.5, 0.5]
   const clampedEffect = Math.max(-0.5, Math.min(0.5, effect))
-  const effectiveEffect = clampedEffect * power
+  const effectiveEffect = clampedEffect
   const peekIndices = useMemo(() => getPeekIndices(n, kState), [n, kState])
+
+  // Classical power approximation for two-sided difference-in-proportions test.
+  const estimatedPower = useMemo(() => {
+    if (n <= 0) return 0
+    const pA = 0.5
+    const pB = Math.max(1e-6, Math.min(1 - 1e-6, 0.5 + clampedEffect))
+    const delta = Math.abs(pB - pA)
+    const seAlt = Math.sqrt((pA * (1 - pA) + pB * (1 - pB)) / n)
+    if (seAlt <= 0) return 0
+    const mu = delta / seAlt
+    const zCrit = normInv(1 - alpha / 2)
+    const powerVal = normalCDF(mu - zCrit) + normalCDF(-mu - zCrit)
+    return Math.max(0, Math.min(1, powerVal))
+  }, [n, clampedEffect, alpha])
 
   // Compute the probability of crossing the CI at any point for all selected layers
   useEffect(() => {
@@ -167,7 +189,7 @@ export function ABTestSim({
       results[layer] = count / PEEK_N_SIMS;
     }
     setPeekProbs(results);
-  }, [showPeekStats, layers, n, clampedEffect, seed, alpha, power, kState, runSimulationsTrigger, peekIndices]);
+  }, [showPeekStats, layers, n, clampedEffect, seed, alpha, kState, runSimulationsTrigger, peekIndices]);
 
   // Trajectory recomputed automatically whenever the controls change.
   const traj = useMemo(() => simulateABTestTrajectory(n, effectiveEffect, seed), [n, effectiveEffect, seed])
@@ -460,22 +482,13 @@ export function ABTestSim({
         {showPowerControl && (
           <div className="w-full sm:w-[210px]">
             <label className="block text-xs font-medium text-neutral-600 mb-1">
-              Power (1 - β) <span className="font-mono">({power.toFixed(2)})</span>
+              Estimated Power (1 - β)
             </label>
-            <div className="relative">
-              <input
-                type="range" min={POWER_MIN} max={POWER_MAX} step={0.01}
-                value={power} onChange={e => setPower(parseFloat(e.target.value))}
-                className="w-full"
-              />
-              <div
-                className="pointer-events-none absolute top-0 bottom-0 border-l border-neutral-500"
-                style={{ left: `${((POWER_DEFAULT - POWER_MIN) / (POWER_MAX - POWER_MIN)) * 100}%` }}
-                aria-hidden
-              />
+            <div className="h-9 px-3 flex items-center rounded border border-neutral-300 bg-neutral-50 text-neutral-800 font-mono text-sm">
+              {(estimatedPower * 100).toFixed(1)}%
             </div>
             <div className="text-[11px] text-neutral-500 mt-1">
-              Default: power = 0.8
+              Computed from effect size, n, and α (two-sided z-test approximation).
             </div>
           </div>
         )}
