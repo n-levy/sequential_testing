@@ -10,7 +10,15 @@ export function DetailedHero() {
         </p>
       </div>
 
-      <div className="max-w-3xl mx-auto px-4 mt-10 text-neutral-700 space-y-4">
+      <div className="max-w-4xl mx-auto px-4 mt-10">
+        <div className="text-center mb-12">
+          <h2 className="text-3xl font-bold text-neutral-900 mb-4">
+            Introduction
+          </h2>
+        </div>
+      </div>
+
+      <div className="max-w-3xl mx-auto px-4 text-neutral-700 space-y-4">
         <p>
           <strong>The story.</strong>{' '}
           Sequential testing enables you to peek at test results as often as you like and the false positive
