@@ -95,6 +95,7 @@ export function ABTestSim({
   const [power, setPower] = useState(powerProp ?? 0.8)
   const [seed, setSeed] = useState(1)
   const [peekProbs, setPeekProbs] = useState<Record<string, number> | null>(null)
+  const [runSimulationsTrigger, setRunSimulationsTrigger] = useState(0)
   const svgRef = useRef<SVGSVGElement | null>(null)
 
   // Clamp effect to [-0.5, 0.5]
@@ -103,7 +104,7 @@ export function ABTestSim({
 
   // Compute the probability of crossing the CI at any point for all selected layers
   useEffect(() => {
-    if (!showPeekStats) return;
+    if (!showPeekStats || runSimulationsTrigger === 0) return;
     const results: Record<string, number> = {};
     for (const layer of layers) {
       let count = 0;
@@ -144,7 +145,7 @@ export function ABTestSim({
       results[layer] = count / PEEK_N_SIMS;
     }
     setPeekProbs(results);
-  }, [showPeekStats, layers, n, clampedEffect, seed, alpha, power, K]);
+  }, [showPeekStats, layers, n, clampedEffect, seed, alpha, power, K, runSimulationsTrigger]);
 
   // Trajectory recomputed automatically whenever the controls change.
   const traj = useMemo(() => simulateABTestTrajectory(n, effectiveEffect, seed), [n, effectiveEffect, seed])
@@ -466,10 +467,26 @@ export function ABTestSim({
         </div>
       )}
       {/* Probability of crossing CI at some point for all layers */}
-      {showPeekStats && peekProbs && (
+      {showPeekStats && (
         <div className="bg-white border border-blue-400 rounded-lg p-5 mb-8 mt-4 text-center">
-          <span className="text-blue-900 font-semibold">Probability of crossing the CI at some point, based on 500 simulation repetitions:</span>
-          {Object.keys(peekProbs).length === 1 ? (
+          <div className="flex flex-col items-center gap-2">
+            <span className="text-blue-900 font-semibold">
+              Probability of crossing the CI at some point, based on 500 simulation repetitions:
+            </span>
+            <button
+              type="button"
+              onClick={() => {
+                setPeekProbs(null)
+                setRunSimulationsTrigger(t => t + 1)
+              }}
+              className="px-3 py-1.5 text-sm bg-blue-600 text-white rounded hover:bg-blue-700"
+            >
+              Run 500 repetitions
+            </button>
+          </div>
+          {peekProbs === null ? (
+            <div className="mt-2 text-sm text-neutral-500">Click the button to run simulations</div>
+          ) : Object.keys(peekProbs).length === 1 ? (
             <span className="ml-2 text-blue-700 font-mono" id="peek-prob-box">{(Object.values(peekProbs)[0] * 100).toFixed(1)}%</span>
           ) : (
             <table className="mx-auto mt-2 text-sm">
