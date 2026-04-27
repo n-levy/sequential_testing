@@ -431,7 +431,7 @@ export function ABTestSim({
   return (
     <div className="bg-white border border-neutral-300 rounded-lg p-4 my-6">
       <div className="mb-2 text-base font-semibold text-blue-900">
-        Effect: (Treatment mean − Control mean) / Control mean, null hypothesis = 0%.
+        Simulation 1: fixed-horizon confidence intervals.
       </div>
       <div className="mb-3 text-sm text-blue-900 font-semibold">
         Relative effect size (%): <span className="font-mono">{(effectiveEffect * 100 >= 0 ? '+' : '')}{(effectiveEffect * 100).toFixed(1)}%</span>
@@ -503,15 +503,19 @@ export function ABTestSim({
           />
         </div>
         {showPowerControl && (
-          <div className="w-full sm:w-[210px]">
+          <div className="w-full sm:w-[300px]">
             <label className="block text-xs font-medium text-neutral-600 mb-1">
               Estimated Power (1 - β)
             </label>
-            <div className="h-9 px-3 flex items-center rounded border border-neutral-300 bg-neutral-50 text-neutral-800 font-mono text-sm">
-              {estimatedPower === null ? 'Inapplicable (no effect)' : `${(estimatedPower * 100).toFixed(1)}%`}
+            <div className="h-9 px-3 flex items-center rounded border border-neutral-300 bg-neutral-50 text-neutral-800 font-mono text-xs w-full">
+              {estimatedPower === null
+                ? 'Inapplicable since there is no true effect'
+                : estimatedPower >= 0.9995
+                  ? '≈100%'
+                  : `${(estimatedPower * 100).toFixed(1)}%`}
             </div>
             <div className="text-[11px] text-neutral-500 mt-1">
-              Computed from effect size, n, and α (two-sided z-test approximation). Shown as N/A when effect size is 0.
+              Computed from effect size, n, and α (two-sided z-test approximation). Shown as inapplicable when effect size is 0.
             </div>
           </div>
         )}
@@ -620,8 +624,11 @@ export function ABTestSim({
                 <h5 className="font-semibold text-neutral-900 mb-2">Assumptions</h5>
                 <ul className="list-disc list-inside space-y-1">
                   <li>Binary outcome metric (Bernoulli), modeled as conversion in each arm.</li>
+                  <li>Uplift is modeled as relative lift on baseline: <InlineMath>{`\\text{uplift} = (\\bar p_B - \\bar p_A)/\\bar p_A`}</InlineMath>, with generator <InlineMath>{`p_B = p_A(1 + \\text{lift})`}</InlineMath>.</li>
+                  <li>Null hypothesis is <InlineMath>{`H_0: \\text{lift} = 0`}</InlineMath> (equivalently, no treatment effect).</li>
                   <li>Standard deviation follows Bernoulli variance in each arm: <InlineMath>{`\\sigma_A = \\sqrt{p_A(1-p_A)},\\ \\sigma_B = \\sqrt{p_B(1-p_B)}`}</InlineMath>, so <InlineMath>{`\\mathrm{SE}(\\hat p_B-\\hat p_A)=\\sqrt{(\\sigma_A^2+\\sigma_B^2)/n}`}</InlineMath>.</li>
                   <li>Equal traffic split: 50% control and 50% treatment.</li>
+                  <li>Control conversion baseline is user-specified via slider.</li>
                   <li>Independent users/events within and across arms (no clustering or interference).</li>
                   <li>No missing data, no delayed outcomes, and no sample-ratio mismatch.</li>
                   <li>Two-sided significance check at each look: CI crossing zero is treated as significant.</li>
@@ -632,7 +639,8 @@ export function ABTestSim({
                 <h5 className="font-semibold text-neutral-900 mb-2">Notes</h5>
                 <ul className="list-disc list-inside space-y-1">
                   <li>The Monte Carlo estimate uses 1000 repetitions, so displayed rates include simulation noise.</li>
-                  <li>Relative effect is now applied as a multiplicative lift on the selected control baseline: <InlineMath>{`p_B = p_A(1 + \\text{lift})`}</InlineMath>. Example: baseline 10% with +4% lift gives treatment 10.4%.</li>
+                  <li>Example: baseline 10% with +4% relative lift gives treatment 10.4%.</li>
+                  <li>Estimated power is shown as <InlineMath>{`\\approx 100\\%`}</InlineMath> when extremely close to 1, rather than exactly 100%.</li>
                 </ul>
               </div>
             </div>
