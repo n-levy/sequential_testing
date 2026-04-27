@@ -5,8 +5,18 @@ import { useState } from 'react'
 
 function DisplayMathBox({ children }: { children: React.ReactNode }) {
   const [show, setShow] = useState(false);
-  if (show) return <>{children}</>;
-  return <button className="px-4 py-2 bg-blue-600 text-white rounded mb-6" onClick={() => setShow(true)}>Show the math</button>;
+  return (
+    <div>
+      <button
+        type="button"
+        onClick={() => setShow(v => !v)}
+        className="px-3 py-1.5 text-sm bg-neutral-100 text-neutral-800 rounded border border-neutral-300 hover:bg-neutral-200 mb-6"
+      >
+        {show ? 'Hide the math' : 'Show the math'}
+      </button>
+      {show && children}
+    </div>
+  );
 }
 
 export function Act2() {
