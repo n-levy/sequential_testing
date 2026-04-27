@@ -19,7 +19,7 @@ export function DetailedAct5() {
         <div className="bg-blue-50 border border-blue-400 rounded-lg p-6 mb-8">
           <div className="text-neutral-800 space-y-3">
             <p>
-              Under <InlineMath>{`H_0`}</InlineMath> (the coin is fair), the likelihood ratio <InlineMath>{`\Lambda_n`}</InlineMath> bounces up and down, but on average stays at 1. No matter how you peek or stop, you can’t systematically make it large. This is the martingale property in action.
+              Under <InlineMath>{`H_0`}</InlineMath> (the coin is fair), the likelihood ratio <InlineMath>{`\\Lambda_n`}</InlineMath> bounces up and down, but on average stays at 1. No matter how you peek or stop, you can’t systematically make it large. This is the martingale property in action.
             </p>
             <p>
               <strong>Key point:</strong> The likelihood ratio is just like the gambler’s winnings in Act 3. No clever strategy can beat the system if the coin is fair.
@@ -32,7 +32,7 @@ export function DetailedAct5() {
           <h4 className="font-bold text-blue-900 mb-3">Simulation</h4>
           <div className="text-neutral-800 space-y-3">
             <p>
-              The plot shows 100 paths of <InlineMath>{`\Lambda_n`}</InlineMath> over time. When the coin is fair (<InlineMath>{`H_0`}</InlineMath>), the paths wander with no trend. When the coin is biased (<InlineMath>{`H_1`}</InlineMath>), the paths drift upward.
+              The plot shows 100 paths of <InlineMath>{`\\Lambda_n`}</InlineMath> over time. When the coin is fair (<InlineMath>{`H_0`}</InlineMath>), the paths wander with no trend. When the coin is biased (<InlineMath>{`H_1`}</InlineMath>), the paths drift upward.
             </p>
           </div>
         </div>
@@ -41,7 +41,7 @@ export function DetailedAct5() {
         <LRMartingaleSim />
 
         {/* Simulation takeaway */}
-        <div className="bg-amber-50 border border-amber-200 rounded-lg p-4 mt-6">
+        <div className="bg-amber-50 border border-amber-200 rounded-lg p-4 mt-6 mb-8">
           <p className="text-sm text-amber-800">
             <strong>Simulation takeaway:</strong> If the coin is fair, the likelihood ratio stays around 1, no matter how you peek. If the coin is biased, it grows. This is the core of sequential testing.
           </p>

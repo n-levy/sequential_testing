@@ -626,7 +626,7 @@ export function ABTestSim({
             <button
               type="button"
               onClick={() => setShowSimulationNotes(v => !v)}
-              className="px-3 py-1.5 text-sm bg-neutral-100 text-neutral-800 rounded border border-neutral-300 hover:bg-neutral-200"
+              className="px-3 py-1.5 text-sm bg-blue-100 text-blue-800 rounded border border-blue-300 hover:bg-blue-200"
             >
               {showSimulationNotes ? 'Hide simulation assumptions and notes' : 'Show simulation assumptions and notes'}
             </button>

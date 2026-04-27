@@ -39,10 +39,10 @@ export function DetailedAct6() {
           <h4 className="font-bold text-blue-900 mb-3">Simulation</h4>
           <div className="text-neutral-800 space-y-3">
             <p>
-              <strong>Panel 1 &mdash; Markov (single time):</strong> 10,000 fair-coin paths of <InlineMath>{`\Lambda_n`}</InlineMath>. Threshold at <InlineMath>{`\Lambda = 1/\alpha = 20`}</InlineMath>. How many are above the threshold at step 200? Fraction <InlineMath>{`\leq 5\%`}</InlineMath>.
+              <strong>Panel 1 &mdash; Markov (single time):</strong> 10,000 fair-coin paths of <InlineMath>{`\\Lambda_n`}</InlineMath>. Threshold at <InlineMath>{`\\Lambda = 1/\\alpha = 20`}</InlineMath>. How many are above the threshold at step 200? Fraction <InlineMath>{`\\leq 5\\%`}</InlineMath>.
             </p>
             <p>
-              <strong>Panel 2 &mdash; Ville (any time):</strong> Same paths. How many ever cross the threshold at any step? Also <InlineMath>{`\leq 5\%`}</InlineMath>—but this needs a stronger theorem.
+              <strong>Panel 2 &mdash; Ville (any time):</strong> Same paths. How many ever cross the threshold at any step? Also <InlineMath>{`\\leq 5\\%`}</InlineMath>—but this needs a stronger theorem.
             </p>
             <p>
               <strong>Panel 3 &mdash; Comparison:</strong> Standard <InlineMath>{`z`}</InlineMath>-score checked at every step. How many ever show significance? Much higher than 5%—the peeking problem.
@@ -54,9 +54,9 @@ export function DetailedAct6() {
         <VilleInequalitySim />
 
         {/* Simulation takeaway */}
-        <div className="bg-amber-50 border border-amber-200 rounded-lg p-4 mt-6">
+        <div className="bg-amber-50 border border-amber-200 rounded-lg p-4 mt-6 mb-8">
           <p className="text-sm text-amber-800">
-            <strong>Simulation takeaway:</strong> Markov’s inequality controls the false positive rate at a single time. Ville’s inequality controls it across all times—even if you peek after every flip. This is the anytime-valid guarantee.
+            <strong>Simulation takeaway:</strong> Markov's inequality controls the false positive rate at a single time. Ville’s inequality controls it across all times—even if you peek after every flip. This is the anytime-valid guarantee.
           </p>
         </div>
 

@@ -6,7 +6,7 @@ export function HybridApproach() {
       <div className="max-w-4xl mx-auto px-4">
         <div className="text-center mb-10">
           <h2 className="text-3xl font-bold text-neutral-900 mb-3">
-            The Hybrid Approach &mdash; The Recommended Default
+            The Hybrid Approach
           </h2>
           <p className="text-neutral-600">
             How to combine the best of fixed-horizon and sequential testing in practice.
@@ -111,9 +111,8 @@ export function HybridApproach() {
         <div className="bg-yellow-50 border border-yellow-600 rounded-lg p-6 mb-4">
           <h4 className="font-bold text-yellow-900 mb-3">Takeaway</h4>
           <p className="text-neutral-800">
-            Default to the hybrid: <strong>sequential CI for monitoring, fixed CI at a
-            planned horizon for decisions</strong>. Use pure sequential only when the
-            horizon is genuinely unknown.
+            For most short-to-medium-length tests, the hybrid works well: <strong>sequential CI for monitoring, fixed CI at a
+            planned horizon for decisions</strong>. For long-running tests where the horizon is uncertain, relying on the sequential CI alone is the more appropriate choice.
           </p>
         </div>
       </div>

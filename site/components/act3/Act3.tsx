@@ -523,11 +523,13 @@ export function Act3() {
           <div className="text-neutral-800 space-y-3">
             <p><strong>Which method to use:</strong></p>
             <ul className="list-disc list-inside ml-4 space-y-1">
-              <li><strong>Closest to Eppo in these simulations:</strong> Pocock is usually the best match among the DIY options.</li>
+              <li><strong>Closest to Eppo in these simulations:</strong> in the conditions of this simulation, Pocock seems like the most reasonable choice among the alternative methods.</li>
               <li><strong>Avoid over-correction:</strong> Bonferroni is often too conservative, reducing sensitivity more than needed.</li>
               <li><strong>Avoid early over-triggering:</strong> O&apos;Brien&ndash;Fleming can produce too many early significant crossings in this setup.</li>
-              <li><strong>Practical recommendation:</strong> if you are choosing one DIY method for this workflow, use Pocock.</li>
             </ul>
+            <p>
+              That said, we recommend running simulations, A/A tests, or analysing historical tests in each domain, using its specific circumstances (i.e. KPIs and their standard deviations) before deciding which alternative method to use in each domain.
+            </p>
             <p>
               <strong>Timing insight:</strong> the method choice matters most at the beginning of tests, when monitoring is mostly for implementation issues. As sample size grows, interval widths become more similar across methods.
             </p>
@@ -622,7 +624,7 @@ export function Act3() {
           <button
             type="button"
             onClick={() => setShowSimCode(v => !v)}
-            className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+            className="px-3 py-1.5 text-sm bg-blue-100 text-blue-800 rounded border border-blue-300 hover:bg-blue-200"
           >
             Show the code of the simulations
           </button>

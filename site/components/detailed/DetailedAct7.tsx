@@ -22,7 +22,7 @@ export function DetailedAct7() {
               Imagine you have a coin, but you don't know if it's fair (<InlineMath>{`H_0`}</InlineMath>) or biased (<InlineMath>{`H_1`}</InlineMath>). You want to decide as quickly as possible, but you can peek after every flip.
             </p>
             <p>
-              <strong>Wald's answer:</strong> After each observation, compute <InlineMath>{`\Lambda_n`}</InlineMath>. If it gets high enough, call the coin biased. If it drops low enough, call it fair. Otherwise, keep flipping.
+              <strong>Wald's answer:</strong> After each observation, compute <InlineMath>{`\\Lambda_n`}</InlineMath>. If it gets high enough, call the coin biased. If it drops low enough, call it fair. Otherwise, keep flipping.
             </p>
             <p>
               <strong>Key point:</strong> This is the most efficient way to decide between two hypotheses with error guarantees. On average, it needs far fewer observations than any fixed-sample test.
@@ -35,7 +35,7 @@ export function DetailedAct7() {
           <h4 className="font-bold text-blue-900 mb-3">Simulation</h4>
           <div className="text-neutral-800 space-y-3">
             <p>
-              Flip a coin and watch <InlineMath>{`\Lambda_n`}</InlineMath> move. If it crosses the upper threshold (<InlineMath>{`B`}</InlineMath>), you call the coin biased. If it falls below the lower threshold (<InlineMath>{`A`}</InlineMath>), you call it fair. Otherwise, keep going.
+              Flip a coin and watch <InlineMath>{`\\Lambda_n`}</InlineMath> move. If it crosses the upper threshold (<InlineMath>{`B`}</InlineMath>), you call the coin biased. If it falls below the lower threshold (<InlineMath>{`A`}</InlineMath>), you call it fair. Otherwise, keep going.
             </p>
           </div>
         </div>
@@ -44,7 +44,7 @@ export function DetailedAct7() {
         <SPRTSim />
 
         {/* Simulation takeaway */}
-        <div className="bg-amber-50 border border-amber-200 rounded-lg p-4 mt-6">
+        <div className="bg-amber-50 border border-amber-200 rounded-lg p-4 mt-6 mb-8">
           <p className="text-sm text-amber-800">
             <strong>Simulation takeaway:</strong> The SPRT lets you decide as soon as the evidence is strong enough, saving time and samples. But it requires you to pick the effect size in advance.
           </p>

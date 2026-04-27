@@ -22,13 +22,13 @@ export function DetailedAct3() {
 							<p className="font-semibold text-neutral-900 mb-2">Theorem (Doob's Optional Stopping Theorem)</p>
 							<div className="text-neutral-700 space-y-2">
 								<p>
-									Let <InlineMath>{`\{M_n\}`}</InlineMath> be a martingale and{' '}
-									<InlineMath>{`\tau`}</InlineMath> a <strong>stopping time</strong> &mdash; a rule
+									Let <InlineMath>{`\\{M_n\\}`}</InlineMath> be a martingale and{' '}
+									<InlineMath>{`\\tau`}</InlineMath> a <strong>stopping time</strong> &mdash; a rule
 									for when to quit that uses only information accumulated so far (no looking
 									into the future). Then, under reasonable conditions:
 								</p>
 								<div className="bg-neutral-50 border border-neutral-300 rounded p-3">
-									<BlockMath>{`\EE[M_\tau] = \EE[M_0]`}</BlockMath>
+									<BlockMath>{`\\EE[M_\\tau] = \\EE[M_0]`}</BlockMath>
 								</div>
 							</div>
 						</div>

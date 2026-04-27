@@ -30,7 +30,7 @@ export function Navigation({ variant = 'landing' }: NavigationProps) {
     { id: 'act-11', title: 'Act 11: Pipeline', href: '/in-depth#act-11' },
     { id: 'act-12', title: 'Act 12: CUPED', href: '/in-depth#act-12' },
     { id: 'act-13', title: 'Act 13: Sequential CI', href: '/in-depth#act-13' },
-    { id: 'act-14', title: 'Act 14: DIY', href: '/in-depth#act-14' },
+    { id: 'act-14', title: 'Act 14: Alternative Methods', href: '/in-depth#act-14' },
   ]
 
   const landingLinks = [

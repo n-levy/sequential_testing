@@ -37,7 +37,7 @@ const IN_DEPTH_ITEMS = [
   { id: 'act-9', label: 'Act 9 – Confidence Sequences' },
   { id: 'act-11', label: 'Act 10 – Eppo Pipeline' },
   { id: 'act-13', label: 'Act 11 – Sequential CI' },
-  { id: 'act-14', label: 'Act 12 – DIY Alternatives' },
+  { id: 'act-14', label: 'Act 12 – Alternative Methods' },
   { id: 'hybrid', label: 'Hybrid Approach' },
   { id: 'summary', label: 'Summary' },
   { id: 'references', label: 'References' },

@@ -56,7 +56,7 @@ export function DetailedAct8() {
           <ul className="list-disc ml-6 space-y-1 mt-2">
             <li><InlineMath>{`\\Lambda_n^{\\delta}`}</InlineMath> = the likelihood ratio assuming effect size <InlineMath>{`\\delta`}</InlineMath>.</li>
             <li><InlineMath>{`dH(\\delta)`}</InlineMath> = how much weight to give effect size <InlineMath>{`\\delta`}</InlineMath>.</li>
-            <li><InlineMath>{`\int`}</InlineMath> = the integral &mdash; takes a weighted average (mixture) over all possible <InlineMath>{`\delta`}</InlineMath>.</li>
+            <li><InlineMath>{`\\int`}</InlineMath> = the integral &mdash; takes a weighted average (mixture) over all possible <InlineMath>{`\\delta`}</InlineMath>.</li>
           </ul>
           <p className="mt-2">
             The result is the expected likelihood ratio under the mixing distribution{' '}
@@ -97,7 +97,7 @@ export function DetailedAct8() {
         <MixtureSPRTSim />
 
         {/* Simulation takeaway */}
-        <div className="bg-amber-50 border border-amber-200 rounded-lg p-4 mt-6">
+        <div className="bg-amber-50 border border-amber-200 rounded-lg p-4 mt-6 mb-8">
           <p className="text-sm text-amber-800">
             <strong>Simulation takeaway:</strong> The mixture approach lets you test for a range of effect sizes, not just one. The anytime-valid guarantee is preserved.
           </p>

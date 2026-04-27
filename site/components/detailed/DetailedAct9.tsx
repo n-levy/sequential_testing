@@ -44,7 +44,7 @@ export function DetailedAct9() {
         <ConfidenceSequenceSim />
 
         {/* Simulation takeaway */}
-        <div className="bg-amber-50 border border-amber-200 rounded-lg p-4 mt-6">
+        <div className="bg-amber-50 border border-amber-200 rounded-lg p-4 mt-6 mb-8">
           <p className="text-sm text-amber-800">
             <strong>Simulation takeaway:</strong> Confidence sequences let you estimate with valid coverage at every time, no matter how often you peek. This is the modern solution for sequential estimation.
           </p>
@@ -136,7 +136,7 @@ export function DetailedAct9() {
           <ul className="list-disc ml-6 space-y-2">
             <li><strong><a href="#ref-robbins-1970" className="text-blue-600 hover:text-blue-800">Robbins (1970)</a>:</strong> introduced the mixture approach and confidence sequences, but only for known-variance Normal data.</li>
             <li><strong><a href="#ref-johari-2017" className="text-blue-600 hover:text-blue-800">Johari et al. (2017)</a>:</strong> made it practical for A/B testing via the mSPRT, but still assumed known variance and parametric (Normal) data.</li>
-            <li><strong><a href="#ref-howard-2021" className="text-blue-600 hover:text-blue-800">Howard et al. (2021)</a>: extended to nonparametric settings</strong> via the sub-<InlineMath>{`\psi`}</InlineMath> framework. The boundary works for <em>any</em> sub-Gaussian data (not just Normal), the variance can be unknown (estimated from data), and the coverage guarantee is exact (non-asymptotic).</li>
+            <li><strong><a href="#ref-howard-2021" className="text-blue-600 hover:text-blue-800">Howard et al. (2021)</a>: extended to nonparametric settings</strong> via the sub-<InlineMath>{`\\psi`}</InlineMath> framework. The boundary works for <em>any</em> sub-Gaussian data (not just Normal), the variance can be unknown (estimated from data), and the coverage guarantee is exact (non-asymptotic).</li>
           </ul>
         </div>
 
