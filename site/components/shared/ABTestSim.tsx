@@ -66,6 +66,10 @@ function getPeekIndices(n: number, k: number): number[] {
   return Array.from(uniqueLooks).sort((a, b) => a - b)
 }
 
+function clampProbability(p: number): number {
+  return Math.max(1e-6, Math.min(1 - 1e-6, p))
+}
+
 const LAYER_STYLE: Record<SimLayer, { color: string; label: string }> = {
   'fixed-ci':        { color: '#ef4444', label: 'Standard 95% CI' },
   'sequential-ci':   { color: '#2563eb', label: 'Sequential CI (Eppo)' },
@@ -83,16 +87,18 @@ function mulberry32(seed: number) {
   }
 }
 
-/** Simulate running difference in means for A/B test. */
-function simulateABTestTrajectory(n: number, effect: number, seed: number) {
+/** Simulate running difference in means for A/B test with relative lift on a control baseline. */
+function simulateABTestTrajectory(n: number, relativeLift: number, controlRate: number, seed: number) {
   const rand = mulberry32(seed)
   const meansA = new Float64Array(n)
   const meansB = new Float64Array(n)
   const ses = new Float64Array(n)
+  const pA = clampProbability(controlRate)
+  const pB = clampProbability(pA * (1 + relativeLift))
   let sumA = 0, sumB = 0
   for (let i = 0; i < n; i++) {
-    sumA += rand() < 0.5 ? 1 : 0
-    sumB += rand() < 0.5 + effect ? 1 : 0
+    sumA += rand() < pA ? 1 : 0
+    sumB += rand() < pB ? 1 : 0
     const k = i + 1
     meansA[i] = sumA / k
     meansB[i] = sumB / k
@@ -117,6 +123,7 @@ export function ABTestSim({
   const [effect, setEffect] = useState(defaultEffect)
   const [n, setN] = useState(defaultN)
   const [alpha, setAlpha] = useState(ALPHA_DEFAULT)
+  const [baselineRate, setBaselineRate] = useState(0.1)
   const [seed, setSeed] = useState(1)
   const [kState, setK] = useState(KProp)
   const [peekProbs, setPeekProbs] = useState<Record<string, number> | null>(null)
@@ -127,14 +134,15 @@ export function ABTestSim({
   // Clamp effect to [-0.5, 0.5]
   const clampedEffect = Math.max(-0.5, Math.min(0.5, effect))
   const effectiveEffect = clampedEffect
+  const clampedBaseline = clampProbability(baselineRate)
   const peekIndices = useMemo(() => getPeekIndices(n, kState), [n, kState])
 
   // Classical power approximation for two-sided difference-in-proportions test.
   const estimatedPower = useMemo<number | null>(() => {
     if (n <= 0) return null
     if (Math.abs(clampedEffect) < 1e-12) return null
-    const pA = 0.5
-    const pB = Math.max(1e-6, Math.min(1 - 1e-6, 0.5 + clampedEffect))
+    const pA = clampedBaseline
+    const pB = clampProbability(pA * (1 + clampedEffect))
     const delta = Math.abs(pB - pA)
     const seAlt = Math.sqrt((pA * (1 - pA) + pB * (1 - pB)) / n)
     if (seAlt <= 0) return null
@@ -142,7 +150,7 @@ export function ABTestSim({
     const zCrit = normInv(1 - alpha / 2)
     const powerVal = normalCDF(mu - zCrit) + normalCDF(-mu - zCrit)
     return Math.max(0, Math.min(1, powerVal))
-  }, [n, clampedEffect, alpha])
+  }, [n, clampedEffect, alpha, clampedBaseline])
 
   // Compute the probability of crossing the CI at any point for all selected layers
   useEffect(() => {
@@ -151,7 +159,7 @@ export function ABTestSim({
     for (const layer of layers) {
       let count = 0;
       for (let sim = 0; sim < PEEK_N_SIMS; ++sim) {
-        const t = simulateABTestTrajectory(n, effectiveEffect, seed + sim + runSimulationsTrigger * 10000);
+        const t = simulateABTestTrajectory(n, effectiveEffect, clampedBaseline, seed + sim + runSimulationsTrigger * 10000);
         let crossed = false;
         if (peekIndices.length === 0) continue;
         let lookPtr = 0
@@ -191,10 +199,13 @@ export function ABTestSim({
       results[layer] = count / PEEK_N_SIMS;
     }
     setPeekProbs(results);
-  }, [showPeekStats, layers, n, clampedEffect, effectiveEffect, seed, alpha, kState, runSimulationsTrigger, peekIndices]);
+  }, [showPeekStats, layers, n, clampedEffect, effectiveEffect, clampedBaseline, seed, alpha, kState, runSimulationsTrigger, peekIndices]);
 
   // Trajectory recomputed automatically whenever the controls change.
-  const traj = useMemo(() => simulateABTestTrajectory(n, effectiveEffect, seed), [n, effectiveEffect, seed])
+  const traj = useMemo(
+    () => simulateABTestTrajectory(n, effectiveEffect, clampedBaseline, seed),
+    [n, effectiveEffect, clampedBaseline, seed]
+  )
 
   // Compute the running effect in percent: (meanB - meanA) / meanA
   const effectPct = useMemo(() => {
@@ -428,6 +439,16 @@ export function ABTestSim({
       <div className="flex flex-wrap items-start gap-4 mb-4">
         <div className="w-full sm:w-[210px]">
           <label className="block text-xs font-medium text-neutral-600 mb-1">
+            Control conversion rate <span className="font-mono">({(clampedBaseline * 100).toFixed(1)}%)</span>
+          </label>
+          <input
+            type="range" min={0.01} max={0.5} step={0.01}
+            value={baselineRate} onChange={e => setBaselineRate(parseFloat(e.target.value))}
+            className="w-full"
+          />
+        </div>
+        <div className="w-full sm:w-[210px]">
+          <label className="block text-xs font-medium text-neutral-600 mb-1">
             Number of users <span className="font-mono">(n = {n})</span>
           </label>
           <input
@@ -611,7 +632,7 @@ export function ABTestSim({
                 <h5 className="font-semibold text-neutral-900 mb-2">Notes</h5>
                 <ul className="list-disc list-inside space-y-1">
                   <li>The Monte Carlo estimate uses 1000 repetitions, so displayed rates include simulation noise.</li>
-                  <li>The slider is labeled as relative effect, but the generator currently applies it as an additive probability-point shift from a 50% baseline (for example, slider +0.05 sets treatment from 50% to 55%); this is mainly to keep the simulation simple and fast for interactive use, and is a practical approximation rather than a full production experiment model.</li>
+                  <li>Relative effect is now applied as a multiplicative lift on the selected control baseline: <InlineMath>{`p_B = p_A(1 + \\text{lift})`}</InlineMath>. Example: baseline 10% with +4% lift gives treatment 10.4%.</li>
                 </ul>
               </div>
             </div>
