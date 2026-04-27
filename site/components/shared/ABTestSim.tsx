@@ -1,4 +1,4 @@
-'use client'
+"use client"
 
 import { useState, useEffect, useMemo, useRef, type ReactNode } from 'react'
 import * as d3 from 'd3'
@@ -81,6 +81,9 @@ export function ABTestSim({
   const [peekProbs, setPeekProbs] = useState<Record<string, number> | null>(null)
   const svgRef = useRef<SVGSVGElement | null>(null)
 
+  // Clamp effect to [-0.5, 0.5]
+  const clampedEffect = Math.max(-0.5, Math.min(0.5, effect))
+
   // Compute the probability of crossing the CI at any point for all selected layers
   useEffect(() => {
     if (!showPeekStats) return;
@@ -124,12 +127,8 @@ export function ABTestSim({
     setPeekProbs(results);
   }, [showPeekStats, layers, n, clampedEffect, seed, alpha]);
 
-  // Clamp effect to [-0.5, 0.5]
-  const clampedEffect = Math.max(-0.5, Math.min(0.5, effect))
-
   // Trajectory recomputed automatically whenever the controls change.
   const traj = useMemo(() => simulateABTestTrajectory(n, clampedEffect, seed), [n, clampedEffect, seed])
-
 
   // Compute the running effect in percent: (meanB - meanA) / meanA
   const effectPct = useMemo(() => {
