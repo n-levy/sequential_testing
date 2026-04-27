@@ -236,8 +236,8 @@ export function DetailedAct14() {
         </div>
 
         {/* Key Takeaway */}
-        <div className="bg-yellow-50 border border-yellow-600 rounded-lg p-6 mb-8">
-          <h4 className="font-bold text-yellow-900 mb-3">Key Takeaway</h4>
+        <div className="bg-blue-100 border border-blue-500 rounded-lg p-6 mb-8">
+          <h4 className="font-bold text-blue-900 mb-3">Key Takeaway</h4>
           <div className="text-neutral-800 space-y-3">
             <p><strong>Which method to use:</strong></p>
             <ul className="list-disc list-inside ml-4 space-y-1">
@@ -323,8 +323,8 @@ export function DetailedAct14() {
           Otherwise: no significant effect.
         </p>
 
-        <div className="bg-yellow-50 border border-yellow-600 rounded-lg p-6 mb-8">
-          <h4 className="font-bold text-yellow-900 mb-3">Key Takeaway</h4>
+        <div className="bg-blue-100 border border-blue-500 rounded-lg p-6 mb-8">
+          <h4 className="font-bold text-blue-900 mb-3">Key Takeaway</h4>
           <div className="text-neutral-800 space-y-2">
             <p><strong>The hybrid approach without Eppo:</strong></p>
             <ul className="list-disc list-inside ml-4 space-y-1">

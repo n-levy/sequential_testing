@@ -108,8 +108,8 @@ export function HybridApproach() {
           </table>
         </div>
 
-        <div className="bg-yellow-50 border border-yellow-600 rounded-lg p-6 mb-4">
-          <h4 className="font-bold text-yellow-900 mb-3">Takeaway</h4>
+        <div className="bg-blue-100 border border-blue-500 rounded-lg p-6 mb-4">
+          <h4 className="font-bold text-blue-900 mb-3">Takeaway</h4>
           <p className="text-neutral-800">
             For most short-to-medium-length tests, the hybrid works well: <strong>sequential CI for monitoring, fixed CI at a
             planned horizon for decisions</strong>. For long-running tests where the horizon is uncertain, relying on the sequential CI alone is the more appropriate choice.

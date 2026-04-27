@@ -64,7 +64,7 @@ export function DetailedAct8() {
           </p>
         </div>
 
-        <div className="bg-amber-50 border border-amber-300 rounded-lg p-4 mb-6 text-neutral-800">
+        <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6 text-neutral-800">
           <p className="font-semibold mb-2">What is the &ldquo;mixture <InlineMath>{`\\tau`}</InlineMath>&rdquo;?</p>
           <p className="mb-2">
             The mixing distribution <InlineMath>{`H`}</InlineMath> is your <em>prior belief</em> about
@@ -97,8 +97,8 @@ export function DetailedAct8() {
         <MixtureSPRTSim />
 
         {/* Simulation takeaway */}
-        <div className="bg-amber-50 border border-amber-200 rounded-lg p-4 mt-6 mb-8">
-          <p className="text-sm text-amber-800">
+        <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mt-6 mb-8">
+          <p className="text-sm text-blue-800">
             <strong>Simulation takeaway:</strong> The mixture approach lets you test for a range of effect sizes, not just one. The anytime-valid guarantee is preserved.
           </p>
         </div>
@@ -211,8 +211,8 @@ export function DetailedAct8() {
         </DisplayMathBox>
 
         {/* Key Takeaway */}
-        <div className="bg-green-50 border border-green-200 rounded-lg p-6 mb-8">
-          <h4 className="font-bold text-green-900 mb-3">Key Takeaway</h4>
+        <div className="bg-blue-50 border border-blue-300 rounded-lg p-6 mb-8">
+          <h4 className="font-bold text-blue-900 mb-3">Key Takeaway</h4>
           <div className="text-neutral-800 space-y-3">
             <p>
               <strong>Key concepts:</strong> Robbins&apos; mixture idea, the mSPRT as a weighted

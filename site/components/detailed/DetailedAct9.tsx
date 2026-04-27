@@ -44,8 +44,8 @@ export function DetailedAct9() {
         <ConfidenceSequenceSim />
 
         {/* Simulation takeaway */}
-        <div className="bg-amber-50 border border-amber-200 rounded-lg p-4 mt-6 mb-8">
-          <p className="text-sm text-amber-800">
+        <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mt-6 mb-8">
+          <p className="text-sm text-blue-800">
             <strong>Simulation takeaway:</strong> Confidence sequences let you estimate with valid coverage at every time, no matter how often you peek. This is the modern solution for sequential estimation.
           </p>
         </div>
@@ -185,8 +185,8 @@ export function DetailedAct9() {
         </DisplayMathBox>
 
         {/* Key Takeaway */}
-        <div className="bg-green-50 border border-green-200 rounded-lg p-6 mb-8">
-          <h4 className="font-bold text-green-900 mb-3">Key Takeaway</h4>
+        <div className="bg-blue-50 border border-blue-300 rounded-lg p-6 mb-8">
+          <h4 className="font-bold text-blue-900 mb-3">Key Takeaway</h4>
           <div className="text-neutral-800 space-y-3">
             <p>
               <strong>Key concepts:</strong> confidence sequences (uniform coverage over all times),

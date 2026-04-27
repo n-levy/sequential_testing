@@ -109,8 +109,8 @@ export function Act2() {
       </div>
 
       {/* ── Key Takeaway ── */}
-      <div className="bg-yellow-50 border border-yellow-600 rounded-lg p-6 mb-8">
-        <h4 className="font-bold text-yellow-900 mb-3">Key Takeaway</h4>
+      <div className="bg-blue-100 border border-blue-500 rounded-lg p-6 mb-8">
+        <h4 className="font-bold text-blue-900 mb-3">Key Takeaway</h4>
         <div className="text-neutral-800 space-y-3">
           <p>
             Sequential intervals trade narrowness at a single look for validity across all looks. If your team monitors live, this is the right tradeoff.
@@ -192,8 +192,8 @@ export function Act2() {
         </table>
       </div>
 
-      <div className="bg-yellow-50 border border-yellow-600 rounded-lg p-6 mb-8">
-        <h4 className="font-bold text-yellow-900 mb-3">Key Takeaway</h4>
+      <div className="bg-blue-100 border border-blue-500 rounded-lg p-6 mb-8">
+        <h4 className="font-bold text-blue-900 mb-3">Key Takeaway</h4>
         <div className="text-neutral-800 space-y-3">
           <p>
             <strong>The hybrid approach in one sentence:</strong> Monitor guardrail KPIs with a

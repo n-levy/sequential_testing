@@ -140,8 +140,8 @@ export function DetailedAct12() {
         </DisplayMathBox>
 
         {/* Key Takeaway */}
-        <div className="bg-green-50 border border-green-200 rounded-lg p-6 mb-8">
-          <h4 className="font-bold text-green-900 mb-3">Key Takeaway</h4>
+        <div className="bg-blue-50 border border-blue-300 rounded-lg p-6 mb-8">
+          <h4 className="font-bold text-blue-900 mb-3">Key Takeaway</h4>
           <div className="text-neutral-800">
             <p>
               <strong>Key concepts:</strong> regression adjustment as generalised CUPED, separate

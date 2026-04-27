@@ -52,8 +52,8 @@ export function DetailedAct4() {
         <LikelihoodRatioSim />
 
         {/* Simulation takeaway */}
-        <div className="bg-amber-50 border border-amber-200 rounded-lg p-4 mt-6 mb-8">
-          <p className="text-sm text-amber-800">
+        <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mt-6 mb-8">
+          <p className="text-sm text-blue-800">
             <strong>Simulation takeaway:</strong> Even with a real bias, it takes a lot of data to reliably tell the difference. Short sequences are noisy; long sequences reveal the truth.
           </p>
         </div>
@@ -155,8 +155,8 @@ export function DetailedAct4() {
         </DisplayMathBox>
 
         {/* Key Takeaway */}
-        <div className="bg-green-50 border border-green-200 rounded-lg p-6 mb-8">
-          <h4 className="font-bold text-green-900 mb-3">Key Takeaway</h4>
+        <div className="bg-blue-50 border border-blue-300 rounded-lg p-6 mb-8">
+          <h4 className="font-bold text-blue-900 mb-3">Key Takeaway</h4>
           <div className="text-neutral-800">
             <p>
               The likelihood ratio quantifies how many times more probable the observed data are under <InlineMath>{`H_1`}</InlineMath> relative to <InlineMath>{`H_0`}</InlineMath>.

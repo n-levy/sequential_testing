@@ -33,7 +33,7 @@ export function Act1() {
         <h3 className="text-xl font-semibold mb-2">Simulation</h3>
         <p className="text-neutral-700">
           Below is a simulation of an A/B test. Specify the effect size, number of users, and significance level.
-          The plot shows the running difference in means and the standard 95% confidence interval.
+          The plot shows the running estimate of the relative uplift and the standard 95% confidence interval.
         </p>
       </div>
 
@@ -104,8 +104,8 @@ export function Act1() {
       </div>
 
       {/* ── Key Takeaway ── */}
-      <div className="bg-yellow-50 border border-yellow-600 rounded-lg p-6 mb-8">
-        <h4 className="font-bold text-yellow-900 mb-3">Key Takeaway</h4>
+      <div className="bg-blue-100 border border-blue-500 rounded-lg p-6 mb-8">
+        <h4 className="font-bold text-blue-900 mb-3">Key Takeaway</h4>
         <div className="text-neutral-800 space-y-3">
           <p>
             Sequential methods control the probability of ever making a false positive, no matter when we stop. They use stricter or time-dependent thresholds to account for repeated checking. This way, we can monitor results as often as we like, and the error rate stays controlled.

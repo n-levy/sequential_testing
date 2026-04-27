@@ -2315,7 +2315,7 @@ export function EppoPipelineSim() {
           {/* Decision banner */}
           <div className={\`rounded-lg p-4 border-2 text-center font-medium \${
             simState.decision === 'ship' ? 'bg-green-50 border-green-300 text-green-800' :
-            simState.decision === 'revert' ? 'bg-amber-50 border-amber-300 text-amber-800' :
+            simState.decision === 'revert' ? 'bg-amber-50 border-amber-300 text-blue-800' :
             'bg-neutral-50 border-neutral-300 text-neutral-700'
           }\`}>
             {simState.decision === 'ship' && \`Decision: Ship the feature (significant at n = \${simState.decisionAt?.toLocaleString()} per group)\`}

@@ -55,17 +55,17 @@ export function DetailedSummary() {
         <div className="text-neutral-700 mb-8">
           <p className="mb-2"><strong>The evolution across eight decades:</strong></p>
           <div className="flex flex-wrap items-center justify-center gap-2 text-sm">
-            <span className="bg-purple-100 px-3 py-1 rounded">Ville (1939)</span>
+            <span className="bg-blue-100 px-3 py-1 rounded">Ville (1939)</span>
             <span className="text-neutral-400">&rarr;</span>
-            <span className="bg-purple-100 px-3 py-1 rounded">Wald (1945)</span>
+            <span className="bg-blue-100 px-3 py-1 rounded">Wald (1945)</span>
             <span className="text-neutral-400">&rarr;</span>
-            <span className="bg-purple-100 px-3 py-1 rounded">Robbins (1970)</span>
+            <span className="bg-blue-100 px-3 py-1 rounded">Robbins (1970)</span>
             <span className="text-neutral-400">&rarr;</span>
-            <span className="bg-purple-100 px-3 py-1 rounded">Johari (2017)</span>
+            <span className="bg-blue-100 px-3 py-1 rounded">Johari (2017)</span>
             <span className="text-neutral-400">&rarr;</span>
-            <span className="bg-purple-100 px-3 py-1 rounded">Howard (2021)</span>
+            <span className="bg-blue-100 px-3 py-1 rounded">Howard (2021)</span>
             <span className="text-neutral-400">&rarr;</span>
-            <span className="bg-purple-100 px-3 py-1 rounded">Eppo (2024)</span>
+            <span className="bg-blue-100 px-3 py-1 rounded">Eppo (2024)</span>
           </div>
         </div>
       </div>

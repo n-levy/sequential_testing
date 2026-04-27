@@ -44,8 +44,8 @@ export function DetailedAct7() {
         <SPRTSim />
 
         {/* Simulation takeaway */}
-        <div className="bg-amber-50 border border-amber-200 rounded-lg p-4 mt-6 mb-8">
-          <p className="text-sm text-amber-800">
+        <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mt-6 mb-8">
+          <p className="text-sm text-blue-800">
             <strong>Simulation takeaway:</strong> The SPRT lets you decide as soon as the evidence is strong enough, saving time and samples. But it requires you to pick the effect size in advance.
           </p>
         </div>
@@ -147,8 +147,8 @@ export function DetailedAct7() {
         </div>
 
         {/* Key Takeaway */}
-        <div className="bg-green-50 border border-green-200 rounded-lg p-6 mb-8">
-          <h4 className="font-bold text-green-900 mb-3">Key Takeaway</h4>
+        <div className="bg-blue-50 border border-blue-300 rounded-lg p-6 mb-8">
+          <h4 className="font-bold text-blue-900 mb-3">Key Takeaway</h4>
           <div className="text-neutral-800">
             <p>
               <strong>Key concepts:</strong> SPRT decision rule, Wald&apos;s boundary approximations,
