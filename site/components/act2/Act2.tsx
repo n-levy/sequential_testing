@@ -238,7 +238,7 @@ export function Act2() {
           {/* Step 2 */}
           <h5 className="font-semibold mb-2">2. Sequential confidence interval (Eppo)</h5>
           <p className="mb-2 text-neutral-800">
-            Eppo's sequential confidence interval replaces the fixed multiplier 1.96 with a time-dependent one:
+            Eppo's sequential confidence interval replaces the fixed multiplier 1.96 with one that depends on the number of observations:
           </p>
           <BlockMath>{`\\hat{u}_n \\pm 100\\cdot\\frac{\\widehat{\\mathrm{SE}}_n}{\\bar{X}_{A,n}}\\,\\sqrt{\\frac{n+\\nu}{n}\\log\\!\\left(\\frac{n+\\nu}{\\nu\\,\\alpha}\\right)}`}</BlockMath>
           <ul className="mb-6 text-sm text-neutral-600 space-y-1 ml-4 list-disc">
@@ -265,7 +265,7 @@ export function Act2() {
             <li><InlineMath>{`\\log`}</InlineMath> — natural logarithm</li>
           </ul>
           <p className="mb-6 text-neutral-800">
-            This multiplier is larger than 1.96 for small <InlineMath>{`n`}</InlineMath>, which is what keeps the Type I error controlled under continuous monitoring. As <InlineMath>{`n`}</InlineMath> grows, <InlineMath>{`m(n)`}</InlineMath> shrinks — so the confidence interval becomes progressively narrower as more users participate in the test.
+            This multiplier is larger than 1.96, which is what keeps the Type I error controlled under continuous monitoring. The multiplier is especially high when <InlineMath>{`n`}</InlineMath> is small. As <InlineMath>{`n`}</InlineMath> grows, <InlineMath>{`m(n)`}</InlineMath> shrinks, so the confidence interval becomes progressively narrower as more users participate in the test (but remains larger than 1.96).
           </p>
           <p className="mb-6 text-neutral-800">
             The tuning parameter <InlineMath>{`\\nu`}</InlineMath> controls this trade-off between early-stopping power and long-run width. Eppo sets it as:

@@ -19,6 +19,7 @@ export function Math({ children, block = false, className = '' }: MathProps) {
         katex.render(children, ref.current, {
           displayMode: block,
           throwOnError: false,
+          output: 'html',
           macros: {
             "\\RR": "\\mathbb{R}",
             "\\NN": "\\mathbb{N}",
