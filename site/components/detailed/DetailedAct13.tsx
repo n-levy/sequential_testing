@@ -59,31 +59,35 @@ export function DetailedAct13() {
         {/* Sequential multiplier table */}
         <h4 className="text-lg font-semibold text-neutral-800 mb-3">How the sequential multiplier behaves</h4>
 
+        <p className="text-xs text-neutral-500 mb-2">
+          Values below use the default calibration (<InlineMath>{`n^* = 10{,}000,\\ \\alpha = 0.05`}</InlineMath>, giving <InlineMath>{`\\nu \\approx 892`}</InlineMath>).
+        </p>
+
         <div className="overflow-x-auto mb-6">
           <table className="w-full min-w-[640px] text-sm border-collapse border border-neutral-300">
             <thead>
               <tr className="bg-neutral-100">
                 <th className="border border-neutral-300 p-3 text-left font-semibold"><InlineMath>{`n`}</InlineMath></th>
-                <th className="border border-neutral-300 p-3 text-left font-semibold"><InlineMath>{`m(n)`}</InlineMath> (example)</th>
+                <th className="border border-neutral-300 p-3 text-left font-semibold"><InlineMath>{`m(n)`}</InlineMath></th>
                 <th className="border border-neutral-300 p-3 text-left font-semibold"><InlineMath>{`z_{\\alpha/2}`}</InlineMath></th>
                 <th className="border border-neutral-300 p-3 text-left font-semibold">Interpretation</th>
               </tr>
             </thead>
             <tbody>
-              <tr><td className="border border-neutral-300 p-3">100</td><td className="border border-neutral-300 p-3"><InlineMath>{`\\approx 3.8`}</InlineMath></td><td className="border border-neutral-300 p-3">1.96</td><td className="border border-neutral-300 p-3">Early: sequential CI is ~2&times; wider</td></tr>
-              <tr className="bg-neutral-50"><td className="border border-neutral-300 p-3">1,000</td><td className="border border-neutral-300 p-3"><InlineMath>{`\\approx 2.8`}</InlineMath></td><td className="border border-neutral-300 p-3">1.96</td><td className="border border-neutral-300 p-3">Mid-experiment: gap narrowing</td></tr>
-              <tr><td className="border border-neutral-300 p-3">10,000</td><td className="border border-neutral-300 p-3"><InlineMath>{`\\approx 2.3`}</InlineMath></td><td className="border border-neutral-300 p-3">1.96</td><td className="border border-neutral-300 p-3">Late: only ~17% wider</td></tr>
-              <tr className="bg-neutral-50"><td className="border border-neutral-300 p-3">100,000</td><td className="border border-neutral-300 p-3"><InlineMath>{`\\approx 2.1`}</InlineMath></td><td className="border border-neutral-300 p-3">1.96</td><td className="border border-neutral-300 p-3">Approaching classical, never quite reaching it</td></tr>
+              <tr><td className="border border-neutral-300 p-3">100</td><td className="border border-neutral-300 p-3"><InlineMath>{`\\approx 5.5`}</InlineMath></td><td className="border border-neutral-300 p-3">1.96</td><td className="border border-neutral-300 p-3">Very early: CI is ~2.8&times; wider than classical</td></tr>
+              <tr className="bg-neutral-50"><td className="border border-neutral-300 p-3">1,000</td><td className="border border-neutral-300 p-3"><InlineMath>{`\\approx 2.7`}</InlineMath></td><td className="border border-neutral-300 p-3">1.96</td><td className="border border-neutral-300 p-3">Decreasing toward minimum</td></tr>
+              <tr><td className="border border-neutral-300 p-3">4,000</td><td className="border border-neutral-300 p-3"><InlineMath>{`\\approx 2.4`}</InlineMath></td><td className="border border-neutral-300 p-3">1.96</td><td className="border border-neutral-300 p-3">Near minimum (before <InlineMath>{`n^*`}</InlineMath>): ~23% wider</td></tr>
+              <tr className="bg-neutral-50"><td className="border border-neutral-300 p-3">10,000</td><td className="border border-neutral-300 p-3"><InlineMath>{`\\approx 2.45`}</InlineMath></td><td className="border border-neutral-300 p-3">1.96</td><td className="border border-neutral-300 p-3">At <InlineMath>{`n^*`}</InlineMath>: multiplier already rising slightly</td></tr>
+              <tr><td className="border border-neutral-300 p-3">100,000</td><td className="border border-neutral-300 p-3"><InlineMath>{`\\approx 2.8`}</InlineMath></td><td className="border border-neutral-300 p-3">1.96</td><td className="border border-neutral-300 p-3">Well past <InlineMath>{`n^*`}</InlineMath>: multiplier rising, CI widening</td></tr>
             </tbody>
           </table>
         </div>
 
         <div className="bg-white border border-neutral-200 rounded-lg p-4 mb-6 text-neutral-600">
           <p>
-            The sequential multiplier starts high and shrinks toward <InlineMath>{`z_{\\alpha/2}`}</InlineMath> as
-            more data arrives. The gap &mdash; the &ldquo;price of peeking&rdquo; &mdash; decreases
-            but never fully closes. For most practical experiments (thousands to hundreds of
-            thousands of observations), the price is modest: 10&ndash;40% wider than a classical CI.
+            The sequential multiplier starts high, decreases to a minimum somewhere before <InlineMath>{`n^*`}</InlineMath>, then slowly rises.
+            The gap from 1.96 &mdash; the &ldquo;price of peeking&rdquo; &mdash; is largest early on and smallest near the planned sample size.
+            It never fully closes; m(n) always stays above 1.96.
           </p>
         </div>
 
