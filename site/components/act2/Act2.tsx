@@ -265,17 +265,20 @@ export function Act2() {
             <li><InlineMath>{`\\log`}</InlineMath> — natural logarithm</li>
           </ul>
           <p className="mb-6 text-neutral-800">
-            This multiplier is larger than 1.96, which is what keeps the Type I error controlled under continuous monitoring. The multiplier is especially high when <InlineMath>{`n`}</InlineMath> is small. As <InlineMath>{`n`}</InlineMath> grows, <InlineMath>{`m(n)`}</InlineMath> shrinks, so the confidence interval becomes progressively narrower as more users participate in the test (but remains larger than 1.96).
+            This multiplier is larger than 1.96, which is what keeps the Type I error controlled under continuous monitoring. The multiplier is especially high when <InlineMath>{`n`}</InlineMath> is small. As <InlineMath>{`n`}</InlineMath> grows, <InlineMath>{`m(n)`}</InlineMath> first decreases — so the confidence interval narrows — reaches a minimum somewhere before the planned sample size <InlineMath>{`n^*`}</InlineMath>, and then slowly increases again. The interval is therefore tightest in the middle of the experiment and widens slightly if the experiment runs well past <InlineMath>{`n^*`}</InlineMath>. It always remains above 1.96.
           </p>
           <p className="mb-6 text-neutral-800">
             The tuning parameter <InlineMath>{`\\nu`}</InlineMath> controls this trade-off between early-stopping power and long-run width. Eppo sets it as:
           </p>
           <BlockMath>{`\\nu = \\frac{n^*}{\\log(n^*/\\alpha) - 1}`}</BlockMath>
-          <ul className="mb-6 text-sm text-neutral-600 space-y-1 ml-4 list-disc">
+          <ul className="mb-4 text-sm text-neutral-600 space-y-1 ml-4 list-disc">
             <li><InlineMath>{`\\nu`}</InlineMath> — tuning parameter that balances the interval width at early looks versus the planned end date</li>
             <li><InlineMath>{`n^*`}</InlineMath> — the planned (maximum) sample size per group — the horizon at which the experiment is expected to end</li>
             <li><InlineMath>{`\\alpha`}</InlineMath> — target Type I error level</li>
           </ul>
+          <p className="mb-6 text-neutral-800">
+            Setting <InlineMath>{`\\nu`}</InlineMath> too high (relative to actual traffic) shifts the minimum of <InlineMath>{`m(n)`}</InlineMath> to a sample size you never reach, so the interval stays wider than necessary throughout the experiment. Setting it too low shifts the minimum to a point you pass quickly, after which the multiplier starts rising earlier than optimal. The formula above calibrates <InlineMath>{`\\nu`}</InlineMath> so the multiplier is near its minimum around <InlineMath>{`n^*`}</InlineMath> — the point where you expect to make a decision. Being off by a factor of two is fine; being off by a factor of ten matters.
+          </p>
 
           {/* Step 4 */}
           <h5 className="font-semibold mb-2">4. Time-uniform coverage guarantee</h5>
@@ -293,7 +296,7 @@ export function Act2() {
             So unlike fixed-horizon confidence intervals, the guarantee still holds under continuous monitoring.
           </p>
           <p className="text-neutral-800">
-            As <InlineMath>{`n`}</InlineMath> increases and more users join the experiment, the multiplier <InlineMath>{`m(n)`}</InlineMath> decreases toward 1.96, so the confidence interval gradually narrows — reflecting the accumulating evidence.
+            As <InlineMath>{`n`}</InlineMath> increases, the multiplier <InlineMath>{`m(n)`}</InlineMath> first decreases and then slowly rises — so the confidence interval narrows through most of the experiment and widens slightly if the experiment runs past the planned sample size.
           </p>
         </div>
       </DisplayMathBox>
