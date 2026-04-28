@@ -69,8 +69,8 @@ export function MathReference() {
 
           <div className="bg-white border border-neutral-300 rounded-lg p-5">
             <h4 className="font-bold text-neutral-900 mb-2">Sequential Confidence Interval (Howard et al., 2021)</h4>
-            <BlockMath>{`\\text{CI}(t) = \\hat{\\tau}(t) \\;\\pm\\; \\hat{\\sigma}_{\\hat{\\tau}}(t) \\cdot \\sqrt{\\frac{n + \\nu}{n} \\cdot \\log\\!\\frac{n + \\nu}{\\nu \\alpha^2}}`}</BlockMath>
-            <p className="text-sm text-neutral-600 mt-2">Valid at <em>all times simultaneously</em>. The multiplier starts high (~3.8) and decreases toward 1.96.</p>
+            <BlockMath>{`\\text{CI}(t) = \\hat{\\tau}(t) \\;\\pm\\; \\hat{\\sigma}_{\\hat{\\tau}}(t) \\cdot \\sqrt{\\frac{n + \\nu}{n} \\cdot \\log\\!\\frac{n + \\nu}{\\nu \\alpha}}`}</BlockMath>
+            <p className="text-sm text-neutral-600 mt-2">Valid at <em>all times simultaneously</em>. The sequential multiplier first decreases — reaching a minimum before <InlineMath>{`n^*`}</InlineMath> — then slowly rises. It always stays above 1.96.</p>
           </div>
 
           <div className="bg-white border border-neutral-300 rounded-lg p-5">

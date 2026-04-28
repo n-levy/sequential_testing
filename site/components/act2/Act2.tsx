@@ -112,6 +112,9 @@ export function Act2() {
         <p className="text-neutral-700">
           Under repeated peeking, the standard confidence interval inflates false positives substantially, while the sequential confidence interval stays close to the target error level.
         </p>
+        <p className="text-neutral-600 text-sm mt-2">
+          Note: the sequential CI shows ~2% at a single look — below the nominal 5% — because the sequential multiplier is calibrated for continuous monitoring and is intentionally conservative at any fixed look.
+        </p>
       </div>
 
       {/* ── Key Takeaway ── */}
