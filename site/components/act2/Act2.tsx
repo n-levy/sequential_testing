@@ -246,7 +246,7 @@ export function Act2() {
             <li><InlineMath>{`\\widehat{\\mathrm{SE}}_n`}</InlineMath> — estimated standard error of the difference in means at the current sample size</li>
             <li><InlineMath>{`\\bar{X}_{A,n}`}</InlineMath> — running mean outcome in the control group (used to convert absolute SE to relative %)</li>
             <li><InlineMath>{`n`}</InlineMath> — current number of users in each group</li>
-            <li><InlineMath>{`\\nu`}</InlineMath> — tuning parameter that controls the width–power tradeoff (calibrated to the planned sample size)</li>
+            <li><InlineMath>{`\\nu`}</InlineMath> — tuning parameter that controls the width–power tradeoff, calibrated to the planned sample size. See the formula below.</li>
             <li><InlineMath>{`\\alpha`}</InlineMath> — target Type I error level (e.g. 0.05 for a 5% false-positive rate)</li>
             <li><InlineMath>{`\\log`}</InlineMath> — natural logarithm</li>
           </ul>
