@@ -6,7 +6,7 @@ export function EppoFPRReport({ n = 500, alpha = 0.05, seed = 1234 }: { n?: numb
   useEffect(() => {
     // Use the same mixture CI as in CoinFlipMeanSim
     function sequentialHalfWidth(k: number, se: number, alpha: number, nu: number) {
-      return se * Math.sqrt(((k + nu) / k) * Math.log((k + nu) / (nu * alpha * alpha)))
+      return se * Math.sqrt(((k + nu) / k) * Math.log((k + nu) / (nu * alpha)))
     }
     function mulberry32(seed: number) {
       return function () {

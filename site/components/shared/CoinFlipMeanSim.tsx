@@ -68,7 +68,7 @@ function simulateTrajectory(n: number, pHeads: number, seed: number) {
 
 /** Half-width of the Eppo / Howard normal-mixture sequential CI. */
 function sequentialHalfWidth(k: number, se: number, alpha: number, nu: number) {
-  return se * Math.sqrt(((k + nu) / k) * Math.log((k + nu) / (nu * alpha * alpha)))
+  return se * Math.sqrt(((k + nu) / k) * Math.log((k + nu) / (nu * alpha)))
 }
 
 /**

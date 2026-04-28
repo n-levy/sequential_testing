@@ -36,7 +36,7 @@ export function SequentialMultiplierSim() {
     const fixedMult = 1.96
     for (const n of nValues) {
       const v = n * sigma2
-      const logTerm = Math.log((v + nu) / (nu * alpha * alpha))
+      const logTerm = Math.log((v + nu) / (nu * alpha))
       const m = Math.sqrt(((v + nu) / v) * logTerm)
       seqMults.push(m)
     }
@@ -76,7 +76,7 @@ export function SequentialMultiplierSim() {
     const nuN = nuFactor * maxN
     if (nuN >= 10 && nuN <= maxN) {
       const nuV = nuN * sigma2
-      const nuLogTerm = Math.log((nuV + nu) / (nu * alpha * alpha))
+      const nuLogTerm = Math.log((nuV + nu) / (nu * alpha))
       const nuM = Math.sqrt(((nuV + nu) / nuV) * nuLogTerm)
       g.append('line').attr('x1', x(nuN)).attr('x2', x(nuN))
         .attr('y1', 0).attr('y2', height)
@@ -142,7 +142,7 @@ export function SequentialMultiplierSim() {
   const exampleNs = [100, 1000, maxN]
   const exampleMults = exampleNs.map(n => {
     const v = n * sigma2
-    const logTerm = Math.log((v + nu) / (nu * alpha * alpha))
+    const logTerm = Math.log((v + nu) / (nu * alpha))
     return Math.sqrt(((v + nu) / v) * logTerm)
   })
 

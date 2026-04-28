@@ -1581,10 +1581,10 @@ export function ConfidenceSequenceSim() {
       const ciHalf = z * se
 
       // Confidence Sequence (Normal mixture boundary from Howard et al.)
-      // u(v) = sqrt((v + ν) * log((v + ν) / (ν * α²)))
+      // u(v) = sqrt((v + ν) * log((v + ν) / (ν * α)))
       // Half-width = u(v) / n where v = n * σ²
       const v = i * sigma * sigma
-      const uVal = Math.sqrt((v + nu) * Math.log((v + nu) / (nu * alpha * alpha)))
+      const uVal = Math.sqrt((v + nu) * Math.log((v + nu) / (nu * alpha)))
       const csHalf = uVal / i
 
       means.push(mean)
@@ -2622,7 +2622,7 @@ export function SequentialMultiplierSim() {
     const fixedMult = 1.96
     for (const n of nValues) {
       const v = n * sigma2
-      const logTerm = Math.log((v + nu) / (nu * alpha * alpha))
+      const logTerm = Math.log((v + nu) / (nu * alpha))
       const m = Math.sqrt(((v + nu) / v) * logTerm)
       seqMults.push(m)
     }
@@ -2662,7 +2662,7 @@ export function SequentialMultiplierSim() {
     const nuN = nuFactor * maxN
     if (nuN >= 10 && nuN <= maxN) {
       const nuV = nuN * sigma2
-      const nuLogTerm = Math.log((nuV + nu) / (nu * alpha * alpha))
+      const nuLogTerm = Math.log((nuV + nu) / (nu * alpha))
       const nuM = Math.sqrt(((nuV + nu) / nuV) * nuLogTerm)
       g.append('line').attr('x1', x(nuN)).attr('x2', x(nuN))
         .attr('y1', 0).attr('y2', height)
@@ -2728,7 +2728,7 @@ export function SequentialMultiplierSim() {
   const exampleNs = [100, 1000, maxN]
   const exampleMults = exampleNs.map(n => {
     const v = n * sigma2
-    const logTerm = Math.log((v + nu) / (nu * alpha * alpha))
+    const logTerm = Math.log((v + nu) / (nu * alpha))
     return Math.sqrt(((v + nu) / v) * logTerm)
   })
 
