@@ -33,7 +33,7 @@ export function MathReference() {
                 ['n_0(t),\\ n_1(t)', 'Number of users in control / treatment at time t', 'Throughout'],
                 ['n', 'Total observations: n_0(t) + n_1(t)', 'Act 2, Step 6'],
                 ['\\alpha', 'Significance level (typically 0.05)', 'Throughout'],
-                ['\\nu', 'Tuning parameter: \\nu = M \\cdot \\hat{\\sigma}^2', 'Act 2, Step 6 (sequential confidence interval)'],
+                ['\\nu', 'Tuning parameter — calibrated to planned sample size', 'Act 2, Step 6 (sequential confidence interval)'],
                 ['M', 'Expected total sample size', 'Act 2, Step 6'],
                 ['K', 'Number of pre-planned analysis times (peeks)', 'Act 3'],
                 ['k', 'Current peek number (1 \\leq k \\leq K)', 'Act 3'],

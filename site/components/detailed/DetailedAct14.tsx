@@ -201,14 +201,14 @@ export function DetailedAct14() {
                 <td className="border border-neutral-300 p-3 text-center"><InlineMath>{`2.50 \\times \\hat{\\sigma}`}</InlineMath></td>
                 <td className="border border-neutral-300 p-3 text-center"><InlineMath>{`2.36 \\times \\hat{\\sigma}`}</InlineMath></td>
                 <td className="border border-neutral-300 p-3 text-center"><InlineMath>{`4.05 \\times \\hat{\\sigma}`}</InlineMath></td>
-                <td className="border border-neutral-300 p-3 text-center"><InlineMath>{`{\\sim}3.8 \\times \\hat{\\sigma}`}</InlineMath></td>
+                <td className="border border-neutral-300 p-3 text-center"><InlineMath>{`{\\sim}2.7 \\times \\hat{\\sigma}`}</InlineMath></td>
               </tr>
               <tr className="bg-neutral-50">
                 <td className="border border-neutral-300 p-3 font-medium">Confidence interval at final analysis (K=4)</td>
                 <td className="border border-neutral-300 p-3 text-center"><InlineMath>{`2.50 \\times \\hat{\\sigma}`}</InlineMath></td>
                 <td className="border border-neutral-300 p-3 text-center"><InlineMath>{`2.36 \\times \\hat{\\sigma}`}</InlineMath></td>
                 <td className="border border-neutral-300 p-3 text-center"><InlineMath>{`2.02 \\times \\hat{\\sigma}`}</InlineMath></td>
-                <td className="border border-neutral-300 p-3 text-center"><InlineMath>{`{\\sim}2.3 \\times \\hat{\\sigma}`}</InlineMath></td>
+                <td className="border border-neutral-300 p-3 text-center"><InlineMath>{`{\\sim}2.4 \\times \\hat{\\sigma}`}</InlineMath></td>
               </tr>
               <tr>
                 <td className="border border-neutral-300 p-3 font-medium">Valid between peeks?</td>

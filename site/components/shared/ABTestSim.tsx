@@ -640,7 +640,7 @@ export function ABTestSim({
                   <li>Binary outcome metric (Bernoulli), modeled as conversion in each arm.</li>
                   <li>Uplift is modeled as relative lift on baseline: <InlineMath>{`\\text{uplift} = (\\bar p_B - \\bar p_A)/\\bar p_A`}</InlineMath>, with generator <InlineMath>{`p_B = p_A(1 + \\text{lift})`}</InlineMath>.</li>
                   <li>Null hypothesis is <InlineMath>{`H_0: \\text{lift} = 0`}</InlineMath> (equivalently, no treatment effect).</li>
-                  <li>Standard deviation follows Bernoulli variance in each arm: <InlineMath>{`\\sigma_A = \\sqrt{p_A(1-p_A)},\\ \\sigma_B = \\sqrt{p_B(1-p_B)}`}</InlineMath>, so <InlineMath>{`\\mathrm{SE}(\\hat p_B-\\hat p_A)=\\sqrt{(\\sigma_A^2+\\sigma_B^2)/n}`}</InlineMath>.</li>
+                  <li>Standard deviation follows Bernoulli variance in each arm: <InlineMath>{`\\sigma_A = \\sqrt{p_A(1-p_A)},\\ \\sigma_B = \\sqrt{p_B(1-p_B)}`}</InlineMath>, so <InlineMath>{`\\mathrm{SE}(\\hat p_B-\\hat p_A)=\\sqrt{(\\sigma_A^2+\\sigma_B^2)/n}`}</InlineMath> where <InlineMath>{`n`}</InlineMath> is the per-group sample size.</li>
                   <li>Equal traffic split: 50% control and 50% treatment.</li>
                   <li>Control conversion baseline is user-specified via slider.</li>
                   <li>Independent users/events within and across arms (no clustering or interference).</li>
