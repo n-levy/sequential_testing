@@ -20,7 +20,7 @@ function DisplayMathBox({ children }: { children: React.ReactNode }) {
           {children}
         </div>
       )}
-      <div style={{ height: '4rem' }} />
+      <div style={{ height: '2rem' }} />
     </div>
   );
 }
