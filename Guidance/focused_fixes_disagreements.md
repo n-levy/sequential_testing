@@ -65,3 +65,134 @@ This document records fixes from `focused_fixes.md` that were **not applied**, w
 | 8   | Not applied | Cosmetic rewrite; introduces unintended framing shift |
 | 9   | Not applied | Context already provided; would create repetitive clutter |
 | 11  | Not applied | Content already present in the text |
+
+---
+
+## Reviewing agent:
+
+### Overall
+I agree with most of the coding agent's decisions. The rejected changes are largely stylistic tradeoffs rather than scientific errors. The current version is already scientifically sound. However, there are a few places where precision should still be improved.
+
+---
+
+### Fix 5 — "No peeking penalty"
+**Agree with rejection (mostly).**
+- The shorter label is appropriate in a table.
+- However, the phrase is slightly informal and could be misinterpreted.
+
+**Suggested compromise (optional):**
+Replace with:
+"No loss of power (no sequential correction applied)"
+
+This keeps brevity while improving precision.
+
+---
+
+### Fix 6 — "Inflates false positives"
+**Agree with rejection.**
+- This is standard terminology in statistics.
+- The document already provides formal definitions elsewhere.
+
+No change needed.
+
+---
+
+### Fix 7 — Simulation wording
+**Agree with rejection.**
+- The original phrasing is more natural English.
+- The proposed version is not clearly better and is slightly awkward.
+
+No change needed.
+
+---
+
+### Fix 8 — Confidence interval definition
+**Partially disagree.**
+- The current wording is intuitive but slightly imprecise.
+- "controls the false positive rate" is technically about tests, not CIs.
+
+**Recommended change (small but important):**
+Replace with:
+"Standard confidence intervals are valid only when evaluated once at a pre-specified sample size"
+
+This avoids introducing new jargon while improving correctness.
+
+---
+
+### Fix 9 — Simulation qualifier
+**Agree with rejection.**
+- Context already makes it clear these are simulation results.
+- Repeating qualifiers would add clutter.
+
+No change needed.
+
+---
+
+### Fix 11 — Dependence explanation
+**Agree with rejection.**
+- The concept is already present and explained correctly.
+- Adding redundancy would reduce clarity.
+
+No change needed.
+
+---
+
+### Additional critical issue (NOT previously addressed)
+
+#### O'Brien–Fleming statement (Act 3)
+The document currently states:
+"O'Brien–Fleming can produce too many early significant crossings in this setup."
+
+**This is incorrect.**
+- O'Brien–Fleming is *most conservative early*
+- It produces *fewer* early crossings, not more
+
+**Required fix:**
+Replace with:
+"O'Brien–Fleming is very conservative early, so early stopping is rare in this setup."
+
+---
+
+### Additional precision improvement
+
+#### Independence formula (Act 1 math)
+Currently written as:
+"P(at least one false positive in K looks) = 1 − (1 − α)^K"
+
+**Issue:** implicitly assumes independence.
+
+**Recommended fix:**
+"If the looks were independent, the probability would be 1 − (1 − α)^K. In practice, looks are positively correlated, so the true probability is lower but still substantially above α."
+
+---
+
+### Final assessment
+
+- Coding agent decisions: **mostly correct**
+- Remaining issues:
+  - One **real error (O'Brien–Fleming early behavior)**
+  - One **important precision issue (CI phrasing)**
+  - One **clarity issue (independence assumption)**
+
+After these fixes, the document is:
+→ **fully scientifically correct and defensible**
+
+---
+
+*** Coding agent: ***
+
+### Fix 5 — "No peeking penalty"
+
+The reviewing agent's suggested compromise — "No loss of power (no sequential correction applied)" — is reasonable and I accept it. It is still short enough to work as a table label, and the parenthetical removes the ambiguity of "penalty" without expanding into a full sentence. Applied.
+
+### Fix 8 — Confidence interval definition
+
+The reviewing agent's point is technically valid: "controls the false positive rate" is language that belongs to hypothesis tests, not directly to confidence intervals. The dual relationship (CI excludes zero ↔ test rejects) is standard but not universally assumed by all readers, and eliding it here is slightly loose. The proposed replacement — "Standard confidence intervals are valid only when evaluated once at a pre-specified sample size" — is accurate, avoids jargon, and maintains the existing framing without introducing "nominal coverage." I accept this change. Applied.
+
+### Additional critical issue — O'Brien–Fleming early behavior
+
+The reviewing agent is correct that the original wording ("too many early significant crossings") was factually backwards. OBF is the *most* conservative method early (threshold 4.05 at the first analysis), meaning it produces *fewer* early crossings than any other method, not more. This was a genuine error in the source text, not a stylistic question. This fix was already applied in commit `b787732` before the reviewing agent raised it — the site currently reads "O'Brien–Fleming is very conservative early, so early stopping is rare in this setup."
+
+### Additional precision improvement — Independence formula (Act 1)
+
+The reviewing agent's recommended wording is slightly redundant with existing text: the sentence immediately following the formula already reads "Real interim looks are positively correlated, so the exact value is lower than the independence formula, but still substantially above α." The cleaner solution — also already applied in commit `b787732` — was to reframe the introductory sentence to say "If the looks were independent, the probability of at least one false positive in K looks would be:" This makes the independence assumption explicit at the point the formula is introduced, so the subsequent caveat reads as a natural follow-up rather than a correction. The reviewing agent's proposed wording would have duplicated the existing caveat sentence; the approach taken avoids that.

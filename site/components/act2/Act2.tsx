@@ -150,8 +150,7 @@ export function Act2() {
           </li>
           <li>
             <strong>Primary KPI</strong> (the metric the experiment targets): analysed with a{' '}
-            <strong>standard fixed-horizon confidence interval</strong> at the pre-planned end date. No peeking
-            penalty. Full statistical power.
+            <strong>standard fixed-horizon confidence interval</strong> at the pre-planned end date. No loss of power (no sequential correction applied).
           </li>
         </ul>
       </div>

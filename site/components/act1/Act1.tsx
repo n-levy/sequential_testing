@@ -56,9 +56,8 @@ export function Act1() {
       <div className="bg-white border border-neutral-300 rounded-lg p-5 mb-6">
         <h4 className="font-semibold mb-2">Why does this happen?</h4>
         <p className="text-neutral-700">
-          Standard confidence intervals only control the false positive rate if you look once
-          at a pre-specified sample size. Each additional peek gives another chance to get
-          a “significant” result by luck.
+          Standard confidence intervals are valid only when evaluated once at a pre-specified sample size. Each additional peek gives another chance to get
+          a "significant" result by luck.
         </p>
       </div>
 
