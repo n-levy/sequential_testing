@@ -61,7 +61,7 @@ export function BlockMath({ children, className }: { children: string, className
 // Common mathematical expressions
 export const MathExpressions = {
   confidenceInterval: "\\text{CI} = \\hat{\\tau} \\pm z_{\\alpha/2} \\cdot \\text{SE}",
-  sequentialCI: "\\text{CI}(t) = \\hat{\\tau}(t) \\pm \\sqrt{\\frac{n + \\nu}{n} \\cdot \\log\\frac{n + \\nu}{\\nu \\alpha^2}} \\cdot \\hat{\\sigma}_{\\hat{\\tau}}(t)",
+  sequentialCI: "\\text{CI}(t) = \\hat{\\tau}(t) \\pm \\sqrt{\\frac{n + \\nu}{n} \\cdot \\log\\frac{n + \\nu}{\\nu \\alpha}} \\cdot \\hat{\\sigma}_{\\hat{\\tau}}(t)",
   treatmentEffect: "\\hat{\\tau} = \\bar{Y}_1 - \\bar{Y}_0",
   standardError: "\\text{SE} = \\sqrt{\\frac{s_0^2}{n_0} + \\frac{s_1^2}{n_1}}",
   falsePositive: "\\alpha = \\mathbb{P}(\\text{false positive})",

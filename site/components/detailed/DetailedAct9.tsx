@@ -92,7 +92,7 @@ export function DetailedAct9() {
             variance) <InlineMath>{`v_t = \\sum_{i=1}^t \\sigma_i^2`}</InlineMath>:
           </p>
           <div className="bg-white border-2 border-green-200 rounded-lg p-4">
-            <BlockMath>{`u(v) = \\sqrt{(v + \\nu) \\cdot \\log\\!\\frac{v + \\nu}{\\nu \\alpha^2}}`}</BlockMath>
+            <BlockMath>{`u(v) = \\sqrt{(v + \\nu) \\cdot \\log\\!\\frac{v + \\nu}{\\nu \\alpha}}`}</BlockMath>
           </div>
           <p>
             The <InlineMath>{`(1-\\alpha)`}</InlineMath>-confidence sequence is:
@@ -164,7 +164,7 @@ export function DetailedAct9() {
             </thead>
             <tbody>
               <tr><td className="border border-neutral-300 p-3">Fixed-sample CI</td><td className="border border-neutral-300 p-3"><InlineMath>{`\\frac{\\sigma}{\\sqrt{n}} \\cdot z_{\\alpha/2}`}</InlineMath></td></tr>
-              <tr className="bg-neutral-50"><td className="border border-neutral-300 p-3">Normal mixture CS</td><td className="border border-neutral-300 p-3"><InlineMath>{`\\frac{1}{n}\\sqrt{(n\\sigma^2 + \\nu) \\log\\frac{n\\sigma^2 + \\nu}{\\nu\\alpha^2}}`}</InlineMath></td></tr>
+              <tr className="bg-neutral-50"><td className="border border-neutral-300 p-3">Normal mixture CS</td><td className="border border-neutral-300 p-3"><InlineMath>{`\\frac{1}{n}\\sqrt{(n\\sigma^2 + \\nu) \\log\\frac{n\\sigma^2 + \\nu}{\\nu\\alpha}}`}</InlineMath></td></tr>
               <tr><td className="border border-neutral-300 p-3">LIL-rate CS</td><td className="border border-neutral-300 p-3"><InlineMath>{`\\frac{\\sigma}{\\sqrt{n}} \\cdot \\sqrt{2\\log\\log(n\\sigma^2)}`}</InlineMath></td></tr>
             </tbody>
           </table>
@@ -202,7 +202,7 @@ export function DetailedAct9() {
             <p>
               <strong>Key concepts:</strong> confidence sequences (uniform coverage over all times),
               the Normal mixture boundary{' '}
-              <InlineMath>{`u(v) = \\sqrt{(v+\\nu)\\log\\frac{v+\\nu}{\\nu\\alpha^2}}`}</InlineMath>,
+              <InlineMath>{`u(v) = \\sqrt{(v+\\nu)\\log\\frac{v+\\nu}{\\nu\\alpha}}`}</InlineMath>,
               the tuning parameter <InlineMath>{`\\nu`}</InlineMath>, the sub-<InlineMath>{`\\psi`}</InlineMath> framework,
               nonparametric validity, the <InlineMath>{`\\sqrt{\\log n}`}</InlineMath> &ldquo;price of peeking.&rdquo;
             </p>

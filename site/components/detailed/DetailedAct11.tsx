@@ -147,7 +147,7 @@ export function DetailedAct11() {
             mixture boundary from Act 9:
           </p>
           <div className="bg-white border-2 border-green-200 rounded-lg p-4">
-            <BlockMath>{`\\text{CI}(t) = \\hat{\\tau}(t) \\pm \\hat{\\sigma}_{\\hat{\\tau}}(t) \\cdot \\sqrt{\\frac{n + \\nu}{n} \\cdot \\log\\!\\frac{n + \\nu}{\\nu \\alpha^2}}`}</BlockMath>
+            <BlockMath>{`\\text{CI}(t) = \\hat{\\tau}(t) \\pm \\hat{\\sigma}_{\\hat{\\tau}}(t) \\cdot \\sqrt{\\frac{n + \\nu}{n} \\cdot \\log\\!\\frac{n + \\nu}{\\nu \\alpha}}`}</BlockMath>
           </div>
           <ul className="mb-3 text-sm text-neutral-600 space-y-1 ml-4 list-disc">
             <li><InlineMath>{`\\text{CI}(t)`}</InlineMath> — the sequential confidence interval for the treatment effect at time <InlineMath>{`t`}</InlineMath>; valid regardless of when you look</li>
@@ -156,7 +156,7 @@ export function DetailedAct11() {
             <li><InlineMath>{`n = n_0(t) + n_1(t)`}</InlineMath> — the total number of users across both groups at time <InlineMath>{`t`}</InlineMath></li>
             <li><InlineMath>{`\\nu`}</InlineMath> — the tuning parameter, set as <InlineMath>{`\\nu = M \\cdot \\hat{\\sigma}^2`}</InlineMath> where <InlineMath>{`M`}</InlineMath> is the planned total sample size; calibrates the multiplier to be close to 1.96 at the planned end of the experiment</li>
             <li><InlineMath>{`\\alpha`}</InlineMath> — the significance level (e.g. 0.05 for 95% sequential confidence intervals)</li>
-            <li><InlineMath>{`\\sqrt{(n+\\nu)/n \\cdot \\log((n+\\nu)/\\nu\\alpha^2)}`}</InlineMath> — the time-varying multiplier: larger than 1.96 early in the experiment, shrinking toward 1.96 as <InlineMath>{`n`}</InlineMath> grows</li>
+            <li><InlineMath>{`\\sqrt{(n+\\nu)/n \\cdot \\log((n+\\nu)/\\nu\\alpha)}`}</InlineMath> — the time-varying multiplier: larger than 1.96 throughout the experiment; decreases to a minimum before <InlineMath>{`n^*`}</InlineMath>, then slowly rises, never reaching 1.96</li>
           </ul>
           <p className="mt-2">
             where <InlineMath>{`n = n_0(t) + n_1(t)`}</InlineMath> is the total sample size and{' '}

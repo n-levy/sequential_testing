@@ -34,7 +34,7 @@ export function DetailedAct13() {
         <div className="text-neutral-700 space-y-3 mb-6">
           <p>From the pipeline (Act 11, Step 6):</p>
           <div className="bg-white border-2 border-green-200 rounded-lg p-4">
-            <BlockMath>{`\\text{CI}(t) = \\hat{\\tau}(t) \\pm \\hat{\\sigma}_{\\hat{\\tau}}(t) \\cdot \\underbrace{\\sqrt{\\frac{n + \\nu}{n} \\cdot \\log\\!\\frac{n + \\nu}{\\nu \\alpha^2}}}_{\\text{sequential multiplier}}`}</BlockMath>
+            <BlockMath>{`\\text{CI}(t) = \\hat{\\tau}(t) \\pm \\hat{\\sigma}_{\\hat{\\tau}}(t) \\cdot \\underbrace{\\sqrt{\\frac{n + \\nu}{n} \\cdot \\log\\!\\frac{n + \\nu}{\\nu \\alpha}}}_{\\text{sequential multiplier}}`}</BlockMath>
           </div>
           <ul className="mb-3 text-sm text-neutral-600 space-y-1 ml-4 list-disc">
             <li><InlineMath>{`\\text{CI}(t)`}</InlineMath> — the sequential (anytime-valid) confidence interval at time <InlineMath>{`t`}</InlineMath></li>
@@ -135,7 +135,7 @@ export function DetailedAct13() {
           <div className="text-neutral-800 space-y-2">
             <ul className="list-disc ml-6 space-y-1">
               <li><strong>Framework:</strong> <a href="#ref-howard-2021" className="text-blue-600 hover:text-blue-800">Howard et al. (2021)</a> confidence sequences (not the mSPRT of <a href="#ref-johari-2017" className="text-blue-600 hover:text-blue-800">Johari et al. 2017</a>).</li>
-              <li><strong>Boundary:</strong> The Normal mixture boundary <InlineMath>{`u(v) = \\sqrt{(v+\\nu)\\log\\frac{v+\\nu}{\\nu\\alpha^2}}`}</InlineMath>.</li>
+              <li><strong>Boundary:</strong> The Normal mixture boundary <InlineMath>{`u(v) = \\sqrt{(v+\\nu)\\log\\frac{v+\\nu}{\\nu\\alpha}}`}</InlineMath>.</li>
               <li><strong>Tuning:</strong> <InlineMath>{`\\nu = M\\hat{\\sigma}^2`}</InlineMath>, where <InlineMath>{`M`}</InlineMath> is the expected total sample size.</li>
               <li><strong>Variance:</strong> Estimated from data (not assumed known).</li>
               <li><strong>Noise reduction:</strong> Generalised CUPED via per-group regression adjustments.</li>
