@@ -64,7 +64,7 @@ export function MathReference() {
           <div className="bg-white border border-neutral-300 rounded-lg p-5">
             <h4 className="font-bold text-neutral-900 mb-2">Standard Confidence Interval</h4>
             <BlockMath>{`\\text{CI} = \\hat{\\tau} \\;\\pm\\; z_{\\alpha/2} \\cdot \\text{SE}`}</BlockMath>
-            <p className="text-sm text-neutral-600 mt-2">Valid only at one pre-specified time. The constant <InlineMath>{`z_{\\alpha/2} \\approx 1.96`}</InlineMath> for a 95% confidence interval.</p>
+            <p className="text-sm text-neutral-600 mt-2">Valid only at one pre-specified time. The constant <InlineMath>{`z_{\\alpha/2} \\approx 1.96`}</InlineMath> for a 95% confidence interval. A confidence interval excluding zero is equivalent to rejecting the null hypothesis at level <InlineMath>{`\\alpha`}</InlineMath>.</p>
           </div>
 
           <div className="bg-white border border-neutral-300 rounded-lg p-5">

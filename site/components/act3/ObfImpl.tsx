@@ -72,8 +72,7 @@ export function ObfImpl() {
               O&apos;Brien&ndash;Fleming is extremely conservative early (threshold 4.05 at the
               first analysis &mdash; early stopping is rare) but barely penalises
               the final analysis (2.02 vs. 1.96 &mdash; only 3% wider).
-              This makes it the most efficient method: if the experiment runs to completion,
-              the power loss from the interim analyses is negligible.
+              This makes it highly efficient when the experiment runs to completion, since the final analysis is only minimally penalized.
             </p>
           </div>
 

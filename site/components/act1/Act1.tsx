@@ -156,7 +156,7 @@ export function Act1() {
             <li><InlineMath>{`\\alpha`}</InlineMath> — the significance level; the maximum acceptable probability of a false positive (here 5%)</li>
           </ul>
           <p className="mb-3 text-neutral-800">
-            If we repeatedly check the data, we effectively run many tests. The probability of at least one false positive across <InlineMath>{`K`}</InlineMath> looks is:
+            If we repeatedly check the data, we effectively run many tests. If the looks were independent, the probability of at least one false positive in <InlineMath>{`K`}</InlineMath> looks would be:
           </p>
           <p className="mb-3">
             <InlineMath>{`\\Pr(\\text{at least one false positive in }K\\text{ looks}) = 1-(1-\\alpha)^K`}</InlineMath>

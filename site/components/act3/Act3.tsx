@@ -525,7 +525,7 @@ export function Act3() {
             <ul className="list-disc list-inside ml-4 space-y-1">
               <li><strong>Closest to Eppo in these simulations:</strong> in the conditions of this simulation, Pocock seems like the most reasonable choice among the alternative methods.</li>
               <li><strong>Avoid over-correction:</strong> Bonferroni is often too conservative, reducing sensitivity more than needed.</li>
-              <li><strong>Avoid early over-triggering:</strong> O&apos;Brien&ndash;Fleming can produce too many early significant crossings in this setup.</li>
+              <li><strong>Avoid early over-triggering:</strong> O&apos;Brien&ndash;Fleming is very conservative early, so early stopping is rare in this setup.</li>
             </ul>
             <p>
               That said, we recommend running simulations, A/A tests, or analysing historical tests in each domain, using its specific circumstances (i.e. KPIs and their standard deviations) before deciding which alternative method to use in each domain.
