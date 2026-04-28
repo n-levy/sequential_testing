@@ -19,7 +19,7 @@ export function DisplayMathBox({ children }: { children: React.ReactNode }) {
           {children}
         </div>
       )}
-      <div style={{ marginBottom: '4rem' }} />
+      <div style={{ height: '4rem' }} />
     </div>
   )
 }
