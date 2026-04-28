@@ -10,6 +10,7 @@ export type SimLayer =
   | 'pocock'
   | 'obf'
   | 'bonferroni'
+  | 'three-sd'
 
 type KProp = number;
 interface ABTestSimProps {
@@ -77,6 +78,7 @@ const LAYER_STYLE: Record<SimLayer, { color: string; label: string }> = {
   'pocock':          { color: '#f59e0b', label: 'Pocock' },
   'obf':             { color: '#1d4ed8', label: "O'Brien–Fleming" },
   'bonferroni':      { color: '#0d9488', label: 'Bonferroni' },
+  'three-sd':        { color: '#7c3aed', label: '3 SD rule' },
 }
 
 function mulberry32(seed: number) {
@@ -197,6 +199,8 @@ export function ABTestSim({
           } else if (layer === 'bonferroni') {
             const z = normInv(1 - alpha / (2 * kState));
             w = denom !== 0 ? 100 * t.ses[i] * z / denom : 0;
+          } else if (layer === 'three-sd') {
+            w = denom !== 0 ? 100 * t.ses[i] * 3.0 / denom : 0;
           }
           if (est - w > 0 || est + w < 0) {
             crossed = true;
@@ -421,6 +425,31 @@ export function ABTestSim({
         .attr('stroke-width', 1.2)
         .attr('stroke-opacity', 0.8)
         .attr('d', bonfArea as d3.Area<number>)
+    }
+
+    // 3 SD rule CI band
+    if (layers.includes('three-sd')) {
+      const threeSdArea = d3.area<number>()
+        .x((_d, i) => x(i + 1))
+        .y0((_d, i) => {
+          const denom = traj.meansA[i]
+          const w = denom !== 0 ? 100 * traj.ses[i] * 3.0 / denom : 0
+          return y(effectPct[i] - w)
+        })
+        .y1((_d, i) => {
+          const denom = traj.meansA[i]
+          const w = denom !== 0 ? 100 * traj.ses[i] * 3.0 / denom : 0
+          return y(effectPct[i] + w)
+        })
+
+      g.append('path')
+        .datum(Array.from({ length: n }, (_, i) => i))
+        .attr('fill', LAYER_STYLE['three-sd'].color)
+        .attr('fill-opacity', 0.12)
+        .attr('stroke', LAYER_STYLE['three-sd'].color)
+        .attr('stroke-width', 1.2)
+        .attr('stroke-opacity', 0.8)
+        .attr('d', threeSdArea as d3.Area<number>)
     }
 
     // Mean effect trajectory

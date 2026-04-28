@@ -341,6 +341,7 @@ import { InlineMath, BlockMath } from '../ui/Math'
 import { BonferroniImpl } from './BonferroniImpl'
 import { PocockImpl } from './PocockImpl'
 import { ObfImpl } from './ObfImpl'
+import { ThreeSdImpl } from './ThreeSdImpl'
 import { ABTestSim } from '../shared/ABTestSim'
 
 export function Act3() {
@@ -373,6 +374,7 @@ export function Act3() {
               <li><strong>Bonferroni:</strong> equal allocation, <InlineMath>{`\\alpha/K`}</InlineMath> per analysis. Conservative because it ignores correlation across analyses.</li>
               <li><strong>Pocock:</strong> constant critical value calibrated to the joint distribution of the test statistics across analyses. Tighter than Bonferroni.</li>
               <li><strong>O&apos;Brien&ndash;Fleming:</strong> front-loaded allocation. Very strict early, nearly standard at the final analysis.</li>
+              <li><strong>3 SD rule:</strong> informal rule using a fixed critical value of <InlineMath>{`z = 3.0`}</InlineMath> at every look, regardless of how many peeks are planned. Does not formally control the family-wise error rate, but is very conservative in practice.</li>
             </ul>
             <p>
               Eppo&apos;s approach (Act 2) does not require pre-specifying <InlineMath>{`K`}</InlineMath> &mdash;
@@ -385,8 +387,8 @@ export function Act3() {
         <div className="mb-6">
           <h3 className="text-xl font-semibold mb-2">Simulation</h3>
           <p className="text-neutral-700 mb-3">
-            This extends the Act 1/2 simulation by adding Bonferroni, Pocock, and O&apos;Brien&ndash;Fleming
-            confidence intervals, so you can compare all methods under the same settings.
+            This extends the Act 1/2 simulation by adding Bonferroni, Pocock, O&apos;Brien&ndash;Fleming,
+            and the 3 SD rule confidence intervals, so you can compare all methods under the same settings.
           </p>
         </div>
 
@@ -426,6 +428,17 @@ export function Act3() {
             </CardContent>
             <ObfImpl />
           </Card>
+          <Card className="bg-white border border-neutral-300">
+            <CardHeader>
+              <CardTitle className="text-blue-700">Method 4: 3 Standard Deviations Rule</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <p className="text-sm text-neutral-600">
+                Simple informal rule: stop if the effect estimate is more than 3 SDs from zero. Fixed critical value, no pre-specification of K required.
+              </p>
+            </CardContent>
+            <ThreeSdImpl />
+          </Card>
         </div>
 
 
@@ -433,15 +446,16 @@ export function Act3() {
         <h4 className="font-semibold mb-2">How methods compare in simulation</h4>
         <div className="mb-10">
           <ABTestSim
-            layers={['fixed-ci', 'sequential-ci', 'pocock', 'obf', 'bonferroni']}
+            layers={['fixed-ci', 'sequential-ci', 'pocock', 'obf', 'bonferroni', 'three-sd']}
             showPeekStats
-            simulationTitle="Simulation 3: fixed-horizon, Eppo, and three alternative sequential methods."
+            simulationTitle="Simulation 3: fixed-horizon, Eppo, and four alternative sequential methods."
             defaultEffect={0}
             takeaway={<>
               <strong>Result interpretation:</strong> click &ldquo;Run 1000 repetitions&rdquo; to estimate how often each method crosses significance under the current settings.<br /><br />
-              <strong>Bonferroni:</strong> most conservative among the three DIY methods (lowest crossing share).<br />
+              <strong>Bonferroni:</strong> most conservative among the DIY methods (lowest crossing share).<br />
               <strong>Pocock:</strong> less conservative than Bonferroni with the same threshold at each look.<br />
               <strong>O&apos;Brien&ndash;Fleming:</strong> very strict early, then close to classical thresholds at later looks.<br />
+              <strong>3 SD rule:</strong> very conservative at every look (z = 3.0 fixed); extremely low false positive rate but substantially reduced power.<br />
               <strong>Sequential confidence interval (Eppo):</strong> anytime-valid and typically conservative in this setup.
             </>}
           />
@@ -460,6 +474,7 @@ export function Act3() {
                 <th className="border border-neutral-300 p-3 font-semibold text-neutral-900">Bonferroni</th>
                 <th className="border border-neutral-300 p-3 font-semibold text-neutral-900">Pocock</th>
                 <th className="border border-neutral-300 p-3 font-semibold text-neutral-900">OBF</th>
+                <th className="border border-neutral-300 p-3 font-semibold text-neutral-900">3 SD rule</th>
                 <th className="border border-neutral-300 p-3 font-semibold text-neutral-900">Eppo</th>
               </tr>
             </thead>
@@ -470,12 +485,14 @@ export function Act3() {
                 <td className="border border-neutral-300 p-3 text-center">Yes</td>
                 <td className="border border-neutral-300 p-3 text-center">Yes</td>
                 <td className="border border-neutral-300 p-3 text-center">No</td>
+                <td className="border border-neutral-300 p-3 text-center">No</td>
               </tr>
               <tr className="bg-neutral-50">
                 <td className="border border-neutral-300 p-3 font-medium">Threshold type</td>
                 <td className="border border-neutral-300 p-3 text-center">Constant</td>
                 <td className="border border-neutral-300 p-3 text-center">Constant</td>
                 <td className="border border-neutral-300 p-3 text-center">Decreasing</td>
+                <td className="border border-neutral-300 p-3 text-center">Constant (z=3.0)</td>
                 <td className="border border-neutral-300 p-3 text-center">Continuous</td>
               </tr>
               <tr>
@@ -483,6 +500,7 @@ export function Act3() {
                 <td className="border border-neutral-300 p-3 text-center"><InlineMath>{`2.50 \\times \\hat{\\sigma}`}</InlineMath></td>
                 <td className="border border-neutral-300 p-3 text-center"><InlineMath>{`2.36 \\times \\hat{\\sigma}`}</InlineMath></td>
                 <td className="border border-neutral-300 p-3 text-center"><InlineMath>{`4.05 \\times \\hat{\\sigma}`}</InlineMath></td>
+                <td className="border border-neutral-300 p-3 text-center"><InlineMath>{`3.00 \\times \\hat{\\sigma}`}</InlineMath></td>
                 <td className="border border-neutral-300 p-3 text-center"><InlineMath>{`{\\sim}2.7 \\times \\hat{\\sigma}`}</InlineMath></td>
               </tr>
               <tr className="bg-neutral-50">
@@ -490,6 +508,7 @@ export function Act3() {
                 <td className="border border-neutral-300 p-3 text-center"><InlineMath>{`2.50 \\times \\hat{\\sigma}`}</InlineMath></td>
                 <td className="border border-neutral-300 p-3 text-center"><InlineMath>{`2.36 \\times \\hat{\\sigma}`}</InlineMath></td>
                 <td className="border border-neutral-300 p-3 text-center"><InlineMath>{`2.02 \\times \\hat{\\sigma}`}</InlineMath></td>
+                <td className="border border-neutral-300 p-3 text-center"><InlineMath>{`3.00 \\times \\hat{\\sigma}`}</InlineMath></td>
                 <td className="border border-neutral-300 p-3 text-center"><InlineMath>{`{\\sim}2.4 \\times \\hat{\\sigma}`}</InlineMath></td>
               </tr>
               <tr>
@@ -497,20 +516,31 @@ export function Act3() {
                 <td className="border border-neutral-300 p-3 text-center">No</td>
                 <td className="border border-neutral-300 p-3 text-center">No</td>
                 <td className="border border-neutral-300 p-3 text-center">No</td>
+                <td className="border border-neutral-300 p-3 text-center">No</td>
                 <td className="border border-neutral-300 p-3 text-center">Yes</td>
               </tr>
               <tr className="bg-neutral-50">
+                <td className="border border-neutral-300 p-3 font-medium">Formal FWER control?</td>
+                <td className="border border-neutral-300 p-3 text-center">Yes</td>
+                <td className="border border-neutral-300 p-3 text-center">Yes</td>
+                <td className="border border-neutral-300 p-3 text-center">Yes</td>
+                <td className="border border-neutral-300 p-3 text-center">No</td>
+                <td className="border border-neutral-300 p-3 text-center">Yes (anytime)</td>
+              </tr>
+              <tr>
                 <td className="border border-neutral-300 p-3 font-medium">Variance reduction?</td>
+                <td className="border border-neutral-300 p-3 text-center">Manual</td>
                 <td className="border border-neutral-300 p-3 text-center">Manual</td>
                 <td className="border border-neutral-300 p-3 text-center">Manual</td>
                 <td className="border border-neutral-300 p-3 text-center">Manual</td>
                 <td className="border border-neutral-300 p-3 text-center">Built-in</td>
               </tr>
-              <tr>
+              <tr className="bg-neutral-50">
                 <td className="border border-neutral-300 p-3 font-medium">Implementation</td>
                 <td className="border border-neutral-300 p-3 text-center">1 line</td>
                 <td className="border border-neutral-300 p-3 text-center">Lookup table</td>
                 <td className="border border-neutral-300 p-3 text-center">Formula</td>
+                <td className="border border-neutral-300 p-3 text-center">1 line</td>
                 <td className="border border-neutral-300 p-3 text-center">Platform</td>
               </tr>
             </tbody>
@@ -526,6 +556,7 @@ export function Act3() {
               <li><strong>Closest to Eppo in these simulations:</strong> in the conditions of this simulation, Pocock seems like the most reasonable choice among the alternative methods.</li>
               <li><strong>Avoid over-correction:</strong> Bonferroni is often too conservative, reducing sensitivity more than needed.</li>
               <li><strong>Avoid early over-triggering:</strong> O&apos;Brien&ndash;Fleming is very conservative early, so early stopping is rare in this setup.</li>
+              <li><strong>Avoid the 3 SD rule:</strong> the simulation shows it produces a very low false positive rate in this setup (well below 5%), but this comes at the cost of substantially reduced power &mdash; a fixed z&nbsp;=&nbsp;3.0 is 53% wider than the classical z&nbsp;=&nbsp;1.96 interval at every look including the final analysis. It also provides no formal FWER guarantee. In practice, a well-calibrated method like Pocock or OBF is strictly preferable.</li>
             </ul>
             <p>
               That said, we recommend running simulations, A/A tests, or analysing historical tests in each domain, using its specific circumstances (i.e. KPIs and their standard deviations) before deciding which alternative method to use in each domain.
@@ -634,7 +665,7 @@ export function Act3() {
                 All three simulations on this page use the same component:{' '}
                 <code className="bg-neutral-200 rounded px-1">ABTestSim.tsx</code>. It is called
                 with different <code className="bg-neutral-200 rounded px-1">layers</code> props
-                (Act 1: fixed-ci only; Act 2: fixed-ci + sequential-ci; Act 3: all five methods).
+                (Act 1: fixed-ci only; Act 2: fixed-ci + sequential-ci; Act 3: all six methods).
                 The full TypeScript source is shown below.
               </p>
               <pre className="bg-neutral-100 border border-neutral-300 rounded-lg p-4 text-xs overflow-x-auto whitespace-pre">
