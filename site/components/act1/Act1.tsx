@@ -138,7 +138,7 @@ export function Act1() {
             We test <InlineMath>{`H_0: u = 0`}</InlineMath> (no relative uplift). A standard 95% confidence interval for the uplift, valid at one pre-specified look, is:
           </p>
           <p className="mb-3">
-            <InlineMath>{`\\hat{u}_n \\pm 100 \\cdot \\frac{1.96\\,\\widehat{\\mathrm{SE}}_n}{\\bar{X}_{A,n}}`}</InlineMath>
+            <InlineMath>{`\\hat{u}_n \\pm 100 \\cdot \\frac{\\widehat{\\mathrm{SE}}_n}{\\bar{X}_{A,n}} \\cdot 1.96`}</InlineMath>
           </p>
           <ul className="mb-3 text-sm text-neutral-600 space-y-1 ml-4 list-disc">
             <li><InlineMath>{`1.96`}</InlineMath> — the critical value for a 95% confidence interval (the 97.5th percentile of the standard Normal distribution)</li>

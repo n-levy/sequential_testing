@@ -224,7 +224,7 @@ export function Act2() {
           <p className="mb-2 text-neutral-800">
             A standard 95% confidence interval for the relative uplift <InlineMath>{`\\hat{u}_n`}</InlineMath>, valid at one pre-specified sample size <InlineMath>{`n`}</InlineMath>, is:
           </p>
-          <BlockMath>{`\\hat{u}_n \\pm 100\\cdot\\frac{1.96\\,\\widehat{\\mathrm{SE}}_n}{\\bar{X}_{A,n}}`}</BlockMath>
+          <BlockMath>{`\\hat{u}_n \\pm 100\\cdot\\frac{\\widehat{\\mathrm{SE}}_n}{\\bar{X}_{A,n}}\\cdot 1.96`}</BlockMath>
           <ul className="mb-6 text-sm text-neutral-600 space-y-1 ml-4 list-disc">
             <li><InlineMath>{`\\hat{u}_n`}</InlineMath> — estimated relative uplift (in %) after <InlineMath>{`n`}</InlineMath> users per group have been observed</li>
             <li><InlineMath>{`1.96`}</InlineMath> — the critical value for a 95% confidence interval (the 97.5th percentile of the standard Normal distribution)</li>
