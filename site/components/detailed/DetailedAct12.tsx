@@ -30,9 +30,7 @@ export function DetailedAct12() {
         {/* Interactive Simulation */}
         <VarianceReductionSim />
 
-        {/* Mathematical Formulation */}
         <DisplayMathBox>
-        <h3 className="text-2xl font-bold text-neutral-900 mb-4 mt-8">Mathematical Formulation</h3>
 
         <h4 className="text-lg font-semibold text-neutral-800 mb-3">
           From CUPED to generalised regression adjustment

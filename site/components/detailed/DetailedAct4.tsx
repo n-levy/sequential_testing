@@ -58,9 +58,7 @@ export function DetailedAct4() {
           </p>
         </div>
 
-        {/* Mathematical Formulation */}
         <DisplayMathBox>
-        <h3 className="text-2xl font-bold text-neutral-900 mb-4">Mathematical Formulation</h3>
 
         <h4 className="text-lg font-semibold text-neutral-800 mb-3">The likelihood</h4>
         <div className="text-neutral-700 space-y-3 mb-6">

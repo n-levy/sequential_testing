@@ -62,7 +62,6 @@ export function DetailedAct6() {
 
         {/* Step 1: Markov */}
         <DisplayMathBox>
-        <h3 className="text-2xl font-bold text-neutral-900 mb-4">Mathematical Formulation</h3>
 
         <h4 className="text-lg font-semibold text-neutral-800 mb-3">Step 1: Markov&apos;s Inequality</h4>
 

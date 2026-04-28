@@ -213,7 +213,6 @@ export function Act2() {
       {/* Math section with DisplayMathBox */}
       <DisplayMathBox>
         <div className="bg-neutral-100 border border-neutral-300 rounded-lg p-6 mt-8 mb-16">
-          <h4 className="font-bold mb-3">Mathematical Formulation</h4>
           <p className="mb-2">
             In this simulation, the displayed effect and the confidence interval boundaries are both expressed as percentage uplift:
           </p>

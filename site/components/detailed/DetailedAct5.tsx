@@ -49,7 +49,6 @@ export function DetailedAct5() {
 
         {/* Proof */}
         <DisplayMathBox>
-        <h3 className="text-2xl font-bold text-neutral-900 mb-4">Mathematical Formulation</h3>
 
         <h4 className="text-lg font-semibold text-neutral-800 mb-3">
           Proof that <InlineMath>{`\\Lambda_n`}</InlineMath> is a martingale under <InlineMath>{`H_0`}</InlineMath>

@@ -50,9 +50,7 @@ export function DetailedAct9() {
           </p>
         </div>
 
-        {/* Mathematical Formulation */}
         <DisplayMathBox>
-        <h3 className="text-2xl font-bold text-neutral-900 mb-4">Mathematical Formulation</h3>
 
         <h4 className="text-lg font-semibold text-neutral-800 mb-3">Definition</h4>
         <div className="bg-white border-2 border-neutral-400 rounded-lg p-5 mb-6">
