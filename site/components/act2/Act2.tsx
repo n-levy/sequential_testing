@@ -15,7 +15,7 @@ function DisplayMathBox({ children }: { children: React.ReactNode }) {
         {show ? 'Hide the math' : 'Show the math'}
       </button>
       {show && (
-        <div>
+        <div className="bg-neutral-100 border border-neutral-300 rounded-lg p-6">
           <h4 className="font-bold text-neutral-900 mb-4">The math</h4>
           {children}
         </div>
@@ -217,7 +217,7 @@ export function Act2() {
 
       {/* Math section with DisplayMathBox */}
       <DisplayMathBox>
-        <div className="bg-neutral-100 border border-neutral-300 rounded-lg p-6 mt-8 mb-16">
+        <div>
 
           {/* Step 1 */}
           <h5 className="font-semibold mb-2">1. Fixed-horizon confidence interval (from Act 1)</h5>

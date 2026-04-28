@@ -14,7 +14,7 @@ export function DisplayMathBox({ children }: { children: React.ReactNode }) {
         {show ? 'Hide the math' : 'Show the math'}
       </button>
       {show && (
-        <div>
+        <div className="bg-neutral-100 border border-neutral-300 rounded-lg p-6">
           <h4 className="font-bold text-neutral-900 mb-4">The math</h4>
           {children}
         </div>

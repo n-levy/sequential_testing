@@ -19,7 +19,7 @@ function DisplayMathBox({ children }: { children: React.ReactNode }) {
         {show ? 'Hide the math' : 'Show the math'}
       </button>
       {show && (
-        <div>
+        <div className="bg-neutral-100 border border-neutral-300 rounded-lg p-6">
           <h4 className="font-bold text-neutral-900 mb-4">The math</h4>
           {children}
         </div>
@@ -120,7 +120,7 @@ export function Act1() {
 
       {/* Math section with DisplayMathBox */}
       <DisplayMathBox>
-        <div className="bg-neutral-100 border border-neutral-300 rounded-lg p-6 mt-8 mb-16">
+        <div>
           <h4 className="font-bold mb-3">Why peeking inflates Type I error</h4>
           <p className="mb-3 text-neutral-800">
             The simulation tracks the <strong>relative uplift</strong>: the treatment effect expressed as a percentage of the control mean. Formally:
