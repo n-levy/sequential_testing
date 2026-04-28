@@ -129,6 +129,7 @@ export function ABTestSim({
   const [seed, setSeed] = useState(1)
   const [kState, setK] = useState(KProp)
   const [peekProbs, setPeekProbs] = useState<Record<string, number> | null>(null)
+  const [meanEstWhenSig, setMeanEstWhenSig] = useState<Record<string, number> | null>(null)
   const [runSimulationsTrigger, setRunSimulationsTrigger] = useState(0)
   const [showSimulationNotes, setShowSimulationNotes] = useState(false)
   const svgRef = useRef<SVGSVGElement | null>(null)
@@ -159,11 +160,14 @@ export function ABTestSim({
   useEffect(() => {
     if (!showPeekStats || runSimulationsTrigger === 0) return;
     const results: Record<string, number> = {};
+    const meanEstResults: Record<string, number> = {};
     for (const layer of layers) {
       let count = 0;
+      let sumAbsEstWhenSig = 0;
       for (let sim = 0; sim < PEEK_N_SIMS; ++sim) {
         const t = simulateABTestTrajectory(n, effectiveEffect, clampedBaseline, seed + sim + runSimulationsTrigger * 10000);
         let crossed = false;
+        let estAtCrossing = 0;
         if (peekIndices.length === 0) continue;
         let lookPtr = 0
         const lastLookPtr = peekIndices.length - 1
@@ -193,15 +197,21 @@ export function ABTestSim({
           }
           if (est - w > 0 || est + w < 0) {
             crossed = true;
+            estAtCrossing = est;
             break
           }
           lookPtr++
         }
-        if (crossed) count++;
+        if (crossed) {
+          count++;
+          sumAbsEstWhenSig += Math.abs(estAtCrossing);
+        }
       }
       results[layer] = count / PEEK_N_SIMS;
+      meanEstResults[layer] = count > 0 ? sumAbsEstWhenSig / count : 0;
     }
     setPeekProbs(results);
+    setMeanEstWhenSig(meanEstResults);
   }, [showPeekStats, layers, n, clampedEffect, effectiveEffect, clampedBaseline, seed, alpha, kState, runSimulationsTrigger, peekIndices]);
 
   // Trajectory recomputed automatically whenever the controls change.
@@ -591,6 +601,7 @@ export function ABTestSim({
                 type="button"
                 onClick={() => {
                   setPeekProbs(null)
+                  setMeanEstWhenSig(null)
                   setRunSimulationsTrigger(t => t + 1)
                 }}
                 className="px-3 py-1.5 text-sm bg-blue-600 text-white rounded hover:bg-blue-700"
@@ -608,6 +619,7 @@ export function ABTestSim({
                   <tr>
                     <th className="px-3 py-1 text-left">Method</th>
                     <th className="px-3 py-1 text-right">Share crossing</th>
+                    <th className="px-3 py-1 text-right">Mean |effect| when significant</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -615,6 +627,9 @@ export function ABTestSim({
                     <tr key={layer}>
                       <td className="px-3 py-1 text-left">{LAYER_STYLE[layer].label}{['pocock','obf','bonferroni'].includes(layer) ? ` (K=${kState})` : ''}</td>
                       <td className="px-3 py-1 text-right text-blue-700 font-mono">{(peekProbs[layer] * 100).toFixed(1)}%</td>
+                      <td className="px-3 py-1 text-right text-blue-700 font-mono">
+                        {meanEstWhenSig && peekProbs[layer] > 0 ? `${meanEstWhenSig[layer].toFixed(1)}%` : '—'}
+                      </td>
                     </tr>
                   ))}
                 </tbody>
