@@ -5,7 +5,7 @@ import { useState } from 'react'
 export function DisplayMathBox({ children }: { children: React.ReactNode }) {
   const [show, setShow] = useState(false)
   return (
-    <div className="mb-16">
+    <div>
       <button
         type="button"
         onClick={() => setShow(v => !v)}
@@ -14,11 +14,12 @@ export function DisplayMathBox({ children }: { children: React.ReactNode }) {
         {show ? 'Hide the math' : 'Show the math'}
       </button>
       {show && (
-        <div className="bg-neutral-100 border border-neutral-300 rounded-lg p-6 mb-16">
+        <div className="bg-neutral-100 border border-neutral-300 rounded-lg p-6">
           <h4 className="font-bold text-neutral-900 mb-4">The math</h4>
           {children}
         </div>
       )}
+      <div style={{ marginBottom: '4rem' }} />
     </div>
   )
 }
