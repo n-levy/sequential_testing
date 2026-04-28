@@ -1,6 +1,6 @@
 "use client"
 import { ABTestSim } from '../shared/ABTestSim'
-import { InlineMath } from '../ui/Math'
+import { InlineMath, BlockMath } from '../ui/Math'
 import { useState } from 'react'
 
 function DisplayMathBox({ children }: { children: React.ReactNode }) {
@@ -14,7 +14,12 @@ function DisplayMathBox({ children }: { children: React.ReactNode }) {
       >
         {show ? 'Hide the math' : 'Show the math'}
       </button>
-      {show && children}
+      {show && (
+        <div>
+          <h4 className="font-bold text-neutral-900 mb-4">The math</h4>
+          {children}
+        </div>
+      )}
     </div>
   );
 }
@@ -213,39 +218,55 @@ export function Act2() {
       {/* Math section with DisplayMathBox */}
       <DisplayMathBox>
         <div className="bg-neutral-100 border border-neutral-300 rounded-lg p-6 mt-8 mb-16">
-          <p className="mb-2">
-            In this simulation, the displayed effect and the confidence interval boundaries are both expressed as percentage uplift:
+
+          {/* Step 1 */}
+          <h5 className="font-semibold mb-2">1. Fixed-horizon confidence interval (from Act 1)</h5>
+          <p className="mb-2 text-neutral-800">
+            A standard 95% confidence interval for the relative uplift <InlineMath>{`\\hat{u}_n`}</InlineMath>, valid at one pre-specified sample size <InlineMath>{`n`}</InlineMath>, is:
           </p>
-          <p className="mb-2">
-            <InlineMath>{`\\hat u_n = 100\\cdot\\frac{\\bar X_{B,n}-\\bar X_{A,n}}{\\bar X_{A,n}}`}</InlineMath>
+          <BlockMath>{`\\hat{u}_n \\pm 100\\cdot\\frac{1.96\\,\\widehat{\\mathrm{SE}}_n}{\\bar{X}_{A,n}}`}</BlockMath>
+          <p className="mb-6 text-neutral-800">
+            where <InlineMath>{`\\widehat{\\mathrm{SE}}_n = \\sqrt{\\hat{\\sigma}_A^2/n + \\hat{\\sigma}_B^2/n}`}</InlineMath> is the standard error of the difference in means. This interval is only valid at the single pre-specified look.
           </p>
-          <p className="mb-2">
-            The confidence interval half-width is computed from the running standard error <InlineMath>{`\\widehat{\\mathrm{SE}}_n`}</InlineMath> of the difference in means, then divided by the control mean to convert to percentage scale.
-            A fixed-horizon 95% confidence interval uses
+
+          {/* Step 2 */}
+          <h5 className="font-semibold mb-2">2. Sequential confidence interval (Eppo)</h5>
+          <p className="mb-2 text-neutral-800">
+            Eppo's sequential confidence interval replaces the fixed multiplier 1.96 with a time-dependent one:
           </p>
-          <p className="mb-2">
-            <InlineMath>{`\\hat u_n \\pm 100\\cdot\\frac{1.96\\,\\widehat{\\mathrm{SE}}_n}{\\bar X_{A,n}}`}</InlineMath>
-          </p>
-          <p className="mb-2">
-            and is valid at one pre-specified analysis.
-          </p>
-          <p className="mb-2">
-            A sequential confidence interval replaces 1.96 with a time-dependent multiplier:
-          </p>
-          <p className="mb-2">
-            <InlineMath>{`\\hat u_n \\pm 100\\cdot\\frac{\\widehat{\\mathrm{SE}}_n}{\\bar X_{A,n}}\\,\\sqrt{\\frac{n+\\nu}{n}\\log\\!\\left(\\frac{n+\\nu}{\\nu\\alpha}\\right)}`}</InlineMath>
-          </p>
-          <p className="mb-2">
+          <BlockMath>{`\\hat{u}_n \\pm 100\\cdot\\frac{\\widehat{\\mathrm{SE}}_n}{\\bar{X}_{A,n}}\\,\\sqrt{\\frac{n+\\nu}{n}\\log\\!\\left(\\frac{n+\\nu}{\\nu\\,\\alpha}\\right)}`}</BlockMath>
+          <p className="mb-6 text-neutral-800">
             where <InlineMath>{`\\nu`}</InlineMath> is a tuning parameter and <InlineMath>{`\\alpha`}</InlineMath> is the target Type I error level.
           </p>
-          <p className="mb-2">
-            This yields time-uniform coverage:
+
+          {/* Step 3 */}
+          <h5 className="font-semibold mb-2">3. The multiplier</h5>
+          <p className="mb-2 text-neutral-800">
+            The key difference between the two formulas is the multiplier of the standard error. In the fixed-horizon case it is the constant 1.96. In Eppo's sequential implementation it is:
           </p>
-          <p className="mb-2">
-            <InlineMath>{`\\Pr\\!\\left(\\tau \\in \\mathrm{CI}_n\\ \\text{for all } n\\ge1\\right)\\ge 1-\\alpha`}</InlineMath>
+          <BlockMath>{`m(n) = \\sqrt{\\frac{n+\\nu}{n}\\log\\!\\left(\\frac{n+\\nu}{\\nu\\,\\alpha}\\right)}`}</BlockMath>
+          <p className="mb-2 text-neutral-800">
+            This multiplier is larger than 1.96 for small <InlineMath>{`n`}</InlineMath>, which is what keeps the Type I error controlled under continuous monitoring. As <InlineMath>{`n`}</InlineMath> grows, <InlineMath>{`m(n)`}</InlineMath> shrinks — so the confidence interval becomes progressively narrower as more users participate in the test.
           </p>
-          <p className="mb-2">
+          <p className="mb-6 text-neutral-800">
+            The tuning parameter <InlineMath>{`\\nu`}</InlineMath> controls this trade-off between early-stopping power and long-run width. Eppo sets it as:
+          </p>
+          <BlockMath>{`\\nu = \\frac{n^*}{\\log(n^*/\\alpha) - 1}`}</BlockMath>
+          <p className="mb-6 text-neutral-800">
+            where <InlineMath>{`n^*`}</InlineMath> is the planned sample size (the horizon at which the test is expected to end). This calibrates the multiplier to be close to 1.96 at <InlineMath>{`n = n^*`}</InlineMath>.
+          </p>
+
+          {/* Step 4 */}
+          <h5 className="font-semibold mb-2">4. Time-uniform coverage guarantee</h5>
+          <p className="mb-2 text-neutral-800">
+            The sequential CI satisfies:
+          </p>
+          <BlockMath>{`\\Pr\\!\\left(u \\in \\mathrm{CI}_n\\ \\text{for all } n\\ge1\\right)\\ge 1-\\alpha`}</BlockMath>
+          <p className="mb-2 text-neutral-800">
             So unlike fixed-horizon confidence intervals, the guarantee still holds under continuous monitoring.
+          </p>
+          <p className="text-neutral-800">
+            As <InlineMath>{`n`}</InlineMath> increases and more users join the experiment, the multiplier <InlineMath>{`m(n)`}</InlineMath> decreases toward 1.96, so the confidence interval gradually narrows — reflecting the accumulating evidence.
           </p>
         </div>
       </DisplayMathBox>

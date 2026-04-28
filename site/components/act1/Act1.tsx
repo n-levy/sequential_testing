@@ -18,7 +18,12 @@ function DisplayMathBox({ children }: { children: React.ReactNode }) {
       >
         {show ? 'Hide the math' : 'Show the math'}
       </button>
-      {show && children}
+      {show && (
+        <div>
+          <h4 className="font-bold text-neutral-900 mb-4">The math</h4>
+          {children}
+        </div>
+      )}
     </div>
   );
 }
@@ -118,37 +123,31 @@ export function Act1() {
         <div className="bg-neutral-100 border border-neutral-300 rounded-lg p-6 mt-8 mb-16">
           <h4 className="font-bold mb-3">Why peeking inflates Type I error</h4>
           <p className="mb-3 text-neutral-800">
-            In a fixed-horizon A/B test (one planned analysis), we test:
+            The simulation tracks the <strong>relative uplift</strong>: the treatment effect expressed as a percentage of the control mean. Formally:
           </p>
           <p className="mb-3">
-            <InlineMath>{`H_0:\\ \\tau = 0,\\qquad \\hat{\\tau}_n = \\bar X_{B,n} - \\bar X_{A,n}`}</InlineMath>
+            <InlineMath>{`\\hat{u}_n = 100 \\cdot \\frac{\\bar{X}_{B,n} - \\bar{X}_{A,n}}{\\bar{X}_{A,n}}`}</InlineMath>
           </p>
           <p className="mb-3 text-neutral-800">
-            With a standard 95% confidence interval,
+            We test <InlineMath>{`H_0: u = 0`}</InlineMath> (no relative uplift). A standard 95% confidence interval for the uplift, valid at one pre-specified look, is:
           </p>
           <p className="mb-3">
-            <InlineMath>{`\\hat{\\tau}_n \\pm 1.96\\,\\widehat{\\mathrm{SE}}_n`}</InlineMath>
+            <InlineMath>{`\\hat{u}_n \\pm 100 \\cdot \\frac{1.96\\,\\widehat{\\mathrm{SE}}_n}{\\bar{X}_{A,n}}`}</InlineMath>
           </p>
           <p className="mb-3 text-neutral-800">
-            the false positive rate is controlled at one pre-specified look:
+            where <InlineMath>{`\\widehat{\\mathrm{SE}}_n`}</InlineMath> is the running standard error of the difference in means. The false positive rate at a single planned look is:
           </p>
           <p className="mb-3">
             <InlineMath>{`\\Pr(\\text{reject }H_0\\text{ at one look}) = \\alpha = 0.05`}</InlineMath>
           </p>
           <p className="mb-3 text-neutral-800">
-            If we repeatedly check the data, we effectively run many tests. The probability of at least one false positive becomes:
+            If we repeatedly check the data, we effectively run many tests. The probability of at least one false positive across <InlineMath>{`K`}</InlineMath> looks is:
           </p>
           <p className="mb-3">
-            <InlineMath>{`\\Pr(\\text{at least one false positive in }K\\text{ looks})`}</InlineMath>
+            <InlineMath>{`\\Pr(\\text{at least one false positive in }K\\text{ looks}) = 1-(1-\\alpha)^K`}</InlineMath>
           </p>
           <p className="mb-3 text-neutral-800">
-            Under independence this is:
-          </p>
-          <p className="mb-3">
-            <InlineMath>{`1-(1-\\alpha)^K`}</InlineMath>
-          </p>
-          <p className="mb-3 text-neutral-800">
-            and a useful approximation for small <InlineMath>{`\\alpha`}</InlineMath> is:
+            A useful approximation for small <InlineMath>{`\\alpha`}</InlineMath>:
           </p>
           <p className="mb-3">
             <InlineMath>{`1-(1-\\alpha)^K \\approx K\\alpha`}</InlineMath>
