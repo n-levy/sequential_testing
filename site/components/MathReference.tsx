@@ -76,7 +76,7 @@ export function MathReference() {
           <div className="bg-white border border-neutral-300 rounded-lg p-5">
             <h4 className="font-bold text-neutral-900 mb-2">CUPED Variance Reduction</h4>
             <BlockMath>{`Y^*_i = Y_i - \\hat{f}_g(X_i) \\qquad \\Var(Y^*) = \\Var(Y)(1 - \\rho^2)`}</BlockMath>
-            <p className="text-sm text-neutral-600 mt-2">At <InlineMath>{`\\rho = 0.7`}</InlineMath>, half the variance is eliminated.</p>
+            <p className="text-sm text-neutral-600 mt-2">At <InlineMath>{`\\rho = 0.7`}</InlineMath>, <InlineMath>{`1 - 0.7^2 = 0.51`}</InlineMath> — about 49% of the variance is eliminated.</p>
           </div>
 
           <div className="bg-white border border-neutral-300 rounded-lg p-5">
