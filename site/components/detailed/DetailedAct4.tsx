@@ -67,8 +67,20 @@ export function DetailedAct4() {
           </p>
           <p>The likelihood if the coin is fair (<InlineMath>{`H_0`}</InlineMath>):</p>
           <BlockMath>{`\\mathcal{L}_0 = (0.5)^k \\times (0.5)^{n-k} = (0.5)^n`}</BlockMath>
+          <ul className="mb-3 text-sm text-neutral-600 space-y-1 ml-4 list-disc">
+            <li><InlineMath>{`\\mathcal{L}_0`}</InlineMath> — likelihood under the null hypothesis (fair coin): the probability of seeing the exact sequence of heads and tails we observed, if the coin truly is fair</li>
+            <li><InlineMath>{`n`}</InlineMath> — total number of coin flips</li>
+            <li><InlineMath>{`k`}</InlineMath> — number of heads observed</li>
+            <li><InlineMath>{`n - k`}</InlineMath> — number of tails observed</li>
+          </ul>
           <p>The likelihood if the coin is biased (<InlineMath>{`H_1`}</InlineMath>):</p>
           <BlockMath>{`\\mathcal{L}_1 = (0.5 + \\delta)^k \\times (0.5 - \\delta)^{n-k}`}</BlockMath>
+          <ul className="mb-3 text-sm text-neutral-600 space-y-1 ml-4 list-disc">
+            <li><InlineMath>{`\\mathcal{L}_1`}</InlineMath> — likelihood under the alternative hypothesis (biased coin): the probability of the observed sequence if the coin has bias <InlineMath>{`\\delta`}</InlineMath></li>
+            <li><InlineMath>{`\\delta`}</InlineMath> — the amount of bias added to the heads probability (e.g. <InlineMath>{`\\delta = 0.1`}</InlineMath> means the biased coin lands heads with probability 0.6)</li>
+            <li><InlineMath>{`0.5 + \\delta`}</InlineMath> — probability of heads under the biased coin</li>
+            <li><InlineMath>{`0.5 - \\delta`}</InlineMath> — probability of tails under the biased coin</li>
+          </ul>
         </div>
 
         <h4 className="text-lg font-semibold text-neutral-800 mb-3">The likelihood ratio</h4>
@@ -76,6 +88,10 @@ export function DetailedAct4() {
           <div className="bg-white border border-neutral-300 rounded-lg p-4">
             <BlockMath>{`\\Lambda_n = \\frac{\\mathcal{L}_1}{\\mathcal{L}_0} = \\frac{(0.5+\\delta)^k \\;(0.5-\\delta)^{n-k}}{(0.5)^n}`}</BlockMath>
           </div>
+          <ul className="mb-3 text-sm text-neutral-600 space-y-1 ml-4 list-disc">
+            <li><InlineMath>{`\\Lambda_n`}</InlineMath> — the likelihood ratio after <InlineMath>{`n`}</InlineMath> flips: how many times more likely the observed data are under the biased-coin hypothesis vs. the fair-coin hypothesis</li>
+            <li><InlineMath>{`\\mathcal{L}_1 / \\mathcal{L}_0`}</InlineMath> — ratio of the biased-coin likelihood to the fair-coin likelihood</li>
+          </ul>
           <div className="bg-white border border-neutral-200 rounded-lg p-4 text-neutral-600">
             <p>
               The likelihood ratio tells you how much more likely the data are if the coin is biased versus fair.
@@ -130,6 +146,12 @@ export function DetailedAct4() {
           <div className="bg-white border border-neutral-300 rounded-lg p-4">
             <BlockMath>{`\\Lambda_n = \\Lambda_{n-1} \\times \\frac{f_1(x_n)}{f_0(x_n)}`}</BlockMath>
           </div>
+          <ul className="mb-3 text-sm text-neutral-600 space-y-1 ml-4 list-disc">
+            <li><InlineMath>{`\\Lambda_{n-1}`}</InlineMath> — the likelihood ratio computed from all previous flips (before the <InlineMath>{`n`}</InlineMath>th flip)</li>
+            <li><InlineMath>{`f_j(x_n)`}</InlineMath> — the probability of the <InlineMath>{`n`}</InlineMath>th flip's outcome <InlineMath>{`x_n`}</InlineMath> under hypothesis <InlineMath>{`H_j`}</InlineMath> (where <InlineMath>{`j=0`}</InlineMath> is fair and <InlineMath>{`j=1`}</InlineMath> is biased)</li>
+            <li><InlineMath>{`x_n`}</InlineMath> — the actual outcome of the <InlineMath>{`n`}</InlineMath>th flip (heads or tails)</li>
+            <li><InlineMath>{`f_1(x_n) / f_0(x_n)`}</InlineMath> — the likelihood ratio for just the one new observation; multiply by this at each step to update the running total</li>
+          </ul>
           <p>
             where <InlineMath>{`f_j(x_n)`}</InlineMath> is the probability of the{' '}
             <InlineMath>{`n`}</InlineMath>th flip&apos;s outcome under <InlineMath>{`H_j`}</InlineMath>.

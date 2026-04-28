@@ -225,9 +225,15 @@ export function Act2() {
             A standard 95% confidence interval for the relative uplift <InlineMath>{`\\hat{u}_n`}</InlineMath>, valid at one pre-specified sample size <InlineMath>{`n`}</InlineMath>, is:
           </p>
           <BlockMath>{`\\hat{u}_n \\pm 100\\cdot\\frac{1.96\\,\\widehat{\\mathrm{SE}}_n}{\\bar{X}_{A,n}}`}</BlockMath>
-          <p className="mb-6 text-neutral-800">
-            where <InlineMath>{`\\widehat{\\mathrm{SE}}_n = \\sqrt{\\hat{\\sigma}_A^2/n + \\hat{\\sigma}_B^2/n}`}</InlineMath> is the standard error of the difference in means. This interval is only valid at the single pre-specified look.
-          </p>
+          <ul className="mb-6 text-sm text-neutral-600 space-y-1 ml-4 list-disc">
+            <li><InlineMath>{`\\hat{u}_n`}</InlineMath> — estimated relative uplift (in %) after <InlineMath>{`n`}</InlineMath> users per group have been observed</li>
+            <li><InlineMath>{`1.96`}</InlineMath> — the critical value for a 95% confidence interval (the 97.5th percentile of the standard Normal distribution)</li>
+            <li><InlineMath>{`\\widehat{\\mathrm{SE}}_n`}</InlineMath> — estimated standard error of the difference in means, equal to <InlineMath>{`\\sqrt{\\hat{\\sigma}_A^2/n + \\hat{\\sigma}_B^2/n}`}</InlineMath></li>
+            <li><InlineMath>{`\\hat{\\sigma}_A^2`}</InlineMath> — estimated variance of outcomes in the control group (group A)</li>
+            <li><InlineMath>{`\\hat{\\sigma}_B^2`}</InlineMath> — estimated variance of outcomes in the treatment group (group B)</li>
+            <li><InlineMath>{`\\bar{X}_{A,n}`}</InlineMath> — running mean outcome in the control group after <InlineMath>{`n`}</InlineMath> observations</li>
+            <li><InlineMath>{`n`}</InlineMath> — number of users assigned to each group so far</li>
+          </ul>
 
           {/* Step 2 */}
           <h5 className="font-semibold mb-2">2. Sequential confidence interval (Eppo)</h5>
@@ -235,9 +241,15 @@ export function Act2() {
             Eppo's sequential confidence interval replaces the fixed multiplier 1.96 with a time-dependent one:
           </p>
           <BlockMath>{`\\hat{u}_n \\pm 100\\cdot\\frac{\\widehat{\\mathrm{SE}}_n}{\\bar{X}_{A,n}}\\,\\sqrt{\\frac{n+\\nu}{n}\\log\\!\\left(\\frac{n+\\nu}{\\nu\\,\\alpha}\\right)}`}</BlockMath>
-          <p className="mb-6 text-neutral-800">
-            where <InlineMath>{`\\nu`}</InlineMath> is a tuning parameter and <InlineMath>{`\\alpha`}</InlineMath> is the target Type I error level.
-          </p>
+          <ul className="mb-6 text-sm text-neutral-600 space-y-1 ml-4 list-disc">
+            <li><InlineMath>{`\\hat{u}_n`}</InlineMath> — estimated relative uplift (in %) after <InlineMath>{`n`}</InlineMath> users per group</li>
+            <li><InlineMath>{`\\widehat{\\mathrm{SE}}_n`}</InlineMath> — estimated standard error of the difference in means at the current sample size</li>
+            <li><InlineMath>{`\\bar{X}_{A,n}`}</InlineMath> — running mean outcome in the control group (used to convert absolute SE to relative %)</li>
+            <li><InlineMath>{`n`}</InlineMath> — current number of users in each group</li>
+            <li><InlineMath>{`\\nu`}</InlineMath> — tuning parameter that controls the width–power tradeoff (calibrated to the planned sample size)</li>
+            <li><InlineMath>{`\\alpha`}</InlineMath> — target Type I error level (e.g. 0.05 for a 5% false-positive rate)</li>
+            <li><InlineMath>{`\\log`}</InlineMath> — natural logarithm</li>
+          </ul>
 
           {/* Step 3 */}
           <h5 className="font-semibold mb-2">3. The multiplier</h5>
@@ -245,16 +257,25 @@ export function Act2() {
             The key difference between the two formulas is the multiplier of the standard error. In the fixed-horizon case it is the constant 1.96. In Eppo's sequential implementation it is:
           </p>
           <BlockMath>{`m(n) = \\sqrt{\\frac{n+\\nu}{n}\\log\\!\\left(\\frac{n+\\nu}{\\nu\\,\\alpha}\\right)}`}</BlockMath>
-          <p className="mb-2 text-neutral-800">
+          <ul className="mb-4 text-sm text-neutral-600 space-y-1 ml-4 list-disc">
+            <li><InlineMath>{`m(n)`}</InlineMath> — the time-varying multiplier applied to the standard error (replaces 1.96 from the fixed-horizon formula)</li>
+            <li><InlineMath>{`n`}</InlineMath> — current number of users in each group</li>
+            <li><InlineMath>{`\\nu`}</InlineMath> — tuning parameter (explained below)</li>
+            <li><InlineMath>{`\\alpha`}</InlineMath> — target Type I error level (e.g. 0.05)</li>
+            <li><InlineMath>{`\\log`}</InlineMath> — natural logarithm</li>
+          </ul>
+          <p className="mb-6 text-neutral-800">
             This multiplier is larger than 1.96 for small <InlineMath>{`n`}</InlineMath>, which is what keeps the Type I error controlled under continuous monitoring. As <InlineMath>{`n`}</InlineMath> grows, <InlineMath>{`m(n)`}</InlineMath> shrinks — so the confidence interval becomes progressively narrower as more users participate in the test.
           </p>
           <p className="mb-6 text-neutral-800">
             The tuning parameter <InlineMath>{`\\nu`}</InlineMath> controls this trade-off between early-stopping power and long-run width. Eppo sets it as:
           </p>
           <BlockMath>{`\\nu = \\frac{n^*}{\\log(n^*/\\alpha) - 1}`}</BlockMath>
-          <p className="mb-6 text-neutral-800">
-            where <InlineMath>{`n^*`}</InlineMath> is the planned sample size (the horizon at which the test is expected to end). This calibrates the multiplier to be close to 1.96 at <InlineMath>{`n = n^*`}</InlineMath>.
-          </p>
+          <ul className="mb-6 text-sm text-neutral-600 space-y-1 ml-4 list-disc">
+            <li><InlineMath>{`\\nu`}</InlineMath> — tuning parameter that balances the interval width at early looks versus the planned end date</li>
+            <li><InlineMath>{`n^*`}</InlineMath> — the planned (maximum) sample size per group — the horizon at which the experiment is expected to end</li>
+            <li><InlineMath>{`\\alpha`}</InlineMath> — target Type I error level</li>
+          </ul>
 
           {/* Step 4 */}
           <h5 className="font-semibold mb-2">4. Time-uniform coverage guarantee</h5>
@@ -262,6 +283,12 @@ export function Act2() {
             The sequential CI satisfies:
           </p>
           <BlockMath>{`\\Pr\\!\\left(u \\in \\mathrm{CI}_n\\ \\text{for all } n\\ge1\\right)\\ge 1-\\alpha`}</BlockMath>
+          <ul className="mb-4 text-sm text-neutral-600 space-y-1 ml-4 list-disc">
+            <li><InlineMath>{`u`}</InlineMath> — the true (unknown) relative uplift of the treatment compared to control</li>
+            <li><InlineMath>{`\\mathrm{CI}_n`}</InlineMath> — the sequential confidence interval computed at sample size <InlineMath>{`n`}</InlineMath></li>
+            <li><InlineMath>{`\\Pr(\\cdot)`}</InlineMath> — probability over repeated experiments</li>
+            <li><InlineMath>{`\\alpha`}</InlineMath> — target Type I error level; the guarantee holds with probability at least <InlineMath>{`1 - \\alpha`}</InlineMath></li>
+          </ul>
           <p className="mb-2 text-neutral-800">
             So unlike fixed-horizon confidence intervals, the guarantee still holds under continuous monitoring.
           </p>

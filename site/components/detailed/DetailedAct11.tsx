@@ -73,6 +73,12 @@ export function DetailedAct11() {
           <div className="bg-white border border-neutral-300 rounded-lg p-4 mt-2">
             <BlockMath>{`Y^*_i = Y_i - \\hat{f}_g(X_i)`}</BlockMath>
           </div>
+          <ul className="mb-3 text-sm text-neutral-600 space-y-1 ml-4 list-disc">
+            <li><InlineMath>{`Y^*_i`}</InlineMath> — the regression-adjusted (residualised) outcome for user <InlineMath>{`i`}</InlineMath>; this is what the sequential CI is built on</li>
+            <li><InlineMath>{`Y_i`}</InlineMath> — the raw outcome metric for user <InlineMath>{`i`}</InlineMath> during the experiment (e.g. purchase amount, number of clicks)</li>
+            <li><InlineMath>{`\\hat{f}_g(X_i)`}</InlineMath> — the regression model's prediction of <InlineMath>{`Y_i`}</InlineMath> based on user <InlineMath>{`i`}</InlineMath>'s pre-experiment behaviour; fitted separately for each group <InlineMath>{`g`}</InlineMath> (control or treatment)</li>
+            <li><InlineMath>{`X_i`}</InlineMath> — the pre-experiment covariate for user <InlineMath>{`i`}</InlineMath>: the same metric measured before the experiment started (e.g. purchases in the prior 30 days)</li>
+          </ul>
           <div className="bg-white border border-neutral-200 rounded-lg p-4 text-neutral-600 mt-2">
             <p>
               Each adjusted outcome <InlineMath>{`Y^*_i`}</InlineMath> equals the raw
@@ -88,10 +94,20 @@ export function DetailedAct11() {
         <div className="text-neutral-700 space-y-3 mb-8">
           <p>Compute the adjusted group means:</p>
           <BlockMath>{`\\hat{\\mu}_0(t) = \\frac{1}{n_0(t)} \\sum_{i \\in \\text{control}} Y^*_i, \\qquad \\hat{\\mu}_1(t) = \\frac{1}{n_1(t)} \\sum_{i \\in \\text{treatment}} Y^*_i`}</BlockMath>
+          <ul className="mb-3 text-sm text-neutral-600 space-y-1 ml-4 list-disc">
+            <li><InlineMath>{`\\hat{\\mu}_0(t)`}</InlineMath> — the running average of the adjusted outcomes in the <strong>control</strong> group at time <InlineMath>{`t`}</InlineMath></li>
+            <li><InlineMath>{`\\hat{\\mu}_1(t)`}</InlineMath> — the running average of the adjusted outcomes in the <strong>treatment</strong> group at time <InlineMath>{`t`}</InlineMath></li>
+            <li><InlineMath>{`n_0(t)`}</InlineMath> — number of users in the control group at time <InlineMath>{`t`}</InlineMath></li>
+            <li><InlineMath>{`n_1(t)`}</InlineMath> — number of users in the treatment group at time <InlineMath>{`t`}</InlineMath></li>
+          </ul>
           <p>The estimated treatment effect and the <strong>relative lift</strong>:</p>
           <div className="bg-white border border-neutral-300 rounded-lg p-4">
             <BlockMath>{`\\text{Relative lift}(t) = \\frac{\\hat{\\tau}(t)}{\\hat{\\mu}_0(t)} = \\frac{\\hat{\\mu}_1(t)}{\\hat{\\mu}_0(t)} - 1`}</BlockMath>
           </div>
+          <ul className="mb-3 text-sm text-neutral-600 space-y-1 ml-4 list-disc">
+            <li><InlineMath>{`\\hat{\\tau}(t) = \\hat{\\mu}_1(t) - \\hat{\\mu}_0(t)`}</InlineMath> — the estimated absolute treatment effect: the difference in adjusted means between treatment and control</li>
+            <li><InlineMath>{`\\hat{\\tau}(t) / \\hat{\\mu}_0(t)`}</InlineMath> — the relative lift: the treatment effect expressed as a fraction of the control average (e.g. +0.03 means +3%)</li>
+          </ul>
           <div className="bg-white border border-neutral-200 rounded-lg p-4 text-neutral-600 mt-2">
             <p>
               If control averages &euro;100 and treatment averages &euro;103, the relative lift
@@ -108,6 +124,12 @@ export function DetailedAct11() {
             <strong>residuals</strong> <InlineMath>{`Y^*_i`}</InlineMath>:
           </p>
           <BlockMath>{`\\hat{\\sigma}_{\\hat{\\tau}}^2(t) = \\frac{s_0^2(t)}{n_0(t)} + \\frac{s_1^2(t)}{n_1(t)}`}</BlockMath>
+          <ul className="mb-3 text-sm text-neutral-600 space-y-1 ml-4 list-disc">
+            <li><InlineMath>{`\\hat{\\sigma}_{\\hat{\\tau}}^2(t)`}</InlineMath> — estimated variance of the treatment effect estimator <InlineMath>{`\\hat{\\tau}(t)`}</InlineMath>; its square root is the standard error</li>
+            <li><InlineMath>{`s_0^2(t)`}</InlineMath> — sample variance of the adjusted outcomes <InlineMath>{`Y^*_i`}</InlineMath> in the control group at time <InlineMath>{`t`}</InlineMath></li>
+            <li><InlineMath>{`s_1^2(t)`}</InlineMath> — sample variance of the adjusted outcomes <InlineMath>{`Y^*_i`}</InlineMath> in the treatment group at time <InlineMath>{`t`}</InlineMath></li>
+            <li><InlineMath>{`n_0(t), n_1(t)`}</InlineMath> — number of users in control and treatment at time <InlineMath>{`t`}</InlineMath></li>
+          </ul>
           <div className="bg-white border border-neutral-200 rounded-lg p-4 text-neutral-600">
             <p>
               The variance is estimated from the data &mdash; not assumed known. This is a key
@@ -127,6 +149,15 @@ export function DetailedAct11() {
           <div className="bg-white border-2 border-green-200 rounded-lg p-4">
             <BlockMath>{`\\text{CI}(t) = \\hat{\\tau}(t) \\pm \\hat{\\sigma}_{\\hat{\\tau}}(t) \\cdot \\sqrt{\\frac{n + \\nu}{n} \\cdot \\log\\!\\frac{n + \\nu}{\\nu \\alpha^2}}`}</BlockMath>
           </div>
+          <ul className="mb-3 text-sm text-neutral-600 space-y-1 ml-4 list-disc">
+            <li><InlineMath>{`\\text{CI}(t)`}</InlineMath> — the sequential confidence interval for the treatment effect at time <InlineMath>{`t`}</InlineMath>; valid regardless of when you look</li>
+            <li><InlineMath>{`\\hat{\\tau}(t)`}</InlineMath> — the estimated treatment effect (centre of the interval)</li>
+            <li><InlineMath>{`\\hat{\\sigma}_{\\hat{\\tau}}(t)`}</InlineMath> — the estimated standard error of <InlineMath>{`\\hat{\\tau}(t)`}</InlineMath> (square root of the variance from Step 5)</li>
+            <li><InlineMath>{`n = n_0(t) + n_1(t)`}</InlineMath> — the total number of users across both groups at time <InlineMath>{`t`}</InlineMath></li>
+            <li><InlineMath>{`\\nu`}</InlineMath> — the tuning parameter, set as <InlineMath>{`\\nu = M \\cdot \\hat{\\sigma}^2`}</InlineMath> where <InlineMath>{`M`}</InlineMath> is the planned total sample size; calibrates the multiplier to be close to 1.96 at the planned end of the experiment</li>
+            <li><InlineMath>{`\\alpha`}</InlineMath> — the significance level (e.g. 0.05 for 95% sequential confidence intervals)</li>
+            <li><InlineMath>{`\\sqrt{(n+\\nu)/n \\cdot \\log((n+\\nu)/\\nu\\alpha^2)}`}</InlineMath> — the time-varying multiplier: larger than 1.96 early in the experiment, shrinking toward 1.96 as <InlineMath>{`n`}</InlineMath> grows</li>
+          </ul>
           <p className="mt-2">
             where <InlineMath>{`n = n_0(t) + n_1(t)`}</InlineMath> is the total sample size and{' '}
             <InlineMath>{`\\nu = M \\cdot \\hat{\\sigma}^2`}</InlineMath> is the tuning parameter.

@@ -128,24 +128,41 @@ export function Act1() {
           <p className="mb-3">
             <InlineMath>{`\\hat{u}_n = 100 \\cdot \\frac{\\bar{X}_{B,n} - \\bar{X}_{A,n}}{\\bar{X}_{A,n}}`}</InlineMath>
           </p>
+          <ul className="mb-3 text-sm text-neutral-600 space-y-1 ml-4 list-disc">
+            <li><InlineMath>{`\\hat{u}_n`}</InlineMath> — estimated relative uplift (in %) after <InlineMath>{`n`}</InlineMath> observations per group</li>
+            <li><InlineMath>{`\\bar{X}_{B,n}`}</InlineMath> — running mean outcome in the <strong>treatment</strong> group after <InlineMath>{`n`}</InlineMath> observations</li>
+            <li><InlineMath>{`\\bar{X}_{A,n}`}</InlineMath> — running mean outcome in the <strong>control</strong> group after <InlineMath>{`n`}</InlineMath> observations</li>
+            <li><InlineMath>{`n`}</InlineMath> — number of observations (e.g. users) in each group so far</li>
+          </ul>
           <p className="mb-3 text-neutral-800">
             We test <InlineMath>{`H_0: u = 0`}</InlineMath> (no relative uplift). A standard 95% confidence interval for the uplift, valid at one pre-specified look, is:
           </p>
           <p className="mb-3">
             <InlineMath>{`\\hat{u}_n \\pm 100 \\cdot \\frac{1.96\\,\\widehat{\\mathrm{SE}}_n}{\\bar{X}_{A,n}}`}</InlineMath>
           </p>
+          <ul className="mb-3 text-sm text-neutral-600 space-y-1 ml-4 list-disc">
+            <li><InlineMath>{`1.96`}</InlineMath> — the critical value for a 95% confidence interval (the 97.5th percentile of the standard Normal distribution)</li>
+            <li><InlineMath>{`\\widehat{\\mathrm{SE}}_n`}</InlineMath> — estimated standard error of the difference in means <InlineMath>{`(\\bar{X}_{B,n} - \\bar{X}_{A,n})`}</InlineMath>, equal to <InlineMath>{`\\sqrt{(\\hat{\\sigma}_A^2 + \\hat{\\sigma}_B^2)/n}`}</InlineMath></li>
+            <li><InlineMath>{`\\hat{\\sigma}_A^2,\\, \\hat{\\sigma}_B^2`}</InlineMath> — estimated variance of outcomes in the control and treatment groups</li>
+          </ul>
           <p className="mb-3 text-neutral-800">
-            where <InlineMath>{`\\widehat{\\mathrm{SE}}_n`}</InlineMath> is the running standard error of the difference in means. The false positive rate at a single planned look is:
+            The false positive rate at a single planned look is:
           </p>
           <p className="mb-3">
             <InlineMath>{`\\Pr(\\text{reject }H_0\\text{ at one look}) = \\alpha = 0.05`}</InlineMath>
           </p>
+          <ul className="mb-3 text-sm text-neutral-600 space-y-1 ml-4 list-disc">
+            <li><InlineMath>{`\\alpha`}</InlineMath> — the significance level; the maximum acceptable probability of a false positive (here 5%)</li>
+          </ul>
           <p className="mb-3 text-neutral-800">
             If we repeatedly check the data, we effectively run many tests. The probability of at least one false positive across <InlineMath>{`K`}</InlineMath> looks is:
           </p>
           <p className="mb-3">
             <InlineMath>{`\\Pr(\\text{at least one false positive in }K\\text{ looks}) = 1-(1-\\alpha)^K`}</InlineMath>
           </p>
+          <ul className="mb-3 text-sm text-neutral-600 space-y-1 ml-4 list-disc">
+            <li><InlineMath>{`K`}</InlineMath> — total number of times we look at (peek at) the data during the experiment</li>
+          </ul>
           <p className="mb-3 text-neutral-800">
             A useful approximation for small <InlineMath>{`\\alpha`}</InlineMath>:
           </p>

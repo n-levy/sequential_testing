@@ -49,6 +49,12 @@ export function DetailedAct8() {
           </ol>
           <p>Therefore Ville&apos;s inequality gives:</p>
           <BlockMath>{`\\PP\\!\\left(\\Lambda_n^{H} \\text{ ever} \\geq \\frac{1}{\\alpha}\\right) \\leq \\alpha`}</BlockMath>
+          <ul className="mb-3 text-sm text-neutral-600 space-y-1 ml-4 list-disc">
+            <li><InlineMath>{`\\Lambda_n^{H}`}</InlineMath> — the mixture likelihood ratio: a weighted average of the likelihood ratios for all possible effect sizes, weighted by the mixing distribution <InlineMath>{`H`}</InlineMath></li>
+            <li><InlineMath>{`1/\\alpha`}</InlineMath> — the rejection threshold (e.g. 20 for <InlineMath>{`\\alpha = 0.05`}</InlineMath>)</li>
+            <li><InlineMath>{`\\PP(\\cdot \\text{ ever} \\geq 1/\\alpha)`}</InlineMath> — the probability that the mixture statistic crosses the threshold at <em>any</em> point during the experiment</li>
+            <li><InlineMath>{`\\alpha`}</InlineMath> — the overall false positive rate, controlled even under continuous monitoring</li>
+          </ul>
         </div>
 
         <div className="bg-white border border-neutral-200 rounded-lg p-4 mb-6 text-neutral-600">

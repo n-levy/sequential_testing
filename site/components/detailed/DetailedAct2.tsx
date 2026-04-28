@@ -59,6 +59,10 @@ export function DetailedAct2() {
             <InlineMath>{`i`}</InlineMath>th coin flip:
           </p>
           <BlockMath>{`X_i = \\begin{cases} +1 & \\text{if heads (step forward)} \\\\ -1 & \\text{if tails (step backward)} \\end{cases}`}</BlockMath>
+          <ul className="mb-3 text-sm text-neutral-600 space-y-1 ml-4 list-disc">
+            <li><InlineMath>{`X_i`}</InlineMath> — the outcome of the <InlineMath>{`i`}</InlineMath>th coin flip (+1 for heads, −1 for tails)</li>
+            <li><InlineMath>{`i`}</InlineMath> — an index counting which flip we are on (1st flip, 2nd flip, …)</li>
+          </ul>
           <p>
             The probability of heads is written <InlineMath>{`p`}</InlineMath>. For a fair coin,{' '}
             <InlineMath>{`p = 0.5`}</InlineMath>.
@@ -73,6 +77,11 @@ export function DetailedAct2() {
           <div className="bg-white border border-neutral-300 rounded-lg p-4">
             <BlockMath>{`S_n = \\sum_{i=1}^{n} X_i = X_1 + X_2 + \\cdots + X_n`}</BlockMath>
           </div>
+          <ul className="mb-3 text-sm text-neutral-600 space-y-1 ml-4 list-disc">
+            <li><InlineMath>{`S_n`}</InlineMath> — the cumulative position (score) after <InlineMath>{`n`}</InlineMath> steps; this is what the simulation plots on the y-axis</li>
+            <li><InlineMath>{`n`}</InlineMath> — the total number of coin flips so far</li>
+            <li><InlineMath>{`\\sum_{i=1}^{n}`}</InlineMath> — sum all terms from the 1st flip (<InlineMath>{`i=1`}</InlineMath>) to the <InlineMath>{`n`}</InlineMath>th flip (<InlineMath>{`i=n`}</InlineMath>)</li>
+          </ul>
           <div className="bg-white border border-neutral-200 rounded-lg p-4 text-neutral-600">
             <p>
               In words: <InlineMath>{`S`}</InlineMath> sub <InlineMath>{`n`}</InlineMath> equals
@@ -99,6 +108,10 @@ export function DetailedAct2() {
             When <InlineMath>{`p = 0.5`}</InlineMath>, each flip has expected value zero:
           </p>
           <BlockMath>{`\\EE[X_i] = \\underbrace{0.5}_{P(\\text{heads})} \\times (+1) + \\underbrace{0.5}_{P(\\text{tails})} \\times (-1) = 0`}</BlockMath>
+          <ul className="mb-3 text-sm text-neutral-600 space-y-1 ml-4 list-disc">
+            <li><InlineMath>{`\\EE[X_i]`}</InlineMath> — expected value (long-run average) of the <InlineMath>{`i`}</InlineMath>th coin flip outcome</li>
+            <li><InlineMath>{`P(\\text{heads}) = 0.5`}</InlineMath> — probability of landing heads on a fair coin</li>
+          </ul>
           <p>Because each step averages to zero:</p>
           <div className="bg-white border border-neutral-300 rounded-lg p-4">
             <BlockMath>{`\\EE[S_n] = \\EE[X_1] + \\EE[X_2] + \\cdots + \\EE[X_n] = 0`}</BlockMath>
@@ -119,10 +132,16 @@ export function DetailedAct2() {
             For a single fair coin flip:
           </p>
           <BlockMath>{`\\Var(X_i) = \\EE[(X_i - 0)^2] = 0.5 \\times (+1)^2 + 0.5 \\times (-1)^2 = 1`}</BlockMath>
+          <ul className="mb-3 text-sm text-neutral-600 space-y-1 ml-4 list-disc">
+            <li><InlineMath>{`\\Var(X_i)`}</InlineMath> — variance of a single flip: the average squared distance from the mean (0)</li>
+          </ul>
           <p>
             Because flips are independent, the variance of the sum is the sum of the variances:
           </p>
           <BlockMath>{`\\Var(S_n) = \\Var(X_1) + \\Var(X_2) + \\cdots + \\Var(X_n) = \\underbrace{1 + 1 + \\cdots + 1}_{n \\text{ terms}} = n`}</BlockMath>
+          <ul className="mb-3 text-sm text-neutral-600 space-y-1 ml-4 list-disc">
+            <li><InlineMath>{`\\Var(S_n)`}</InlineMath> — variance of the cumulative sum after <InlineMath>{`n`}</InlineMath> flips; grows linearly with the number of steps</li>
+          </ul>
           <p>
             The <strong>standard deviation</strong> is the square root of the variance &mdash;
             same units as the position:
@@ -130,6 +149,9 @@ export function DetailedAct2() {
           <div className="bg-white border border-neutral-300 rounded-lg p-4">
             <BlockMath>{`\\text{SD}(S_n) = \\sqrt{\\Var(S_n)} = \\sqrt{n}`}</BlockMath>
           </div>
+          <ul className="mb-3 text-sm text-neutral-600 space-y-1 ml-4 list-disc">
+            <li><InlineMath>{`\\text{SD}(S_n)`}</InlineMath> — standard deviation of the walk's position after <InlineMath>{`n`}</InlineMath> steps: the typical distance from zero; grows as the square root of <InlineMath>{`n`}</InlineMath></li>
+          </ul>
           <div className="bg-white border border-neutral-200 rounded-lg p-4 text-neutral-600">
             <p>
               Before we begin flipping the coin, the expected position is zero: <InlineMath>{`\\EE[S_n] = 0`}</InlineMath>.
@@ -156,11 +178,19 @@ export function DetailedAct2() {
             When <InlineMath>{`p \\neq 0.5`}</InlineMath>, each step has a non-zero average:
           </p>
           <BlockMath>{`\\EE[X_i] = p \\times (+1) + (1-p) \\times (-1) = 2p - 1`}</BlockMath>
+          <ul className="mb-3 text-sm text-neutral-600 space-y-1 ml-4 list-disc">
+            <li><InlineMath>{`p`}</InlineMath> — probability of heads (e.g. 0.6 for a biased coin that lands heads 60% of the time)</li>
+            <li><InlineMath>{`1 - p`}</InlineMath> — probability of tails</li>
+            <li><InlineMath>{`2p - 1`}</InlineMath> — net expected step per flip; equals 0 for a fair coin (<InlineMath>{`p = 0.5`}</InlineMath>), positive for a heads-biased coin</li>
+          </ul>
           <p>
             For <InlineMath>{`p = 0.6`}</InlineMath>: <InlineMath>{`\\EE[X_i] = 0.2`}</InlineMath>.
             After <InlineMath>{`n`}</InlineMath> steps:
           </p>
           <BlockMath>{`\\EE[S_n] = n(2p - 1)`}</BlockMath>
+          <ul className="mb-3 text-sm text-neutral-600 space-y-1 ml-4 list-disc">
+            <li><InlineMath>{`\\EE[S_n]`}</InlineMath> — expected position after <InlineMath>{`n`}</InlineMath> steps; grows linearly with <InlineMath>{`n`}</InlineMath> when the coin is biased</li>
+          </ul>
           <p>This is a systematic <em>drift</em> &mdash; the random walk now has a trend.</p>
         </div>
 
