@@ -162,29 +162,36 @@ export function ActHybrid() {
           <li>
             <strong>Guardrail KPIs — abort for harm only.</strong> You abort the experiment only if
             the sequential confidence interval is entirely <em>below</em> zero (i.e., the entire
-            interval lies on the harmful side). You never abort because the interval is entirely
-            above zero. This means the false-abort probability is the lower-tail probability of the
-            two-sided interval: α/2, not α.
+            interval lies on the harmful side). This is a one-tailed test at α/2 on the harm side.
           </li>
           <li>
             <strong>Primary KPI — ship for benefit only.</strong> You ship the feature only if the
             standard confidence interval at the end of the experiment is entirely <em>above</em>{' '}
-            zero (i.e., a beneficial effect is confirmed). You do not declare success if the interval
-            is entirely below zero. This means the false-ship probability is the upper-tail
-            probability of the two-sided interval: α/2, not α.
+            zero (i.e., a beneficial effect is confirmed). This is a one-tailed test at α/2 on the
+            benefit side.
           </li>
         </ul>
         <div className="bg-yellow-50 border border-yellow-300 rounded-lg p-4 mb-4">
-          <p className="text-neutral-800 font-semibold mb-2">Practical implication</p>
-          <p className="text-neutral-700">
-            With a conventional two-sided 95% confidence interval (α = 0.05), the effective
-            false positive rate for each decision is <strong>2.5%</strong>, not 5%. The hybrid
-            approach is therefore more conservative than teams often realise.
+          <p className="text-neutral-800 font-semibold mb-2">
+            The total false positive rate is the same as a classic two-tailed test
           </p>
-          <p className="text-neutral-700 mt-2">
-            Teams that want a 5% false positive rate for the shipping decision can either use a
-            one-sided test at α = 5% explicitly, or — equivalently — widen the two-sided confidence
-            interval to 90% (α = 0.10). Both give the same critical value.
+          <p className="text-neutral-700 mb-3">
+            In a classic A/B test with α = 0.05, a two-tailed test at the end of the experiment
+            produces a 5% false positive rate — split symmetrically as 2.5% on the benefit side and
+            2.5% on the harm side. The hybrid approach keeps exactly the same total budget:
+          </p>
+          <ul className="list-disc pl-5 space-y-1 text-neutral-700 mb-3">
+            <li>2.5% allocated to false aborts <em>during</em> the test (sequential CI, harm side)</li>
+            <li>2.5% allocated to false ships <em>at the end</em> of the test (standard CI, benefit side)</li>
+            <li>Total: 2.5% + 2.5% = <strong>5%</strong></li>
+          </ul>
+          <p className="text-neutral-700">
+            The hybrid approach is not more or less conservative than a classic test — the total
+            false positive rate is the same. What changes is <em>when and where</em> you spend the
+            budget: half during the experiment for harm protection, half at the end for benefit
+            detection. The only cost of the hybrid approach is that confidence intervals are wider
+            during the experiment (sequential CIs must be wider to remain valid across repeated
+            looks). At the planned end date, the standard CI is exactly as narrow as in a classic test.
           </p>
         </div>
       </div>
