@@ -28,7 +28,11 @@ function DisplayMathBox({ children }: { children: React.ReactNode }) {
 export function Act2() {
   return (
     <div id="act2" className="max-w-3xl mx-auto px-4">
-      <h2 className="text-2xl font-bold mb-1">Act 2 — The Eppo Solution</h2>
+      <h2 className="text-2xl font-bold mb-1">Act 2 — The Eppo Solution (2022)</h2>
+
+      <p className="text-neutral-700 mb-6">
+        This act describes the solution introduced in the 2022 technical report by Schmit &amp; Miller (see reference 5). We do not know whether this is the exact current implementation in Eppo, but it provides a concrete example of how modern A/B testing platforms implement sequential testing.
+      </p>
 
       {/* Simulation intro */}
       <div className="mb-6">
@@ -123,97 +127,6 @@ export function Act2() {
         <div className="text-neutral-800 space-y-3">
           <p>
             Sequential intervals trade narrowness at a single look for validity across all looks. If your team monitors live, this is the right tradeoff.
-          </p>
-        </div>
-      </div>
-
-      {/* ── The Hybrid Approach ── */}
-      <h3 className="text-xl font-bold mb-4">The Hybrid Approach</h3>
-
-      <p className="text-neutral-700 mb-4">
-        The sequential confidence interval is always wider than a fixed-horizon confidence interval at any given sample size. For the{' '}
-        <strong>primary KPI</strong> — the metric the experiment is designed to move — this width
-        penalty reduces statistical power.
-      </p>
-
-      <div className="bg-neutral-50 border border-neutral-300 rounded-lg p-5 mb-5">
-        <p className="font-bold text-neutral-900 mb-3">
-          Apply sequential testing where early stopping adds the most value (safety guardrails), and
-          fixed-horizon testing where statistical power matters most (the primary metric).
-        </p>
-        <p className="text-neutral-700 mb-3">The hybrid approach partitions metrics into two categories:</p>
-        <ul className="list-disc pl-5 space-y-2 text-neutral-700">
-          <li>
-            <strong>Guardrail KPIs</strong> (revenue, error rate, latency, etc.): monitored
-            continuously with a <strong>sequential confidence interval</strong>. If the confidence interval excludes zero on the
-            harmful side, abort the experiment immediately.
-          </li>
-          <li>
-            <strong>Primary KPI</strong> (the metric the experiment targets): analysed with a{' '}
-            <strong>standard fixed-horizon confidence interval</strong> at the pre-planned end date. No loss of power (no sequential correction applied).
-          </li>
-        </ul>
-      </div>
-
-      <h4 className="font-semibold mb-3">What you gain</h4>
-      <div className="overflow-x-auto mb-6">
-        <table className="w-full min-w-[480px] text-sm border-collapse border border-neutral-300">
-          <thead>
-            <tr className="bg-neutral-100">
-              <th className="border border-neutral-300 p-3 text-left font-semibold"></th>
-              <th className="border border-neutral-300 p-3 text-left font-semibold">Full sequential</th>
-              <th className="border border-neutral-300 p-3 text-left font-semibold">Hybrid</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td className="border border-neutral-300 p-3">Primary KPI confidence interval width</td>
-              <td className="border border-neutral-300 p-3">Wider (~10–40%)</td>
-              <td className="border border-neutral-300 p-3">Standard (no penalty)</td>
-            </tr>
-            <tr className="bg-neutral-50">
-              <td className="border border-neutral-300 p-3">Primary KPI power</td>
-              <td className="border border-neutral-300 p-3">Reduced</td>
-              <td className="border border-neutral-300 p-3">Full</td>
-            </tr>
-            <tr>
-              <td className="border border-neutral-300 p-3">Guardrail protection</td>
-              <td className="border border-neutral-300 p-3">Continuous</td>
-              <td className="border border-neutral-300 p-3">Continuous</td>
-            </tr>
-            <tr className="bg-neutral-50">
-              <td className="border border-neutral-300 p-3">Early stopping for success</td>
-              <td className="border border-neutral-300 p-3">Yes</td>
-              <td className="border border-neutral-300 p-3">No</td>
-            </tr>
-            <tr>
-              <td className="border border-neutral-300 p-3">Early stopping for harm</td>
-              <td className="border border-neutral-300 p-3">Yes</td>
-              <td className="border border-neutral-300 p-3">Yes</td>
-            </tr>
-            <tr className="bg-neutral-50">
-              <td className="border border-neutral-300 p-3">Complexity</td>
-              <td className="border border-neutral-300 p-3">Higher</td>
-              <td className="border border-neutral-300 p-3">Lower</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-
-      <div className="bg-blue-100 border border-blue-500 rounded-lg p-6 mb-8">
-        <h4 className="font-bold text-blue-900 mb-3">Key Takeaway</h4>
-        <div className="text-neutral-800 space-y-3">
-          <p>
-            <strong>The hybrid approach in one sentence:</strong> Monitor guardrail KPIs with a
-            sequential confidence interval for early abort; analyse the primary KPI with a standard confidence interval at the planned
-            end-date.
-          </p>
-          <p>
-            This gives you the safety of sequential testing where it matters most (preventing harm)
-            without paying the power penalty on the metric you care about most (the primary KPI).
-          </p>
-          <p className="font-semibold">
-            This is the recommended approach for most A/B testing programmes.
           </p>
         </div>
       </div>

@@ -28,8 +28,8 @@ export function References() {
             A multiple testing procedure for clinical trials.
             <em> Biometrics</em>, 35(3), 549&ndash;556.
           </li>
-          <li id="ref-schmit-miller-2024">
-            <strong>Schmit, M. &amp; Miller, T.</strong> (2024).
+          <li id="ref-schmit-miller-2022">
+            <strong>Schmit, M. &amp; Miller, T.</strong> (2022).
             Sequential confidence intervals for comparing two proportions with
             variance reduction.
             <em> Eppo Technical Report</em>.

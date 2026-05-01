@@ -1,358 +1,50 @@
 "use client";
 import React, { useState } from 'react';
 
-// Full source of the shared simulation component (ABTestSim.tsx)
-const SIM_CODE = `"use client"
-
-import { useState, useEffect, useMemo, useRef, type ReactNode } from 'react'
-import * as d3 from 'd3'
-import { InlineMath } from '../ui/Math'
-
+// Key extract of the shared simulation component (ABTestSim.tsx) showing the layer definitions.
+const SIM_CODE = `// Layer type definition — all supported confidence interval methods:
 export type SimLayer =
-  | 'fixed-ci'
-  | 'sequential-ci'
-  | 'pocock'
-  | 'obf'
-  | 'bonferroni'
+  | 'fixed-ci'       // Standard fixed-horizon 95% confidence interval
+  | 'sequential-ci'  // Sequential confidence interval (Eppo / Howard et al.)
+  | 'pocock'         // Pocock group-sequential boundary
+  | 'obf'            // O'Brien–Fleming group-sequential boundary
+  | 'bonferroni'     // Bonferroni correction (alpha/K per look)
+  | 'harm-detect'    // Guardrail harm detection (one-sided, z = 3.0)
 
-type KProp = number;
-interface ABTestSimProps {
-  layers: SimLayer[]
-  showPeekStats?: boolean
-  takeaway?: ReactNode
-  simulationTitle?: string
-  defaultEffect?: number // difference in means between B and A
-  defaultN?: number
-  showPowerControl?: boolean
-  K?: KProp // number of peeks for group sequential methods
-  hideEffectStats?: boolean // hide sample effect and CI half-width boxes
+// Legend labels and colours for each layer:
+const LAYER_STYLE = {
+  'fixed-ci':      { color: '#ef4444', label: 'Standard 95% confidence interval' },
+  'sequential-ci': { color: '#2563eb', label: 'Sequential confidence interval (Eppo)' },
+  'pocock':        { color: '#f59e0b', label: 'Pocock' },
+  'obf':           { color: '#1d4ed8', label: "O'Brien–Fleming" },
+  'bonferroni':    { color: '#0d9488', label: 'Bonferroni' },
+  'harm-detect':   { color: '#dc2626', label: 'Guardrail harm detection (3 SD)' },
 }
 
-const Z_975 = 1.959964
-const PEEK_N_SIMS = 1000 // number of re-randomizations used to estimate crossing probabilities
-const ALPHA_MIN = 0.01
-const ALPHA_MAX = 0.1
-const ALPHA_DEFAULT = 0.05
-
-// Normal quantile approximation
-function erfinv(x: number) {
-  const a = 0.147
-  const ln = Math.log(1 - x * x)
-  const part1 = 2 / (Math.PI * a) + ln / 2
-  const part2 = ln / a
-  return Math.sign(x) * Math.sqrt(Math.sqrt(part1 * part1 - part2) - part1)
-}
-
-function normInv(p: number) {
-  return Math.sqrt(2) * erfinv(2 * p - 1)
-}
-
-function normalCDF(x: number) {
-  const a1 = 0.254829592
-  const a2 = -0.284496736
-  const a3 = 1.421413741
-  const a4 = -1.453152027
-  const a5 = 1.061405429
-  const p = 0.3275911
-  const sign = x < 0 ? -1 : 1
-  const ax = Math.abs(x) / Math.SQRT2
-  const t = 1 / (1 + p * ax)
-  const y = 1 - (((((a5 * t + a4) * t) + a3) * t + a2) * t + a1) * t * Math.exp(-ax * ax)
-  return 0.5 * (1 + sign * y)
-}
-
-function getPeekIndices(n: number, k: number): number[] {
-  if (n <= 0 || k <= 0) return []
-  const uniqueLooks = new Set<number>()
-  for (let j = 1; j <= k; j++) {
-    const look = Math.round((j * n) / k)
-    uniqueLooks.add(Math.max(1, Math.min(n, look)))
-  }
-  return Array.from(uniqueLooks).sort((a, b) => a - b)
-}
-
-function clampProbability(p: number): number {
-  return Math.max(1e-6, Math.min(1 - 1e-6, p))
-}
-
-const LAYER_STYLE: Record<SimLayer, { color: string; label: string }> = {
-  'fixed-ci':        { color: '#ef4444', label: 'Standard 95% CI' },
-  'sequential-ci':   { color: '#2563eb', label: 'Sequential CI (Eppo)' },
-  'pocock':          { color: '#f59e0b', label: 'Pocock' },
-  'obf':             { color: '#1d4ed8', label: "O'Brien-Fleming" },
-  'bonferroni':      { color: '#0d9488', label: 'Bonferroni' },
-}
-
-function mulberry32(seed: number) {
-  return function () {
-    let t = (seed += 0x6d2b79f5)
-    t = Math.imul(t ^ (t >>> 15), t | 1)
-    t ^= t + Math.imul(t ^ (t >>> 7), t | 61)
-    return ((t ^ (t >>> 14)) >>> 0) / 4294967296
-  }
-}
-
-/** Simulate running difference in means for A/B test with relative lift on a control baseline. */
-function simulateABTestTrajectory(n: number, relativeLift: number, controlRate: number, seed: number) {
-  const rand = mulberry32(seed)
-  const meansA = new Float64Array(n)
-  const meansB = new Float64Array(n)
-  const ses = new Float64Array(n)
-  const pA = clampProbability(controlRate)
-  const pB = clampProbability(pA * (1 + relativeLift))
-  let sumA = 0, sumB = 0
-  for (let i = 0; i < n; i++) {
-    sumA += rand() < pA ? 1 : 0
-    sumB += rand() < pB ? 1 : 0
-    const k = i + 1
-    meansA[i] = sumA / k
-    meansB[i] = sumB / k
-    // Pooled variance for difference in means
-    const vA = Math.max(meansA[i] * (1 - meansA[i]), 1e-4)
-    const vB = Math.max(meansB[i] * (1 - meansB[i]), 1e-4)
-    ses[i] = Math.sqrt((vA + vB) / k)
-  }
-  return { meansA, meansB, ses }
-}
-
-export function ABTestSim({
-  layers,
-  showPeekStats = false,
-  takeaway,
-  simulationTitle = 'Simulation 1: fixed-horizon confidence intervals.',
-  defaultEffect = 0,
-  defaultN = 10000,
-  showPowerControl = true,
-  K: KProp = 6,
-  hideEffectStats = false,
-}: ABTestSimProps) {
-  const [effect, setEffect] = useState(defaultEffect)
-  const [n, setN] = useState(defaultN)
-  const [alpha, setAlpha] = useState(ALPHA_DEFAULT)
-  const [baselineRate, setBaselineRate] = useState(0.1)
-  const [seed, setSeed] = useState(1)
-  const [kState, setK] = useState(KProp)
-  const [peekProbs, setPeekProbs] = useState<Record<string, number> | null>(null)
-  const [runSimulationsTrigger, setRunSimulationsTrigger] = useState(0)
-  const [showSimulationNotes, setShowSimulationNotes] = useState(false)
-  const svgRef = useRef<SVGSVGElement | null>(null)
-
-  const clampedEffect = Math.max(-0.5, Math.min(0.5, effect))
-  const effectiveEffect = clampedEffect
-  const effectPercent = Math.round(effectiveEffect * 100)
-  const clampedBaseline = clampProbability(baselineRate)
-  const peekIndices = useMemo(() => getPeekIndices(n, kState), [n, kState])
-
-  // Classical power approximation for two-sided difference-in-proportions test.
-  const estimatedPower = useMemo<number | null>(() => {
-    if (n <= 0) return null
-    if (Math.abs(clampedEffect) < 1e-12) return null
-    const pA = clampedBaseline
-    const pB = clampProbability(pA * (1 + clampedEffect))
-    const delta = Math.abs(pB - pA)
-    const seAlt = Math.sqrt((pA * (1 - pA) + pB * (1 - pB)) / n)
-    if (seAlt <= 0) return null
-    const mu = delta / seAlt
-    const zCrit = normInv(1 - alpha / 2)
-    const powerVal = normalCDF(mu - zCrit) + normalCDF(-mu - zCrit)
-    return Math.max(0, Math.min(1, powerVal))
-  }, [n, clampedEffect, alpha, clampedBaseline])
-
-  // Compute the probability of crossing the CI at any point for all selected layers
-  useEffect(() => {
-    if (!showPeekStats || runSimulationsTrigger === 0) return;
-    const results: Record<string, number> = {};
-    for (const layer of layers) {
-      let count = 0;
-      for (let sim = 0; sim < PEEK_N_SIMS; ++sim) {
-        const t = simulateABTestTrajectory(n, effectiveEffect, clampedBaseline, seed + sim + runSimulationsTrigger * 10000);
-        let crossed = false;
-        if (peekIndices.length === 0) continue;
-        let lookPtr = 0
-        const lastLookPtr = peekIndices.length - 1
-        for (let i = 0; i < n && lookPtr <= lastLookPtr; ++i) {
-          if ((i + 1) !== peekIndices[lookPtr]) continue;
-          const denom = t.meansA[i];
-          const est = denom !== 0 ? 100 * (t.meansB[i] - denom) / denom : 0;
-          let w = 0;
-          if (layer === 'fixed-ci') {
-            w = denom !== 0 ? 100 * Z_975 * t.ses[i] / denom : 0;
-          } else if (layer === 'sequential-ci') {
-            const nu = n * 0.25;
-            const t_i = i + 1;
-            const logTerm = Math.log((t_i + nu) / (nu * alpha));
-            w = denom !== 0 ? 100 * t.ses[i] * Math.sqrt((t_i + nu) / t_i * logTerm) / denom : 0;
-          } else if (layer === 'pocock') {
-            const cP = 2.41;
-            w = denom !== 0 ? 100 * t.ses[i] * cP / denom : 0;
-          } else if (layer === 'obf') {
-            const k = Math.max(1, Math.round((i + 1) / n * kState));
-            const z = normInv(1 - alpha / (2 * kState / k));
-            w = denom !== 0 ? 100 * t.ses[i] * z / denom : 0;
-          } else if (layer === 'bonferroni') {
-            const z = normInv(1 - alpha / (2 * kState));
-            w = denom !== 0 ? 100 * t.ses[i] * z / denom : 0;
-          }
-          if (est - w > 0 || est + w < 0) {
-            crossed = true;
-            break
-          }
-          lookPtr++
-        }
-        if (crossed) count++;
-      }
-      results[layer] = count / PEEK_N_SIMS;
-    }
-    setPeekProbs(results);
-  }, [showPeekStats, layers, n, clampedEffect, effectiveEffect, clampedBaseline, seed, alpha, kState, runSimulationsTrigger, peekIndices]);
-
-  const traj = useMemo(
-    () => simulateABTestTrajectory(n, effectiveEffect, clampedBaseline, seed),
-    [n, effectiveEffect, clampedBaseline, seed]
-  )
-
-  // Compute the running effect in percent: (meanB - meanA) / meanA
-  const effectPct = useMemo(() => {
-    const arr = new Float64Array(n)
-    for (let i = 0; i < n; i++) {
-      const denom = traj.meansA[i]
-      arr[i] = denom !== 0 ? 100 * (traj.meansB[i] - denom) / denom : 0
-    }
-    if (n > 0) arr[0] = 0
-    return arr
-  }, [traj, n])
-
-  // Compute the per-step CI half-width for the fixed CI (in percent)
-  const ciHalfWidthPct = useMemo(() => {
-    const arr = new Float64Array(n)
-    for (let i = 0; i < n; i++) {
-      const denom = traj.meansA[i]
-      arr[i] = denom !== 0 ? 100 * Z_975 * traj.ses[i] / denom : 0
-    }
-    if (n > 0) arr[0] = 0
-    return arr
-  }, [traj, n])
-
-  // Render the plot with D3
-  useEffect(() => {
-    if (!svgRef.current) return
-    const svg = d3.select(svgRef.current)
-    svg.selectAll('*').remove()
-    const W = 700, H = 360
-    const margin = { top: 20, right: 16, bottom: 44, left: 56 }
-    const innerW = W - margin.left - margin.right
-    const innerH = H - margin.top - margin.bottom
-    const yMin = -100, yMax = 100
-    const xUpper = Math.max(1, n)
-    const x = d3.scaleLinear().domain([0, xUpper]).range([0, innerW])
-    const y = d3.scaleLinear().domain([yMin, yMax]).range([innerH, 0])
-    const g = svg.append('g').attr('transform', \`translate(\${margin.left},\${margin.top})\`)
-    const xAxisY = y(0)
-
-    g.append('g').attr('transform', \`translate(0,\${xAxisY})\`).call(d3.axisBottom(x).ticks(6))
-    g.append('g').call(d3.axisLeft(y).ticks(6).tickFormat(d => \`\${Math.round(d as number)}%\`))
-    g.append('text')
-      .attr('transform', \`translate(\${innerW / 2}, \${innerH + 34})\`)
-      .style('text-anchor', 'middle').style('font-size', '12px').style('fill', '#525252')
-      .text('Number of users (n)')
-    g.append('text')
-      .attr('transform', 'rotate(-90)')
-      .attr('x', -innerH / 2).attr('y', -42)
-      .style('text-anchor', 'middle').style('font-size', '12px').style('fill', '#525252')
-      .text('Effect (%)')
-
-    // Reference line at 0
-    g.append('line')
-      .attr('x1', 0).attr('x2', innerW)
-      .attr('y1', y(0)).attr('y2', y(0))
-      .attr('stroke', '#525252').attr('stroke-width', 1).attr('stroke-dasharray', '4 3')
-
-    // CI bands — one per layer
-    const ciWidth = (layer: SimLayer, i: number) => {
-      const denom = traj.meansA[i]
-      if (denom === 0) return 0
-      if (layer === 'fixed-ci') return 100 * Z_975 * traj.ses[i] / denom
-      if (layer === 'sequential-ci') {
-        const nu = n * 0.25
-        const t_i = i + 1
-        return 100 * traj.ses[i] * Math.sqrt((t_i + nu) / t_i * Math.log((t_i + nu) / (nu * alpha))) / denom
-      }
-      if (layer === 'pocock') return 100 * traj.ses[i] * 2.41 / denom
-      if (layer === 'obf') {
-        const k = Math.max(1, Math.round((i + 1) / n * kState))
-        return 100 * traj.ses[i] * normInv(1 - alpha / (2 * kState / k)) / denom
-      }
-      if (layer === 'bonferroni') return 100 * traj.ses[i] * normInv(1 - alpha / (2 * kState)) / denom
-      return 0
-    }
-
-    for (const layer of layers) {
-      const area = d3.area<number>()
-        .x((_d, i) => x(i + 1))
-        .y0((_d, i) => y(effectPct[i] - ciWidth(layer, i)))
-        .y1((_d, i) => y(effectPct[i] + ciWidth(layer, i)))
-        .defined((_d, i) => i >= 5 && Number.isFinite(ciWidth(layer, i)))
-      g.append('path')
-        .datum(Array.from({ length: n }, (_, i) => i))
-        .attr('fill', LAYER_STYLE[layer].color)
-        .attr('fill-opacity', 0.12)
-        .attr('stroke', LAYER_STYLE[layer].color)
-        .attr('stroke-width', 1.2)
-        .attr('stroke-opacity', 0.8)
-        .attr('d', area as d3.Area<number>)
-    }
-
-    // Mean effect trajectory
-    const line = d3.line<number>()
-      .x((_d, i) => x(i + 1))
-      .y((_d, i) => y(effectPct[i]))
-    g.append('path')
-      .datum(Array.from({ length: n }, (_, i) => i))
-      .attr('fill', 'none').attr('stroke', '#0f172a').attr('stroke-width', 1.6)
-      .attr('d', line as d3.Line<number>)
-  }, [effectPct, ciHalfWidthPct, n, layers, traj, alpha, kState])
-
-  const decision = useMemo(() => {
-    if (n <= 0 || peekIndices.length === 0) return null
-    for (const look of peekIndices) {
-      const i = look - 1
-      const lo = effectPct[i] - ciHalfWidthPct[i]
-      const hi = effectPct[i] + ciHalfWidthPct[i]
-      if (lo > 0 || hi < 0) return { label: 'Yes' }
-    }
-    return { label: 'No' }
-  }, [effectPct, ciHalfWidthPct, n, peekIndices])
-
-  return (
-    <div className="bg-white border border-neutral-300 rounded-lg p-4 my-6">
-      {/* Controls: baseline rate, n, alpha, effect size, K, estimated power */}
-      {/* ... (see full source for complete JSX) */}
-
-      {/* SVG plot rendered by D3 */}
-      <svg ref={svgRef} viewBox="0 0 700 360" style={{ minWidth: 700, width: '100%' }} />
-
-      {/* Decision panel, peek-probability runner, simulation notes */}
-    </div>
-  )
-}
+// Harm-detect stopping is one-sided: only fires when the CI upper bound is below zero.
+// For all other methods, stopping is two-sided (CI excludes zero on either side).
+const isCross = layer === 'harm-detect'
+  ? (est + w < 0)                    // upper bound below zero => harm
+  : (est - w > 0 || est + w < 0)     // CI excludes zero (two-sided)
 `;
 import { Card, CardHeader, CardTitle, CardContent } from '../ui/Card'
 import { InlineMath, BlockMath } from '../ui/Math'
 import { BonferroniImpl } from './BonferroniImpl'
 import { PocockImpl } from './PocockImpl'
 import { ObfImpl } from './ObfImpl'
-import { ThreeSdImpl } from './ThreeSdImpl'
+import { HarmDetectionImpl } from './HarmDetectionImpl'
 import { ABTestSim } from '../shared/ABTestSim'
 
-export function Act3() {
+export function Act4() {
   const [showSimCode, setShowSimCode] = useState(false)
 
   return (
-    <div id="act3" className="max-w-3xl mx-auto px-4">
-      <h2 className="text-2xl font-bold mb-1">Act 3 — Alternative Methods</h2>
+    <div id="act4" className="max-w-3xl mx-auto px-4">
+      <h2 className="text-2xl font-bold mb-1">Act 4 — Alternative Methods</h2>
       <p className="text-neutral-700 mb-6">
         Three group sequential methods for controlling false positives under interim analyses,
-        for teams implementing sequential monitoring without a dedicated platform.
+        plus a one-sided guardrail harm detection rule — for teams implementing sequential
+        monitoring without a dedicated platform.
       </p>
 
         {/* ── Intuition ── */}
@@ -374,7 +66,7 @@ export function Act3() {
               <li><strong>Bonferroni:</strong> equal allocation, <InlineMath>{`\\alpha/K`}</InlineMath> per analysis. Conservative because it ignores correlation across analyses.</li>
               <li><strong>Pocock:</strong> constant critical value calibrated to the joint distribution of the test statistics across analyses. Tighter than Bonferroni.</li>
               <li><strong>O&apos;Brien&ndash;Fleming:</strong> front-loaded allocation. Very strict early, nearly standard at the final analysis.</li>
-              <li><strong>3 SD rule:</strong> informal rule using a fixed critical value of <InlineMath>{`z = 3.0`}</InlineMath> at every look, regardless of how many peeks are planned. Does not formally control the family-wise error rate, but is very conservative in practice.</li>
+              <li><strong>Harm detection (3 SD):</strong> a one-sided guardrail rule using a fixed critical value of <InlineMath>{`z = 3.0`}</InlineMath>. Stops only when the effect is more than 3 SDs in the harmful direction. Does not formally control the family-wise error rate, but is very conservative in practice.</li>
             </ul>
             <p>
               Eppo&apos;s approach (Act 2) does not require pre-specifying <InlineMath>{`K`}</InlineMath> &mdash;
@@ -430,14 +122,14 @@ export function Act3() {
           </Card>
           <Card className="bg-white border border-neutral-300">
             <CardHeader>
-              <CardTitle className="text-blue-700">Method 4: 3 Standard Deviations Rule</CardTitle>
+              <CardTitle className="text-red-700">Method 4: Guardrail Harm Detection</CardTitle>
             </CardHeader>
             <CardContent>
               <p className="text-sm text-neutral-600">
-                Simple informal rule: stop if the effect estimate is more than 3 SDs from zero. Fixed critical value, no pre-specification of K required.
+                One-sided guardrail rule: stop only if the effect is more than 3 SDs in the harmful direction. Fixed critical value, no pre-specification of K required.
               </p>
             </CardContent>
-            <ThreeSdImpl />
+            <HarmDetectionImpl />
           </Card>
         </div>
 
@@ -446,17 +138,17 @@ export function Act3() {
         <h4 className="font-semibold mb-2">How methods compare in simulation</h4>
         <div className="mb-10">
           <ABTestSim
-            layers={['fixed-ci', 'sequential-ci', 'pocock', 'obf', 'bonferroni', 'three-sd']}
+            layers={['fixed-ci', 'sequential-ci', 'pocock', 'obf', 'bonferroni', 'harm-detect']}
             showPeekStats
-            simulationTitle="Simulation 3: fixed-horizon, Eppo, and four alternative sequential methods."
+            simulationTitle="Simulation 4: fixed-horizon, Eppo, three group-sequential methods, and guardrail harm detection."
             defaultEffect={0}
             takeaway={<>
-              <strong>Result interpretation:</strong> click &ldquo;Run 1000 repetitions&rdquo; to estimate how often each method crosses significance under the current settings.<br /><br />
-              <strong>Bonferroni:</strong> most conservative among the DIY methods (lowest crossing share).<br />
-              <strong>Pocock:</strong> less conservative than Bonferroni with the same threshold at each look.<br />
-              <strong>O&apos;Brien&ndash;Fleming:</strong> very strict early, then close to classical thresholds at later looks.<br />
-              <strong>3 SD rule:</strong> very conservative at every look (z = 3.0 fixed); extremely low false positive rate but substantially reduced power.<br />
-              <strong>Sequential confidence interval (Eppo):</strong> anytime-valid and typically conservative in this setup.
+              <strong>Result interpretation:</strong> click &ldquo;Run 1000 repetitions&rdquo; to estimate how often each method crosses the threshold under the current settings.<br /><br />
+              <strong>Bonferroni:</strong> most conservative among the formal methods (lowest crossing share).<br />
+              <strong>Pocock:</strong> less conservative than Bonferroni; calibrated to the joint distribution across K analyses.<br />
+              <strong>O&apos;Brien&ndash;Fleming:</strong> very strict early, close to classical at the final analysis.<br />
+              <strong>Harm detection:</strong> one-sided — only fires when the effect is strongly negative. Under a null with no true harm, it rarely triggers regardless of K.<br />
+              <strong>Sequential confidence interval (Eppo):</strong> anytime-valid and typically close to 5% under continuous monitoring.
             </>}
           />
         </div>
@@ -474,7 +166,7 @@ export function Act3() {
                 <th className="border border-neutral-300 p-3 font-semibold text-neutral-900">Bonferroni</th>
                 <th className="border border-neutral-300 p-3 font-semibold text-neutral-900">Pocock</th>
                 <th className="border border-neutral-300 p-3 font-semibold text-neutral-900">OBF</th>
-                <th className="border border-neutral-300 p-3 font-semibold text-neutral-900">3 SD rule</th>
+                <th className="border border-neutral-300 p-3 font-semibold text-neutral-900">Harm detection</th>
                 <th className="border border-neutral-300 p-3 font-semibold text-neutral-900">Eppo</th>
               </tr>
             </thead>
@@ -492,7 +184,7 @@ export function Act3() {
                 <td className="border border-neutral-300 p-3 text-center">Constant</td>
                 <td className="border border-neutral-300 p-3 text-center">Constant</td>
                 <td className="border border-neutral-300 p-3 text-center">Decreasing</td>
-                <td className="border border-neutral-300 p-3 text-center">Constant (z=3.0)</td>
+                <td className="border border-neutral-300 p-3 text-center">One-sided (z=3.0)</td>
                 <td className="border border-neutral-300 p-3 text-center">Continuous</td>
               </tr>
               <tr>
@@ -543,6 +235,14 @@ export function Act3() {
                 <td className="border border-neutral-300 p-3 text-center">1 line</td>
                 <td className="border border-neutral-300 p-3 text-center">Platform</td>
               </tr>
+              <tr>
+                <td className="border border-neutral-300 p-3 font-medium">Purpose</td>
+                <td className="border border-neutral-300 p-3 text-center">General (two-sided)</td>
+                <td className="border border-neutral-300 p-3 text-center">General (two-sided)</td>
+                <td className="border border-neutral-300 p-3 text-center">General (two-sided)</td>
+                <td className="border border-neutral-300 p-3 text-center">Guardrail only</td>
+                <td className="border border-neutral-300 p-3 text-center">General (anytime)</td>
+              </tr>
             </tbody>
           </table>
         </div>
@@ -556,7 +256,7 @@ export function Act3() {
               <li><strong>Closest to Eppo in these simulations:</strong> in the conditions of this simulation, Pocock seems like the most reasonable choice among the alternative methods.</li>
               <li><strong>Avoid over-correction:</strong> Bonferroni is often too conservative, reducing sensitivity more than needed.</li>
               <li><strong>Avoid early over-triggering:</strong> O&apos;Brien&ndash;Fleming is very conservative early, so early stopping is rare in this setup.</li>
-              <li><strong>Avoid the 3 SD rule:</strong> the simulation shows it produces a very low false positive rate in this setup (well below 5%), but this comes at the cost of substantially reduced power &mdash; a fixed z&nbsp;=&nbsp;3.0 is 53% wider than the classical z&nbsp;=&nbsp;1.96 interval at every look including the final analysis. It also provides no formal FWER guarantee. In practice, a well-calibrated method like Pocock or OBF is strictly preferable.</li>
+              <li><strong>Harm detection is not a substitute for a two-sided method:</strong> it is a one-sided guardrail rule only. Because it stops only for harm, it will never flag a beneficial effect as significant. Use it as a safety net alongside a primary analysis, not as the primary analysis itself.</li>
             </ul>
             <p>
               That said, we recommend running simulations, A/A tests, or analysing historical tests in each domain, using its specific circumstances (i.e. KPIs and their standard deviations) before deciding which alternative method to use in each domain.
@@ -573,7 +273,7 @@ export function Act3() {
         </h3>
 
         <p className="mb-4 text-neutral-700">
-          Act 2 introduced the hybrid approach: sequential confidence interval on guardrail KPIs for early
+          Act 3 introduced the hybrid approach: sequential confidence interval on guardrail KPIs for early
           abort, standard confidence interval on the primary KPI at the planned end date. Below is how to
           implement it using any of the three correction methods above.
         </p>
@@ -662,11 +362,12 @@ export function Act3() {
           {showSimCode && (
             <div className="mt-3">
               <p className="text-sm text-neutral-600 mb-2">
-                All three simulations on this page use the same component:{' '}
-                <code className="bg-neutral-200 rounded px-1">ABTestSim.tsx</code>. It is called
+                All simulations on this page use the shared{' '}
+                <code className="bg-neutral-200 rounded px-1">ABTestSim.tsx</code> component, called
                 with different <code className="bg-neutral-200 rounded px-1">layers</code> props
-                (Act 1: fixed-ci only; Act 2: fixed-ci + sequential-ci; Act 3: all six methods).
-                The full TypeScript source is shown below.
+                (Act 1: <code className="bg-neutral-200 rounded px-1">fixed-ci</code>; Act 2:{' '}
+                <code className="bg-neutral-200 rounded px-1">fixed-ci, sequential-ci</code>; Act 4: all five methods).
+                The key layer definitions and stopping logic are shown below.
               </p>
               <pre className="bg-neutral-100 border border-neutral-300 rounded-lg p-4 text-xs overflow-x-auto whitespace-pre">
                 {SIM_CODE}

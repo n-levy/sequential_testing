@@ -10,7 +10,7 @@ export type SimLayer =
   | 'pocock'
   | 'obf'
   | 'bonferroni'
-  | 'three-sd'
+  | 'harm-detect'
 
 type KProp = number;
 interface ABTestSimProps {
@@ -18,20 +18,21 @@ interface ABTestSimProps {
   showPeekStats?: boolean
   takeaway?: ReactNode
   simulationTitle?: string
-  defaultEffect?: number // difference in means between B and A
+  defaultEffect?: number
   defaultN?: number
   showPowerControl?: boolean
-  K?: KProp // number of peeks for group sequential methods
-  hideEffectStats?: boolean // hide sample effect and CI half-width boxes
+  K?: KProp
+  hideEffectStats?: boolean
+  showMeanEffects?: boolean // show mean |effect| columns in the 1000-repetitions table
 }
 
 const Z_975 = 1.959964
-const PEEK_N_SIMS = 1000 // number of re-randomizations used to estimate crossing probabilities
+const PEEK_N_SIMS = 1000
 const ALPHA_MIN = 0.01
 const ALPHA_MAX = 0.1
 const ALPHA_DEFAULT = 0.05
+const DURATION_DEFAULT = 2 // weeks
 
-// Normal quantile approximation
 function erfinv(x: number) {
   const a = 0.147
   const ln = Math.log(1 - x * x)
@@ -73,12 +74,12 @@ function clampProbability(p: number): number {
 }
 
 const LAYER_STYLE: Record<SimLayer, { color: string; label: string }> = {
-  'fixed-ci':        { color: '#ef4444', label: 'Standard 95% CI' },
-  'sequential-ci':   { color: '#2563eb', label: 'Sequential CI (Eppo)' },
-  'pocock':          { color: '#f59e0b', label: 'Pocock' },
-  'obf':             { color: '#1d4ed8', label: "O'Brien–Fleming" },
-  'bonferroni':      { color: '#0d9488', label: 'Bonferroni' },
-  'three-sd':        { color: '#7c3aed', label: '3 SD rule' },
+  'fixed-ci':      { color: '#ef4444', label: 'Standard 95% confidence interval' },
+  'sequential-ci': { color: '#2563eb', label: 'Sequential confidence interval (Eppo)' },
+  'pocock':        { color: '#f59e0b', label: 'Pocock' },
+  'obf':           { color: '#1d4ed8', label: "O'Brien–Fleming" },
+  'bonferroni':    { color: '#0d9488', label: 'Bonferroni' },
+  'harm-detect':   { color: '#dc2626', label: 'Guardrail harm detection (3 SD)' },
 }
 
 function mulberry32(seed: number) {
@@ -90,7 +91,6 @@ function mulberry32(seed: number) {
   }
 }
 
-/** Simulate running difference in means for A/B test with relative lift on a control baseline. */
 function simulateABTestTrajectory(n: number, relativeLift: number, controlRate: number, seed: number) {
   const rand = mulberry32(seed)
   const meansA = new Float64Array(n)
@@ -105,7 +105,6 @@ function simulateABTestTrajectory(n: number, relativeLift: number, controlRate: 
     const k = i + 1
     meansA[i] = sumA / k
     meansB[i] = sumB / k
-    // Pooled variance for difference in means
     const vA = Math.max(meansA[i] * (1 - meansA[i]), 1e-4)
     const vB = Math.max(meansB[i] * (1 - meansB[i]), 1e-4)
     ses[i] = Math.sqrt((vA + vB) / k)
@@ -123,6 +122,7 @@ export function ABTestSim({
   showPowerControl = true,
   K: KProp = 6,
   hideEffectStats = false,
+  showMeanEffects = false,
 }: ABTestSimProps) {
   const [effect, setEffect] = useState(defaultEffect)
   const [n, setN] = useState(defaultN)
@@ -130,6 +130,7 @@ export function ABTestSim({
   const [baselineRate, setBaselineRate] = useState(0.1)
   const [seed, setSeed] = useState(1)
   const [kState, setK] = useState(KProp)
+  const [durationWeeks, setDurationWeeks] = useState(DURATION_DEFAULT)
   const [peekProbs, setPeekProbs] = useState<Record<string, number> | null>(null)
   const [meanEstWhenSig, setMeanEstWhenSig] = useState<Record<string, number> | null>(null)
   const [meanEstAtEndWhenSig, setMeanEstAtEndWhenSig] = useState<Record<string, number> | null>(null)
@@ -137,14 +138,13 @@ export function ABTestSim({
   const [showSimulationNotes, setShowSimulationNotes] = useState(false)
   const svgRef = useRef<SVGSVGElement | null>(null)
 
-  // Clamp effect to [-0.5, 0.5]
   const clampedEffect = Math.max(-0.5, Math.min(0.5, effect))
   const effectiveEffect = clampedEffect
   const effectPercent = Math.round(effectiveEffect * 100)
   const clampedBaseline = clampProbability(baselineRate)
   const peekIndices = useMemo(() => getPeekIndices(n, kState), [n, kState])
+  const daysTotal = durationWeeks * 7
 
-  // Classical power approximation for two-sided difference-in-proportions test.
   const estimatedPower = useMemo<number | null>(() => {
     if (n <= 0) return null
     if (Math.abs(clampedEffect) < 1e-12) return null
@@ -159,7 +159,6 @@ export function ABTestSim({
     return Math.max(0, Math.min(1, powerVal))
   }, [n, clampedEffect, alpha, clampedBaseline])
 
-  // Compute the probability of crossing the CI at any point for all selected layers
   useEffect(() => {
     if (!showPeekStats || runSimulationsTrigger === 0) return;
     const results: Record<string, number> = {};
@@ -177,7 +176,6 @@ export function ABTestSim({
         let lookPtr = 0
         const lastLookPtr = peekIndices.length - 1
         for (let i = 0; i < n && lookPtr <= lastLookPtr; ++i) {
-          // Evaluate only at exactly k equal-interval peeks.
           if ((i + 1) !== peekIndices[lookPtr]) continue;
           const denom = t.meansA[i];
           const est = denom !== 0 ? 100 * (t.meansB[i] - denom) / denom : 0;
@@ -190,7 +188,7 @@ export function ABTestSim({
             const logTerm = Math.log((t_i + nu) / (nu * alpha));
             w = denom !== 0 ? 100 * t.ses[i] * Math.sqrt((t_i + nu) / t_i * logTerm) / denom : 0;
           } else if (layer === 'pocock') {
-            const cP = 2.41; // good approx for K≈6
+            const cP = 2.41;
             w = denom !== 0 ? 100 * t.ses[i] * cP / denom : 0;
           } else if (layer === 'obf') {
             const k = Math.max(1, Math.round((i + 1) / n * kState));
@@ -199,10 +197,14 @@ export function ABTestSim({
           } else if (layer === 'bonferroni') {
             const z = normInv(1 - alpha / (2 * kState));
             w = denom !== 0 ? 100 * t.ses[i] * z / denom : 0;
-          } else if (layer === 'three-sd') {
+          } else if (layer === 'harm-detect') {
             w = denom !== 0 ? 100 * t.ses[i] * 3.0 / denom : 0;
           }
-          if (est - w > 0 || est + w < 0) {
+          // harm-detect: one-sided — only cross if CI upper bound is below zero (harm detected)
+          const isCross = layer === 'harm-detect'
+            ? (est + w < 0)
+            : (est - w > 0 || est + w < 0);
+          if (isCross) {
             crossed = true;
             estAtCrossing = est;
             break
@@ -212,7 +214,6 @@ export function ABTestSim({
         if (crossed) {
           count++;
           sumAbsEstWhenSig += Math.abs(estAtCrossing);
-          // Effect estimate at the end of the test (max n), regardless of when crossing occurred
           const denomEnd = t.meansA[n - 1];
           const estAtEnd = denomEnd !== 0 ? 100 * (t.meansB[n - 1] - denomEnd) / denomEnd : 0;
           sumAbsEstAtEndWhenSig += Math.abs(estAtEnd);
@@ -227,35 +228,31 @@ export function ABTestSim({
     setMeanEstAtEndWhenSig(meanEstAtEndResults);
   }, [showPeekStats, layers, n, clampedEffect, effectiveEffect, clampedBaseline, seed, alpha, kState, runSimulationsTrigger, peekIndices]);
 
-  // Trajectory recomputed automatically whenever the controls change.
   const traj = useMemo(
     () => simulateABTestTrajectory(n, effectiveEffect, clampedBaseline, seed),
     [n, effectiveEffect, clampedBaseline, seed]
   )
 
-  // Compute the running effect in percent: (meanB - meanA) / meanA
   const effectPct = useMemo(() => {
     const arr = new Float64Array(n)
     for (let i = 0; i < n; i++) {
       const denom = traj.meansA[i]
       arr[i] = denom !== 0 ? 100 * (traj.meansB[i] - denom) / denom : 0
     }
-    if (n > 0) arr[0] = 0 // Force first value to zero
+    if (n > 0) arr[0] = 0
     return arr
   }, [traj, n])
 
-  // Compute the per-step CI half-width for the fixed CI (in percent)
   const ciHalfWidthPct = useMemo(() => {
     const arr = new Float64Array(n)
     for (let i = 0; i < n; i++) {
       const denom = traj.meansA[i]
       arr[i] = denom !== 0 ? 100 * Z_975 * traj.ses[i] / denom : 0
     }
-    if (n > 0) arr[0] = 0 // Force first value to zero
+    if (n > 0) arr[0] = 0
     return arr
   }, [traj, n])
 
-  // ── Render the plot ──
   useEffect(() => {
     if (!svgRef.current) return
     const svg = d3.select(svgRef.current)
@@ -265,31 +262,42 @@ export function ABTestSim({
     const margin = { top: 20, right: 16, bottom: 44, left: 56 }
     const innerW = W - margin.left - margin.right
     const innerH = H - margin.top - margin.bottom
-    // Y-axis: force to -100 to +100
     const yMin = -100
     const yMax = 100
-    const xUpper = Math.max(1, n)
-    const x = d3.scaleLinear().domain([0, xUpper]).range([0, innerW])
+    // x-axis in days
+    const x = d3.scaleLinear().domain([0, daysTotal]).range([0, innerW])
     const y = d3.scaleLinear().domain([yMin, yMax]).range([innerH, 0])
     const g = svg.append('g').attr('transform', `translate(${margin.left},${margin.top})`)
     const xAxisY = y(0)
-    // Axes
-    g.append('g').attr('transform', `translate(0,${xAxisY})`).call(d3.axisBottom(x).ticks(6).tickFormat(d => `${Math.round(d as number)}`))
+
+    // Draw x-axis with day ticks; always include a tick at 14 days (2 weeks)
+    const tickSet = new Set<number>()
+    const approxTicks = d3.ticks(0, daysTotal, 6)
+    approxTicks.forEach(t => tickSet.add(t))
+    tickSet.add(14) // always show 2-week mark
+    const tickValues = Array.from(tickSet).filter(t => t >= 0 && t <= daysTotal).sort((a, b) => a - b)
+
+    g.append('g')
+      .attr('transform', `translate(0,${xAxisY})`)
+      .call(d3.axisBottom(x).tickValues(tickValues).tickFormat(d => `${Math.round(d as number)}`))
+
     g.append('g').call(d3.axisLeft(y).ticks(6).tickFormat(d => `${Math.round(d as number)}%`))
     g.append('text')
       .attr('transform', `translate(${innerW / 2}, ${innerH + 34})`)
       .style('text-anchor', 'middle').style('font-size', '12px').style('fill', '#525252')
-      .text('Number of users (n)')
+      .text('Time (days)')
     g.append('text')
       .attr('transform', 'rotate(-90)')
       .attr('x', -innerH / 2).attr('y', -42)
       .style('text-anchor', 'middle').style('font-size', '12px').style('fill', '#525252')
       .text('Effect (%)')
-    // Reference line: null hypothesis at 0
+
+    // Reference line at 0
     g.append('line')
       .attr('x1', 0).attr('x2', innerW)
       .attr('y1', y(0)).attr('y2', y(0))
       .attr('stroke', '#525252').attr('stroke-width', 1).attr('stroke-dasharray', '4 3')
+
     g.append('text')
       .attr('x', x(0))
       .attr('y', xAxisY + 16)
@@ -297,9 +305,13 @@ export function ABTestSim({
       .style('font-size', '11px')
       .style('fill', '#525252')
       .text('0')
-    // CI band
+
+    // Helper: convert user index i to x-day coordinate
+    const dayOf = (i: number) => n > 0 ? (i + 1) * daysTotal / n : 0
+
+    // CI band for fixed-ci (always rendered as base layer)
     const area = d3.area<number>()
-      .x((_d, i) => x(i + 1))
+      .x((_d, i) => x(dayOf(i)))
       .y0((_d, i) => y(effectPct[i] - ciHalfWidthPct[i]))
       .y1((_d, i) => y(effectPct[i] + ciHalfWidthPct[i]))
       .defined((_d, i) => i >= 5 && Number.isFinite(ciHalfWidthPct[i]))
@@ -314,7 +326,7 @@ export function ABTestSim({
 
     if (layers.includes('sequential-ci')) {
       const seqArea = d3.area<number>()
-        .x((_d, i) => x(i + 1))
+        .x((_d, i) => x(dayOf(i)))
         .y0((_d, i) => {
           const denom = traj.meansA[i]
           const nu = n * 0.25
@@ -335,7 +347,6 @@ export function ABTestSim({
             : 0
           return y(effectPct[i] + w)
         })
-
       g.append('path')
         .datum(Array.from({ length: n }, (_, i) => i))
         .attr('fill', LAYER_STYLE['sequential-ci'].color)
@@ -346,11 +357,10 @@ export function ABTestSim({
         .attr('d', seqArea as d3.Area<number>)
     }
 
-    // Pocock CI band
     if (layers.includes('pocock')) {
       const cP = 2.41
       const pocockArea = d3.area<number>()
-        .x((_d, i) => x(i + 1))
+        .x((_d, i) => x(dayOf(i)))
         .y0((_d, i) => {
           const denom = traj.meansA[i]
           const w = denom !== 0 ? 100 * traj.ses[i] * cP / denom : 0
@@ -361,7 +371,6 @@ export function ABTestSim({
           const w = denom !== 0 ? 100 * traj.ses[i] * cP / denom : 0
           return y(effectPct[i] + w)
         })
-
       g.append('path')
         .datum(Array.from({ length: n }, (_, i) => i))
         .attr('fill', LAYER_STYLE['pocock'].color)
@@ -372,10 +381,9 @@ export function ABTestSim({
         .attr('d', pocockArea as d3.Area<number>)
     }
 
-    // O'Brien–Fleming CI band
     if (layers.includes('obf')) {
       const obfArea = d3.area<number>()
-        .x((_d, i) => x(i + 1))
+        .x((_d, i) => x(dayOf(i)))
         .y0((_d, i) => {
           const denom = traj.meansA[i]
           const k = Math.max(1, Math.round((i + 1) / n * kState))
@@ -390,7 +398,6 @@ export function ABTestSim({
           const w = denom !== 0 ? 100 * traj.ses[i] * z / denom : 0
           return y(effectPct[i] + w)
         })
-
       g.append('path')
         .datum(Array.from({ length: n }, (_, i) => i))
         .attr('fill', LAYER_STYLE['obf'].color)
@@ -401,11 +408,10 @@ export function ABTestSim({
         .attr('d', obfArea as d3.Area<number>)
     }
 
-    // Bonferroni CI band
     if (layers.includes('bonferroni')) {
       const z = normInv(1 - alpha / (2 * kState))
       const bonfArea = d3.area<number>()
-        .x((_d, i) => x(i + 1))
+        .x((_d, i) => x(dayOf(i)))
         .y0((_d, i) => {
           const denom = traj.meansA[i]
           const w = denom !== 0 ? 100 * traj.ses[i] * z / denom : 0
@@ -416,7 +422,6 @@ export function ABTestSim({
           const w = denom !== 0 ? 100 * traj.ses[i] * z / denom : 0
           return y(effectPct[i] + w)
         })
-
       g.append('path')
         .datum(Array.from({ length: n }, (_, i) => i))
         .attr('fill', LAYER_STYLE['bonferroni'].color)
@@ -427,10 +432,9 @@ export function ABTestSim({
         .attr('d', bonfArea as d3.Area<number>)
     }
 
-    // 3 SD rule CI band
-    if (layers.includes('three-sd')) {
-      const threeSdArea = d3.area<number>()
-        .x((_d, i) => x(i + 1))
+    if (layers.includes('harm-detect')) {
+      const harmArea = d3.area<number>()
+        .x((_d, i) => x(dayOf(i)))
         .y0((_d, i) => {
           const denom = traj.meansA[i]
           const w = denom !== 0 ? 100 * traj.ses[i] * 3.0 / denom : 0
@@ -441,20 +445,19 @@ export function ABTestSim({
           const w = denom !== 0 ? 100 * traj.ses[i] * 3.0 / denom : 0
           return y(effectPct[i] + w)
         })
-
       g.append('path')
         .datum(Array.from({ length: n }, (_, i) => i))
-        .attr('fill', LAYER_STYLE['three-sd'].color)
-        .attr('fill-opacity', 0.12)
-        .attr('stroke', LAYER_STYLE['three-sd'].color)
+        .attr('fill', LAYER_STYLE['harm-detect'].color)
+        .attr('fill-opacity', 0.10)
+        .attr('stroke', LAYER_STYLE['harm-detect'].color)
         .attr('stroke-width', 1.2)
-        .attr('stroke-opacity', 0.8)
-        .attr('d', threeSdArea as d3.Area<number>)
+        .attr('stroke-opacity', 0.7)
+        .attr('d', harmArea as d3.Area<number>)
     }
 
     // Mean effect trajectory
     const line = d3.line<number>()
-      .x((_d, i) => x(i + 1))
+      .x((_d, i) => x(dayOf(i)))
       .y((_d, i) => y(effectPct[i]))
     g.append('path')
       .datum(Array.from({ length: n }, (_, i) => i))
@@ -462,9 +465,8 @@ export function ABTestSim({
       .attr('stroke', '#0f172a')
       .attr('stroke-width', 1.6)
       .attr('d', line as d3.Line<number>)
-  }, [effectPct, ciHalfWidthPct, n, layers, traj, alpha, kState])
+  }, [effectPct, ciHalfWidthPct, n, layers, traj, alpha, kState, daysTotal])
 
-  // Decision at the final time step (in percent)
   const decision = useMemo(() => {
     if (n <= 0) return null
     if (peekIndices.length === 0) return null
@@ -478,6 +480,8 @@ export function ABTestSim({
     }
     return { label: 'No' }
   }, [effectPct, ciHalfWidthPct, n, peekIndices])
+
+  const usersPerDay = n > 0 && daysTotal > 0 ? Math.round(n / daysTotal) : 0
 
   return (
     <div className="bg-white border border-neutral-300 rounded-lg p-4 my-6">
@@ -524,9 +528,7 @@ export function ABTestSim({
               aria-hidden
             />
           </div>
-          <div className="text-[11px] text-neutral-500 mt-1">
-            Default: α = 0.05
-          </div>
+          <div className="text-[11px] text-neutral-500 mt-1">Default: α = 0.05</div>
         </div>
         <div className="w-full sm:w-[210px]">
           <label className="block text-xs font-medium text-neutral-600 mb-1">
@@ -544,9 +546,7 @@ export function ABTestSim({
               aria-hidden
             />
           </div>
-          <div className="text-[11px] text-neutral-500 mt-1">
-            Default: effect size = 0%
-          </div>
+          <div className="text-[11px] text-neutral-500 mt-1">Default: effect size = 0%</div>
         </div>
         <div className="w-full sm:w-[210px]">
           <label className="block text-xs font-medium text-neutral-600 mb-1">
@@ -562,6 +562,27 @@ export function ABTestSim({
             }}
             className="w-full"
           />
+        </div>
+        <div className="w-full sm:w-[210px]">
+          <label className="block text-xs font-medium text-neutral-600 mb-1">
+            Experiment duration (weeks) <span className="font-mono">({durationWeeks})</span>
+          </label>
+          <div className="relative">
+            <input
+              type="range" min={1} max={8} step={1}
+              value={durationWeeks}
+              onChange={e => setDurationWeeks(parseInt(e.target.value, 10))}
+              className="w-full"
+            />
+            <div
+              className="pointer-events-none absolute top-0 bottom-0 border-l border-neutral-500"
+              style={{ left: `${((DURATION_DEFAULT - 1) / (8 - 1)) * 100}%` }}
+              aria-hidden
+            />
+          </div>
+          <div className="text-[11px] text-neutral-500 mt-1">
+            Default: 2 weeks · {usersPerDay} users/day per group
+          </div>
         </div>
         {showPowerControl && (
           <div className="w-full sm:w-[300px]">
@@ -601,7 +622,6 @@ export function ABTestSim({
           ))}
         </div>
       </div>
-      {/* Plot */}
       <div style={{ width: '100%', overflowX: 'auto' }}>
         <svg
           ref={svgRef}
@@ -610,7 +630,6 @@ export function ABTestSim({
           className="w-full"
         />
       </div>
-      {/* Stats / decision panel */}
       {decision && (
         <div className="mt-4">
           <div className="bg-neutral-50 border border-neutral-200 rounded-lg p-3">
@@ -626,7 +645,6 @@ export function ABTestSim({
           {takeaway}
         </div>
       )}
-      {/* Probability of crossing CI at some point for all layers */}
       {showPeekStats && (
         <div className="mb-8 mt-4">
           <div className="bg-white border border-blue-400 rounded-lg p-5 text-center">
@@ -651,15 +669,19 @@ export function ABTestSim({
             {peekProbs === null ? (
               <div className="mt-2 text-sm text-neutral-500">Click the button to run simulations</div>
             ) : Object.keys(peekProbs).length === 1 ? (
-              <span className="ml-2 text-blue-700 font-mono" id="peek-prob-box">{(Object.values(peekProbs)[0] * 100).toFixed(1)}%</span>
+              <span className="ml-2 text-blue-700 font-mono">{(Object.values(peekProbs)[0] * 100).toFixed(1)}%</span>
             ) : (
               <table className="mx-auto mt-2 text-sm">
                 <thead>
                   <tr>
                     <th className="px-3 py-1 text-left">Method</th>
                     <th className="px-3 py-1 text-right">Share crossing</th>
-                    <th className="px-3 py-1 text-right">Mean |effect| when significant</th>
-                    <th className="px-3 py-1 text-right">Mean |effect| at end of test when significant</th>
+                    {showMeanEffects && (
+                      <>
+                        <th className="px-3 py-1 text-right">Mean |effect| when significant</th>
+                        <th className="px-3 py-1 text-right">Mean |effect| at end of test when significant</th>
+                      </>
+                    )}
                   </tr>
                 </thead>
                 <tbody>
@@ -667,12 +689,16 @@ export function ABTestSim({
                     <tr key={layer}>
                       <td className="px-3 py-1 text-left">{LAYER_STYLE[layer].label}{['pocock','obf','bonferroni'].includes(layer) ? ` (K=${kState})` : ''}</td>
                       <td className="px-3 py-1 text-right text-blue-700 font-mono">{(peekProbs[layer] * 100).toFixed(1)}%</td>
-                      <td className="px-3 py-1 text-right text-blue-700 font-mono">
-                        {meanEstWhenSig && peekProbs[layer] > 0 ? `${meanEstWhenSig[layer].toFixed(1)}%` : '—'}
-                      </td>
-                      <td className="px-3 py-1 text-right text-blue-700 font-mono">
-                        {meanEstAtEndWhenSig && peekProbs[layer] > 0 ? `${meanEstAtEndWhenSig[layer].toFixed(1)}%` : '—'}
-                      </td>
+                      {showMeanEffects && (
+                        <>
+                          <td className="px-3 py-1 text-right text-blue-700 font-mono">
+                            {meanEstWhenSig && peekProbs[layer] > 0 ? `${meanEstWhenSig[layer].toFixed(1)}%` : '—'}
+                          </td>
+                          <td className="px-3 py-1 text-right text-blue-700 font-mono">
+                            {meanEstAtEndWhenSig && peekProbs[layer] > 0 ? `${meanEstAtEndWhenSig[layer].toFixed(1)}%` : '—'}
+                          </td>
+                        </>
+                      )}
                     </tr>
                   ))}
                 </tbody>
@@ -695,15 +721,17 @@ export function ABTestSim({
               <div>
                 <h5 className="font-semibold text-neutral-900 mb-2">Assumptions</h5>
                 <ul className="list-disc list-inside space-y-1">
-                  <li>Binary outcome metric (Bernoulli), modeled as conversion in each arm.</li>
+                  <li>Binary outcome metric (Bernoulli), modeled as conversion in each arm. For example: making an order in the first visit during the test.</li>
                   <li>Uplift is modeled as relative lift on baseline: <InlineMath>{`\\text{uplift} = (\\bar p_B - \\bar p_A)/\\bar p_A`}</InlineMath>, with generator <InlineMath>{`p_B = p_A(1 + \\text{lift})`}</InlineMath>.</li>
                   <li>Null hypothesis is <InlineMath>{`H_0: \\text{lift} = 0`}</InlineMath> (equivalently, no treatment effect).</li>
                   <li>Standard deviation follows Bernoulli variance in each arm: <InlineMath>{`\\sigma_A = \\sqrt{p_A(1-p_A)},\\ \\sigma_B = \\sqrt{p_B(1-p_B)}`}</InlineMath>, so <InlineMath>{`\\mathrm{SE}(\\hat p_B-\\hat p_A)=\\sqrt{(\\sigma_A^2+\\sigma_B^2)/n}`}</InlineMath> where <InlineMath>{`n`}</InlineMath> is the per-group sample size.</li>
                   <li>Equal traffic split: 50% control and 50% treatment.</li>
                   <li>Control conversion baseline is user-specified via slider.</li>
+                  <li>A constant number of users joins the experiment each day. For example, if n = 1,400 and the experiment lasts 2 weeks (14 days), then 1,400 / 14 = 100 users per group join per day.</li>
+                  <li>In reality, the number of unique users entering each day may decrease over time as repeat visitors are excluded. This simplification does not affect the key insights the simulation aims to illustrate.</li>
                   <li>Independent users/events within and across arms (no clustering or interference).</li>
                   <li>No missing data, no delayed outcomes, and no sample-ratio mismatch.</li>
-                  <li>Two-sided significance check at each look: confidence interval crossing zero is treated as significant.</li>
+                  <li>Two-sided significance check at each look: confidence interval crossing zero is treated as significant. Exception: the guardrail harm detection method is one-sided — it only triggers when the confidence interval lies entirely below zero.</li>
                   <li>Peeks occur at exactly K equal time intervals over the test duration.</li>
                 </ul>
               </div>

@@ -141,7 +141,7 @@ export function Act1() {
             <InlineMath>{`\\hat{u}_n \\pm 100 \\cdot \\frac{\\widehat{\\mathrm{SE}}_n}{\\bar{X}_{A,n}} \\cdot 1.96`}</InlineMath>
           </p>
           <ul className="mb-3 text-sm text-neutral-600 space-y-1 ml-4 list-disc">
-            <li><InlineMath>{`1.96`}</InlineMath> — the critical value for a 95% confidence interval (the 97.5th percentile of the standard Normal distribution)</li>
+            <li><InlineMath>{`1.96`}</InlineMath> — the critical value for a 95% confidence interval. For a two-sided test at level <InlineMath>{`\\alpha = 0.05`}</InlineMath>, we reject when the test statistic falls in either tail of the standard Normal distribution. We want to leave 2.5% probability in each tail, so we need the 97.5th percentile: <InlineMath>{`\\Phi^{-1}(0.975) = 1.96`}</InlineMath>. In other words, 95% of the standard Normal distribution lies between <InlineMath>{`{-1.96}`}</InlineMath> and <InlineMath>{`{+1.96}`}</InlineMath>.</li>
             <li><InlineMath>{`\\widehat{\\mathrm{SE}}_n`}</InlineMath> — estimated standard error of the <em>absolute</em> difference in means <InlineMath>{`(\\bar{X}_{B,n} - \\bar{X}_{A,n})`}</InlineMath>, equal to <InlineMath>{`\\sqrt{(\\hat{\\sigma}_A^2 + \\hat{\\sigma}_B^2)/n}`}</InlineMath>; dividing by <InlineMath>{`\\bar{X}_{A,n}`}</InlineMath> converts this to the SE of the relative uplift (delta method)</li>
             <li><InlineMath>{`\\hat{\\sigma}_A^2,\\, \\hat{\\sigma}_B^2`}</InlineMath> — estimated variance of outcomes in the control and treatment groups</li>
           </ul>
@@ -154,23 +154,8 @@ export function Act1() {
           <ul className="mb-3 text-sm text-neutral-600 space-y-1 ml-4 list-disc">
             <li><InlineMath>{`\\alpha`}</InlineMath> — the significance level; the maximum acceptable probability of a false positive (here 5%)</li>
           </ul>
-          <p className="mb-3 text-neutral-800">
-            If we repeatedly check the data, we effectively run many tests. If the looks were independent, the probability of at least one false positive in <InlineMath>{`K`}</InlineMath> looks would be:
-          </p>
-          <p className="mb-3">
-            <InlineMath>{`\\Pr(\\text{at least one false positive in }K\\text{ looks}) = 1-(1-\\alpha)^K`}</InlineMath>
-          </p>
-          <ul className="mb-3 text-sm text-neutral-600 space-y-1 ml-4 list-disc">
-            <li><InlineMath>{`K`}</InlineMath> — total number of times we look at (peek at) the data during the experiment</li>
-          </ul>
-          <p className="mb-3 text-neutral-800">
-            A useful approximation for small <InlineMath>{`\\alpha`}</InlineMath>:
-          </p>
-          <p className="mb-3">
-            <InlineMath>{`1-(1-\\alpha)^K \\approx K\\alpha`}</InlineMath>
-          </p>
           <p className="text-neutral-800">
-            Real interim looks are positively correlated, so the exact value is lower than the independence formula, but still substantially above <InlineMath>{`\\alpha`}</InlineMath>. That is why repeated peeking inflates Type I error.
+            Real interim looks are positively correlated. Even so, repeated peeking still substantially inflates the Type I error above <InlineMath>{`\\alpha`}</InlineMath> — that is why peeking with standard confidence intervals is problematic.
           </p>
         </div>
       </DisplayMathBox>

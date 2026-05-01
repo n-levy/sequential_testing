@@ -3,7 +3,10 @@ import { ActSidebar } from '../../components/ActSidebar'
 import { Hero } from '../../components/Hero'
 import { Act1 } from '../../components/act1/Act1'
 import { Act2 } from '../../components/act2/Act2'
-import { Act3 } from '../../components/act3/Act3'
+import { ActHybrid } from '../../components/act_hybrid/ActHybrid'
+import { Act4 } from '../../components/act3/Act3'
+import { ActMagnitudeError } from '../../components/act5/ActMagnitudeError'
+import { FAQ } from '../../components/FAQ'
 import { Summary } from '../../components/Summary'
 import { MathReference } from '../../components/MathReference'
 import { References } from '../../components/References'
@@ -14,8 +17,11 @@ const FOCUSED_ITEMS = [
   { id: '_home', label: 'Home' },
   { id: 'intro', label: 'Introduction' },
   { id: 'act1', label: 'Act 1 – Peeking Problem' },
-  { id: 'act2', label: 'Act 2 – Eppo Solution' },
-  { id: 'act3', label: 'Act 3 – Alternative Methods' },
+  { id: 'act2', label: 'Act 2 – Eppo Solution (2022)' },
+  { id: 'act3-hybrid', label: 'Act 3 – Hybrid Approach' },
+  { id: 'act4', label: 'Act 4 – Alternative Methods' },
+  { id: 'act5', label: 'Act 5 – Magnitude Error' },
+  { id: 'faq', label: 'FAQ' },
   { id: 'summary', label: 'Summary' },
   { id: 'math-reference', label: 'Math Reference' },
   { id: 'references', label: 'References' },
@@ -32,7 +38,10 @@ export default function FocusedVersion() {
         <Hero />
         <Act1 />
         <Act2 />
-        <Act3 />
+        <ActHybrid />
+        <Act4 />
+        <ActMagnitudeError />
+        <FAQ />
         <Summary />
         <MathReference />
         <References />
