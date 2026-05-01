@@ -149,6 +149,46 @@ export function ActHybrid() {
         — this is the statistical power that would have been sacrificed with a fully sequential approach.
       </div>
 
+      {/* Sub-section: One-tailed decisions */}
+      <div className="border-t border-neutral-200 pt-6 mb-6">
+        <h3 className="text-lg font-bold mb-3 text-neutral-900">
+          Both decisions are effectively one-tailed tests at α/2
+        </h3>
+        <p className="text-neutral-700 mb-4">
+          The confidence intervals in the hybrid approach are <em>two-sided</em> — they have both an
+          upper and a lower bound. But the decision rules are <em>one-directional</em>:
+        </p>
+        <ul className="list-disc pl-5 space-y-3 text-neutral-700 mb-4">
+          <li>
+            <strong>Guardrail KPIs — abort for harm only.</strong> You abort the experiment only if
+            the sequential confidence interval is entirely <em>below</em> zero (i.e., the entire
+            interval lies on the harmful side). You never abort because the interval is entirely
+            above zero. This means the false-abort probability is the lower-tail probability of the
+            two-sided interval: α/2, not α.
+          </li>
+          <li>
+            <strong>Primary KPI — ship for benefit only.</strong> You ship the feature only if the
+            standard confidence interval at the end of the experiment is entirely <em>above</em>{' '}
+            zero (i.e., a beneficial effect is confirmed). You do not declare success if the interval
+            is entirely below zero. This means the false-ship probability is the upper-tail
+            probability of the two-sided interval: α/2, not α.
+          </li>
+        </ul>
+        <div className="bg-yellow-50 border border-yellow-300 rounded-lg p-4 mb-4">
+          <p className="text-neutral-800 font-semibold mb-2">Practical implication</p>
+          <p className="text-neutral-700">
+            With a conventional two-sided 95% confidence interval (α = 0.05), the effective
+            false positive rate for each decision is <strong>2.5%</strong>, not 5%. The hybrid
+            approach is therefore more conservative than teams often realise.
+          </p>
+          <p className="text-neutral-700 mt-2">
+            Teams that want a 5% false positive rate for the shipping decision can either use a
+            one-sided test at α = 5% explicitly, or — equivalently — widen the two-sided confidence
+            interval to 90% (α = 0.10). Both give the same critical value.
+          </p>
+        </div>
+      </div>
+
       {/* Sub-section: What if primary KPI is also a guardrail? */}
       <div className="border-t border-neutral-200 pt-6 mb-6">
         <h3 className="text-lg font-bold mb-3 text-neutral-900">
