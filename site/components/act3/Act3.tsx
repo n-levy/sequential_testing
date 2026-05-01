@@ -27,7 +27,7 @@ const isCross = layer === 'harm-detect'
   ? (est + w < 0)                    // upper bound below zero => harm
   : (est - w > 0 || est + w < 0)     // CI excludes zero (two-sided)
 `;
-import { Card, CardHeader, CardTitle, CardContent } from '../ui/Card'
+import { Card } from '../ui/Card'
 import { InlineMath, BlockMath } from '../ui/Math'
 import { BonferroniImpl } from './BonferroniImpl'
 import { PocockImpl } from './PocockImpl'
@@ -84,48 +84,15 @@ export function Act4() {
         {/* ── All Methods ── */}
         <div className="flex flex-col gap-6 mb-8">
           <Card className="bg-white border border-neutral-300">
-            <CardHeader>
-              <CardTitle className="text-blue-700">Method 1: Bonferroni</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p className="text-sm text-neutral-600">
-                The simplest correction. Divide <InlineMath>{`\\alpha`}</InlineMath> by{' '}
-                <InlineMath>{`K`}</InlineMath>. One line of code.
-              </p>
-            </CardContent>
             <BonferroniImpl />
           </Card>
           <Card className="bg-white border border-neutral-300">
-            <CardHeader>
-              <CardTitle className="text-neutral-900">Method 2: <a href="#ref-pocock-1977" className="text-blue-600 hover:text-blue-800">Pocock (1977)</a></CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p className="text-sm text-neutral-600">
-                Constant critical boundary. Tighter than Bonferroni by exploiting correlation.
-              </p>
-            </CardContent>
             <PocockImpl />
           </Card>
           <Card className="bg-white border border-neutral-300">
-            <CardHeader>
-              <CardTitle className="text-blue-700">Method 3: <a href="#ref-obrien-fleming-1979" className="text-blue-600 hover:text-blue-800">O'Brien–Fleming (1979)</a></CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p className="text-sm text-neutral-600">
-                Decreasing threshold. Nearly no penalty at the final analysis.
-              </p>
-            </CardContent>
             <ObfImpl />
           </Card>
           <Card className="bg-white border border-neutral-300">
-            <CardHeader>
-              <CardTitle className="text-neutral-900">Method 4: Guardrail Harm Detection</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p className="text-sm text-neutral-600">
-                One-sided guardrail rule: stop only if the effect is more than 3 SDs in the harmful direction. Fixed critical value, no pre-specification of K required.
-              </p>
-            </CardContent>
             <HarmDetectionImpl />
           </Card>
         </div>
