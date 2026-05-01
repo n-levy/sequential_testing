@@ -138,6 +138,20 @@ export function ABTestSim({
   const [showSimulationNotes, setShowSimulationNotes] = useState(false)
   const svgRef = useRef<SVGSVGElement | null>(null)
 
+  useEffect(() => {
+    const handler = () => {
+      setShowSimulationNotes(true)
+      if (showPeekStats) {
+        setPeekProbs(null)
+        setMeanEstWhenSig(null)
+        setMeanEstAtEndWhenSig(null)
+        setRunSimulationsTrigger(t => t + 1)
+      }
+    }
+    window.addEventListener('show-all-content', handler)
+    return () => window.removeEventListener('show-all-content', handler)
+  }, [showPeekStats])
+
   const clampedEffect = Math.max(-0.5, Math.min(0.5, effect))
   const effectiveEffect = clampedEffect
   const effectPercent = Math.round(effectiveEffect * 100)

@@ -1,9 +1,16 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 
 export function DisplayMathBox({ children }: { children: React.ReactNode }) {
   const [show, setShow] = useState(false)
+
+  useEffect(() => {
+    const handler = () => setShow(true)
+    window.addEventListener('show-all-content', handler)
+    return () => window.removeEventListener('show-all-content', handler)
+  }, [])
+
   return (
     <div>
       <button

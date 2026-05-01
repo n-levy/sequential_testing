@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, ReactNode } from 'react'
+import { useState, useEffect, ReactNode } from 'react'
 
 interface ShowMathProps {
   children: ReactNode
@@ -14,6 +14,13 @@ interface ShowMathProps {
  */
 export function ShowMath({ children, label = 'Show me the math' }: ShowMathProps) {
   const [open, setOpen] = useState(false)
+
+  useEffect(() => {
+    const handler = () => setOpen(true)
+    window.addEventListener('show-all-content', handler)
+    return () => window.removeEventListener('show-all-content', handler)
+  }, [])
+
   return (
     <div className="mb-8">
       <button

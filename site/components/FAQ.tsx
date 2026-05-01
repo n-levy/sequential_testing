@@ -1,10 +1,17 @@
 "use client"
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { InlineMath } from './ui/Math'
 
 function FAQItem({ question, children }: { question: string; children: React.ReactNode }) {
   const [open, setOpen] = useState(false)
+
+  useEffect(() => {
+    const handler = () => setOpen(true)
+    window.addEventListener('show-all-content', handler)
+    return () => window.removeEventListener('show-all-content', handler)
+  }, [])
+
   return (
     <div className="border border-neutral-300 rounded-lg mb-3">
       <button

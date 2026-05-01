@@ -22,6 +22,7 @@ import { DetailedReferences } from '../../components/detailed/DetailedReferences
 import { DetailedAppendixCode } from '../../components/detailed/DetailedAppendixCode'
 import { Comments } from '../../components/Comments'
 import { ContactForm } from '../../components/ContactForm'
+import { ShowAllButton } from '../../components/shared/ShowAllButton'
 
 const IN_DEPTH_ITEMS = [
   { id: '_home', label: 'Home' },
@@ -74,6 +75,7 @@ export default function InDepthVersion() {
         <DetailedReferences />
         <AppendixDivider />
         <DetailedAppendixCode />
+        <ShowAllButton />
         <Comments />
         <ContactForm />
       </main>

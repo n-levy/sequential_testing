@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
 // Key extract of the shared simulation component (ABTestSim.tsx) showing the layer definitions.
 const SIM_CODE = `// Layer type definition — all supported confidence interval methods:
@@ -37,6 +37,12 @@ import { ABTestSim } from '../shared/ABTestSim'
 
 export function Act4() {
   const [showSimCode, setShowSimCode] = useState(false)
+
+  useEffect(() => {
+    const handler = () => setShowSimCode(true)
+    window.addEventListener('show-all-content', handler)
+    return () => window.removeEventListener('show-all-content', handler)
+  }, [])
 
   return (
     <div id="act4" className="max-w-3xl mx-auto px-4">

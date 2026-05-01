@@ -12,6 +12,7 @@ import { MathReference } from '../../components/MathReference'
 import { References } from '../../components/References'
 import { Comments } from '../../components/Comments'
 import { ContactForm } from '../../components/ContactForm'
+import { ShowAllButton } from '../../components/shared/ShowAllButton'
 
 const FOCUSED_ITEMS = [
   { id: '_home', label: 'Home' },
@@ -45,6 +46,7 @@ export default function FocusedVersion() {
         <Summary />
         <MathReference />
         <References />
+        <ShowAllButton />
         <Comments />
         <ContactForm />
       </main>

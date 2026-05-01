@@ -1,5 +1,5 @@
 "use client"
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 
 const CODE_RandomWalkSim = `'use client'
 
@@ -3210,6 +3210,13 @@ export function ComparisonSim() {
 
 function CodeBlock({ label, code }: { label: string; code: string }) {
   const [show, setShow] = useState(false)
+
+  useEffect(() => {
+    const handler = () => setShow(true)
+    window.addEventListener('show-all-content', handler)
+    return () => window.removeEventListener('show-all-content', handler)
+  }, [])
+
   return (
     <div className="mb-4">
       <button
