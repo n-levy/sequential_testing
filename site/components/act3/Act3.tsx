@@ -119,7 +119,7 @@ export function Act4() {
           </Card>
           <Card className="bg-white border border-neutral-300">
             <CardHeader>
-              <CardTitle className="text-red-700">Method 4: Guardrail Harm Detection</CardTitle>
+              <CardTitle className="text-neutral-900">Method 4: Guardrail Harm Detection</CardTitle>
             </CardHeader>
             <CardContent>
               <p className="text-sm text-neutral-600">
