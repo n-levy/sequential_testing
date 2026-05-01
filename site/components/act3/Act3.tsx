@@ -81,15 +81,6 @@ export function Act4() {
           </div>
         </div>
 
-        {/* ── Simulation Intro ── */}
-        <div className="mb-6">
-          <h3 className="text-xl font-semibold mb-2">Simulation</h3>
-          <p className="text-neutral-700 mb-3">
-            This extends the Act 1/2 simulation by adding Bonferroni, Pocock, O&apos;Brien&ndash;Fleming,
-            and the 3 SD rule confidence intervals, so you can compare all methods under the same settings.
-          </p>
-        </div>
-
         {/* ── All Methods ── */}
         <div className="flex flex-col gap-6 mb-8">
           <Card className="bg-white border border-neutral-300">
@@ -141,7 +132,13 @@ export function Act4() {
 
 
         {/* ── Simulation: Share crossing each threshold ── */}
-        <h4 className="font-semibold mb-2">How methods compare in simulation</h4>
+        <div className="mb-6">
+          <h3 className="text-xl font-semibold mb-2">Simulation</h3>
+          <p className="text-neutral-700 mb-3">
+            This extends the Act 1/2 simulation by adding Bonferroni, Pocock, O&apos;Brien&ndash;Fleming,
+            and the 3 SD rule confidence intervals, so you can compare all methods under the same settings.
+          </p>
+        </div>
         <div className="mb-10">
           <ABTestSim
             layers={['fixed-ci', 'sequential-ci', 'pocock', 'obf', 'bonferroni', 'harm-detect']}

@@ -54,7 +54,7 @@ export function ActMagnitudeError() {
       <p className="text-neutral-700 mb-4">
         Sequential confidence intervals are deliberately <em>wider</em> than fixed-horizon
         intervals (that&rsquo;s how they maintain valid coverage under repeated monitoring).
-        For the CI to exclude zero when it is wide, the point estimate must be very far from
+        For the confidence interval to exclude zero when it is wide, the point estimate must be very far from
         zero. In other words, a sequential test that stops early requires an especially large
         observed effect. When this happens, random noise is almost always contributing —
         meaning the true effect is smaller than what was measured.
@@ -107,6 +107,11 @@ export function ActMagnitudeError() {
         is smaller because there is no early stopping.
       </p>
 
+      <div className="mb-2 max-w-2xl mx-auto">
+        <p className="text-xs text-neutral-500 mb-2">
+          The 1000-repetition table uses the same settings (n, α, effect size, K, baseline rate) as the trajectory chart — they are part of the same simulation. Adjust any slider above the chart and click &ldquo;Run 1000 repetitions&rdquo; to re-run with the updated parameters.
+        </p>
+      </div>
       <div className="mb-8 max-w-2xl mx-auto">
         <ABTestSim
           layers={['fixed-ci', 'sequential-ci']}

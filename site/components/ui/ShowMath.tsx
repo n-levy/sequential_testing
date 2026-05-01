@@ -39,7 +39,7 @@ export function ShowMath({ children, label = 'Show me the math' }: ShowMathProps
         </svg>
         {open ? 'Hide the math' : label}
       </button>
-      {open && <div className="mt-4">{children}</div>}
+      {open && <div className="mt-4 leading-relaxed">{children}</div>}
     </div>
   )
 }

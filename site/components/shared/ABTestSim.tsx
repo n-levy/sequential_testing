@@ -731,10 +731,10 @@ export function ABTestSim({
           </div>
 
           {showSimulationNotes && (
-            <div className="mt-3 bg-neutral-50 border border-neutral-300 rounded-lg p-4 text-left text-sm text-neutral-700 space-y-4">
+            <div className="mt-3 bg-neutral-50 border border-neutral-300 rounded-lg p-4 text-left text-sm text-neutral-700 space-y-4 leading-relaxed">
               <div>
                 <h5 className="font-semibold text-neutral-900 mb-2">Assumptions</h5>
-                <ul className="list-disc list-inside space-y-1">
+                <ul className="list-disc list-inside space-y-2">
                   <li>Binary outcome metric (Bernoulli), modeled as conversion in each arm. For example: making an order in the first visit during the test.</li>
                   <li>Uplift is modeled as relative lift on baseline: <InlineMath>{`\\text{uplift} = (\\bar p_B - \\bar p_A)/\\bar p_A`}</InlineMath>, with generator <InlineMath>{`p_B = p_A(1 + \\text{lift})`}</InlineMath>.</li>
                   <li>Null hypothesis is <InlineMath>{`H_0: \\text{lift} = 0`}</InlineMath> (equivalently, no treatment effect).</li>
@@ -751,7 +751,7 @@ export function ABTestSim({
               </div>
               <div>
                 <h5 className="font-semibold text-neutral-900 mb-2">Notes</h5>
-                <ul className="list-disc list-inside space-y-1">
+                <ul className="list-disc list-inside space-y-2">
                   <li>The Monte Carlo estimate uses 1000 repetitions, so displayed rates include simulation noise.</li>
                   <li>Example: baseline 10% with +4% relative lift gives treatment 10.4%.</li>
                   <li>Estimated power is shown as <InlineMath>{`\\approx 100\\%`}</InlineMath> when extremely close to 1, rather than exactly 100%.</li>

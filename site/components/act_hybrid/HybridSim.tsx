@@ -78,9 +78,9 @@ export function HybridSim() {
     const svg = d3.select(svgRef.current)
     svg.selectAll('*').remove()
 
-    const W = 700
+    const W = 820
     const H = 380
-    const margin = { top: 30, right: 20, bottom: 48, left: 56 }
+    const margin = { top: 30, right: 140, bottom: 48, left: 56 }
     const innerW = W - margin.left - margin.right
     const innerH = H - margin.top - margin.bottom
 
@@ -218,22 +218,32 @@ export function HybridSim() {
         .attr('r', 4)
         .attr('fill', '#ef4444')
 
-      // Annotation — right-aligned to just left of the vertical dashed line
-      const annotY = Math.min(Math.max(y(estEnd) - 20, 10), innerH - 30)
-      g.append('text')
-        .attr('x', xEnd - 10)
-        .attr('y', annotY)
-        .style('text-anchor', 'end')
-        .style('font-size', '10px')
-        .style('fill', '#ef4444')
-        .text('Primary KPI: decided here')
-      g.append('text')
-        .attr('x', xEnd - 10)
-        .attr('y', annotY + 13)
-        .style('text-anchor', 'end')
-        .style('font-size', '10px')
-        .style('fill', '#ef4444')
-        .text('with standard confidence interval')
+      // Annotation — to the RIGHT of the vertical dashed line with background box
+      const annotX = xEnd + 10
+      const annotY = Math.min(Math.max(y(estEnd) - 26, 4), innerH - 52)
+      const annotLines = ['Primary KPI:', 'decided at end', 'standard CI']
+      const boxW = 112
+      const boxH = 48
+      g.append('rect')
+        .attr('x', annotX - 4)
+        .attr('y', annotY - 14)
+        .attr('width', boxW)
+        .attr('height', boxH)
+        .attr('fill', 'white')
+        .attr('fill-opacity', 0.92)
+        .attr('rx', 4)
+        .attr('stroke', '#ef4444')
+        .attr('stroke-width', 1)
+      annotLines.forEach((line, idx) => {
+        g.append('text')
+          .attr('x', annotX)
+          .attr('y', annotY + idx * 14)
+          .style('text-anchor', 'start')
+          .style('font-size', '10px')
+          .style('font-weight', idx === 0 ? '600' : '400')
+          .style('fill', '#ef4444')
+          .text(line)
+      })
     }
 
     // Effect trajectory (dark line on top)
@@ -359,7 +369,7 @@ export function HybridSim() {
       <div style={{ width: '100%', overflowX: 'auto' }}>
         <svg
           ref={svgRef}
-          viewBox="0 0 700 380"
+          viewBox="0 0 820 380"
           style={{ minWidth: 700, width: '100%', maxWidth: '100%' }}
           className="w-full"
         />

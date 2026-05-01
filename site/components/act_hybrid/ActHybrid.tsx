@@ -1,6 +1,8 @@
 "use client"
 
 import { HybridSim } from './HybridSim'
+import { DisplayMathBox } from '../ui/DisplayMathBox'
+import { InlineMath, BlockMath } from '../ui/Math'
 
 export function ActHybrid() {
   return (
@@ -172,7 +174,7 @@ export function ActHybrid() {
         <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-4">
           <ul className="list-disc pl-5 space-y-2 text-neutral-800">
             <li>
-              <strong>Sequential CI throughout the experiment</strong>, at significance level{' '}
+              <strong>Sequential confidence interval throughout the experiment</strong>, at significance level{' '}
               <em>α / 2</em>. If the CI excludes zero at any point during the experiment, you may
               stop early.
             </li>
@@ -235,6 +237,75 @@ export function ActHybrid() {
           </table>
         </div>
       </div>
+
+      {/* Show the math */}
+      <DisplayMathBox>
+        <div className="space-y-6 text-neutral-800">
+
+          <div>
+            <h5 className="font-semibold text-neutral-900 mb-2">1. Sequential confidence interval (guardrails)</h5>
+            <p className="mb-2">
+              During the experiment, each guardrail KPI is monitored with a sequential confidence interval. At any time <InlineMath>{`n`}</InlineMath>, the interval is:
+            </p>
+            <BlockMath>{`\\mathrm{CI}_{\\text{seq}}(n) = \\hat{\\tau}(n) \\;\\pm\\; \\widehat{\\mathrm{SE}}(n) \\cdot \\underbrace{\\sqrt{\\frac{n+\\nu}{n}\\log\\!\\frac{n+\\nu}{\\nu\\,\\alpha_g}}}_{m(n,\\,\\alpha_g)}`}</BlockMath>
+            <ul className="text-sm text-neutral-600 space-y-1 ml-4 list-disc mt-2">
+              <li><InlineMath>{`\\hat{\\tau}(n)`}</InlineMath> — estimated treatment effect at sample size <InlineMath>{`n`}</InlineMath></li>
+              <li><InlineMath>{`\\widehat{\\mathrm{SE}}(n)`}</InlineMath> — estimated standard error at sample size <InlineMath>{`n`}</InlineMath></li>
+              <li><InlineMath>{`m(n, \\alpha_g)`}</InlineMath> — time-varying multiplier (Howard et al., 2021); always <InlineMath>{`> 1.96`}</InlineMath></li>
+              <li><InlineMath>{`\\nu`}</InlineMath> — tuning parameter calibrated to the planned sample size <InlineMath>{`n^*`}</InlineMath></li>
+              <li><InlineMath>{`\\alpha_g`}</InlineMath> — per-guardrail significance level (see below for multiple guardrails)</li>
+            </ul>
+            <p className="mt-2 text-sm text-neutral-700">
+              This interval is <strong>anytime-valid</strong>: the probability of it ever excluding zero under the null is at most <InlineMath>{`\\alpha_g`}</InlineMath>, no matter how many times you peek.
+            </p>
+          </div>
+
+          <div>
+            <h5 className="font-semibold text-neutral-900 mb-2">2. Standard confidence interval (primary KPI, at planned end date)</h5>
+            <p className="mb-2">
+              At the planned end date <InlineMath>{`n^*`}</InlineMath>, the primary KPI is analysed exactly once with a fixed-horizon interval:
+            </p>
+            <BlockMath>{`\\mathrm{CI}_{\\text{std}}(n^*) = \\hat{\\tau}(n^*) \\;\\pm\\; z_{\\alpha/2} \\cdot \\widehat{\\mathrm{SE}}(n^*)`}</BlockMath>
+            <ul className="text-sm text-neutral-600 space-y-1 ml-4 list-disc mt-2">
+              <li><InlineMath>{`z_{\\alpha/2} = \\Phi^{-1}(1 - \\alpha/2)`}</InlineMath> — the standard normal critical value; <InlineMath>{`z_{0.025} \\approx 1.96`}</InlineMath> for <InlineMath>{`\\alpha = 0.05`}</InlineMath></li>
+              <li>Because the primary KPI is tested only once, no sequential correction is needed — the full statistical power is retained</li>
+            </ul>
+          </div>
+
+          <div>
+            <h5 className="font-semibold text-neutral-900 mb-2">3. Multiple guardrail KPIs: Bonferroni correction</h5>
+            <p className="mb-2">
+              If there are <InlineMath>{`G`}</InlineMath> guardrail KPIs, apply a Bonferroni correction to keep the family-wise false positive rate at <InlineMath>{`\\alpha`}</InlineMath>:
+            </p>
+            <BlockMath>{`\\alpha_g = \\frac{\\alpha}{G}`}</BlockMath>
+            <p className="mt-1 text-sm text-neutral-700">
+              For example, with <InlineMath>{`G = 3`}</InlineMath> guardrails and <InlineMath>{`\\alpha = 0.05`}</InlineMath>, set <InlineMath>{`\\alpha_g = 0.0167`}</InlineMath> for each.
+            </p>
+          </div>
+
+          <div>
+            <h5 className="font-semibold text-neutral-900 mb-2">4. The union bound (hybrid sequential variant)</h5>
+            <p className="mb-2">
+              When the primary KPI also needs interim protection against harm, the significance budget is split equally: a sequential test at <InlineMath>{`\\alpha/2`}</InlineMath> during the experiment, and a standard test at <InlineMath>{`\\alpha/2`}</InlineMath> at the end.
+            </p>
+            <p className="mb-2">
+              The <strong>union bound</strong> (Boole&rsquo;s inequality) guarantees that the probability of any false positive across both tests is at most the sum of each test&rsquo;s error rate:
+            </p>
+            <BlockMath>{`\\Pr(\\text{any false positive}) \\leq \\Pr(\\text{seq. test crosses zero}) + \\Pr(\\text{final test crosses zero}) \\leq \\frac{\\alpha}{2} + \\frac{\\alpha}{2} = \\alpha`}</BlockMath>
+            <p className="mt-2 text-sm text-neutral-700">
+              The two tests use:
+            </p>
+            <ul className="text-sm text-neutral-600 space-y-1 ml-4 list-disc mt-1">
+              <li>Sequential: <InlineMath>{`\\mathrm{CI}_{\\text{seq}}(n)`}</InlineMath> with <InlineMath>{`\\alpha_s = \\alpha/2`}</InlineMath> — wider multiplier <InlineMath>{`m(n, \\alpha/2)`}</InlineMath></li>
+              <li>Final: <InlineMath>{`\\mathrm{CI}_{\\text{std}}(n^*)`}</InlineMath> with <InlineMath>{`z_{\\alpha/4} = \\Phi^{-1}(1 - \\alpha/4) \\approx 2.24`}</InlineMath> for <InlineMath>{`\\alpha = 0.05`}</InlineMath></li>
+            </ul>
+            <p className="mt-2 text-sm text-neutral-700">
+              The final test uses <InlineMath>{`z_{\\alpha/4}`}</InlineMath> (slightly wider than the standard 1.96) because it is testing at level <InlineMath>{`\\alpha/2`}</InlineMath> rather than <InlineMath>{`\\alpha`}</InlineMath>. This is a modest cost: the interval at the end is only slightly wider than a fully fixed-horizon test, while the sequential monitoring during the experiment provides continuous harm protection.
+            </p>
+          </div>
+
+        </div>
+      </DisplayMathBox>
 
       {/* Key Takeaway */}
       <div className="bg-blue-100 border border-blue-500 rounded-lg p-6 mb-8">
