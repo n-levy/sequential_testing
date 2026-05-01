@@ -336,7 +336,7 @@ export function ActHybrid() {
               When the primary KPI also needs interim protection against harm, the significance budget is split equally: a sequential test at <InlineMath>{`\\alpha/2`}</InlineMath> during the experiment, and a standard test at <InlineMath>{`\\alpha/2`}</InlineMath> at the end.
             </p>
             <p className="mb-2">
-              The <strong>union bound</strong> (Boole&rsquo;s inequality) guarantees that the probability of any false positive across both tests is at most the sum of each test&rsquo;s error rate:
+              The <strong>union bound</strong>{' '}(Boole&rsquo;s inequality) guarantees that the probability of any false positive across both tests is at most the sum of each test&rsquo;s error rate:
             </p>
             <BlockMath>{`\\Pr(\\text{any false positive}) \\leq \\Pr(\\text{seq. test crosses zero}) + \\Pr(\\text{final test crosses zero}) \\leq \\frac{\\alpha}{2} + \\frac{\\alpha}{2} = \\alpha`}</BlockMath>
             <p className="mt-2 text-sm text-neutral-700">
@@ -344,10 +344,10 @@ export function ActHybrid() {
             </p>
             <ul className="text-sm text-neutral-600 space-y-1 ml-4 list-disc mt-1">
               <li>Sequential: <InlineMath>{`\\mathrm{CI}_{\\text{seq}}(n)`}</InlineMath> with <InlineMath>{`\\alpha_s = \\alpha/2`}</InlineMath> — wider multiplier <InlineMath>{`m(n, \\alpha/2)`}</InlineMath></li>
-              <li>Final: <InlineMath>{`\\mathrm{CI}_{\\text{std}}(n^*)`}</InlineMath> with <InlineMath>{`z_{\\alpha/4} = \\Phi^{-1}(1 - \\alpha/4) \\approx 2.24`}</InlineMath> for <InlineMath>{`\\alpha = 0.05`}</InlineMath></li>
+              <li>Final: one-tailed test at <InlineMath>{`\\alpha/2`}</InlineMath> using <InlineMath>{`z_{\\alpha/2} = \\Phi^{-1}(1 - \\alpha/2) = 1.96`}</InlineMath> for <InlineMath>{`\\alpha = 0.05`}</InlineMath></li>
             </ul>
             <p className="mt-2 text-sm text-neutral-700">
-              The final test uses <InlineMath>{`z_{\\alpha/4}`}</InlineMath> (slightly wider than the standard 1.96) because it is testing at level <InlineMath>{`\\alpha/2`}</InlineMath> rather than <InlineMath>{`\\alpha`}</InlineMath>. This is a modest cost: the interval at the end is only slightly wider than a fully fixed-horizon test, while the sequential monitoring during the experiment provides continuous harm protection.
+              The final test uses <InlineMath>{`z_{\\alpha/2} = 1.96`}</InlineMath> — exactly the same critical value as the benefit side of a classic two-tailed test at <InlineMath>{`\\alpha`}</InlineMath>. There is no extra cost at the end of the experiment: a one-tailed test at <InlineMath>{`\\alpha/2`}</InlineMath> occupies exactly the same region of the normal distribution as one tail of a classic two-tailed test at <InlineMath>{`\\alpha`}</InlineMath>. The only cost of the hybrid sequential variant is the wider sequential confidence interval <em>during</em> the experiment.
             </p>
           </div>
 
