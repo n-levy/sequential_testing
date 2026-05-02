@@ -145,8 +145,9 @@ export function ActHybrid() {
         <strong>Reading the chart:</strong> The wide blue band is the sequential confidence interval
         that monitors guardrail KPIs throughout the experiment. At the planned end date (dashed vertical
         line), the narrower red error bar shows the standard 95% confidence interval used to make the
-        primary KPI decision. Notice how much narrower the standard confidence interval is at the end
-        — this is the statistical power that would have been sacrificed with a fully sequential approach.
+        primary KPI decision. Notice that the standard confidence interval at the end is narrower.
+        The difference between the red and blue intervals is the statistical power that would have
+        been sacrificed with a fully sequential approach.
       </div>
 
       {/* Sub-section: One-tailed decisions */}
