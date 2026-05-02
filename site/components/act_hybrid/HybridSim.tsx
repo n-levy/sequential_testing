@@ -240,7 +240,24 @@ export function HybridSim() {
         .attr('r', 4)
         .attr('fill', '#ef4444')
 
-      // Annotation — to the RIGHT of the vertical dashed line with background box
+    }
+
+    // Effect trajectory (dark line on top)
+    const line = d3.line<number>()
+      .x((_d, i) => x(dayOf(i)))
+      .y((_d, i) => y(effectPct[i]))
+
+    g.append('path')
+      .datum(Array.from({ length: nExt }, (_, i) => i))
+      .attr('fill', 'none')
+      .attr('stroke', '#0f172a')
+      .attr('stroke-width', 1.6)
+      .attr('d', line as d3.Line<number>)
+
+    // Annotation — drawn last so it sits on top of all plot lines
+    if (n > 0) {
+      const lastI = n - 1
+      const estEnd = effectPct[lastI]
       const annotX = xEnd + 20
       const annotY = Math.min(Math.max(y(estEnd) - 26, 4), innerH - 56)
       const annotLines = ['Primary KPI:', 'decided at end', 'standard CI']
@@ -267,18 +284,6 @@ export function HybridSim() {
           .text(line)
       })
     }
-
-    // Effect trajectory (dark line on top)
-    const line = d3.line<number>()
-      .x((_d, i) => x(dayOf(i)))
-      .y((_d, i) => y(effectPct[i]))
-
-    g.append('path')
-      .datum(Array.from({ length: nExt }, (_, i) => i))
-      .attr('fill', 'none')
-      .attr('stroke', '#0f172a')
-      .attr('stroke-width', 1.6)
-      .attr('d', line as d3.Line<number>)
   }, [effectPct, traj, n, nExt, alpha, daysTotal])
 
   return (
