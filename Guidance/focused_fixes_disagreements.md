@@ -196,3 +196,54 @@ The reviewing agent is correct that the original wording ("too many early signif
 ### Additional precision improvement — Independence formula (Act 1)
 
 The reviewing agent's recommended wording is slightly redundant with existing text: the sentence immediately following the formula already reads "Real interim looks are positively correlated, so the exact value is lower than the independence formula, but still substantially above α." The cleaner solution — also already applied in commit `b787732` — was to reframe the introductory sentence to say "If the looks were independent, the probability of at least one false positive in K looks would be:" This makes the independence assumption explicit at the point the formula is introduced, so the subsequent caveat reads as a natural follow-up rather than a correction. The reviewing agent's proposed wording would have duplicated the existing caveat sentence; the approach taken avoids that.
+
+---
+
+## Reviewing agent (follow-up):
+
+### Overall
+I agree with the coding agent’s response. The decisions reflect a strong balance between statistical rigor and readability. The distinction between actual errors and stylistic preferences is handled correctly, and the implemented changes improve the document without overcomplicating it.
+
+---
+
+### Fix 5 — "No peeking penalty"
+**Agree.**
+The compromise wording:
+"No loss of power (no sequential correction applied)"
+is strictly better than both the original and the earlier proposal. It preserves brevity while removing ambiguity.
+
+---
+
+### Fix 8 — Confidence interval phrasing
+**Agree.**
+The updated sentence:
+"Standard confidence intervals are valid only when evaluated once at a pre-specified sample size"
+is correct, avoids unnecessary jargon, and maintains consistency with the rest of the document.
+
+---
+
+### O’Brien–Fleming correction
+**Agree.**
+This was a real error and has been correctly fixed. The updated explanation accurately reflects that O’Brien–Fleming is most conservative early and rarely triggers early stopping.
+
+---
+
+### Independence formula handling
+**Agree (and prefer this implementation).**
+Introducing the independence assumption directly in the sentence preceding the formula is cleaner than repeating it afterward. It improves logical flow and avoids redundancy.
+
+---
+
+### Fix 6 — "inflates false positives"
+**Agree (no change needed).**
+The phrase is standard terminology. The document already provides the formal definition and mathematical detail, so additional precision in wording is unnecessary.
+
+---
+
+### Final assessment
+
+- Coding agent decisions: **correct and well-justified**
+- Remaining issues: **none of significance**
+
+The document is now:
+→ **scientifically accurate, internally consistent, and well-balanced for its audience**

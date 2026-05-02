@@ -1,0 +1,100 @@
+Changes to both versions: change the title from "Sequential Testing for A/B Experiments" to "Sequential Testing in Online Controlled Experiments"
+
+Changes to the focused version
+
+- Change: "In practice, teams routinely monitor experiments"
+To: "In practice, teams routinely monitor A/B tests"
+
+- Change: "Caution: Magnitude Error — Why early stopping inflates effect size estimates, and how to handle it."
+To: "Caution: Magnitude Error — Why early stopping inflates effect size estimates."
+
+In all simulations:
+- Add ticks on simulation slides for setting the parameters
+
+- Add a label on the x axis of the plot of all simulation, saying Time (days). Add ticks on the axis, every five days.
+
+- In the "In this simulation, would peeking 11 times at equal time intervals during the test show at least one statistically significant result?
+Yes", mark the response by putting a blue  rectangle with rounded corners around it so it would be clear to the user that that part changes as the result of the simulation.
+
+- do the same for the result of "Share of simulations in which peeking 11 times at equal time intervals during the test would show at least one statistically significant result,
+across 1000 repetitions:
+21.7%"
+
+- Change: "In this simulation, would peeking"
+To: "In this instance of the simulation, would peeking"
+
+- Place "Values below are calibrated to the default simulation settings (α=0.05, n=10000) using equal-interval peeks." below the table that it refers to, instead of above it.
+
+- Change: "Values below are calibrated to the default simulation settings (α=0.05, n=10000) using equal-interval peeks."
+to: "Values below are calibrated to the default simulation settings (α=0.05, n=10000) using equal-interval peeks. See 'simulation assumptions and notes box for additional information on the simulation setup."
+
+- The math of act 1 says "dividing by XˉA,n​ converts this to the SE of the relative uplift (delta method)" but I thought the delta method only applies to dividing one random variable by another. Please check and correct this if needed.
+
+- In the math, vhange: "A standard 95% confidence interval for the relative uplift u^n"
+To: "A standard 95% confidence interval for the estimated relative uplift u^n"
+
+- Change "Eppo (source: geteppo.com/blog/comparing-frequentist-vs-bayesian-approaches)."
+To: "Eppo (link to source)." And hyperlink to the source.
+
+- Change: "No sequential correction applied, so statistical power is fully preserved."
+To: "No sequential correction applied."
+
+- Change: "In many settings it is good practice to run an experiment for a round number of weeks,"
+To: "In many cases, tests are designed to run for a round number of weeks (e.g. 2 weeks),"
+
+- Change: " A pre-specified end date naturally satisfies this requirement."
+To: "In these cases, stopping early may create bias by giving some weekdays more weight than others."
+
+- Remove: "Point estimates are still biased when a guardrail triggers early stopping. Winner’s curse applies: estimates observed at an early stop tend to overstate the true effect. (Act 5 discusses this in detail.)" 
+
+- Change: "No early stopping for success on the primary KPI. If the treatment effect is very large, you must still wait until the planned end date to declare success."
+To: "No early stopping for success on the primary KPI. If the treatment effect is very large, you must still wait until the planned end date to declare success. This could have a considerable effect on experiments that were designed to run for a long time, in which the treatment has a larger effect than expected."
+
+- Change: "The confidence interval switches width at the end of the test. During the experiment the sequential confidence interval is wider than the standard one; at the planned end date it narrows abruptly. This can be confusing to stakeholders following results in real time."
+To: "Usually some of the guardrail metrics are also outcome metrics. That is, we do not only wish to monitor them for harm during the experiment. We also wish to estimate the effect on them at the end of the experiment. During the experiment their sequential confidence intervals will be wider than the standard one; at the planned end date it will narrows abruptly. This can be confusing to stakeholders following results in real time."
+
+- Turn the point above about the ci abruptly becoming a narrow into a note. It is not a limitation, it is something to be aware of and prepare the stakeholders.
+
+- Change "Wider (~10–40%)"
+To: "Wider", everywhere.
+
+-In the Hybrid approach simulation, show how the ci narrows at the end by displaying a clear red bar on the plot at the end of the test, with two perpendicular short lines at both of its ends marking the limits of the bar. Currently the Ci at the end of the test is not shown.
+
+- Change: "Primary KPI — ship for benefit only. You ship the feature only if the standard confidence interval at the end of the experiment is entirely above zero (i.e., a beneficial effect is confirmed). This is a one-tailed test at α/2 on the benefit side."
+To: "Primary KPI — test for benefit only. You ship the feature only if the standard confidence interval at the end of the experiment is entirely above zero (i.e., a beneficial effect is confirmed) or includes zero in case of a 'no harm' test, but you are not interested in testing whether it has a statistically significant negative effect. This is a one-tailed test at α/2 on the benefit side.
+
+- Change the color of the "The total false positive rate is the same as a classic two-tailed test" box to blue, like all the other colored boxes on the page. They should be all have the same blue-ish background color.
+
+Remove: "What if the primary KPI is also a guardrail?
+
+In some experiments, the primary outcome metric must also be protected against severe harm — for example, a revenue metric where a large negative effect would require immediate action. In this case, waiting until the planned end date for the primary KPI is not acceptable.
+
+Eppo describes a hybrid sequential solution for this scenario (source: geteppo.com/blog/comparing-frequentist-vs-bayesian-approaches). The approach splits the significance budget between two tests:
+
+    Sequential confidence interval throughout the experiment, at significance level α / 2. If the CI excludes zero at any point during the experiment, you may stop early.
+    Standard t-test at the planned end date, at significance level α / 2. If the experiment runs to completion without early stopping, the final decision uses this narrower threshold.
+
+By a union bound (Bonferroni), the probability of any false positive across both tests is at most α/2 + α/2 = α, so the overall Type I error is controlled. The tradeoff is that each individual test is slightly more conservative than if it alone used the full α budget.
+
+According to Eppo, this approach “provides a balance of strong statistical power at the end of the experiment while still allowing the user to safely peek during the experiment” and “achieves confidence intervals at the end of the experiment that are almost as tight as those generated by the fixed test, resulting in much higher power to detect smaller effects compared to the fully sequential test.”
+Standard hybrid Hybrid sequential (Eppo)
+Primary KPI monitored during experiment? No Yes (at α/2)
+Primary KPI analysed at end? Yes (at α) Yes (at α/2)
+Power at end of experiment Full (α) Near-full (α/2, slightly lower)
+Early stopping for harm on primary KPI? No Yes
+Overall Type I error controlled at α? Yes Yes (by union bound)"
+
+- In the math boxes, remove the multiplication by 100 (currently is is done on some of them and not done in others)
+
+Remove "The hybrid approach in one sentence:"
+
+Changes to the landing page (https://sequential-testing.vercel.app/):
+- Change: "Prerequisites
+
+Comfort with algebra and basic probability. No calculus required. Every formula is accompanied by a plain-language translation."
+To:
+"Prerequisites
+
+Familiarity with the statistics of common A/B testing (or randomized controlled trials) Comfort with algebra and basic probability. No calculus required. Every formula is accompanied by a plain-language translation."
+
+- Change: "For those who want to understand" to: "For data scientists who want to understand"
