@@ -108,7 +108,7 @@ export default function Home() {
           <div className="max-w-3xl mx-auto px-4 text-center">
             <h3 className="text-lg font-semibold text-neutral-800 mb-2">Prerequisites</h3>
             <p className="text-neutral-500">
-              Familiarity with the statistics of common A/B testing (or randomized controlled trials).
+              Familiarity with the statistics of common online controlled experiments (&lsquo;A/B tests&rsquo;).
               Comfort with algebra and basic probability. No calculus required.
               Every formula is accompanied by a plain-language translation.
             </p>
