@@ -78,21 +78,22 @@ export function HybridSim() {
   const clampedEffect = Math.max(-0.5, Math.min(0.5, effect))
   const clampedBaseline = clampProbability(baselineRate)
   const usersPerDay = n > 0 && daysTotal > 0 ? Math.round(n / daysTotal) : 0
+  const nExt = n + Math.max(1, usersPerDay)
 
   const traj = useMemo(
-    () => simulateTrajectory(n, clampedEffect, clampedBaseline, seed),
-    [n, clampedEffect, clampedBaseline, seed]
+    () => simulateTrajectory(nExt, clampedEffect, clampedBaseline, seed),
+    [nExt, clampedEffect, clampedBaseline, seed]
   )
 
   const effectPct = useMemo(() => {
-    const arr = new Float64Array(n)
-    for (let i = 0; i < n; i++) {
+    const arr = new Float64Array(nExt)
+    for (let i = 0; i < nExt; i++) {
       const denom = traj.meansA[i]
       arr[i] = denom !== 0 ? 100 * (traj.meansB[i] - denom) / denom : 0
     }
-    if (n > 0) arr[0] = 0
+    if (nExt > 0) arr[0] = 0
     return arr
-  }, [traj, n])
+  }, [traj, nExt])
 
   useEffect(() => {
     if (!svgRef.current) return
@@ -107,7 +108,7 @@ export function HybridSim() {
 
     const yMin = -100
     const yMax = 100
-    const x = d3.scaleLinear().domain([0, daysTotal]).range([0, innerW])
+    const x = d3.scaleLinear().domain([0, daysTotal + 1]).range([0, innerW])
     const y = d3.scaleLinear().domain([yMin, yMax]).range([innerH, 0])
     const g = svg.append('g').attr('transform', `translate(${margin.left},${margin.top})`)
 
@@ -165,7 +166,7 @@ export function HybridSim() {
       .defined((_d, i) => i >= 5)
 
     g.append('path')
-      .datum(Array.from({ length: n }, (_, i) => i))
+      .datum(Array.from({ length: nExt }, (_, i) => i))
       .attr('fill', '#2563eb')
       .attr('fill-opacity', 0.13)
       .attr('stroke', '#2563eb')
@@ -273,12 +274,12 @@ export function HybridSim() {
       .y((_d, i) => y(effectPct[i]))
 
     g.append('path')
-      .datum(Array.from({ length: n }, (_, i) => i))
+      .datum(Array.from({ length: nExt }, (_, i) => i))
       .attr('fill', 'none')
       .attr('stroke', '#0f172a')
       .attr('stroke-width', 1.6)
       .attr('d', line as d3.Line<number>)
-  }, [effectPct, traj, n, alpha, daysTotal])
+  }, [effectPct, traj, n, nExt, alpha, daysTotal])
 
   return (
     <div className="bg-white border border-neutral-300 rounded-lg p-4 my-6">

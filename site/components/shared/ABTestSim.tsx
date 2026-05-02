@@ -179,6 +179,8 @@ export function ABTestSim({
   const clampedBaseline = clampProbability(baselineRate)
   const peekIndices = useMemo(() => getPeekIndices(n, kState), [n, kState])
   const daysTotal = durationWeeks * 7
+  const usersPerDay = n > 0 && daysTotal > 0 ? Math.max(1, Math.round(n / daysTotal)) : 1
+  const nExt = n + usersPerDay
 
   const estimatedPower = useMemo<number | null>(() => {
     if (n <= 0) return null
@@ -264,29 +266,29 @@ export function ABTestSim({
   }, [showPeekStats, layers, n, clampedEffect, effectiveEffect, clampedBaseline, seed, alpha, kState, runSimulationsTrigger, peekIndices]);
 
   const traj = useMemo(
-    () => simulateABTestTrajectory(n, effectiveEffect, clampedBaseline, seed),
-    [n, effectiveEffect, clampedBaseline, seed]
+    () => simulateABTestTrajectory(nExt, effectiveEffect, clampedBaseline, seed),
+    [nExt, effectiveEffect, clampedBaseline, seed]
   )
 
   const effectPct = useMemo(() => {
-    const arr = new Float64Array(n)
-    for (let i = 0; i < n; i++) {
+    const arr = new Float64Array(nExt)
+    for (let i = 0; i < nExt; i++) {
       const denom = traj.meansA[i]
       arr[i] = denom !== 0 ? 100 * (traj.meansB[i] - denom) / denom : 0
     }
-    if (n > 0) arr[0] = 0
+    if (nExt > 0) arr[0] = 0
     return arr
-  }, [traj, n])
+  }, [traj, nExt])
 
   const ciHalfWidthPct = useMemo(() => {
-    const arr = new Float64Array(n)
-    for (let i = 0; i < n; i++) {
+    const arr = new Float64Array(nExt)
+    for (let i = 0; i < nExt; i++) {
       const denom = traj.meansA[i]
       arr[i] = denom !== 0 ? 100 * Z_975 * traj.ses[i] / denom : 0
     }
-    if (n > 0) arr[0] = 0
+    if (nExt > 0) arr[0] = 0
     return arr
-  }, [traj, n])
+  }, [traj, nExt])
 
   useEffect(() => {
     if (!svgRef.current) return
@@ -300,7 +302,7 @@ export function ABTestSim({
     const yMin = -100
     const yMax = 100
     // x-axis in days
-    const x = d3.scaleLinear().domain([0, daysTotal]).range([0, innerW])
+    const x = d3.scaleLinear().domain([0, daysTotal + 1]).range([0, innerW])
     const y = d3.scaleLinear().domain([yMin, yMax]).range([innerH, 0])
     const g = svg.append('g').attr('transform', `translate(${margin.left},${margin.top})`)
     const xAxisY = y(0)
@@ -310,6 +312,7 @@ export function ABTestSim({
     const approxTicks = d3.ticks(0, daysTotal, 6)
     approxTicks.forEach(t => tickSet.add(t))
     tickSet.add(14) // always show 2-week mark
+    tickSet.add(daysTotal) // always show last day
     const tickValues = Array.from(tickSet).filter(t => t >= 0 && t <= daysTotal).sort((a, b) => a - b)
 
     g.append('g')
@@ -351,7 +354,7 @@ export function ABTestSim({
       .y1((_d, i) => y(effectPct[i] + ciHalfWidthPct[i]))
       .defined((_d, i) => i >= 5 && Number.isFinite(ciHalfWidthPct[i]))
     g.append('path')
-      .datum(Array.from({ length: n }, (_, i) => i))
+      .datum(Array.from({ length: nExt }, (_, i) => i))
       .attr('fill', LAYER_STYLE['fixed-ci'].color)
       .attr('fill-opacity', 0.12)
       .attr('stroke', LAYER_STYLE['fixed-ci'].color)
@@ -383,7 +386,7 @@ export function ABTestSim({
           return y(effectPct[i] + w)
         })
       g.append('path')
-        .datum(Array.from({ length: n }, (_, i) => i))
+        .datum(Array.from({ length: nExt }, (_, i) => i))
         .attr('fill', LAYER_STYLE['sequential-ci'].color)
         .attr('fill-opacity', 0.15)
         .attr('stroke', LAYER_STYLE['sequential-ci'].color)
@@ -407,7 +410,7 @@ export function ABTestSim({
           return y(effectPct[i] + w)
         })
       g.append('path')
-        .datum(Array.from({ length: n }, (_, i) => i))
+        .datum(Array.from({ length: nExt }, (_, i) => i))
         .attr('fill', LAYER_STYLE['pocock'].color)
         .attr('fill-opacity', 0.12)
         .attr('stroke', LAYER_STYLE['pocock'].color)
@@ -434,7 +437,7 @@ export function ABTestSim({
           return y(effectPct[i] + w)
         })
       g.append('path')
-        .datum(Array.from({ length: n }, (_, i) => i))
+        .datum(Array.from({ length: nExt }, (_, i) => i))
         .attr('fill', LAYER_STYLE['obf'].color)
         .attr('fill-opacity', 0.12)
         .attr('stroke', LAYER_STYLE['obf'].color)
@@ -458,7 +461,7 @@ export function ABTestSim({
           return y(effectPct[i] + w)
         })
       g.append('path')
-        .datum(Array.from({ length: n }, (_, i) => i))
+        .datum(Array.from({ length: nExt }, (_, i) => i))
         .attr('fill', LAYER_STYLE['bonferroni'].color)
         .attr('fill-opacity', 0.12)
         .attr('stroke', LAYER_STYLE['bonferroni'].color)
@@ -481,7 +484,7 @@ export function ABTestSim({
           return y(effectPct[i] + w)
         })
       g.append('path')
-        .datum(Array.from({ length: n }, (_, i) => i))
+        .datum(Array.from({ length: nExt }, (_, i) => i))
         .attr('fill', LAYER_STYLE['harm-detect'].color)
         .attr('fill-opacity', 0.10)
         .attr('stroke', LAYER_STYLE['harm-detect'].color)
@@ -495,12 +498,12 @@ export function ABTestSim({
       .x((_d, i) => x(dayOf(i)))
       .y((_d, i) => y(effectPct[i]))
     g.append('path')
-      .datum(Array.from({ length: n }, (_, i) => i))
+      .datum(Array.from({ length: nExt }, (_, i) => i))
       .attr('fill', 'none')
       .attr('stroke', '#0f172a')
       .attr('stroke-width', 1.6)
       .attr('d', line as d3.Line<number>)
-  }, [effectPct, ciHalfWidthPct, n, layers, traj, alpha, kState, daysTotal])
+  }, [effectPct, ciHalfWidthPct, n, nExt, layers, traj, alpha, kState, daysTotal])
 
   const decision = useMemo(() => {
     if (n <= 0) return null
@@ -515,8 +518,6 @@ export function ABTestSim({
     }
     return { label: 'No' }
   }, [effectPct, ciHalfWidthPct, n, peekIndices])
-
-  const usersPerDay = n > 0 && daysTotal > 0 ? Math.round(n / daysTotal) : 0
 
   return (
     <div className="bg-white border border-neutral-300 rounded-lg p-4 my-6">
