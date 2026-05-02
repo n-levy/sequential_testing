@@ -112,6 +112,27 @@ function simulateABTestTrajectory(n: number, relativeLift: number, controlRate: 
   return { meansA, meansB, ses }
 }
 
+function SliderTicks({ ticks, min, max, format }: {
+  ticks: number[]
+  min: number
+  max: number
+  format: (v: number) => string
+}) {
+  return (
+    <div className="relative h-4 mt-0.5 select-none pointer-events-none">
+      {ticks.map(v => (
+        <span
+          key={v}
+          className="absolute text-[9px] text-neutral-400 -translate-x-1/2"
+          style={{ left: `${((v - min) / (max - min)) * 100}%` }}
+        >
+          {format(v)}
+        </span>
+      ))}
+    </div>
+  )
+}
+
 export function ABTestSim({
   layers,
   showPeekStats = false,
@@ -513,8 +534,12 @@ export function ABTestSim({
           <input
             type="range" min={0.01} max={0.5} step={0.01}
             value={baselineRate} onChange={e => setBaselineRate(parseFloat(e.target.value))}
-            className="w-full"
+            className="w-full" list="abt-baseline-ticks"
           />
+          <datalist id="abt-baseline-ticks">
+            <option value="0.01" /><option value="0.10" /><option value="0.25" /><option value="0.50" />
+          </datalist>
+          <SliderTicks ticks={[0.01, 0.10, 0.25, 0.50]} min={0.01} max={0.5} format={v => `${Math.round(v * 100)}%`} />
         </div>
         <div className="w-full sm:w-[210px]">
           <label className="block text-xs font-medium text-neutral-600 mb-1">
@@ -523,8 +548,12 @@ export function ABTestSim({
           <input
             type="range" min={0} max={100000} step={50}
             value={n} onChange={e => setN(parseInt(e.target.value, 10))}
-            className="w-full"
+            className="w-full" list="abt-n-ticks"
           />
+          <datalist id="abt-n-ticks">
+            <option value="0" /><option value="1000" /><option value="5000" /><option value="10000" /><option value="50000" /><option value="100000" />
+          </datalist>
+          <SliderTicks ticks={[0, 1000, 5000, 10000, 50000, 100000]} min={0} max={100000} format={v => v >= 1000 ? `${v / 1000}k` : '0'} />
         </div>
         <div className="w-full sm:w-[210px]">
           <label className="block text-xs font-medium text-neutral-600 mb-1">
@@ -534,7 +563,7 @@ export function ABTestSim({
             <input
               type="range" min={ALPHA_MIN} max={ALPHA_MAX} step={0.01}
               value={alpha} onChange={e => setAlpha(parseFloat(e.target.value))}
-              className="w-full"
+              className="w-full" list="abt-alpha-ticks"
             />
             <div
               className="pointer-events-none absolute top-0 bottom-0 border-l border-neutral-500"
@@ -542,6 +571,10 @@ export function ABTestSim({
               aria-hidden
             />
           </div>
+          <datalist id="abt-alpha-ticks">
+            <option value="0.01" /><option value="0.05" /><option value="0.10" />
+          </datalist>
+          <SliderTicks ticks={[0.01, 0.05, 0.10]} min={ALPHA_MIN} max={ALPHA_MAX} format={v => v.toFixed(2)} />
           <div className="text-[11px] text-neutral-500 mt-1">Default: α = 0.05</div>
         </div>
         <div className="w-full sm:w-[210px]">
@@ -552,7 +585,7 @@ export function ABTestSim({
             <input
               type="range" min={-0.5} max={0.5} step={0.01}
               value={clampedEffect} onChange={e => setEffect(parseFloat(e.target.value))}
-              className="w-full"
+              className="w-full" list="abt-effect-ticks"
             />
             <div
               className="pointer-events-none absolute top-0 bottom-0 border-l border-neutral-500"
@@ -560,6 +593,10 @@ export function ABTestSim({
               aria-hidden
             />
           </div>
+          <datalist id="abt-effect-ticks">
+            <option value="-0.5" /><option value="-0.25" /><option value="0" /><option value="0.25" /><option value="0.5" />
+          </datalist>
+          <SliderTicks ticks={[-0.5, -0.25, 0, 0.25, 0.5]} min={-0.5} max={0.5} format={v => `${Math.round(v * 100)}%`} />
           <div className="text-[11px] text-neutral-500 mt-1">Default: effect size = 0%</div>
         </div>
         <div className="w-full sm:w-[210px]">
@@ -574,8 +611,12 @@ export function ABTestSim({
               setK(newK)
               setPeekProbs(null)
             }}
-            className="w-full"
+            className="w-full" list="abt-k-ticks"
           />
+          <datalist id="abt-k-ticks">
+            <option value="2" /><option value="10" /><option value="25" /><option value="50" />
+          </datalist>
+          <SliderTicks ticks={[2, 10, 25, 50]} min={2} max={50} format={v => `${v}`} />
         </div>
         <div className="w-full sm:w-[210px]">
           <label className="block text-xs font-medium text-neutral-600 mb-1">
@@ -586,7 +627,7 @@ export function ABTestSim({
               type="range" min={1} max={8} step={1}
               value={durationWeeks}
               onChange={e => setDurationWeeks(parseInt(e.target.value, 10))}
-              className="w-full"
+              className="w-full" list="abt-duration-ticks"
             />
             <div
               className="pointer-events-none absolute top-0 bottom-0 border-l border-neutral-500"
@@ -594,6 +635,10 @@ export function ABTestSim({
               aria-hidden
             />
           </div>
+          <datalist id="abt-duration-ticks">
+            <option value="1" /><option value="2" /><option value="4" /><option value="8" />
+          </datalist>
+          <SliderTicks ticks={[1, 2, 4, 8]} min={1} max={8} format={v => `${v}w`} />
           <div className="text-[11px] text-neutral-500 mt-1">
             Default: 2 weeks · {usersPerDay} users/day per group
           </div>
@@ -647,10 +692,12 @@ export function ABTestSim({
       {decision && (
         <div className="mt-4">
           <div className="bg-neutral-50 border border-neutral-200 rounded-lg p-3">
-            <div className="text-sm font-semibold text-black">
-              In this simulation, would peeking {kState} times at equal time intervals during the test show at least one statistically significant result?
+            <div className="text-sm font-semibold text-black mb-2">
+              In this instance of the simulation, would peeking {kState} times at equal time intervals during the test show at least one statistically significant result?
             </div>
-            <div className="text-sm text-neutral-500">{decision.label}</div>
+            <span className="inline-block bg-blue-50 border border-blue-400 rounded-lg px-3 py-1 text-sm font-semibold text-blue-800">
+              {decision.label}
+            </span>
           </div>
         </div>
       )}
@@ -683,7 +730,9 @@ export function ABTestSim({
             {peekProbs === null ? (
               <div className="mt-2 text-sm text-neutral-500">Click the button to run simulations</div>
             ) : Object.keys(peekProbs).length === 1 ? (
-              <span className="ml-2 text-blue-700 font-mono">{(Object.values(peekProbs)[0] * 100).toFixed(1)}%</span>
+              <span className="mt-2 inline-block bg-blue-50 border border-blue-400 rounded-lg px-4 py-1.5 text-blue-700 font-mono font-semibold text-lg">
+                {(Object.values(peekProbs)[0] * 100).toFixed(1)}%
+              </span>
             ) : (
               <table className="mx-auto mt-2 text-sm">
                 <thead>

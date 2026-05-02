@@ -5,7 +5,7 @@ import './globals.css'
 const inter = Inter({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
-  title: 'Sequential Testing in A/B Experiments',
+  title: 'Sequential Testing in Online Controlled Experiments',
   description: 'An interactive guide to sequential testing methods for A/B experiments, featuring EPPO and other approaches.',
 }
 

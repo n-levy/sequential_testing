@@ -5,7 +5,7 @@ export function Hero() {
     <section id="intro" className="bg-gradient-to-br from-primary-50 to-secondary-50 py-20">
       <div className="max-w-4xl mx-auto px-4 text-center">
         <h1 className="text-4xl md:text-6xl font-bold text-neutral-900 mb-6">
-          Sequential Testing for A/B Experiments
+          Sequential Testing in Online Controlled Experiments
         </h1>
         <p className="text-xl text-neutral-700 mb-4 max-w-3xl mx-auto">
           A Focused Guide in Five Acts
@@ -18,7 +18,7 @@ export function Hero() {
           <strong>The problem.</strong>{' '}
           Standard hypothesis tests guarantee a controlled false positive rate only when
           results are analysed once, at a pre-specified sample size. In practice, teams
-          routinely monitor experiments and peek at interim results &mdash; inflating the
+          routinely monitor A/B tests and peek at interim results &mdash; inflating the
           Type I error rate well beyond the nominal{' '}
           <InlineMath>{`\\alpha`}</InlineMath>.
         </p>
@@ -47,7 +47,7 @@ export function Hero() {
           <li><strong>The Eppo Solution (2022)</strong> &mdash; How modern platforms implement sequential confidence intervals.</li>
           <li><strong>The Hybrid Approach</strong> &mdash; Combine sequential guardrail monitoring with standard analysis of the primary KPI.</li>
           <li><strong>Alternative Methods</strong> &mdash; Bonferroni, Pocock, O&apos;Brien&ndash;Fleming, and guardrail harm detection for teams without a dedicated platform.</li>
-          <li><strong>Caution: Magnitude Error</strong> &mdash; Why early stopping inflates effect size estimates, and how to handle it.</li>
+          <li><strong>Caution: Magnitude Error</strong> &mdash; Why early stopping inflates effect size estimates.</li>
         </ol>
         <p>
           <strong>Target audience.</strong>{' '}

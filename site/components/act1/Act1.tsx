@@ -73,10 +73,7 @@ export function Act1() {
         <h4 className="font-semibold mb-2">How bad is it?</h4>
       </div>
       {/* Simulation and explanation always visible */}
-      <div className="overflow-x-auto mb-6">
-        <p className="text-xs text-neutral-500 mb-2">
-          Values below are calibrated to the default simulation settings (<InlineMath>{`\\alpha = 0.05`}</InlineMath>, <InlineMath>{`n = 10000`}</InlineMath>) using equal-interval peeks.
-        </p>
+      <div className="overflow-x-auto mb-2">
         <table className="w-full min-w-[640px] text-sm border-collapse border border-neutral-300">
           <thead>
             <tr className="bg-neutral-100">
@@ -107,6 +104,9 @@ export function Act1() {
             </tr>
           </tbody>
         </table>
+        <p className="text-xs text-neutral-500 mt-2">
+          Values above are calibrated to the default simulation settings (<InlineMath>{`\\alpha = 0.05`}</InlineMath>, <InlineMath>{`n = 10000`}</InlineMath>) using equal-interval peeks. See the &lsquo;simulation assumptions and notes&rsquo; box for additional information on the simulation setup.
+        </p>
       </div>
 
       <div className="bg-neutral-50 border border-neutral-300 rounded-lg p-5 mb-8">
@@ -133,7 +133,7 @@ export function Act1() {
             The simulation tracks the <strong>relative uplift</strong>: the treatment effect expressed as a percentage of the control mean. Formally:
           </p>
           <p className="mb-3">
-            <InlineMath>{`\\hat{u}_n = 100 \\cdot \\frac{\\bar{X}_{B,n} - \\bar{X}_{A,n}}{\\bar{X}_{A,n}}`}</InlineMath>
+            <InlineMath>{`\\hat{u}_n = \\frac{\\bar{X}_{B,n} - \\bar{X}_{A,n}}{\\bar{X}_{A,n}}`}</InlineMath>
           </p>
           <ul className="mb-3 text-sm text-neutral-600 space-y-1 ml-4 list-disc">
             <li><InlineMath>{`\\hat{u}_n`}</InlineMath> — estimated relative uplift (in %) after <InlineMath>{`n`}</InlineMath> observations per group</li>
@@ -142,14 +142,14 @@ export function Act1() {
             <li><InlineMath>{`n`}</InlineMath> — number of observations (e.g. users) in each group so far</li>
           </ul>
           <p className="mb-3 text-neutral-800">
-            We test <InlineMath>{`H_0: u = 0`}</InlineMath> (no relative uplift). A standard 95% confidence interval for the uplift, valid at one pre-specified look, is:
+            We test <InlineMath>{`H_0: u = 0`}</InlineMath> (no relative uplift). A standard 95% confidence interval for the estimated relative uplift, valid at one pre-specified look, is:
           </p>
           <p className="mb-3">
-            <InlineMath>{`\\hat{u}_n \\pm 100 \\cdot \\frac{\\widehat{\\mathrm{SE}}_n}{\\bar{X}_{A,n}} \\cdot 1.96`}</InlineMath>
+            <InlineMath>{`\\hat{u}_n \\pm \\frac{\\widehat{\\mathrm{SE}}_n}{\\bar{X}_{A,n}} \\cdot 1.96`}</InlineMath>
           </p>
           <ul className="mb-3 text-sm text-neutral-600 space-y-1 ml-4 list-disc">
             <li><InlineMath>{`1.96`}</InlineMath> — the critical value for a 95% confidence interval. For a two-sided test at level <InlineMath>{`\\alpha = 0.05`}</InlineMath>, we reject when the test statistic falls in either tail of the standard Normal distribution. We want to leave 2.5% probability in each tail, so we need the 97.5th percentile: <InlineMath>{`\\Phi^{-1}(0.975) = 1.96`}</InlineMath>. In other words, 95% of the standard Normal distribution lies between <InlineMath>{`{-1.96}`}</InlineMath> and <InlineMath>{`{+1.96}`}</InlineMath>.</li>
-            <li><InlineMath>{`\\widehat{\\mathrm{SE}}_n`}</InlineMath> — estimated standard error of the <em>absolute</em> difference in means <InlineMath>{`(\\bar{X}_{B,n} - \\bar{X}_{A,n})`}</InlineMath>, equal to <InlineMath>{`\\sqrt{(\\hat{\\sigma}_A^2 + \\hat{\\sigma}_B^2)/n}`}</InlineMath>; dividing by <InlineMath>{`\\bar{X}_{A,n}`}</InlineMath> converts this to the SE of the relative uplift (delta method)</li>
+            <li><InlineMath>{`\\widehat{\\mathrm{SE}}_n`}</InlineMath> — estimated standard error of the <em>absolute</em> difference in means <InlineMath>{`(\\bar{X}_{B,n} - \\bar{X}_{A,n})`}</InlineMath>, equal to <InlineMath>{`\\sqrt{(\\hat{\\sigma}_A^2 + \\hat{\\sigma}_B^2)/n}`}</InlineMath>; dividing by <InlineMath>{`\\bar{X}_{A,n}`}</InlineMath> converts this to the SE of the relative uplift (delta method — first-order approximation treating the control mean as approximately fixed at its expected value)</li>
             <li><InlineMath>{`\\hat{\\sigma}_A^2,\\, \\hat{\\sigma}_B^2`}</InlineMath> — estimated variance of outcomes in the control and treatment groups</li>
           </ul>
           <p className="mb-3 text-neutral-800">

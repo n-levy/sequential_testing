@@ -11,14 +11,14 @@ export function ActHybrid() {
 
       <p className="text-neutral-700 mb-6">
         This act explains a popular &ldquo;hybrid&rdquo; approach to sequential testing. The description and
-        the simulation below follow the approach described by Eppo (source:{' '}
+        the simulation below follow the approach described by Eppo (
         <a
           href="https://www.geteppo.com/blog/comparing-frequentist-vs-bayesian-approaches"
           target="_blank"
           rel="noopener noreferrer"
           className="text-blue-700 underline hover:text-blue-900"
         >
-          geteppo.com/blog/comparing-frequentist-vs-bayesian-approaches
+          link to source
         </a>
         ).
       </p>
@@ -39,7 +39,7 @@ export function ActHybrid() {
           <li>
             <strong>Primary KPI</strong> (the metric the experiment is designed to move): analysed
             with a <strong>standard fixed-horizon confidence interval</strong> at the pre-planned end
-            date. No sequential correction applied, so statistical power is fully preserved.
+            date. No sequential correction applied.
           </li>
         </ul>
       </div>
@@ -63,32 +63,32 @@ export function ActHybrid() {
           monitoring.
         </li>
         <li>
-          <strong>Accounting for weekday effects.</strong> In many settings it is good practice to
-          run an experiment for a round number of weeks, so that the treatment and control groups are
-          exposed to the same day-of-week distribution. A pre-specified end date naturally satisfies
-          this requirement.
+          <strong>Accounting for weekday effects.</strong> In many cases, tests are designed to run
+          for a round number of weeks (e.g. 2 weeks), so that the treatment and control groups are
+          exposed to the same day-of-week distribution. In these cases, stopping early may create
+          bias by giving some weekdays more weight than others.
         </li>
       </ul>
 
       {/* Cons */}
       <h4 className="font-semibold mb-2 text-neutral-900">Limitations</h4>
-      <ul className="list-disc pl-5 space-y-2 text-neutral-700 mb-6">
+      <ul className="list-disc pl-5 space-y-2 text-neutral-700 mb-4">
         <li>
           <strong>No early stopping for success on the primary KPI.</strong> If the treatment effect
-          is very large, you must still wait until the planned end date to declare success.
-        </li>
-        <li>
-          <strong>Point estimates are still biased when a guardrail triggers early stopping.</strong>{' '}
-          Winner&rsquo;s curse applies: estimates observed at an early stop tend to overstate the true
-          effect. (Act 5 discusses this in detail.)
-        </li>
-        <li>
-          <strong>The confidence interval switches width at the end of the test.</strong> During the
-          experiment the sequential confidence interval is wider than the standard one; at the planned
-          end date it narrows abruptly. This can be confusing to stakeholders following results in
-          real time.
+          is very large, you must still wait until the planned end date to declare success. This could
+          have a considerable effect on experiments that were designed to run for a long time, in
+          which the treatment has a larger effect than expected.
         </li>
       </ul>
+
+      <div className="bg-neutral-50 border border-neutral-300 rounded-lg p-4 mb-6 text-sm text-neutral-700">
+        <strong>Note:</strong> Usually some of the guardrail metrics are also outcome metrics. That
+        is, we do not only wish to monitor them for harm during the experiment. We also wish to
+        estimate the effect on them at the end of the experiment. During the experiment their
+        sequential confidence intervals will be wider than the standard one; at the planned end date
+        it will narrow abruptly. This can be confusing to stakeholders following results in real
+        time.
+      </div>
 
       {/* What you gain table */}
       <h4 className="font-semibold mb-3 text-neutral-900">What you gain compared to full sequential</h4>
@@ -104,7 +104,7 @@ export function ActHybrid() {
           <tbody>
             <tr>
               <td className="border border-neutral-300 p-3">Primary KPI confidence interval width</td>
-              <td className="border border-neutral-300 p-3">Wider (~10–40%)</td>
+              <td className="border border-neutral-300 p-3">Wider</td>
               <td className="border border-neutral-300 p-3">Standard (no penalty)</td>
             </tr>
             <tr className="bg-neutral-50">
@@ -165,13 +165,14 @@ export function ActHybrid() {
             interval lies on the harmful side). This is a one-tailed test at α/2 on the harm side.
           </li>
           <li>
-            <strong>Primary KPI — ship for benefit only.</strong> You ship the feature only if the
+            <strong>Primary KPI — test for benefit only.</strong> You ship the feature only if the
             standard confidence interval at the end of the experiment is entirely <em>above</em>{' '}
-            zero (i.e., a beneficial effect is confirmed). This is a one-tailed test at α/2 on the
-            benefit side.
+            zero (i.e., a beneficial effect is confirmed) or includes zero in case of a &lsquo;no
+            harm&rsquo; test, but you are not interested in testing whether it has a statistically
+            significant negative effect. This is a one-tailed test at α/2 on the benefit side.
           </li>
         </ul>
-        <div className="bg-yellow-50 border border-yellow-300 rounded-lg p-4 mb-4">
+        <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-4">
           <p className="text-neutral-800 font-semibold mb-2">
             The total false positive rate is the same as a classic two-tailed test
           </p>
@@ -207,16 +208,8 @@ export function ActHybrid() {
           In this case, waiting until the planned end date for the primary KPI is not acceptable.
         </p>
         <p className="text-neutral-700 mb-4">
-          Eppo describes a <strong>hybrid sequential</strong> solution for this scenario (source:{' '}
-          <a
-            href="https://www.geteppo.com/blog/comparing-frequentist-vs-bayesian-approaches"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-blue-700 underline hover:text-blue-900"
-          >
-            geteppo.com/blog/comparing-frequentist-vs-bayesian-approaches
-          </a>
-          ). The approach splits the significance budget between two tests:
+          In this case, the same approach described above applies — the significance budget is split
+          between two tests:
         </p>
         <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-4">
           <ul className="list-disc pl-5 space-y-2 text-neutral-800">
@@ -237,13 +230,6 @@ export function ActHybrid() {
           at most <em>α/2 + α/2 = α</em>, so the overall Type I error is controlled. The tradeoff is
           that each individual test is slightly more conservative than if it alone used the full{' '}
           <em>α</em> budget.
-        </p>
-        <p className="text-neutral-700 mb-4">
-          According to Eppo, this approach &ldquo;provides a balance of strong statistical power at
-          the end of the experiment while still allowing the user to safely peek during the
-          experiment&rdquo; and &ldquo;achieves confidence intervals at the end of the experiment
-          that are almost as tight as those generated by the fixed test, resulting in much higher
-          power to detect smaller effects compared to the fully sequential test.&rdquo;
         </p>
         <div className="overflow-x-auto mb-2">
           <table className="w-full min-w-[480px] text-sm border-collapse border border-neutral-300">
@@ -359,9 +345,8 @@ export function ActHybrid() {
         <h4 className="font-bold text-blue-900 mb-3">Key Takeaway</h4>
         <div className="text-neutral-800 space-y-3">
           <p>
-            <strong>The hybrid approach in one sentence:</strong> Monitor guardrail KPIs with a
-            sequential confidence interval for early abort; analyse the primary KPI with a standard
-            confidence interval at the planned end date.
+            Monitor guardrail KPIs with a sequential confidence interval for early abort; analyse
+            the primary KPI with a standard confidence interval at the planned end date.
           </p>
           <p>
             This gives you the safety of sequential testing where it matters most (preventing harm)

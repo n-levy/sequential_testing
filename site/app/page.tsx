@@ -73,7 +73,7 @@ export default function Home() {
                   In-Depth
                 </h3>
                 <p className="text-neutral-600 mb-4">
-                  For those who want to understand the <strong>historical origins and
+                  For data scientists who want to understand the <strong>historical origins and
                   mathematical foundations</strong> of sequential testing. Fourteen acts tracing
                   the ideas from random walks through martingales to modern confidence sequences.
                 </p>
@@ -108,6 +108,7 @@ export default function Home() {
           <div className="max-w-3xl mx-auto px-4 text-center">
             <h3 className="text-lg font-semibold text-neutral-800 mb-2">Prerequisites</h3>
             <p className="text-neutral-500">
+              Familiarity with the statistics of common A/B testing (or randomized controlled trials).
               Comfort with algebra and basic probability. No calculus required.
               Every formula is accompanied by a plain-language translation.
             </p>
