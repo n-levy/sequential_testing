@@ -99,9 +99,9 @@ export function HybridSim() {
     const svg = d3.select(svgRef.current)
     svg.selectAll('*').remove()
 
-    const W = 820
+    const W = 920
     const H = 380
-    const margin = { top: 30, right: 170, bottom: 48, left: 56 }
+    const margin = { top: 30, right: 200, bottom: 48, left: 56 }
     const innerW = W - margin.left - margin.right
     const innerH = H - margin.top - margin.bottom
 
@@ -200,43 +200,43 @@ export function HybridSim() {
       const wEnd = denom !== 0 ? 100 * Z_975 * traj.ses[lastI] / denom : 0
       const yLo = y(estEnd - wEnd)
       const yHi = y(estEnd + wEnd)
-      const capHalf = 14
+      const capHalf = 10
 
       // Shaded box for the standard CI (narrow red region)
       g.append('rect')
-        .attr('x', xEnd - 5)
+        .attr('x', xEnd - 4)
         .attr('y', yHi)
-        .attr('width', 10)
+        .attr('width', 8)
         .attr('height', Math.abs(yLo - yHi))
         .attr('fill', '#ef4444')
-        .attr('fill-opacity', 0.35)
+        .attr('fill-opacity', 0.22)
 
       // Vertical bar
       g.append('line')
         .attr('x1', xEnd).attr('x2', xEnd)
         .attr('y1', yHi).attr('y2', yLo)
         .attr('stroke', '#ef4444')
-        .attr('stroke-width', 4)
+        .attr('stroke-width', 2)
 
       // Top cap
       g.append('line')
         .attr('x1', xEnd - capHalf).attr('x2', xEnd + capHalf)
         .attr('y1', yHi).attr('y2', yHi)
         .attr('stroke', '#ef4444')
-        .attr('stroke-width', 4)
+        .attr('stroke-width', 2)
 
       // Bottom cap
       g.append('line')
         .attr('x1', xEnd - capHalf).attr('x2', xEnd + capHalf)
         .attr('y1', yLo).attr('y2', yLo)
         .attr('stroke', '#ef4444')
-        .attr('stroke-width', 4)
+        .attr('stroke-width', 2)
 
       // Center dot
       g.append('circle')
         .attr('cx', xEnd)
         .attr('cy', y(estEnd))
-        .attr('r', 5)
+        .attr('r', 4)
         .attr('fill', '#ef4444')
 
       // Annotation — to the RIGHT of the vertical dashed line with background box
@@ -410,7 +410,7 @@ export function HybridSim() {
       <div style={{ width: '100%', overflowX: 'auto' }}>
         <svg
           ref={svgRef}
-          viewBox="0 0 820 380"
+          viewBox="0 0 920 380"
           style={{ minWidth: 700, width: '100%', maxWidth: '100%' }}
           className="w-full"
         />
