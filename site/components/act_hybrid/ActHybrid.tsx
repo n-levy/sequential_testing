@@ -11,7 +11,7 @@ export function ActHybrid() {
 
       <p className="text-neutral-700 mb-6">
         This act explains a popular &ldquo;hybrid&rdquo; approach to sequential testing. The description and
-        the simulation below follow the approach described by Eppo (
+        the simulation below follow the approach described by Eppo (2022) (
         <a
           href="https://www.geteppo.com/blog/comparing-frequentist-vs-bayesian-approaches"
           target="_blank"
@@ -238,7 +238,7 @@ export function ActHybrid() {
               <tr className="bg-neutral-100">
                 <th className="border border-neutral-300 p-3 text-left font-semibold"></th>
                 <th className="border border-neutral-300 p-3 text-left font-semibold">Standard hybrid</th>
-                <th className="border border-neutral-300 p-3 text-left font-semibold">Hybrid sequential (Eppo)</th>
+                <th className="border border-neutral-300 p-3 text-left font-semibold">Hybrid sequential (Eppo, 2022)</th>
               </tr>
             </thead>
             <tbody>

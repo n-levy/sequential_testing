@@ -16,7 +16,7 @@ export function References() {
             <strong>Howard, S.R., Ramdas, A., McAuliffe, J., &amp; Sekhon, J.</strong> (2021).
             Time-uniform, nonparametric, nonasymptotic confidence sequences.
             <em> Annals of Statistics</em>, 49(2), 1055&ndash;1080.
-            <span className="text-neutral-500"> &mdash; The confidence sequence framework that Eppo adopted.</span>
+            <span className="text-neutral-500"> &mdash; The confidence sequence framework that Eppo (2022) adopted.</span>
           </li>
           <li id="ref-pocock-1977">
             <strong>Pocock, S.J.</strong> (1977).
@@ -33,7 +33,7 @@ export function References() {
             Sequential confidence intervals for comparing two proportions with
             variance reduction.
             <em> Eppo Technical Report</em>.
-            <span className="text-neutral-500"> &mdash; Eppo&apos;s implementation combining Howard et al.&apos;s confidence sequences with generalised CUPED.</span>
+            <span className="text-neutral-500"> &mdash; Eppo&apos;s (2022) implementation combining Howard et al.&apos;s confidence sequences with generalised CUPED.</span>
           </li>
         </ol>
       </div>

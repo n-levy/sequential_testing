@@ -2269,7 +2269,7 @@ export function EppoPipelineSim() {
       <div className="bg-white border border-neutral-200 rounded-lg p-5">
         <h4 className="font-bold text-neutral-900 mb-3">EPPO Pipeline Simulation</h4>
         <p className="text-sm text-neutral-600 mb-4">
-          Watch the full Eppo pipeline in action: randomise users, collect data with CUPED adjustment,
+          Watch the full Eppo (2022) pipeline in action: randomise users, collect data with CUPED adjustment,
           build sequential confidence intervals, and see when a decision is reached.
         </p>
         <div className="grid sm:grid-cols-2 gap-4 mb-4">

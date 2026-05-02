@@ -10,7 +10,7 @@ export function DetailedAct10() {
       <div className="max-w-4xl mx-auto px-4">
         <div className="text-center mb-12">
           <h2 className="text-3xl font-bold text-neutral-900 mb-4">
-            Act 10 &mdash; The Problem Eppo Solves
+            Act 10 &mdash; The Problem Eppo (2022) Solves
           </h2>
         </div>
 
@@ -32,14 +32,14 @@ export function DetailedAct10() {
         <NoiseDemoSim />
 
         <div className="text-neutral-700 space-y-3 mb-8 mt-8">
-          <p><strong>What Eppo wants:</strong></p>
+          <p><strong>What Eppo (2022) wants:</strong></p>
           <ul className="list-disc ml-6 space-y-2">
             <li><strong>Anytime-valid inference:</strong> Peek as often as you like; the error guarantee holds.</li>
             <li><strong>Faster experiments:</strong> Use pre-experiment data to reduce noise, shrinking the confidence interval.</li>
             <li><strong>Simple outputs:</strong> Report a confidence interval for the <em>relative lift</em> (&ldquo;+3% &plusmn; 1.5%&rdquo;) that experimenters can act on immediately.</li>
           </ul>
           <p>
-            Acts 1&ndash;8 built each ingredient. The next three acts show how Eppo assembles
+            Acts 1&ndash;8 built each ingredient. The next three acts show how Eppo (2022) assembles
             them into one pipeline.
           </p>
         </div>

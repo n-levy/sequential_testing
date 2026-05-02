@@ -34,7 +34,7 @@ export function DetailedAct14() {
               <li><strong>O&apos;Brien&ndash;Fleming:</strong> front-loaded allocation. Very strict early, nearly standard at the final analysis.</li>
             </ul>
             <p>
-              Eppo&apos;s approach (Acts 8&ndash;9) does not require pre-specifying <InlineMath>{`K`}</InlineMath> &mdash;
+              Eppo&apos;s (2022) approach (Acts 8&ndash;9) does not require pre-specifying <InlineMath>{`K`}</InlineMath> &mdash;
               it provides a continuously valid guarantee.
             </p>
           </div>
@@ -153,14 +153,14 @@ export function DetailedAct14() {
           <ABTestSim
             layers={['fixed-ci', 'sequential-ci', 'pocock', 'obf', 'bonferroni']}
             showPeekStats
-            simulationTitle="Simulation: fixed-horizon, Eppo, and three alternative sequential methods."
+            simulationTitle="Simulation: fixed-horizon, Eppo (2022), and three alternative sequential methods."
             defaultEffect={0}
             takeaway={<>
               <strong>Result interpretation:</strong> click &ldquo;Run 1000 repetitions&rdquo; to estimate how often each method crosses significance under the current settings.<br /><br />
               <strong>Bonferroni:</strong> most conservative among the three methods (lowest crossing share).<br />
               <strong>Pocock:</strong> less conservative than Bonferroni with the same threshold at each look.<br />
               <strong>O&apos;Brien&ndash;Fleming:</strong> very strict early, then close to classical thresholds at later looks.<br />
-              <strong>Sequential confidence interval (Eppo):</strong> anytime-valid and typically conservative in this setup.
+              <strong>Sequential confidence interval (Eppo, 2022):</strong> anytime-valid and typically conservative in this setup.
             </>}
           />
         </div>
@@ -178,7 +178,7 @@ export function DetailedAct14() {
                 <th className="border border-neutral-300 p-3 font-semibold text-neutral-900">Bonferroni</th>
                 <th className="border border-neutral-300 p-3 font-semibold text-neutral-900">Pocock</th>
                 <th className="border border-neutral-300 p-3 font-semibold text-neutral-900">OBF</th>
-                <th className="border border-neutral-300 p-3 font-semibold text-neutral-900">Eppo</th>
+                <th className="border border-neutral-300 p-3 font-semibold text-neutral-900">Eppo (2022)</th>
               </tr>
             </thead>
             <tbody>
@@ -241,7 +241,7 @@ export function DetailedAct14() {
           <div className="text-neutral-800 space-y-3">
             <p><strong>Which method to use:</strong></p>
             <ul className="list-disc list-inside ml-4 space-y-1">
-              <li><strong>Closest to Eppo in these simulations:</strong> in the conditions of this simulation, Pocock seems like the most reasonable choice among the alternative methods.</li>
+              <li><strong>Closest to Eppo (2022) in these simulations:</strong> in the conditions of this simulation, Pocock seems like the most reasonable choice among the alternative methods.</li>
               <li><strong>Avoid over-correction:</strong> Bonferroni is often too conservative, reducing sensitivity more than needed.</li>
               <li><strong>Avoid early over-triggering:</strong> O&apos;Brien&ndash;Fleming can produce too many early significant crossings in this setup.</li>
             </ul>
@@ -254,9 +254,9 @@ export function DetailedAct14() {
           </div>
         </div>
 
-        {/* Implementing hybrid without Eppo */}
+        {/* Implementing hybrid without Eppo (2022) */}
         <h3 className="text-2xl font-bold text-neutral-900 mb-4">
-          Implementing the Hybrid Approach Without Eppo
+          Implementing the Hybrid Approach Without Eppo (2022)
         </h3>
 
         <p className="mb-4 text-neutral-700">
@@ -326,7 +326,7 @@ export function DetailedAct14() {
         <div className="bg-blue-100 border border-blue-500 rounded-lg p-6 mb-8">
           <h4 className="font-bold text-blue-900 mb-3">Key Takeaway</h4>
           <div className="text-neutral-800 space-y-2">
-            <p><strong>The hybrid approach without Eppo:</strong></p>
+            <p><strong>The hybrid approach without Eppo (2022):</strong></p>
             <ul className="list-disc list-inside ml-4 space-y-1">
               <li>Apply Bonferroni across your <InlineMath>{`G`}</InlineMath> guardrail KPIs: <InlineMath>{`\\alpha_g = \\alpha / G`}</InlineMath>.</li>
               <li>Within each guardrail, use O&apos;Brien&ndash;Fleming (best) or Bonferroni (simplest).</li>

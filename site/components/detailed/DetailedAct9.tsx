@@ -180,8 +180,8 @@ export function DetailedAct9() {
           </p>
         </div>
 
-        {/* Why Eppo chose this */}
-        <h4 className="text-lg font-semibold text-neutral-800 mb-3">Why Eppo chose this framework</h4>
+        {/* Why Eppo (2022) chose this */}
+        <h4 className="text-lg font-semibold text-neutral-800 mb-3">Why Eppo (2022) chose this framework</h4>
 
         <div className="text-neutral-700 space-y-3 mb-6">
           <ol className="list-decimal ml-6 space-y-2">
@@ -207,8 +207,8 @@ export function DetailedAct9() {
               nonparametric validity, the <InlineMath>{`\\sqrt{\\log n}`}</InlineMath> &ldquo;price of peeking.&rdquo;
             </p>
             <p>
-              <strong>This is the framework Eppo uses.</strong> The boundary formula from this act
-              is the engine inside Eppo&apos;s confidence interval.
+              <strong>This is the framework Eppo (2022) uses.</strong> The boundary formula from this act
+              is the engine inside Eppo&apos;s (2022) confidence interval.
             </p>
           </div>
         </div>

@@ -11,15 +11,15 @@ export function DetailedAct13() {
       <div className="max-w-4xl mx-auto px-4">
         <div className="text-center mb-12">
           <h2 className="text-3xl font-bold text-neutral-900 mb-4">
-            Act 13 &mdash; Sequential Confidence Intervals in Eppo
+            Act 13 &mdash; Sequential Confidence Intervals in Eppo (2022)
           </h2>
         </div>
 
-        {/* Intuition: How does Eppo report results you can trust? */}
+        {/* Intuition: How does Eppo (2022) report results you can trust? */}
         <div className="bg-blue-50 border border-blue-400 rounded-lg p-6 mb-8">
           <div className="text-neutral-800 space-y-3">
             <p>
-              Eppo's confidence interval is valid at every time you check, not just one. This lets you monitor continuously and make decisions as soon as the evidence is clear.
+              Eppo's (2022) confidence interval is valid at every time you check, not just one. This lets you monitor continuously and make decisions as soon as the evidence is clear.
             </p>
             <p>
               <strong>Key point:</strong> The interval is a bit wider than a classical CI, but you can stop at any time and the guarantee still holds.
@@ -131,7 +131,7 @@ export function DetailedAct13() {
 
         {/* Summary box */}
         <div className="bg-blue-50 border border-blue-300 rounded-lg p-6 mb-8">
-          <h4 className="font-bold text-blue-900 mb-3">What Eppo Actually Uses (Summary)</h4>
+          <h4 className="font-bold text-blue-900 mb-3">What Eppo (2022) Actually Uses (Summary)</h4>
           <div className="text-neutral-800 space-y-2">
             <ul className="list-disc ml-6 space-y-1">
               <li><strong>Framework:</strong> <a href="#ref-howard-2021" className="text-blue-600 hover:text-blue-800">Howard et al. (2021)</a> confidence sequences (not the mSPRT of <a href="#ref-johari-2017" className="text-blue-600 hover:text-blue-800">Johari et al. 2017</a>).</li>

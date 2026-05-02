@@ -35,17 +35,17 @@ function DisplayMathBox({ children }: { children: React.ReactNode }) {
 export function Act2() {
   return (
     <div id="act2" className="max-w-3xl mx-auto px-4">
-      <h2 className="text-2xl font-bold mb-1">Act 2 — The Eppo Solution (2022)</h2>
+      <h2 className="text-2xl font-bold mb-1">Act 2 — The Eppo (2022) Solution</h2>
 
       <p className="text-neutral-700 mb-6">
-        This act describes the solution introduced in the 2022 technical report by Schmit &amp; Miller (see reference 5). We do not know whether this is the exact current implementation in Eppo, but it provides a concrete example of how modern A/B testing platforms implement sequential testing.
+        This act describes the solution introduced in the 2022 technical report by Schmit &amp; Miller (see reference 5). We do not know whether this is the exact current implementation in Eppo (2022), but it provides a concrete example of how modern A/B testing platforms implement sequential testing.
       </p>
 
       {/* Simulation intro */}
       <div className="mb-6">
         <h3 className="text-xl font-semibold mb-2">Simulation</h3>
         <p className="text-neutral-700">
-          This is the same simulation as Act 1, plus Eppo&apos;s sequential confidence interval (blue)
+          This is the same simulation as Act 1, plus Eppo&apos;s (2022) sequential confidence interval (blue)
           on top of the standard fixed-horizon confidence interval (red). The blue interval is typically
           wider at any single look, but it keeps error control valid under repeated monitoring.
         </p>
@@ -56,7 +56,7 @@ export function Act2() {
         <ABTestSim
           layers={['fixed-ci', 'sequential-ci']}
           showPeekStats={true}
-          simulationTitle="Simulation 2: fixed-horizon + Eppo sequential confidence intervals."
+          simulationTitle="Simulation 2: fixed-horizon + Eppo (2022) sequential confidence intervals."
           K={14}
         />
       </div>
@@ -65,7 +65,7 @@ export function Act2() {
       <div className="bg-white border border-neutral-300 rounded-lg p-5 mb-6">
         <h4 className="font-semibold mb-2">Why does this work?</h4>
         <p className="text-neutral-700 mb-2">
-          The fixed-horizon confidence interval controls error for one planned analysis. Eppo&apos;s sequential confidence interval uses
+          The fixed-horizon confidence interval controls error for one planned analysis. Eppo&apos;s (2022) sequential confidence interval uses
           a time-dependent boundary, so the guarantee is valid no matter when or how often you peek.
         </p>
         <p className="text-neutral-700">
@@ -86,7 +86,7 @@ export function Act2() {
             <tr className="bg-neutral-100">
               <th className="border border-neutral-300 p-3 text-left font-semibold">Checking schedule</th>
               <th className="border border-neutral-300 p-3 text-left font-semibold">Standard 95% confidence interval</th>
-              <th className="border border-neutral-300 p-3 text-left font-semibold">Sequential confidence interval (Eppo)</th>
+              <th className="border border-neutral-300 p-3 text-left font-semibold">Sequential confidence interval (Eppo, 2022)</th>
             </tr>
           </thead>
           <tbody>
@@ -159,9 +159,9 @@ export function Act2() {
           </ul>
 
           {/* Step 2 */}
-          <h5 className="font-semibold mb-2">2. Sequential confidence interval (Eppo)</h5>
+          <h5 className="font-semibold mb-2">2. Sequential confidence interval (Eppo, 2022)</h5>
           <p className="mb-2 text-neutral-800">
-            Eppo's sequential confidence interval replaces the fixed multiplier 1.96 with one that depends on the number of observations:
+            Eppo's (2022) sequential confidence interval replaces the fixed multiplier 1.96 with one that depends on the number of observations:
           </p>
           <BlockMath>{`\\hat{u}_n \\pm \\frac{\\widehat{\\mathrm{SE}}_n}{\\bar{X}_{A,n}}\\,\\sqrt{\\frac{n+\\nu}{n}\\log\\!\\left(\\frac{n+\\nu}{\\nu\\,\\alpha}\\right)}`}</BlockMath>
           <ul className="mb-6 text-sm text-neutral-600 space-y-1 ml-4 list-disc">
@@ -177,7 +177,7 @@ export function Act2() {
           {/* Step 3 */}
           <h5 className="font-semibold mb-2">3. The multiplier</h5>
           <p className="mb-2 text-neutral-800">
-            The key difference between the two formulas is the multiplier of the standard error. In the fixed-horizon case it is the constant 1.96. In Eppo's sequential implementation it is:
+            The key difference between the two formulas is the multiplier of the standard error. In the fixed-horizon case it is the constant 1.96. In Eppo's (2022) sequential implementation it is:
           </p>
           <BlockMath>{`m(n) = \\sqrt{\\frac{n+\\nu}{n}\\log\\!\\left(\\frac{n+\\nu}{\\nu\\,\\alpha}\\right)}`}</BlockMath>
           <ul className="mb-4 text-sm text-neutral-600 space-y-1 ml-4 list-disc">
@@ -191,7 +191,7 @@ export function Act2() {
             This multiplier is larger than 1.96, which is what keeps the Type I error controlled under continuous monitoring. The multiplier is especially high when <InlineMath>{`n`}</InlineMath> is small. As <InlineMath>{`n`}</InlineMath> grows, <InlineMath>{`m(n)`}</InlineMath> first decreases — so the confidence interval narrows — reaches a minimum somewhere before the planned sample size <InlineMath>{`n^*`}</InlineMath>, and then slowly increases again. The interval is therefore tightest in the middle of the experiment and widens slightly if the experiment runs well past <InlineMath>{`n^*`}</InlineMath>. It always remains above 1.96.
           </p>
           <p className="mb-6 text-neutral-800">
-            The tuning parameter <InlineMath>{`\\nu`}</InlineMath> controls this trade-off between early-stopping power and long-run width. Eppo sets it as:
+            The tuning parameter <InlineMath>{`\\nu`}</InlineMath> controls this trade-off between early-stopping power and long-run width. Eppo (2022) sets it as:
           </p>
           <BlockMath>{`\\nu = \\frac{n^*}{\\log(n^*/\\alpha) - 1}`}</BlockMath>
           <ul className="mb-4 text-sm text-neutral-600 space-y-1 ml-4 list-disc">

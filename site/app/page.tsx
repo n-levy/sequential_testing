@@ -39,7 +39,7 @@ export default function Home() {
                 </h3>
                 <p className="text-neutral-600 mb-4">
                   For data scientists who want to <strong>implement sequential testing</strong> in
-                  their domain. Three acts covering the peeking problem, the Eppo solution
+                  their domain. Three acts covering the peeking problem, the Eppo (2022) solution
                   (with the recommended hybrid approach), and DIY alternatives.
                 </p>
                 <ul className="text-sm text-neutral-500 space-y-1.5 mb-6">

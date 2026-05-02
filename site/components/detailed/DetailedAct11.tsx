@@ -11,14 +11,14 @@ export function DetailedAct11() {
       <div className="max-w-4xl mx-auto px-4">
         <div className="text-center mb-12">
           <h2 className="text-3xl font-bold text-neutral-900 mb-4">
-            Act 11 &mdash; The Eppo Pipeline, Step by Step
+            Act 11 &mdash; The Eppo (2022) Pipeline, Step by Step
           </h2>
         </div>
 
-        {/* Intuition: How does Eppo put it all together? */}
+        {/* Intuition: How does Eppo (2022) put it all together? */}
         <div className="bg-blue-50 border border-blue-400 rounded-lg p-6 mb-8">
           <p className="text-neutral-800">
-            Eppo's pipeline takes raw data, removes predictable noise, and produces an anytime-valid confidence interval for the treatment effect. Each step builds on the previous acts.
+            Eppo's (2022) pipeline takes raw data, removes predictable noise, and produces an anytime-valid confidence interval for the treatment effect. Each step builds on the previous acts.
           </p>
         </div>
 
@@ -64,7 +64,7 @@ export function DetailedAct11() {
         {/* Step 3 */}
         <h3 className="text-xl font-bold text-neutral-900 mb-3">Step 3: Regression adjustment (noise removal)</h3>
         <div className="text-neutral-700 space-y-3 mb-8">
-          <p>This is where Eppo <em>generalises</em> the CUPED idea from <a href="#ref-deng-2013" className="text-blue-600 hover:text-blue-800">Deng et al. (2013)</a>.</p>
+          <p>This is where Eppo (2022) <em>generalises</em> the CUPED idea from <a href="#ref-deng-2013" className="text-blue-600 hover:text-blue-800">Deng et al. (2013)</a>.</p>
           <p>For each group <strong>separately</strong>:</p>
           <ol className="list-decimal ml-6 space-y-1">
             <li>Fit a regression model predicting <InlineMath>{`Y`}</InlineMath> from the pre-experiment covariates <InlineMath>{`X`}</InlineMath>.</li>
@@ -205,7 +205,7 @@ export function DetailedAct11() {
           <h4 className="font-bold text-blue-900 mb-3">Key Takeaway</h4>
           <div className="text-neutral-800">
             <p>
-              <strong>The Eppo pipeline in one sentence:</strong> Randomise &rarr; collect{' '}
+              <strong>The Eppo (2022) pipeline in one sentence:</strong> Randomise &rarr; collect{' '}
               <InlineMath>{`Y`}</InlineMath> and covariates <InlineMath>{`X`}</InlineMath> &rarr;
               regression-adjust (remove predictable noise) &rarr; estimate lift and variance
               &rarr; wrap in a sequential CI &rarr; decide when CI excludes zero.

@@ -93,7 +93,7 @@ export function DetailedAct8() {
           <p className="mt-2">
             <InlineMath>{`\\tau`}</InlineMath> is therefore a <em>tuning knob</em>: pick it to match
             the smallest effect size you genuinely care about detecting. In Act 9 we will see that
-            Eppo exposes this as the <em>target sample size</em> <InlineMath>{`\\nu`}</InlineMath>,
+            Eppo (2022) exposes this as the <em>target sample size</em> <InlineMath>{`\\nu`}</InlineMath>,
             which plays the same role under a different parameterisation.
           </p>
         </div>
@@ -227,8 +227,8 @@ export function DetailedAct8() {
             </p>
             <p>
               <strong>What&apos;s next:</strong> The mSPRT was a landmark &mdash; but it is not
-              what Eppo uses. The next act introduces <strong>confidence sequences</strong> from
-              <a href="#ref-howard-2021" className="text-blue-600 hover:text-blue-800">Howard et al. (2021)</a>, a more general framework that Eppo adopted instead.
+              what Eppo (2022) uses. The next act introduces <strong>confidence sequences</strong> from
+              <a href="#ref-howard-2021" className="text-blue-600 hover:text-blue-800">Howard et al. (2021)</a>, a more general framework that Eppo (2022) adopted instead.
             </p>
           </div>
         </div>

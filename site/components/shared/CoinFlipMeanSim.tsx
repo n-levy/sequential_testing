@@ -10,7 +10,7 @@ import { InlineMath } from '../ui/Math'
  */
 export type SimLayer =
   | 'fixed-ci'         // standard 95% CI band (Act 1: the one that fails under peeking)
-  | 'sequential-ci'    // Eppo's sequential / mixture-boundary CI (Act 2)
+  | 'sequential-ci'    // Eppo's (2022) sequential / mixture-boundary CI (Act 2)
   | 'pocock'           // group-sequential Pocock band (Act 3)
   | 'obf'              // group-sequential O'Brien-Fleming band (Act 3)
   | 'bonferroni'       // Bonferroni-corrected band (Act 3)
@@ -33,7 +33,7 @@ const PEEK_LOOKS = 6                 // number of peeks for the stat
 
 const LAYER_STYLE: Record<SimLayer, { color: string; label: string }> = {
   'fixed-ci':        { color: '#ef4444', label: 'Standard 95% CI' },
-  'sequential-ci':   { color: '#2563eb', label: 'Sequential CI (Eppo)' },
+  'sequential-ci':   { color: '#2563eb', label: 'Sequential CI (Eppo, 2022)' },
   'pocock':          { color: '#f59e0b', label: 'Pocock (K=10)' },
   'obf':             { color: '#1d4ed8', label: "O'Brien–Fleming (K=10)" },
   'bonferroni':      { color: '#0d9488', label: 'Bonferroni (K=10)' },
@@ -66,7 +66,7 @@ function simulateTrajectory(n: number, pHeads: number, seed: number) {
   return { means, ses }
 }
 
-/** Half-width of the Eppo / Howard normal-mixture sequential CI. */
+/** Half-width of the Eppo (2022) / Howard normal-mixture sequential CI. */
 function sequentialHalfWidth(k: number, se: number, alpha: number, nu: number) {
   return se * Math.sqrt(((k + nu) / k) * Math.log((k + nu) / (nu * alpha)))
 }
@@ -109,7 +109,7 @@ function computePeekFPR(n: number, alpha: number, seedBase: number): number {
   return fpCount / PEEK_N_SIMS
 }
 
-// Sequential CI crossing (Eppo/Howard/mixture)
+// Sequential CI crossing (Eppo (2022)/Howard/mixture)
 function computePeekSeqFPR(n: number, alpha: number, seedBase: number): number {
   const looks = Math.min(PEEK_LOOKS, n)
   const stepSize = Math.max(1, Math.floor(n / looks))

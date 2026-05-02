@@ -5,7 +5,7 @@ import React, { useState, useEffect } from 'react';
 const SIM_CODE = `// Layer type definition — all supported confidence interval methods:
 export type SimLayer =
   | 'fixed-ci'       // Standard fixed-horizon 95% confidence interval
-  | 'sequential-ci'  // Sequential confidence interval (Eppo / Howard et al.)
+  | 'sequential-ci'  // Sequential confidence interval (Eppo (2022) / Howard et al.)
   | 'pocock'         // Pocock group-sequential boundary
   | 'obf'            // O'Brien–Fleming group-sequential boundary
   | 'bonferroni'     // Bonferroni correction (alpha/K per look)
@@ -14,7 +14,7 @@ export type SimLayer =
 // Legend labels and colours for each layer:
 const LAYER_STYLE = {
   'fixed-ci':      { color: '#ef4444', label: 'Standard 95% confidence interval' },
-  'sequential-ci': { color: '#2563eb', label: 'Sequential confidence interval (Eppo)' },
+  'sequential-ci': { color: '#2563eb', label: 'Sequential confidence interval (Eppo, 2022)' },
   'pocock':        { color: '#f59e0b', label: 'Pocock' },
   'obf':           { color: '#1d4ed8', label: "O'Brien–Fleming" },
   'bonferroni':    { color: '#0d9488', label: 'Bonferroni' },
@@ -75,7 +75,7 @@ export function Act4() {
               <li><strong>Harm detection (3 SD):</strong> a one-sided guardrail rule using a fixed critical value of <InlineMath>{`z = 3.0`}</InlineMath>. Stops only when the effect is more than 3 SDs in the harmful direction. Does not formally control the family-wise error rate, but is very conservative in practice.</li>
             </ul>
             <p>
-              Eppo&apos;s approach (Act 2) does not require pre-specifying <InlineMath>{`K`}</InlineMath> &mdash;
+              Eppo&apos;s (2022) approach (Act 2) does not require pre-specifying <InlineMath>{`K`}</InlineMath> &mdash;
               it provides a continuously valid guarantee.
             </p>
           </div>
@@ -110,7 +110,7 @@ export function Act4() {
           <ABTestSim
             layers={['fixed-ci', 'sequential-ci', 'pocock', 'obf', 'bonferroni', 'harm-detect']}
             showPeekStats
-            simulationTitle="Simulation 4: fixed-horizon, Eppo, three group-sequential methods, and guardrail harm detection."
+            simulationTitle="Simulation 4: fixed-horizon, Eppo (2022), three group-sequential methods, and guardrail harm detection."
             defaultEffect={0}
             takeaway={<>
               <strong>Result interpretation:</strong> click &ldquo;Run 1000 repetitions&rdquo; to estimate how often each method crosses the threshold under the current settings.<br /><br />
@@ -118,7 +118,7 @@ export function Act4() {
               <strong>Pocock:</strong> less conservative than Bonferroni; calibrated to the joint distribution across K analyses.<br />
               <strong>O&apos;Brien&ndash;Fleming:</strong> very strict early, close to classical at the final analysis.<br />
               <strong>Harm detection:</strong> one-sided — only fires when the effect is strongly negative. Under a null with no true harm, it rarely triggers regardless of K.<br />
-              <strong>Sequential confidence interval (Eppo):</strong> anytime-valid and typically close to 5% under continuous monitoring.
+              <strong>Sequential confidence interval (Eppo, 2022):</strong> anytime-valid and typically close to 5% under continuous monitoring.
             </>}
           />
         </div>
@@ -137,7 +137,7 @@ export function Act4() {
                 <th className="border border-neutral-300 p-3 font-semibold text-neutral-900">Pocock</th>
                 <th className="border border-neutral-300 p-3 font-semibold text-neutral-900">OBF</th>
                 <th className="border border-neutral-300 p-3 font-semibold text-neutral-900">Harm detection</th>
-                <th className="border border-neutral-300 p-3 font-semibold text-neutral-900">Eppo</th>
+                <th className="border border-neutral-300 p-3 font-semibold text-neutral-900">Eppo (2022)</th>
               </tr>
             </thead>
             <tbody>
@@ -223,7 +223,7 @@ export function Act4() {
           <div className="text-neutral-800 space-y-3">
             <p><strong>Which method to use:</strong></p>
             <ul className="list-disc list-inside ml-4 space-y-1">
-              <li><strong>Closest to Eppo in these simulations:</strong> in the conditions of this simulation, Pocock seems like the most reasonable choice among the alternative methods.</li>
+              <li><strong>Closest to Eppo (2022) in these simulations:</strong> in the conditions of this simulation, Pocock seems like the most reasonable choice among the alternative methods.</li>
               <li><strong>Avoid over-correction:</strong> Bonferroni is often too conservative, reducing sensitivity more than needed.</li>
               <li><strong>Avoid early over-triggering:</strong> O&apos;Brien&ndash;Fleming is very conservative early, so early stopping is rare in this setup.</li>
               <li><strong>Harm detection is not a substitute for a two-sided method:</strong> it is a one-sided guardrail rule only. Because it stops only for harm, it will never flag a beneficial effect as significant. Use it as a safety net alongside a primary analysis, not as the primary analysis itself.</li>
@@ -237,9 +237,9 @@ export function Act4() {
           </div>
         </div>
 
-        {/* ── Hybrid Without Eppo ── */}
+        {/* ── Hybrid Without Eppo (2022) ── */}
         <h3 className="text-2xl font-bold text-neutral-900 mb-4">
-          Implementing the Hybrid Approach Without Eppo
+          Implementing the Hybrid Approach Without Eppo (2022)
         </h3>
 
         <p className="mb-4 text-neutral-700">
@@ -309,7 +309,7 @@ export function Act4() {
         <div className="bg-blue-100 border border-blue-500 rounded-lg p-6 mb-8">
           <h4 className="font-bold text-blue-900 mb-3">Key Takeaway</h4>
           <div className="text-neutral-800 space-y-2">
-            <p><strong>The hybrid approach without Eppo:</strong></p>
+            <p><strong>The hybrid approach without Eppo (2022):</strong></p>
             <ul className="list-disc list-inside ml-4 space-y-1">
               <li>Apply Bonferroni across your <InlineMath>{`G`}</InlineMath> guardrail KPIs: <InlineMath>{`\\alpha_g = \\alpha / G`}</InlineMath>.</li>
               <li>Within each guardrail, use O&apos;Brien&ndash;Fleming (best) or Bonferroni (simplest).</li>

@@ -6,7 +6,7 @@ export function AppendixDivider() {
         <p className="text-neutral-700 max-w-2xl mx-auto">
           The sections below are optional deep dives. They cover variance reduction
           (CUPED) and the historical &ldquo;A/B at platform scale&rdquo; problem that
-          motivated Eppo&apos;s pipeline. The main argument of the guide does not depend
+          motivated Eppo&apos;s (2022) pipeline. The main argument of the guide does not depend
           on them &mdash; come back when you want the full picture.
         </p>
       </div>

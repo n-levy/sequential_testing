@@ -110,7 +110,7 @@ export function DetailedReferences() {
             <p className="italic">Annals of Statistics, 49(2), 1055&ndash;1080.</p>
             <p className="text-sm text-neutral-500 mt-1">
               Developed the sub-&psi; framework for confidence sequences. Key result: the
-              Normal mixture boundary. <strong>This is the framework Eppo adopted.</strong>
+              Normal mixture boundary. <strong>This is the framework Eppo (2022) adopted.</strong>
               <span className="italic"> [Used in Acts 9, 10, 12.]</span>
             </p>
           </li>
@@ -120,7 +120,7 @@ export function DetailedReferences() {
             <p>Sequential confidence intervals for comparing two proportions with variance reduction.</p>
             <p className="italic">Eppo Technical Report.</p>
             <p className="text-sm text-neutral-500 mt-1">
-              Eppo&apos;s implementation combining Howard et al.&apos;s confidence sequences with
+              Eppo&apos;s (2022) implementation combining Howard et al.&apos;s confidence sequences with
               generalised CUPED. Estimates variance (does not assume known &sigma;&sup2;).
               <span className="italic"> [Used in Acts 10&ndash;12.]</span>
             </p>

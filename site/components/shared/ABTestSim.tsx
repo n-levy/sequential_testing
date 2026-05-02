@@ -75,7 +75,7 @@ function clampProbability(p: number): number {
 
 const LAYER_STYLE: Record<SimLayer, { color: string; label: string }> = {
   'fixed-ci':      { color: '#ef4444', label: 'Standard 95% confidence interval' },
-  'sequential-ci': { color: '#2563eb', label: 'Sequential confidence interval (Eppo)' },
+  'sequential-ci': { color: '#2563eb', label: 'Sequential confidence interval (Eppo, 2022)' },
   'pocock':        { color: '#f59e0b', label: 'Pocock' },
   'obf':           { color: '#1d4ed8', label: "O'Brien–Fleming" },
   'bonferroni':    { color: '#0d9488', label: 'Bonferroni' },

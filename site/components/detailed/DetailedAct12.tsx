@@ -51,7 +51,7 @@ export function DetailedAct12() {
             reduction <InlineMath>{`\\Var(Y^*) = \\Var(Y)(1 - \\rho^2)`}</InlineMath>, where{' '}
             <InlineMath>{`\\rho = \\Cor(Y,X)`}</InlineMath> is the correlation coefficient.
           </p>
-          <p>Eppo generalises this in two ways:</p>
+          <p>Eppo (2022) generalises this in two ways:</p>
           <ol className="list-decimal ml-6 space-y-1">
             <li><strong>Nonlinear models:</strong> Instead of a single linear coefficient <InlineMath>{`\\theta`}</InlineMath>, fit a full regression model that can capture nonlinear relationships.</li>
             <li><strong>Separate models per group:</strong> Fit <InlineMath>{`\\hat{f}_{\\text{control}}(X)`}</InlineMath> and <InlineMath>{`\\hat{f}_{\\text{treatment}}(X)`}</InlineMath> independently.</li>
