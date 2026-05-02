@@ -241,7 +241,7 @@ export function HybridSim() {
         .attr('fill', '#ef4444')
 
       // Annotation — to the RIGHT of the vertical dashed line with background box
-      const annotX = xEnd + 10
+      const annotX = xEnd + 20
       const annotY = Math.min(Math.max(y(estEnd) - 26, 4), innerH - 56)
       const annotLines = ['Primary KPI:', 'decided at end', 'standard CI']
       const boxW = 130
@@ -252,7 +252,7 @@ export function HybridSim() {
         .attr('width', boxW)
         .attr('height', boxH)
         .attr('fill', 'white')
-        .attr('fill-opacity', 0.92)
+        .attr('fill-opacity', 1)
         .attr('rx', 4)
         .attr('stroke', '#ef4444')
         .attr('stroke-width', 1)
