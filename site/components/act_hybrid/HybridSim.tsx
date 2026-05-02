@@ -101,7 +101,7 @@ export function HybridSim() {
 
     const W = 820
     const H = 380
-    const margin = { top: 30, right: 140, bottom: 48, left: 56 }
+    const margin = { top: 30, right: 170, bottom: 48, left: 56 }
     const innerW = W - margin.left - margin.right
     const innerH = H - margin.top - margin.bottom
 
@@ -241,10 +241,10 @@ export function HybridSim() {
 
       // Annotation — to the RIGHT of the vertical dashed line with background box
       const annotX = xEnd + 10
-      const annotY = Math.min(Math.max(y(estEnd) - 26, 4), innerH - 52)
+      const annotY = Math.min(Math.max(y(estEnd) - 26, 4), innerH - 56)
       const annotLines = ['Primary KPI:', 'decided at end', 'standard CI']
-      const boxW = 112
-      const boxH = 48
+      const boxW = 130
+      const boxH = 52
       g.append('rect')
         .attr('x', annotX - 4)
         .attr('y', annotY - 14)
