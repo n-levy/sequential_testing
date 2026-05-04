@@ -117,6 +117,7 @@ export function ActMagnitudeError() {
           layers={['fixed-ci', 'sequential-ci']}
           showPeekStats={true}
           showMeanEffects={true}
+          showDecision={false}
           simulationTitle="Simulation 5: magnitude error — mean effect at stopping vs. at end of test."
           defaultEffect={0.1}
         />

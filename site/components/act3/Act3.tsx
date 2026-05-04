@@ -110,6 +110,7 @@ export function Act4() {
           <ABTestSim
             layers={['fixed-ci', 'sequential-ci', 'pocock', 'obf', 'bonferroni', 'harm-detect']}
             showPeekStats
+            showDecision={false}
             simulationTitle="Simulation 4: fixed-horizon, Eppo (2022), three group-sequential methods, and guardrail harm detection."
             defaultEffect={0}
             takeaway={<>
