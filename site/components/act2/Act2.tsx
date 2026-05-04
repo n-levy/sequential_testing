@@ -88,20 +88,14 @@ export function Act2() {
       </div>
       <div className="overflow-x-auto mb-6">
         <p className="text-xs text-neutral-500 mb-2">
-          False positive rate under repeated peeking, calibrated to <InlineMath>{`\\alpha = 0.05`}</InlineMath>, baseline 10%, no true effect, equal-interval peeks. Results are shown for two planned sample sizes.
+          Values below are calibrated to default settings (<InlineMath>{`\\alpha = 0.05`}</InlineMath>, <InlineMath>{`n = 10{,}000`}</InlineMath>, baseline 10%, no true effect) using equal-interval peeks.
         </p>
-        <table className="w-full min-w-[820px] text-sm border-collapse border border-neutral-300">
+        <table className="w-full min-w-[640px] text-sm border-collapse border border-neutral-300">
           <thead>
             <tr className="bg-neutral-100">
-              <th className="border border-neutral-300 p-3 text-left font-semibold" rowSpan={2}>Checking schedule</th>
-              <th className="border border-neutral-300 p-3 text-center font-semibold" colSpan={2}><InlineMath>{`n = 10{,}000`}</InlineMath></th>
-              <th className="border border-neutral-300 p-3 text-center font-semibold" colSpan={2}><InlineMath>{`n = 100{,}000`}</InlineMath></th>
-            </tr>
-            <tr className="bg-neutral-100">
-              <th className="border border-neutral-300 p-3 text-left font-semibold">Standard 95% CI</th>
-              <th className="border border-neutral-300 p-3 text-left font-semibold">Sequential CI (Eppo, 2022)</th>
-              <th className="border border-neutral-300 p-3 text-left font-semibold">Standard 95% CI</th>
-              <th className="border border-neutral-300 p-3 text-left font-semibold">Sequential CI (Eppo, 2022)</th>
+              <th className="border border-neutral-300 p-3 text-left font-semibold">Checking schedule</th>
+              <th className="border border-neutral-300 p-3 text-left font-semibold">Standard 95% confidence interval</th>
+              <th className="border border-neutral-300 p-3 text-left font-semibold">Sequential confidence interval (Eppo, 2022)</th>
             </tr>
           </thead>
           <tbody>
@@ -109,20 +103,14 @@ export function Act2() {
               <td className="border border-neutral-300 p-3">Once at the end (1 look)</td>
               <td className="border border-neutral-300 p-3"><InlineMath>{`\\sim 5\\%`}</InlineMath></td>
               <td className="border border-neutral-300 p-3"><InlineMath>{`\\sim 2\\%`}</InlineMath></td>
-              <td className="border border-neutral-300 p-3"><InlineMath>{`\\sim 5\\%`}</InlineMath></td>
-              <td className="border border-neutral-300 p-3"><InlineMath>{`\\sim 2\\%`}</InlineMath></td>
             </tr>
             <tr className="bg-neutral-50">
               <td className="border border-neutral-300 p-3">Daily for 1 week (7 looks)</td>
               <td className="border border-neutral-300 p-3"><InlineMath>{`\\sim 16\\%`}</InlineMath></td>
               <td className="border border-neutral-300 p-3"><InlineMath>{`\\sim 4\\%`}</InlineMath></td>
-              <td className="border border-neutral-300 p-3"><InlineMath>{`\\sim 17\\%`}</InlineMath></td>
-              <td className="border border-neutral-300 p-3"><InlineMath>{`\\sim 4\\%`}</InlineMath></td>
             </tr>
             <tr>
               <td className="border border-neutral-300 p-3">Daily for 2 weeks (14 looks)</td>
-              <td className="border border-neutral-300 p-3"><InlineMath>{`\\sim 22\\%`}</InlineMath></td>
-              <td className="border border-neutral-300 p-3"><InlineMath>{`\\sim 5\\%`}</InlineMath></td>
               <td className="border border-neutral-300 p-3"><InlineMath>{`\\sim 22\\%`}</InlineMath></td>
               <td className="border border-neutral-300 p-3"><InlineMath>{`\\sim 5\\%`}</InlineMath></td>
             </tr>
@@ -130,15 +118,11 @@ export function Act2() {
               <td className="border border-neutral-300 p-3">Daily for 4 weeks (28 looks)</td>
               <td className="border border-neutral-300 p-3"><InlineMath>{`\\sim 28\\%`}</InlineMath></td>
               <td className="border border-neutral-300 p-3"><InlineMath>{`\\sim 5\\%`}</InlineMath></td>
-              <td className="border border-neutral-300 p-3"><InlineMath>{`\\sim 27\\%`}</InlineMath></td>
-              <td className="border border-neutral-300 p-3"><InlineMath>{`\\sim 6\\%`}</InlineMath></td>
             </tr>
             <tr>
               <td className="border border-neutral-300 p-3">Very frequent checks (50 looks)</td>
               <td className="border border-neutral-300 p-3"><InlineMath>{`\\sim 33\\%`}</InlineMath></td>
               <td className="border border-neutral-300 p-3"><InlineMath>{`\\sim 6\\%`}</InlineMath></td>
-              <td className="border border-neutral-300 p-3"><InlineMath>{`\\sim 32\\%`}</InlineMath></td>
-              <td className="border border-neutral-300 p-3"><InlineMath>{`\\sim 7\\%`}</InlineMath></td>
             </tr>
           </tbody>
         </table>
@@ -146,10 +130,13 @@ export function Act2() {
 
       <div className="bg-neutral-50 border border-neutral-300 rounded-lg p-5 mb-8">
         <p className="text-neutral-700">
-          Under repeated peeking, the standard confidence interval inflates false positives substantially, while the sequential confidence interval stays close to the target error level. The false positive rates are nearly identical across the two sample sizes — the behavior of both methods is determined primarily by the number of looks, not by <InlineMath>{`n`}</InlineMath>.
+          Under repeated peeking, the standard confidence interval inflates false positives substantially, while the sequential confidence interval stays close to the target error level.
         </p>
         <p className="text-neutral-600 text-sm mt-2">
           Note: the sequential CI shows ~2% at a single look — below the nominal 5% — because the sequential multiplier is calibrated for continuous monitoring and is intentionally conservative at any fixed look.
+        </p>
+        <p className="text-neutral-600 text-sm mt-2">
+          Note on sample size: these false positive rates are the same regardless of <InlineMath>{`n`}</InlineMath>. Because the tuning parameter <InlineMath>{`\\nu = 0.25n`}</InlineMath> scales with the planned sample size, the sequential multiplier at each fractional look position <InlineMath>{`k/K`}</InlineMath> is independent of <InlineMath>{`n`}</InlineMath>, and the z-statistic under <InlineMath>{`H_0`}</InlineMath> is always <InlineMath>{`N(0,1)`}</InlineMath>. What <em>does</em> change with <InlineMath>{`n`}</InlineMath> is the absolute CI width (narrower for larger <InlineMath>{`n`}</InlineMath>), but the false positive rates are scale-invariant.
         </p>
       </div>
 
