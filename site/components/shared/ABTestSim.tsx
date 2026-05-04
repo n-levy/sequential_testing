@@ -81,7 +81,7 @@ const LAYER_STYLE: Record<SimLayer, { color: string; label: string }> = {
   'pocock':        { color: '#f59e0b', label: 'Pocock' },
   'obf':           { color: '#1d4ed8', label: "O'Brien–Fleming" },
   'bonferroni':    { color: '#0d9488', label: 'Bonferroni' },
-  'harm-detect':   { color: '#dc2626', label: 'Guardrail harm detection (3 SD)' },
+  'harm-detect':   { color: '#7c3aed', label: 'Guardrail harm detection (3 SD)' },
 }
 
 function mulberry32(seed: number) {
