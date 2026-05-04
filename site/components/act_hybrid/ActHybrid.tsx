@@ -144,6 +144,35 @@ export function ActHybrid() {
         </ul>
       </div>
 
+      {/* Alpha allocation */}
+      <div className="bg-blue-50 border border-blue-200 rounded-lg p-5 mb-6">
+        <h4 className="font-semibold text-neutral-900 mb-2">How the error budget is allocated</h4>
+        <p className="text-neutral-700 mb-3">
+          The hybrid approach splits the significance budget <InlineMath>{`\\alpha`}</InlineMath> between
+          the two parts of the design:
+        </p>
+        <ul className="list-disc pl-5 space-y-2 text-neutral-700 mb-3">
+          <li>
+            <strong>Guardrail monitoring (sequential, throughout the experiment):</strong> uses{' '}
+            <InlineMath>{`\\alpha/2`}</InlineMath> per guardrail. Abort early only if harm is
+            detected at this threshold.
+          </li>
+          <li>
+            <strong>Primary KPI analysis (fixed-horizon, at the planned end date):</strong> uses{' '}
+            the full <InlineMath>{`\\alpha`}</InlineMath>. Because this analysis happens only once,
+            no sequential correction is needed — full statistical power is retained.
+          </li>
+        </ul>
+        <p className="text-neutral-700">
+          By a union bound, the probability of any false positive across both tests is at most{' '}
+          <InlineMath>{`\\alpha/2 + 0 = \\alpha/2`}</InlineMath> for guardrail errors, plus{' '}
+          <InlineMath>{`\\alpha`}</InlineMath> for the primary KPI — but because each part addresses
+          a different metric, the overall Type I error on each metric is controlled separately at its
+          own budget. The primary KPI retains its full <InlineMath>{`\\alpha`}</InlineMath> budget and
+          full power.
+        </p>
+      </div>
+
       {/* Pros */}
       <h4 className="font-semibold mb-2 text-neutral-900">Advantages</h4>
       <ul className="list-disc pl-5 space-y-2 text-neutral-700 mb-5">
@@ -310,7 +339,7 @@ export function ActHybrid() {
               <tr>
                 <td className="border border-neutral-300 p-3">Power at end of experiment</td>
                 <td className="border border-neutral-300 p-3">Full (α)</td>
-                <td className="border border-neutral-300 p-3">Near-full (α/2, slightly lower)</td>
+                <td className="border border-neutral-300 p-3">Near-full (α/2, slightly lower)*</td>
               </tr>
               <tr className="bg-neutral-50">
                 <td className="border border-neutral-300 p-3">Early stopping for harm on primary KPI?</td>
@@ -325,6 +354,14 @@ export function ActHybrid() {
             </tbody>
           </table>
         </div>
+        <p className="text-xs text-neutral-500 mt-2">
+          * The final analysis uses a one-sided test at <InlineMath>{`\\alpha/2 = 2.5\\%`}</InlineMath>,
+          giving <InlineMath>{`z = 1.96`}</InlineMath> — the same critical value as a standard
+          two-sided test at <InlineMath>{`\\alpha = 5\\%`}</InlineMath>. Power is marginally lower than
+          "full" only because the Bonferroni union bound is conservative (actual combined error is
+          slightly below <InlineMath>{`\\alpha`}</InlineMath>); in practice the difference is
+          negligible.
+        </p>
       </div>
 
       {/* Show the math */}

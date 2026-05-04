@@ -140,6 +140,33 @@ export function Act2() {
         </p>
       </div>
 
+      {/* Power tradeoff */}
+      <div className="bg-white border border-neutral-300 rounded-lg p-5 mb-8">
+        <h4 className="font-semibold mb-2">The power tradeoff</h4>
+        <p className="text-neutral-700 mb-3">
+          Error control is not free. Because the sequential CI must remain valid across all possible
+          stopping times, its multiplier at the planned end date is larger than 1.96 — approximately
+          2.40 with the default tuning. This means that if a real effect exists, you need it to be
+          about 23% larger to reach significance at <InlineMath>{`n^*`}</InlineMath>, or equivalently
+          you need roughly 50% more users to achieve the same power as a standard fixed-horizon test
+          at the same <InlineMath>{`\\alpha`}</InlineMath>.
+        </p>
+        <p className="text-neutral-700 mb-3">
+          However, the sequential CI also gives you the opportunity to stop <em>early</em> when the
+          evidence is strong before <InlineMath>{`n^*`}</InlineMath>. Under continuous monitoring, the
+          expected sample size when a true effect exists can therefore be substantially less than{' '}
+          <InlineMath>{`n^*`}</InlineMath>, partially or fully offsetting the per-look power penalty.
+        </p>
+        <p className="text-neutral-700">
+          The net result: if your team monitors the experiment and is willing to act on interim
+          results, the sequential CI can match or beat the fixed-horizon design in expected sample
+          size. If you monitor but never stop early, you pay the full power penalty at{' '}
+          <InlineMath>{`n^*`}</InlineMath> without gaining anything. This is why the hybrid approach
+          in Act 3 — sequential monitoring for guardrails only, fixed-horizon for the primary KPI —
+          is often the better practical choice.
+        </p>
+      </div>
+
       {/* ── Key Takeaway ── */}
       <div className="bg-blue-100 border border-blue-500 rounded-lg p-6 mb-8">
         <h4 className="font-bold text-blue-900 mb-3">Key Takeaway</h4>
