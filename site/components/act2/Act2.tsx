@@ -84,7 +84,7 @@ export function Act2() {
 
       {/* How different is it */}
       <div className="mb-4">
-        <h4 className="font-semibold mb-2">How different is it?</h4>
+        <h4 className="font-semibold mb-2">How different is it? (false positive rate under peeking)</h4>
       </div>
       <div className="overflow-x-auto mb-6">
         <p className="text-xs text-neutral-500 mb-2">
