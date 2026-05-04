@@ -153,47 +153,60 @@ export function ActHybrid() {
       {/* Sub-section: One-tailed decisions */}
       <div className="border-t border-neutral-200 pt-6 mb-6">
         <h3 className="text-lg font-bold mb-3 text-neutral-900">
-          Both decisions are effectively one-tailed tests at α/2
+          Two one-sided tests, each at α/4
         </h3>
         <p className="text-neutral-700 mb-4">
-          The confidence intervals in the hybrid approach are <em>two-sided</em> — they have both an
-          upper and a lower bound. But the decision rules are <em>one-directional</em>:
+          The hybrid approach is asymmetric by design: stop early only for degradations, but wait
+          until the pre-planned end date to declare winning variants.
+        </p>
+        <p className="text-neutral-700 mb-4">
+          The inflexibility of the fixed-sample approach is most costly when a test is going
+          poorly. If a variant is significantly degrading metrics, you will want to pull the plug
+          rather than wait. Significant degradations also tend to have large effect sizes, which
+          partially offsets the power loss from sequential monitoring, and point estimates matter
+          less when stopping for harm.
+        </p>
+        <p className="text-neutral-700 mb-4">
+          Conversely, for detecting improvements it is helpful to have additional power and more
+          reliable estimates of the treatment effect — both advantages of the fixed-sample approach.
+        </p>
+        <p className="text-neutral-700 mb-4">
+          This gives two one-sided tests:
         </p>
         <ul className="list-disc pl-5 space-y-3 text-neutral-700 mb-4">
           <li>
-            <strong>Guardrail KPIs — abort for harm only.</strong> You abort the experiment only if
-            the sequential confidence interval is entirely <em>below</em> zero (i.e., the entire
-            interval lies on the harmful side). This is a one-tailed test at α/2 on the harm side.
+            <strong>A sequential test on the degradation tail</strong>, run continuously throughout
+            the experiment at significance level <InlineMath>{`\\alpha/4`}</InlineMath>. Stop early
+            only if evidence of harm crosses this threshold.
           </li>
           <li>
-            <strong>Primary KPI — test for benefit only.</strong> You ship the feature only if the
-            standard confidence interval at the end of the experiment is entirely <em>above</em>{' '}
-            zero (i.e., a beneficial effect is confirmed) or includes zero in case of a &lsquo;no
-            harm&rsquo; test, but you are not interested in testing whether it has a statistically
-            significant negative effect. This is a one-tailed test at α/2 on the benefit side.
+            <strong>A fixed-sample test on the improvement tail</strong>, evaluated once at the
+            planned end date at significance level <InlineMath>{`\\alpha/4`}</InlineMath>. Ship only
+            if benefit is confirmed here.
           </li>
         </ul>
         <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-4">
           <p className="text-neutral-800 font-semibold mb-2">
-            The total false positive rate is the same as a classic two-tailed test
+            Where α/4 comes from
           </p>
           <p className="text-neutral-700 mb-3">
-            In a classic A/B test with α = 0.05, a two-tailed test at the end of the experiment
-            produces a 5% false positive rate — split symmetrically as 2.5% on the benefit side and
-            2.5% on the harm side. The hybrid approach keeps exactly the same total budget:
+            The core idea is that the total α budget is split equally between the two methods.
+            This means the two-tailed sequential test has significance level α/2, and the
+            two-tailed fixed-sample test also has significance level α/2. Since each method is
+            used on only one tail, each one-sided component gets half of that:
           </p>
           <ul className="list-disc pl-5 space-y-1 text-neutral-700 mb-3">
-            <li>2.5% allocated to false aborts <em>during</em> the test (sequential CI, harm side)</li>
-            <li>2.5% allocated to false ships <em>at the end</em> of the test (standard CI, benefit side)</li>
-            <li>Total: 2.5% + 2.5% = <strong>5%</strong></li>
+            <li>Sequential test: α/2 total budget, degradation tail only → <strong>α/4 per continuous look</strong></li>
+            <li>Fixed-sample test: α/2 total budget, improvement tail only → <strong>α/4 at the end date</strong></li>
           </ul>
-          <p className="text-neutral-700">
-            The hybrid approach is not more or less conservative than a classic test — the total
-            false positive rate is the same. What changes is <em>when and where</em> you spend the
-            budget: half during the experiment for harm protection, half at the end for benefit
-            detection. The only cost of the hybrid approach is that confidence intervals are wider
-            during the experiment (sequential CIs must be wider to remain valid across repeated
-            looks). At the planned end date, the standard CI is exactly as narrow as in a classic test.
+          <p className="text-neutral-700 mb-3">
+            At <InlineMath>{`\\alpha = 0.05`}</InlineMath>, each component is{' '}
+            <InlineMath>{`\\alpha/4 = 1.25\\%`}</InlineMath>. To follow the convention of allocating
+            2.5% to each tail — as in a standard 95% confidence interval — set{' '}
+            <InlineMath>{`\\alpha = 0.10`}</InlineMath> (a 90% confidence level). At{' '}
+            <InlineMath>{`\\alpha = 0.10`}</InlineMath>:{' '}
+            <InlineMath>{`\\alpha/4 = 0.025`}</InlineMath>, the same threshold as one tail of a
+            classic two-sided test at the 95% level (<InlineMath>{`z = 1.96`}</InlineMath>).
           </p>
         </div>
       </div>
@@ -290,7 +303,7 @@ export function ActHybrid() {
               <li><InlineMath>{`\\alpha_g`}</InlineMath> — per-guardrail significance level (see below for multiple guardrails)</li>
             </ul>
             <p className="mt-2 text-sm text-neutral-700">
-              This interval is <strong>anytime-valid</strong>: the probability of it ever excluding zero under the null is at most <InlineMath>{`\\alpha_g`}</InlineMath>, no matter how many times you peek.
+              This interval is <strong>anytime-valid</strong>: the probability of it ever excluding zero under the null is at most <InlineMath>{`\\alpha_g`}</InlineMath>, no matter how many times you peek. For the standard hybrid, the sequential CI monitors the degradation tail only, so <InlineMath>{`\\alpha_g = \\alpha/4`}</InlineMath> (with <InlineMath>{`\\alpha = 0.10`}</InlineMath> recommended for conventional coverage).
             </p>
           </div>
 
@@ -299,10 +312,11 @@ export function ActHybrid() {
             <p className="mb-2">
               At the planned end date <InlineMath>{`n^*`}</InlineMath>, the primary KPI is analysed exactly once with a fixed-horizon interval:
             </p>
-            <BlockMath>{`\\mathrm{CI}_{\\text{std}}(n^*) = \\hat{\\tau}(n^*) \\;\\pm\\; z_{\\alpha/2} \\cdot \\widehat{\\mathrm{SE}}(n^*)`}</BlockMath>
+            <BlockMath>{`\\mathrm{CI}_{\\text{std}}(n^*) = \\hat{\\tau}(n^*) \\;\\pm\\; z_{\\alpha/4} \\cdot \\widehat{\\mathrm{SE}}(n^*)`}</BlockMath>
             <ul className="text-sm text-neutral-600 space-y-1 ml-4 list-disc mt-2">
-              <li><InlineMath>{`z_{\\alpha/2} = \\Phi^{-1}(1 - \\alpha/2)`}</InlineMath> — the standard normal critical value; <InlineMath>{`z_{0.025} \\approx 1.96`}</InlineMath> for <InlineMath>{`\\alpha = 0.05`}</InlineMath></li>
-              <li>Because the primary KPI is tested only once, no sequential correction is needed — the full statistical power is retained</li>
+              <li><InlineMath>{`z_{\\alpha/4} = \\Phi^{-1}(1 - \\alpha/4)`}</InlineMath> — the one-sided critical value for the improvement tail; at <InlineMath>{`\\alpha = 0.10`}</InlineMath>, <InlineMath>{`z_{0.025} = 1.96`}</InlineMath></li>
+              <li>Because the primary KPI is tested only once (improvement tail only), no sequential correction is needed — full statistical power is retained</li>
+              <li>Setting <InlineMath>{`\\alpha = 0.10`}</InlineMath> (90% CI) is recommended so that <InlineMath>{`\\alpha/4 = 0.025`}</InlineMath>, matching the conventional 2.5% per tail used in standard 95% testing</li>
             </ul>
           </div>
 
@@ -346,12 +360,13 @@ export function ActHybrid() {
         <h4 className="font-bold text-blue-900 mb-3">Key Takeaway</h4>
         <div className="text-neutral-800 space-y-3">
           <p>
-            Monitor guardrail KPIs with a sequential confidence interval for early abort; analyse
-            the primary KPI with a standard confidence interval at the planned end date.
+            Stop early only for degradations (sequential CI, degradation tail, at α/4); declare
+            winning variants only at the planned end date (standard CI, improvement tail, at α/4).
           </p>
           <p>
-            This gives you the safety of sequential testing where it matters most (preventing harm)
-            without sacrificing statistical power on the metric you care about most.
+            This gives you rapid harm protection without sacrificing statistical power on the metric
+            you care about most. Set α = 0.10 (90% CI) so that each one-sided component uses the
+            conventional 2.5% threshold (z = 1.96).
           </p>
           <p>
             When the primary KPI must also be protected against harm, use the hybrid sequential
