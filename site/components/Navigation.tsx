@@ -12,7 +12,7 @@ export function Navigation({ variant = 'landing' }: NavigationProps) {
 
   const focusedActs = [
     { id: 'act1', title: 'The Problem', href: '/focused#act1' },
-    { id: 'act2', title: 'EPPO Solution', href: '/focused#act2' },
+    { id: 'act2', title: 'Sequential Testing in Eppo', href: '/focused#act2' },
     { id: 'act3', title: 'DIY Implementation', href: '/focused#act3' },
   ]
 

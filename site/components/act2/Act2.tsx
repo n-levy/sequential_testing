@@ -35,10 +35,18 @@ function DisplayMathBox({ children }: { children: React.ReactNode }) {
 export function Act2() {
   return (
     <div id="act2" className="max-w-3xl mx-auto px-4">
-      <h2 className="text-2xl font-bold mb-1">Act 2 — The Eppo (2022) Solution</h2>
+      <h2 className="text-2xl font-bold mb-1">Act 2 - Sequential Testing in Eppo (2022)</h2>
 
       <p className="text-neutral-700 mb-6">
-        This act describes the solution introduced in the 2022 technical report by Schmit &amp; Miller (see reference 5). We do not know whether this is the exact current implementation in Eppo (2022), but it provides a concrete example of how modern A/B testing platforms implement sequential testing.
+        This act explains how sequential testing works in practice, using Eppo as a concrete
+        example. Eppo is an A/B testing platform used at Zalando, among other companies. Its
+        approach to sequential testing was described in detail in a{' '}
+        <a href="#ref-schmit-miller-2022" className="text-blue-700 underline hover:text-blue-900">
+          2022 technical report
+        </a>{' '}
+        by Schmit &amp; Miller. We do not know whether this reflects the exact current
+        implementation, but it provides a clear illustration of how a modern platform implements
+        sequential inference.
       </p>
 
       {/* Simulation intro */}
@@ -58,6 +66,7 @@ export function Act2() {
           showPeekStats={true}
           simulationTitle="Simulation 2: fixed-horizon + Eppo (2022) sequential confidence intervals."
           K={14}
+          peekDecisionSuffix={<>, using the <strong>Sequential Testing confidence intervals</strong></>}
         />
       </div>
 

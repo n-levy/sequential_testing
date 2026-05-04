@@ -18,7 +18,7 @@ const FOCUSED_ITEMS = [
   { id: '_home', label: 'Home' },
   { id: 'intro', label: 'Introduction' },
   { id: 'act1', label: 'Act 1 – Peeking Problem' },
-  { id: 'act2', label: 'Act 2 – Eppo Solution (2022)' },
+  { id: 'act2', label: 'Act 2 – Sequential Testing in Eppo (2022)' },
   { id: 'act3-hybrid', label: 'Act 3 – Hybrid Approach' },
   { id: 'act4', label: 'Act 4 – Alternative Methods' },
   { id: 'act5', label: 'Act 5 – Magnitude Error' },

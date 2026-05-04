@@ -24,6 +24,7 @@ interface ABTestSimProps {
   K?: KProp
   hideEffectStats?: boolean
   showMeanEffects?: boolean // show mean |effect| columns in the 1000-repetitions table
+  peekDecisionSuffix?: ReactNode
 }
 
 const Z_975 = 1.959964
@@ -144,6 +145,7 @@ export function ABTestSim({
   K: KProp = 6,
   hideEffectStats = false,
   showMeanEffects = false,
+  peekDecisionSuffix,
 }: ABTestSimProps) {
   const [effect, setEffect] = useState(defaultEffect)
   const [n, setN] = useState(defaultN)
@@ -694,7 +696,7 @@ export function ABTestSim({
         <div className="mt-4">
           <div className="bg-neutral-50 border border-neutral-200 rounded-lg p-3">
             <div className="text-sm font-semibold text-black mb-2">
-              In this instance of the simulation, would peeking {kState} times at equal time intervals during the test show at least one statistically significant result?
+              In this instance of the simulation, would peeking {kState} times at equal time intervals during the test show at least one statistically significant result{peekDecisionSuffix}?
             </div>
             <span className="inline-block bg-blue-50 border border-blue-400 rounded-lg px-3 py-1 text-sm font-semibold text-blue-800">
               {decision.label}
