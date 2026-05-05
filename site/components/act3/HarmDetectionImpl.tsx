@@ -8,36 +8,50 @@ export function HarmDetectionImpl() {
     <CardContent>
       <div className="space-y-6">
 
-        <div>
-          <h4 className="font-bold text-neutral-900 mb-2">The idea</h4>
-          <p className="text-neutral-700">
-            A simple rule for guardrail monitoring: stop the experiment if the effect on
-            a guardrail metric is more than 3 standard deviations in the <em>harmful</em> direction.
-            Unlike the old two-sided 3 SD rule, this check is <strong>one-sided</strong>:it only
-            triggers when the effect is clearly negative (harmful). A large positive effect on a
-            guardrail is not a reason to abort.
-          </p>
-        </div>
+        {/* Separate box for The idea + The recipe */}
+        <div className="bg-neutral-50 border border-neutral-300 rounded-lg p-5">
+          <div className="space-y-4">
 
-        <div>
-          <h4 className="font-bold text-neutral-900 mb-2">The recipe</h4>
-          <p className="text-neutral-700 mb-2">
-            At each peek, check whether the confidence interval lies entirely below zero:
-          </p>
-          <BlockMath>{`\\hat{\\tau}(t_k) + 3.0 \\cdot \\text{SE}(t_k) < 0`}</BlockMath>
-          <p className="text-neutral-700 mb-3">
-            If this holds, the upper bound of the 3-SD interval is below zero:the data
-            provide very strong evidence of harm. Abort the experiment.
-          </p>
-          <p className="text-neutral-700">
-            Equivalently, compute the one-sided z-statistic and check{' '}
-            <InlineMath>{`Z_k < -3.0`}</InlineMath> (i.e. the standardised effect is strongly negative).
-            No early stopping for positive effects.
-          </p>
+            <div>
+              <h4 className="font-bold text-neutral-900 mb-2">The idea</h4>
+              <p className="text-neutral-700">
+                A simple rule for guardrail monitoring: stop the experiment if the effect on
+                a guardrail metric is more than 3 standard deviations in the <em>harmful</em> direction.
+                Unlike the old two-sided 3 SD rule, this check is <strong>one-sided</strong>:it only
+                triggers when the effect is clearly negative (harmful). A large positive effect on a
+                guardrail is not a reason to abort.
+              </p>
+            </div>
+
+            <div>
+              <h4 className="font-bold text-neutral-900 mb-2">The recipe</h4>
+              <p className="text-neutral-700 mb-2">
+                At each peek, check whether the confidence interval lies entirely below zero:
+              </p>
+              <BlockMath>{`\\hat{\\tau}(t_k) + 3.0 \\cdot \\text{SE}(t_k) < 0`}</BlockMath>
+              <p className="text-neutral-700 mb-3">
+                If this holds, the upper bound of the 3-SD interval is below zero:the data
+                provide very strong evidence of harm. Abort the experiment.
+              </p>
+              <p className="text-neutral-700">
+                Equivalently, compute the one-sided z-statistic and check{' '}
+                <InlineMath>{`Z_k < -3.0`}</InlineMath> (i.e. the standardised effect is strongly negative).
+                No early stopping for positive effects.
+              </p>
+            </div>
+
+          </div>
         </div>
 
         <div>
           <h4 className="font-bold text-neutral-900 mb-2">Stopping threshold vs. other methods (K = 4)</h4>
+          <p className="text-neutral-700 mb-3">
+            The table below compares the z-score threshold applied at each of K&nbsp;=&nbsp;4
+            equally spaced peeks across methods. The 3SE rule uses the same threshold at every peek,
+            regardless of how many peeks are planned. OBF starts very strict and relaxes over time;
+            Pocock is constant but calibrated to the joint distribution; the classical{' '}
+            <InlineMath>{`z_{\\alpha/2} = 1.96`}</InlineMath> applies only at a single planned analysis.
+          </p>
           <div className="overflow-x-auto">
             <table className="w-full min-w-[640px] text-sm border-collapse border border-neutral-300">
               <thead>

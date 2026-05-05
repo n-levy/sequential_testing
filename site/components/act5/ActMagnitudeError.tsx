@@ -5,7 +5,7 @@ import { ABTestSim } from '../shared/ABTestSim'
 export function ActMagnitudeError() {
   return (
     <div id="act5" className="max-w-3xl mx-auto px-4">
-      <h2 className="text-2xl font-bold mb-1">Act 5:Caution: Magnitude Error</h2>
+      <h2 className="text-2xl font-bold mb-1">Act 5: Caution, Magnitude Error</h2>
 
       <p className="text-neutral-700 mb-6">
         Sequential testing provides valid error control: the probability of a false positive stays
@@ -15,7 +15,7 @@ export function ActMagnitudeError() {
       </p>
 
       {/* Core concept */}
-      <div className="bg-neutral-50 border border-neutral-300 rounded-lg p-5 mb-6">
+      <div id="act5-winners-curse" className="bg-neutral-50 border border-neutral-300 rounded-lg p-5 mb-6">
         <h4 className="font-semibold mb-2 text-neutral-900">The winner&rsquo;s curse in A/B testing</h4>
         <p className="text-neutral-700 mb-3">
           When an A/B test stops early and declares a statistically significant result, the
@@ -107,7 +107,7 @@ export function ActMagnitudeError() {
         is smaller because there is no early stopping.
       </p>
 
-      <div className="mb-2 max-w-2xl mx-auto">
+      <div id="act5-sim" className="mb-2 max-w-2xl mx-auto">
         <p className="text-xs text-neutral-500 mb-2">
           The 1000-repetition table uses the same settings (n, α, effect size, K, baseline rate) as the trajectory chart:they are part of the same simulation. Adjust any slider above the chart and click &ldquo;Run 1000 repetitions&rdquo; to re-run with the updated parameters.
         </p>
@@ -124,7 +124,7 @@ export function ActMagnitudeError() {
       </div>
 
       {/* Key Takeaway */}
-      <div className="bg-blue-100 border border-blue-500 rounded-lg p-6 mb-8">
+      <div id="act5-takeaway" className="bg-blue-100 border border-blue-500 rounded-lg p-6 mb-8">
         <h4 className="font-bold text-blue-900 mb-3">Key Takeaway</h4>
         <div className="text-neutral-800 space-y-3">
           <p>

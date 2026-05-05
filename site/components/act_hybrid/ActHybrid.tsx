@@ -70,17 +70,118 @@ export function ActHybrid() {
 
       <p className="text-neutral-700 mb-6">
         This act explains a popular &ldquo;hybrid&rdquo; approach to sequential testing. The description and
-        the simulation below follow the approach described by Eppo (2022) (
+        the simulation below follow the approach described by Eppo. (See &ldquo;Hybrid sequential tests&rdquo;{' '}
         <a
           href="https://www.geteppo.com/blog/comparing-frequentist-vs-bayesian-approaches"
           target="_blank"
           rel="noopener noreferrer"
           className="text-blue-700 underline hover:text-blue-900"
         >
-          link to source
+          here
+        </a>{' '}
+        and &ldquo;Sequential hybrid as two one-sided tests&rdquo;{' '}
+        <a
+          href="https://docs.geteppo.com/statistics/confidence-intervals/analysis-methods/"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="text-blue-700 underline hover:text-blue-900"
+        >
+          here
         </a>
-        ).
+        .)
       </p>
+
+      {/* Simulation */}
+      <div id="act3-sim" className="mb-8 max-w-2xl mx-auto">
+        <HybridSim />
+      </div>
+
+      <div className="bg-neutral-50 border border-neutral-300 rounded-lg p-4 mb-8 text-sm text-neutral-700">
+        <strong>Reading the chart:</strong> The wide blue band is the sequential confidence interval
+        that monitors guardrail KPIs throughout the experiment. At the planned end date (dashed vertical
+        line), the narrower red error bar shows the standard 95% confidence interval used to make the
+        primary KPI decision. Notice that the standard confidence interval at the end is narrower.
+        The difference between the red and blue intervals is the statistical power that would have
+        been sacrificed with a fully sequential approach.
+      </div>
+
+      {/* Sub-section: One-tailed decisions */}
+      <EppoGuidanceSection />
+
+      {/* Pros */}
+      <h4 id="act3-adv" className="font-semibold mb-2 text-neutral-900">Advantages</h4>
+      <ul className="list-disc pl-5 space-y-2 text-neutral-700 mb-5">
+        <li>
+          <strong>Full statistical power on the primary KPI.</strong> Because the primary KPI uses a
+          standard confidence interval at the planned end date, there is no sequential correction and
+          no power penalty.
+        </li>
+        <li>
+          <strong>Continuous guardrail protection.</strong> Sequential monitoring of guardrail KPIs
+          lets you abort the experiment the moment a harmful effect is detected, without waiting for
+          the planned end date.
+        </li>
+        <li>
+          <strong>Simpler to explain and implement</strong> than a fully sequential design. Most
+          decisions are still made at a single planned analysis; only guardrails require continuous
+          monitoring.
+        </li>
+        <li>
+          <strong>Accounting for weekday effects.</strong> In many cases, tests are designed to run
+          for a round number of weeks (e.g. 2 weeks), so that the treatment and control groups are
+          exposed to the same day-of-week distribution. In these cases, stopping early may create
+          bias by giving some weekdays more weight than others.
+        </li>
+      </ul>
+
+      {/* Cons */}
+      <h4 className="font-semibold mb-2 text-neutral-900">Limitations</h4>
+      <ul className="list-disc pl-5 space-y-2 text-neutral-700 mb-6">
+        <li>
+          <strong>No early stopping for success on the primary KPI.</strong> If the treatment effect
+          is very large, you must still wait until the planned end date to declare success. This could
+          have a considerable effect on experiments that were designed to run for a long time, in
+          which the treatment has a larger effect than expected.
+        </li>
+      </ul>
+
+      {/* Sub-section: What if primary KPI is also a guardrail? */}
+      <div id="act3-guardrail" className="border-t border-neutral-200 pt-6 mb-6">
+        <h3 className="text-lg font-bold mb-3 text-neutral-900">
+          What if the primary KPI is also a guardrail?
+        </h3>
+        <p className="text-neutral-700 mb-4">
+          In some experiments, the primary outcome metric must also be protected against severe harm,
+          for example a revenue metric where a large negative effect would require immediate action.
+          In this case, the same approach described above applies: the significance budget is split
+          between two tests:
+        </p>
+        <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-4">
+          <ul className="list-disc pl-5 space-y-2 text-neutral-800">
+            <li>
+              <strong>Sequential confidence interval throughout the experiment</strong>, at significance level{' '}
+              <em>α / 2</em>. If the CI excludes zero at any point during the experiment, you may
+              stop early.
+            </li>
+            <li>
+              <strong>Standard t-test at the planned end date</strong>, at significance level{' '}
+              <em>α / 2</em>. If the experiment runs to completion without early stopping, the final
+              decision uses this narrower threshold.
+            </li>
+          </ul>
+        </div>
+        <p className="text-neutral-700 mb-4">
+          As mentioned above, by a union bound (Bonferroni), the probability of any false positive
+          across both tests is at most <em>α/2 + α/2 = α</em>, so the overall Type I error is
+          controlled.
+        </p>
+        <p className="text-neutral-700">
+          Note that guardrail metrics that are also tracked as outcome metrics will show wider
+          sequential confidence intervals throughout the experiment, narrowing to standard width
+          only at the planned end date. This can be confusing to stakeholders following results in
+          real time.
+        </p>
+      </div>
 
       {/* What you gain table */}
       <h4 className="font-semibold mb-3 text-neutral-900">What you gain compared to full sequential</h4>
@@ -128,99 +229,8 @@ export function ActHybrid() {
         </table>
       </div>
 
-      {/* Simulation */}
-      <div className="mb-8 max-w-2xl mx-auto">
-        <HybridSim />
-      </div>
-
-      <div className="bg-neutral-50 border border-neutral-300 rounded-lg p-4 mb-8 text-sm text-neutral-700">
-        <strong>Reading the chart:</strong> The wide blue band is the sequential confidence interval
-        that monitors guardrail KPIs throughout the experiment. At the planned end date (dashed vertical
-        line), the narrower red error bar shows the standard 95% confidence interval used to make the
-        primary KPI decision. Notice that the standard confidence interval at the end is narrower.
-        The difference between the red and blue intervals is the statistical power that would have
-        been sacrificed with a fully sequential approach.
-      </div>
-
-      {/* Sub-section: One-tailed decisions */}
-      <EppoGuidanceSection />
-
-      {/* Pros */}
-      <h4 className="font-semibold mb-2 text-neutral-900">Advantages</h4>
-      <ul className="list-disc pl-5 space-y-2 text-neutral-700 mb-5">
-        <li>
-          <strong>Full statistical power on the primary KPI.</strong> Because the primary KPI uses a
-          standard confidence interval at the planned end date, there is no sequential correction and
-          no power penalty.
-        </li>
-        <li>
-          <strong>Continuous guardrail protection.</strong> Sequential monitoring of guardrail KPIs
-          lets you abort the experiment the moment a harmful effect is detected, without waiting for
-          the planned end date.
-        </li>
-        <li>
-          <strong>Simpler to explain and implement</strong> than a fully sequential design. Most
-          decisions are still made at a single planned analysis; only guardrails require continuous
-          monitoring.
-        </li>
-        <li>
-          <strong>Accounting for weekday effects.</strong> In many cases, tests are designed to run
-          for a round number of weeks (e.g. 2 weeks), so that the treatment and control groups are
-          exposed to the same day-of-week distribution. In these cases, stopping early may create
-          bias by giving some weekdays more weight than others.
-        </li>
-      </ul>
-
-      {/* Cons */}
-      <h4 className="font-semibold mb-2 text-neutral-900">Limitations</h4>
-      <ul className="list-disc pl-5 space-y-2 text-neutral-700 mb-6">
-        <li>
-          <strong>No early stopping for success on the primary KPI.</strong> If the treatment effect
-          is very large, you must still wait until the planned end date to declare success. This could
-          have a considerable effect on experiments that were designed to run for a long time, in
-          which the treatment has a larger effect than expected.
-        </li>
-      </ul>
-
-      {/* Sub-section: What if primary KPI is also a guardrail? */}
-      <div className="border-t border-neutral-200 pt-6 mb-6">
-        <h3 className="text-lg font-bold mb-3 text-neutral-900">
-          What if the primary KPI is also a guardrail?
-        </h3>
-        <p className="text-neutral-700 mb-4">
-          In some experiments, the primary outcome metric must also be protected against severe harm,
-          for example a revenue metric where a large negative effect would require immediate action.
-          In this case, the same approach described above applies: the significance budget is split
-          between two tests:
-        </p>
-        <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-4">
-          <ul className="list-disc pl-5 space-y-2 text-neutral-800">
-            <li>
-              <strong>Sequential confidence interval throughout the experiment</strong>, at significance level{' '}
-              <em>α / 2</em>. If the CI excludes zero at any point during the experiment, you may
-              stop early.
-            </li>
-            <li>
-              <strong>Standard t-test at the planned end date</strong>, at significance level{' '}
-              <em>α / 2</em>. If the experiment runs to completion without early stopping, the final
-              decision uses this narrower threshold.
-            </li>
-          </ul>
-        </div>
-        <p className="text-neutral-700 mb-4">
-          As mentioned above, by a union bound (Bonferroni), the probability of any false positive
-          across both tests is at most <em>α/2 + α/2 = α</em>, so the overall Type I error is
-          controlled.
-        </p>
-        <p className="text-neutral-700">
-          Note that guardrail metrics that are also tracked as outcome metrics will show wider
-          sequential confidence intervals throughout the experiment, narrowing to standard width
-          only at the planned end date. This can be confusing to stakeholders following results in
-          real time.
-        </p>
-      </div>
-
       {/* Show the math */}
+      <div id="act3-math">
       <DisplayMathBox>
         <div className="space-y-6 text-neutral-800">
 
@@ -288,9 +298,10 @@ export function ActHybrid() {
 
         </div>
       </DisplayMathBox>
+      </div>
 
       {/* Key Takeaway */}
-      <div className="bg-blue-100 border border-blue-500 rounded-lg p-6 mb-8">
+      <div id="act3-takeaway" className="bg-blue-100 border border-blue-500 rounded-lg p-6 mb-8">
         <h4 className="font-bold text-blue-900 mb-3">Key Takeaway</h4>
         <div className="text-neutral-800 space-y-3">
           <p>
@@ -299,7 +310,7 @@ export function ActHybrid() {
             at α/2 = 2.5%).
           </p>
           <p>
-            This gives you rapid harm protection without sacrificing statistical power on the metric
+            This gives you continuous harm protection without sacrificing statistical power on the metric
             you care about most. Both components use the conventional 2.5% threshold (z = 1.96),
             identical to one tail of a standard 95% confidence interval.
           </p>

@@ -17,11 +17,52 @@ import { ShowAllButton } from '../../components/shared/ShowAllButton'
 const FOCUSED_ITEMS = [
   { id: '_home', label: 'Home' },
   { id: 'intro', label: 'Introduction' },
-  { id: 'act1', label: 'Act 1 – Peeking Problem' },
-  { id: 'act2', label: 'Act 2 – Sequential Testing in Eppo (2022)' },
-  { id: 'act3-hybrid', label: 'Act 3 – Hybrid Approach' },
-  { id: 'act4', label: 'Act 4 – Alternative Methods' },
-  { id: 'act5', label: 'Act 5 – Magnitude Error' },
+  {
+    id: 'act1', label: 'Act 1 – Peeking Problem',
+    children: [
+      { id: 'act1-sim', label: 'Simulation' },
+      { id: 'act1-why', label: 'Why does this happen?' },
+      { id: 'act1-takeaway', label: 'Key Takeaway' },
+    ],
+  },
+  {
+    id: 'act2', label: 'Act 2 – Sequential Testing in Eppo (2022)',
+    children: [
+      { id: 'act2-sim', label: 'Simulation' },
+      { id: 'act2-tradeoff', label: 'Power tradeoff' },
+      { id: 'act2-takeaway', label: 'Key Takeaway' },
+    ],
+  },
+  {
+    id: 'act3-hybrid', label: 'Act 3 – Hybrid Approach',
+    children: [
+      { id: 'act3-sim', label: 'Simulation' },
+      { id: 'act3-adv', label: 'Advantages & Limitations' },
+      { id: 'act3-guardrail', label: 'Primary KPI as guardrail' },
+      { id: 'act3-math', label: 'Show the math' },
+      { id: 'act3-takeaway', label: 'Key Takeaway' },
+    ],
+  },
+  {
+    id: 'act4', label: 'Act 4 – Alternative Methods',
+    children: [
+      { id: 'act4-bonferroni', label: 'Method 1: Bonferroni' },
+      { id: 'act4-pocock', label: 'Method 2: Pocock' },
+      { id: 'act4-obf', label: 'Method 3: OBF' },
+      { id: 'act4-harm', label: 'Method 4: Harm Detection' },
+      { id: 'act4-sim', label: 'Simulation' },
+      { id: 'act4-comparison', label: 'Comparison' },
+      { id: 'act4-hybrid-impl', label: 'Hybrid without Eppo' },
+    ],
+  },
+  {
+    id: 'act5', label: 'Act 5 – Magnitude Error',
+    children: [
+      { id: 'act5-winners-curse', label: "Winner's curse" },
+      { id: 'act5-sim', label: 'Simulation' },
+      { id: 'act5-takeaway', label: 'Key Takeaway' },
+    ],
+  },
   { id: 'faq', label: 'FAQ' },
   { id: 'summary', label: 'Summary' },
   { id: 'math-reference', label: 'Math Reference' },

@@ -552,14 +552,14 @@ export function ABTestSim({
             Number of users <span className="font-mono">(n = {n})</span>
           </label>
           <input
-            type="range" min={0} max={100000} step={50}
+            type="range" min={0} max={1000000} step={1000}
             value={n} onChange={e => setN(parseInt(e.target.value, 10))}
             className="w-full" list="abt-n-ticks"
           />
           <datalist id="abt-n-ticks">
-            <option value="0" /><option value="1000" /><option value="5000" /><option value="10000" /><option value="50000" /><option value="100000" />
+            <option value="0" /><option value="1000" /><option value="10000" /><option value="100000" /><option value="500000" /><option value="1000000" />
           </datalist>
-          <SliderTicks ticks={[0, 1000, 5000, 10000, 50000, 100000]} min={0} max={100000} format={v => v >= 1000 ? `${v / 1000}k` : '0'} />
+          <SliderTicks ticks={[0, 1000, 10000, 100000, 500000, 1000000]} min={0} max={1000000} format={v => v >= 1000000 ? '1M' : v >= 1000 ? `${v / 1000}k` : '0'} />
         </div>
         <div className="w-full sm:w-[210px]">
           <label className="block text-xs font-medium text-neutral-600 mb-1">

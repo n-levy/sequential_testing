@@ -6,6 +6,7 @@ import { useRouter } from 'next/navigation'
 interface SidebarItem {
   id: string
   label: string
+  children?: SidebarItem[]
 }
 
 interface ActSidebarProps {
@@ -15,10 +16,14 @@ interface ActSidebarProps {
 export function ActSidebar({ items }: ActSidebarProps) {
   const [activeId, setActiveId] = useState<string>('')
   const [open, setOpen] = useState(false)
+  const [expanded, setExpanded] = useState<Set<string>>(new Set())
   const router = useRouter()
 
+  const allObservable = items.flatMap(item =>
+    [item, ...(item.children ?? [])].filter(i => !i.id.startsWith('_'))
+  )
+
   useEffect(() => {
-    const observableItems = items.filter(item => !item.id.startsWith('_'))
     const observer = new IntersectionObserver(
       (entries) => {
         const visible = entries.filter(e => e.isIntersecting)
@@ -30,13 +35,13 @@ export function ActSidebar({ items }: ActSidebarProps) {
       { rootMargin: '-80px 0px -60% 0px', threshold: 0 }
     )
 
-    const targets = observableItems
+    const targets = allObservable
       .map(item => document.getElementById(item.id))
       .filter(Boolean) as HTMLElement[]
 
     targets.forEach(el => observer.observe(el))
     return () => observer.disconnect()
-  }, [items])
+  }, [allObservable])
 
   const handleClick = (id: string) => {
     if (id === '_home') {
@@ -49,6 +54,15 @@ export function ActSidebar({ items }: ActSidebarProps) {
       el.scrollIntoView({ behavior: 'smooth', block: 'start' })
       setOpen(false)
     }
+  }
+
+  const toggleExpand = (id: string, e: React.MouseEvent) => {
+    e.stopPropagation()
+    setExpanded(prev => {
+      const next = new Set(prev)
+      if (next.has(id)) { next.delete(id) } else { next.add(id) }
+      return next
+    })
   }
 
   return (
@@ -83,18 +97,49 @@ export function ActSidebar({ items }: ActSidebarProps) {
           <ul className="space-y-0.5">
             {items.map((item) => (
               <li key={item.id}>
-                <button
-                  onClick={() => handleClick(item.id)}
-                  className={`
-                    w-full text-left px-3 py-1.5 rounded text-sm transition-colors
-                    ${activeId === item.id
-                      ? 'bg-blue-50 text-blue-700 font-semibold'
-                      : 'text-neutral-600 hover:bg-neutral-100 hover:text-neutral-900'
-                    }
-                  `}
-                >
-                  {item.label}
-                </button>
+                <div className="flex items-center gap-0.5">
+                  <button
+                    onClick={() => handleClick(item.id)}
+                    className={`
+                      flex-1 text-left px-3 py-1.5 rounded text-sm transition-colors
+                      ${activeId === item.id
+                        ? 'bg-blue-50 text-blue-700 font-semibold'
+                        : 'text-neutral-600 hover:bg-neutral-100 hover:text-neutral-900'
+                      }
+                    `}
+                  >
+                    {item.label}
+                  </button>
+                  {item.children && item.children.length > 0 && (
+                    <button
+                      onClick={(e) => toggleExpand(item.id, e)}
+                      className="px-1.5 py-1 text-xs text-neutral-400 hover:text-neutral-700 hover:bg-neutral-100 rounded transition-colors leading-none"
+                      aria-label={expanded.has(item.id) ? 'Collapse' : 'Expand'}
+                    >
+                      {expanded.has(item.id) ? '−' : '+'}
+                    </button>
+                  )}
+                </div>
+                {item.children && expanded.has(item.id) && (
+                  <ul className="mt-0.5 ml-3 space-y-0.5 border-l border-neutral-200 pl-2">
+                    {item.children.map(child => (
+                      <li key={child.id}>
+                        <button
+                          onClick={() => handleClick(child.id)}
+                          className={`
+                            w-full text-left px-2 py-1 rounded text-xs transition-colors
+                            ${activeId === child.id
+                              ? 'bg-blue-50 text-blue-700 font-semibold'
+                              : 'text-neutral-500 hover:bg-neutral-100 hover:text-neutral-800'
+                            }
+                          `}
+                        >
+                          {child.label}
+                        </button>
+                      </li>
+                    ))}
+                  </ul>
+                )}
               </li>
             ))}
           </ul>

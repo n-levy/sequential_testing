@@ -83,23 +83,23 @@ export function Act4() {
 
         {/* ── All Methods ── */}
         <div className="flex flex-col gap-6 mb-8">
-          <Card className="bg-white border border-neutral-300">
+          <Card id="act4-bonferroni" className="bg-white border border-neutral-300">
             <BonferroniImpl />
           </Card>
-          <Card className="bg-white border border-neutral-300">
+          <Card id="act4-pocock" className="bg-white border border-neutral-300">
             <PocockImpl />
           </Card>
-          <Card className="bg-white border border-neutral-300">
+          <Card id="act4-obf" className="bg-white border border-neutral-300">
             <ObfImpl />
           </Card>
-          <Card className="bg-white border border-neutral-300">
+          <Card id="act4-harm" className="bg-white border border-neutral-300">
             <HarmDetectionImpl />
           </Card>
         </div>
 
 
         {/* ── Simulation: Share crossing each threshold ── */}
-        <div className="mb-6">
+        <div id="act4-sim" className="mb-6">
           <h3 className="text-xl font-semibold mb-2">Simulation</h3>
           <p className="text-neutral-700 mb-3">
             This extends the Act 1/2 simulation by adding Bonferroni, Pocock, O&apos;Brien&ndash;Fleming,
@@ -118,14 +118,14 @@ export function Act4() {
               <strong>Bonferroni:</strong> most conservative among the formal methods (lowest crossing share).<br />
               <strong>Pocock:</strong> less conservative than Bonferroni; calibrated to the joint distribution across K analyses.<br />
               <strong>O&apos;Brien&ndash;Fleming:</strong> very strict early, close to classical at the final analysis.<br />
-              <strong>Harm detection:</strong> one-sided, only fires when the effect is strongly negative. Under a null with no true harm, it rarely triggers regardless of K.<br />
+              <strong>Harm detection (3SE rule):</strong> one-sided, only fires when the effect is strongly negative (z &lt; −3.0). Under a null with no true harm, it rarely triggers regardless of K.<br />
               <strong>Sequential confidence interval (Eppo, 2022):</strong> anytime-valid and typically close to 5% under continuous monitoring.
             </>}
           />
         </div>
 
         {/* ── Head-to-Head Comparison ── */}
-        <h3 className="text-2xl font-bold text-neutral-900 mb-4">Comparison</h3>
+        <h3 id="act4-comparison" className="text-2xl font-bold text-neutral-900 mb-4">Comparison</h3>
         <div className="overflow-x-auto mb-6">
           <p className="text-xs text-neutral-500 mb-2">
             The confidence interval width rows below are illustrative values for <InlineMath>{`K = 4`}</InlineMath>, independent of the slider above.
@@ -239,7 +239,7 @@ export function Act4() {
         </div>
 
         {/* ── Hybrid Without Eppo (2022) ── */}
-        <h3 className="text-2xl font-bold text-neutral-900 mb-4">
+        <h3 id="act4-hybrid-impl" className="text-2xl font-bold text-neutral-900 mb-4">
           Implementing the Hybrid Approach Without Eppo (2022)
         </h3>
 

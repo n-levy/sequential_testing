@@ -50,7 +50,7 @@ export function Act2() {
       </p>
 
       {/* Simulation intro */}
-      <div className="mb-6">
+      <div id="act2-sim" className="mb-6">
         <h3 className="text-xl font-semibold mb-2">Simulation</h3>
         <p className="text-neutral-700">
           This is the same simulation as Act 1, plus Eppo&apos;s (2022) sequential confidence interval (blue)
@@ -141,7 +141,7 @@ export function Act2() {
       </div>
 
       {/* Power tradeoff */}
-      <div className="bg-white border border-neutral-300 rounded-lg p-5 mb-8">
+      <div id="act2-tradeoff" className="bg-white border border-neutral-300 rounded-lg p-5 mb-8">
         <h4 className="font-semibold mb-2">The power tradeoff</h4>
         <p className="text-neutral-700 mb-3">
           Error control is not free. Because the sequential CI must remain valid across all possible
@@ -168,7 +168,7 @@ export function Act2() {
       </div>
 
       {/* ── Key Takeaway ── */}
-      <div className="bg-blue-100 border border-blue-500 rounded-lg p-6 mb-8">
+      <div id="act2-takeaway" className="bg-blue-100 border border-blue-500 rounded-lg p-6 mb-8">
         <h4 className="font-bold text-blue-900 mb-3">Key Takeaway</h4>
         <div className="text-neutral-800 space-y-3">
           <p>

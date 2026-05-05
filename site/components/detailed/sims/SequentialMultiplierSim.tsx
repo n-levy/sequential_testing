@@ -171,7 +171,7 @@ export function SequentialMultiplierSim() {
             <label className="block text-sm font-medium text-neutral-700 mb-1">
               Max sample size: {maxN.toLocaleString()}
             </label>
-            <input type="range" min={1000} max={100000} step={1000} value={maxN}
+            <input type="range" min={1000} max={1000000} step={1000} value={maxN}
               onChange={e => setMaxN(+e.target.value)} className="w-full accent-blue-600" />
           </div>
         </div>

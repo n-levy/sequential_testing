@@ -42,7 +42,7 @@ export function Act1() {
       <h2 className="text-2xl font-bold mb-1">Act 1: The Peeking Problem</h2>
 
       {/* Simulation intro */}
-      <div className="mb-6">
+      <div id="act1-sim" className="mb-6">
         <h3 className="text-xl font-semibold mb-2">Simulation</h3>
         <p className="text-neutral-700">
           Below is a simulation of an A/B test. Specify the effect size, number of users, and significance level.
@@ -60,7 +60,7 @@ export function Act1() {
       </div>
 
       {/* Why does this happen */}
-      <div className="bg-white border border-neutral-300 rounded-lg p-5 mb-6">
+      <div id="act1-why" className="bg-white border border-neutral-300 rounded-lg p-5 mb-6">
         <h4 className="font-semibold mb-2">Why does this happen?</h4>
         <p className="text-neutral-700">
           Standard confidence intervals are valid only when evaluated once at a pre-specified sample size. Each additional peek gives another chance to get
@@ -116,7 +116,7 @@ export function Act1() {
       </div>
 
       {/* ── Key Takeaway ── */}
-      <div className="bg-blue-100 border border-blue-500 rounded-lg p-6 mb-8">
+      <div id="act1-takeaway" className="bg-blue-100 border border-blue-500 rounded-lg p-6 mb-8">
         <h4 className="font-bold text-blue-900 mb-3">Key Takeaway</h4>
         <div className="text-neutral-800 space-y-3">
           <p>
