@@ -13,7 +13,7 @@ export function HarmDetectionImpl() {
           <p className="text-neutral-700">
             A simple rule for guardrail monitoring: stop the experiment if the effect on
             a guardrail metric is more than 3 standard deviations in the <em>harmful</em> direction.
-            Unlike the old two-sided 3 SD rule, this check is <strong>one-sided</strong> — it only
+            Unlike the old two-sided 3 SD rule, this check is <strong>one-sided</strong>:it only
             triggers when the effect is clearly negative (harmful). A large positive effect on a
             guardrail is not a reason to abort.
           </p>
@@ -26,7 +26,7 @@ export function HarmDetectionImpl() {
           </p>
           <BlockMath>{`\\hat{\\tau}(t_k) + 3.0 \\cdot \\text{SE}(t_k) < 0`}</BlockMath>
           <p className="text-neutral-700 mb-3">
-            If this holds, the upper bound of the 3-SD interval is below zero — the data
+            If this holds, the upper bound of the 3-SD interval is below zero:the data
             provide very strong evidence of harm. Abort the experiment.
           </p>
           <p className="text-neutral-700">
@@ -69,7 +69,7 @@ export function HarmDetectionImpl() {
           </div>
           <p className="text-neutral-600 text-sm mt-2">
             The z = 3.0 threshold is the same at every peek. Unlike OBF and Pocock, this is not
-            formally calibrated to the number of peeks — it is a fixed rule chosen for its
+            formally calibrated to the number of peeks:it is a fixed rule chosen for its
             simplicity and conservativeness.
           </p>
         </div>
@@ -77,7 +77,7 @@ export function HarmDetectionImpl() {
         <div className="bg-white border border-neutral-400 rounded-lg p-4">
           <p className="text-neutral-700">
             At a single look the false positive rate for the one-sided test is{' '}
-            <InlineMath>{`\\Phi(-3) \\approx 0.13\\%`}</InlineMath> — far below the nominal 5%.
+            <InlineMath>{`\\Phi(-3) \\approx 0.13\\%`}</InlineMath>:far below the nominal 5%.
             This means the rule will <strong>rarely trigger</strong> even under a genuine harmful
             effect unless the effect is large or the experiment runs for a long time. It is
             intended as a last-resort safety check, not a precise statistical test.
@@ -97,13 +97,13 @@ export function HarmDetectionImpl() {
             </li>
             <li>
               <strong>Harm check:</strong> If <InlineMath>{`\\text{UB}_k < 0`}</InlineMath>: harm detected
-              — abort the experiment immediately.
+             :abort the experiment immediately.
             </li>
             <li>
               <strong>Otherwise:</strong> continue. No stopping for positive results.
             </li>
             <li>
-              <strong>No pre-specification of K required</strong> — the threshold does not depend
+              <strong>No pre-specification of K required</strong>:the threshold does not depend
               on the number of planned peeks.
             </li>
           </ol>

@@ -218,8 +218,8 @@ export function MartingaleSim() {
 
       <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
         <p className="text-sm text-blue-800">
-          <strong>What you&apos;re seeing:</strong> Left: a single gambler&apos;s profit/loss over time — a random walk
-          re-labelled as money. Right: the doubling strategy histogram — many small winners, a few
+          <strong>What you&apos;re seeing:</strong> Left: a single gambler&apos;s profit/loss over time:a random walk
+          re-labelled as money. Right: the doubling strategy histogram:many small winners, a few
           catastrophic losers. The average profit converges to €0 (martingale property). No strategy
           can beat a fair game.
         </p>

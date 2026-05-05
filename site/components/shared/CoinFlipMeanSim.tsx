@@ -403,8 +403,8 @@ export function CoinFlipMeanSim({
     if (w == null) return null
     const lo = est - w
     const hi = est + w
-    if (lo > 0) return { label: 'Reject null — bias > 0', color: 'text-green-700' }
-    if (hi < 0) return { label: 'Reject null — bias < 0', color: 'text-rose-700' }
+    if (lo > 0) return { label: 'Reject null:bias > 0', color: 'text-green-700' }
+    if (hi < 0) return { label: 'Reject null:bias < 0', color: 'text-rose-700' }
     return { label: 'Inconclusive', color: 'text-neutral-600' }
   }, [layers, bands, traj, n])
 

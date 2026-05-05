@@ -87,9 +87,6 @@ export function Act2() {
         <h4 className="font-semibold mb-2">How different is it? (false positive rate under peeking)</h4>
       </div>
       <div className="overflow-x-auto mb-6">
-        <p className="text-xs text-neutral-500 mb-2">
-          Values below are calibrated to default settings (<InlineMath>{`\\alpha = 0.05`}</InlineMath>, <InlineMath>{`n = 10{,}000`}</InlineMath>, baseline 10%, no true effect) using equal-interval peeks.
-        </p>
         <table className="w-full min-w-[640px] text-sm border-collapse border border-neutral-300">
           <thead>
             <tr className="bg-neutral-100">
@@ -126,6 +123,9 @@ export function Act2() {
             </tr>
           </tbody>
         </table>
+        <p className="text-xs text-neutral-500 mt-2">
+          Values above are calibrated to default settings (<InlineMath>{`\\alpha = 0.05`}</InlineMath>, <InlineMath>{`n = 10{,}000`}</InlineMath>, baseline 10%, no true effect). Each row uses the number of equal-interval peeks shown in the checking schedule column.
+        </p>
       </div>
 
       <div className="bg-neutral-50 border border-neutral-300 rounded-lg p-5 mb-8">
@@ -133,10 +133,10 @@ export function Act2() {
           Under repeated peeking, the standard confidence interval inflates false positives substantially, while the sequential confidence interval stays close to the target error level.
         </p>
         <p className="text-neutral-600 text-sm mt-2">
-          Note: the sequential CI shows ~2% at a single look — below the nominal 5% — because the sequential multiplier is calibrated for continuous monitoring and is intentionally conservative at any fixed look.
+          Note: the sequential CI shows ~2% at a single look, below the nominal 5%, because the sequential multiplier is calibrated for continuous monitoring and is intentionally conservative at any fixed look.
         </p>
         <p className="text-neutral-600 text-sm mt-2">
-          Note on sample size: these false positive rates are the same regardless of <InlineMath>{`n`}</InlineMath>. Because the tuning parameter <InlineMath>{`\\nu = 0.25n`}</InlineMath> scales with the planned sample size, the sequential multiplier at each fractional look position <InlineMath>{`k/K`}</InlineMath> is independent of <InlineMath>{`n`}</InlineMath>, and the z-statistic under <InlineMath>{`H_0`}</InlineMath> is always <InlineMath>{`N(0,1)`}</InlineMath>. What <em>does</em> change with <InlineMath>{`n`}</InlineMath> is the absolute CI width (narrower for larger <InlineMath>{`n`}</InlineMath>), but the false positive rates are scale-invariant.
+          Note on sample size: the false positive rates are approximately but not exactly independent of <InlineMath>{`n`}</InlineMath>. With the Eppo (2022) formula <InlineMath>{`\\nu = n^*/({\\log(n^*/\\alpha)-1})`}</InlineMath>, the ratio <InlineMath>{`\\nu/n^*`}</InlineMath> decreases slowly as <InlineMath>{`n^*`}</InlineMath> grows, so the sequential multiplier at each fractional look shifts slightly with <InlineMath>{`n`}</InlineMath>. In typical operating ranges the effect is small. What changes most visibly with <InlineMath>{`n`}</InlineMath> is the absolute CI width (narrower for larger <InlineMath>{`n`}</InlineMath>).
         </p>
       </div>
 
@@ -145,11 +145,11 @@ export function Act2() {
         <h4 className="font-semibold mb-2">The power tradeoff</h4>
         <p className="text-neutral-700 mb-3">
           Error control is not free. Because the sequential CI must remain valid across all possible
-          stopping times, its multiplier at the planned end date is larger than 1.96 — approximately
-          2.40 with the default tuning. This means that if a real effect exists, you need it to be
-          about 23% larger to reach significance at <InlineMath>{`n^*`}</InlineMath>, or equivalently
-          you need roughly 50% more users to achieve the same power as a standard fixed-horizon test
-          at the same <InlineMath>{`\\alpha`}</InlineMath>.
+          stopping times, its multiplier at the planned end date is larger than 1.96, approximately
+          2.45 at the default settings (<InlineMath>{`n^* = 10{,}000`}</InlineMath>, <InlineMath>{`\\alpha = 0.05`}</InlineMath>).
+          This means that if a real effect exists, you need it to be about 25% larger to reach
+          significance at <InlineMath>{`n^*`}</InlineMath>, or equivalently you need roughly 56% more
+          users to achieve the same power as a standard fixed-horizon test at the same <InlineMath>{`\\alpha`}</InlineMath>.
         </p>
         <p className="text-neutral-700 mb-3">
           However, the sequential CI also gives you the opportunity to stop <em>early</em> when the
@@ -162,7 +162,7 @@ export function Act2() {
           results, the sequential CI can match or beat the fixed-horizon design in expected sample
           size. If you monitor but never stop early, you pay the full power penalty at{' '}
           <InlineMath>{`n^*`}</InlineMath> without gaining anything. This is why the hybrid approach
-          in Act 3 — sequential monitoring for guardrails only, fixed-horizon for the primary KPI —
+          in Act 3 (sequential monitoring for guardrails only, fixed-horizon for the primary KPI)
           is often the better practical choice.
         </p>
       </div>
@@ -172,7 +172,7 @@ export function Act2() {
         <h4 className="font-bold text-blue-900 mb-3">Key Takeaway</h4>
         <div className="text-neutral-800 space-y-3">
           <p>
-            Sequential intervals trade narrowness at a single look for validity across all looks. If your team monitors live, this is the right tradeoff.
+            Sequential intervals trade narrowness at a single look for validity across all looks.
           </p>
         </div>
       </div>
@@ -188,13 +188,13 @@ export function Act2() {
           </p>
           <BlockMath>{`\\hat{u}_n \\pm \\frac{\\widehat{\\mathrm{SE}}_n}{\\bar{X}_{A,n}}\\cdot 1.96`}</BlockMath>
           <ul className="mb-6 text-sm text-neutral-600 space-y-1 ml-4 list-disc">
-            <li><InlineMath>{`\\hat{u}_n`}</InlineMath> — estimated relative uplift (in %) after <InlineMath>{`n`}</InlineMath> users per group have been observed</li>
-            <li><InlineMath>{`1.96`}</InlineMath> — the critical value for a 95% confidence interval (the 97.5th percentile of the standard Normal distribution)</li>
-            <li><InlineMath>{`\\widehat{\\mathrm{SE}}_n`}</InlineMath> — estimated standard error of the difference in means, equal to <InlineMath>{`\\sqrt{\\hat{\\sigma}_A^2/n + \\hat{\\sigma}_B^2/n}`}</InlineMath></li>
-            <li><InlineMath>{`\\hat{\\sigma}_A^2`}</InlineMath> — estimated variance of outcomes in the control group (group A)</li>
-            <li><InlineMath>{`\\hat{\\sigma}_B^2`}</InlineMath> — estimated variance of outcomes in the treatment group (group B)</li>
-            <li><InlineMath>{`\\bar{X}_{A,n}`}</InlineMath> — running mean outcome in the control group after <InlineMath>{`n`}</InlineMath> observations</li>
-            <li><InlineMath>{`n`}</InlineMath> — number of users assigned to each group so far</li>
+            <li><InlineMath>{`\\hat{u}_n`}</InlineMath>: estimated relative uplift (in %) after <InlineMath>{`n`}</InlineMath> users per group have been observed</li>
+            <li><InlineMath>{`1.96`}</InlineMath>: the critical value for a 95% confidence interval (the 97.5th percentile of the standard Normal distribution)</li>
+            <li><InlineMath>{`\\widehat{\\mathrm{SE}}_n`}</InlineMath>: estimated standard error of the difference in means, equal to <InlineMath>{`\\sqrt{\\hat{\\sigma}_A^2/n + \\hat{\\sigma}_B^2/n}`}</InlineMath></li>
+            <li><InlineMath>{`\\hat{\\sigma}_A^2`}</InlineMath>: estimated variance of outcomes in the control group (group A)</li>
+            <li><InlineMath>{`\\hat{\\sigma}_B^2`}</InlineMath>: estimated variance of outcomes in the treatment group (group B)</li>
+            <li><InlineMath>{`\\bar{X}_{A,n}`}</InlineMath>: running mean outcome in the control group after <InlineMath>{`n`}</InlineMath> observations</li>
+            <li><InlineMath>{`n`}</InlineMath>: number of users assigned to each group so far</li>
           </ul>
 
           {/* Step 2 */}
@@ -204,13 +204,13 @@ export function Act2() {
           </p>
           <BlockMath>{`\\hat{u}_n \\pm \\frac{\\widehat{\\mathrm{SE}}_n}{\\bar{X}_{A,n}}\\,\\sqrt{\\frac{n+\\nu}{n}\\log\\!\\left(\\frac{n+\\nu}{\\nu\\,\\alpha}\\right)}`}</BlockMath>
           <ul className="mb-6 text-sm text-neutral-600 space-y-1 ml-4 list-disc">
-            <li><InlineMath>{`\\hat{u}_n`}</InlineMath> — estimated relative uplift (in %) after <InlineMath>{`n`}</InlineMath> users per group</li>
-            <li><InlineMath>{`\\widehat{\\mathrm{SE}}_n`}</InlineMath> — estimated standard error of the difference in means at the current sample size</li>
-            <li><InlineMath>{`\\bar{X}_{A,n}`}</InlineMath> — running mean outcome in the control group (used to convert absolute SE to relative %)</li>
-            <li><InlineMath>{`n`}</InlineMath> — current number of users in each group</li>
-            <li><InlineMath>{`\\nu`}</InlineMath> — tuning parameter that controls the width–power tradeoff, calibrated to the planned sample size. See the formula below.</li>
-            <li><InlineMath>{`\\alpha`}</InlineMath> — target Type I error level (e.g. 0.05 for a 5% false-positive rate)</li>
-            <li><InlineMath>{`\\log`}</InlineMath> — natural logarithm</li>
+            <li><InlineMath>{`\\hat{u}_n`}</InlineMath>: estimated relative uplift (in %) after <InlineMath>{`n`}</InlineMath> users per group</li>
+            <li><InlineMath>{`\\widehat{\\mathrm{SE}}_n`}</InlineMath>: estimated standard error of the difference in means at the current sample size</li>
+            <li><InlineMath>{`\\bar{X}_{A,n}`}</InlineMath>: running mean outcome in the control group (used to convert absolute SE to relative %)</li>
+            <li><InlineMath>{`n`}</InlineMath>: current number of users in each group</li>
+            <li><InlineMath>{`\\nu`}</InlineMath>: tuning parameter that controls the width–power tradeoff, calibrated to the planned sample size. See the formula below.</li>
+            <li><InlineMath>{`\\alpha`}</InlineMath>: target Type I error level (e.g. 0.05 for a 5% false-positive rate)</li>
+            <li><InlineMath>{`\\log`}</InlineMath>: natural logarithm</li>
           </ul>
 
           {/* Step 3 */}
@@ -220,26 +220,26 @@ export function Act2() {
           </p>
           <BlockMath>{`m(n) = \\sqrt{\\frac{n+\\nu}{n}\\log\\!\\left(\\frac{n+\\nu}{\\nu\\,\\alpha}\\right)}`}</BlockMath>
           <ul className="mb-4 text-sm text-neutral-600 space-y-1 ml-4 list-disc">
-            <li><InlineMath>{`m(n)`}</InlineMath> — the time-varying multiplier applied to the standard error (replaces 1.96 from the fixed-horizon formula)</li>
-            <li><InlineMath>{`n`}</InlineMath> — current number of users in each group</li>
-            <li><InlineMath>{`\\nu`}</InlineMath> — tuning parameter (explained below)</li>
-            <li><InlineMath>{`\\alpha`}</InlineMath> — target Type I error level (e.g. 0.05)</li>
-            <li><InlineMath>{`\\log`}</InlineMath> — natural logarithm</li>
+            <li><InlineMath>{`m(n)`}</InlineMath>: the time-varying multiplier applied to the standard error (replaces 1.96 from the fixed-horizon formula)</li>
+            <li><InlineMath>{`n`}</InlineMath>: current number of users in each group</li>
+            <li><InlineMath>{`\\nu`}</InlineMath>: tuning parameter (explained below)</li>
+            <li><InlineMath>{`\\alpha`}</InlineMath>: target Type I error level (e.g. 0.05)</li>
+            <li><InlineMath>{`\\log`}</InlineMath>: natural logarithm</li>
           </ul>
           <p className="mb-6 text-neutral-800">
-            This multiplier is larger than 1.96, which is what keeps the Type I error controlled under continuous monitoring. The multiplier is especially high when <InlineMath>{`n`}</InlineMath> is small. As <InlineMath>{`n`}</InlineMath> grows, <InlineMath>{`m(n)`}</InlineMath> first decreases — so the confidence interval narrows — reaches a minimum somewhere before the planned sample size <InlineMath>{`n^*`}</InlineMath>, and then slowly increases again. The interval is therefore tightest in the middle of the experiment and widens slightly if the experiment runs well past <InlineMath>{`n^*`}</InlineMath>. It always remains above 1.96.
+            This multiplier is larger than 1.96, which is what keeps the Type I error controlled under continuous monitoring. The multiplier is especially high when <InlineMath>{`n`}</InlineMath> is small. As <InlineMath>{`n`}</InlineMath> grows, <InlineMath>{`m(n)`}</InlineMath> first decreases, reaching its minimum at roughly 40% of <InlineMath>{`n^*`}</InlineMath>, and then slowly increases again. The confidence interval is therefore widest early in the experiment, narrowest around 40% of the way through, and has widened somewhat again by the planned end date <InlineMath>{`n^*`}</InlineMath>. It always remains above 1.96.
           </p>
           <p className="mb-6 text-neutral-800">
             The tuning parameter <InlineMath>{`\\nu`}</InlineMath> controls this trade-off between early-stopping power and long-run width. Eppo (2022) sets it as:
           </p>
           <BlockMath>{`\\nu = \\frac{n^*}{\\log(n^*/\\alpha) - 1}`}</BlockMath>
           <ul className="mb-4 text-sm text-neutral-600 space-y-1 ml-4 list-disc">
-            <li><InlineMath>{`\\nu`}</InlineMath> — tuning parameter that balances the interval width at early looks versus the planned end date</li>
-            <li><InlineMath>{`n^*`}</InlineMath> — the planned (maximum) sample size per group — the horizon at which the experiment is expected to end</li>
-            <li><InlineMath>{`\\alpha`}</InlineMath> — target Type I error level</li>
+            <li><InlineMath>{`\\nu`}</InlineMath>: tuning parameter that balances the interval width at early looks versus the planned end date</li>
+            <li><InlineMath>{`n^*`}</InlineMath>: the planned (maximum) sample size per group, the horizon at which the experiment is expected to end</li>
+            <li><InlineMath>{`\\alpha`}</InlineMath>: target Type I error level</li>
           </ul>
           <p className="mb-6 text-neutral-800">
-            Setting <InlineMath>{`\\nu`}</InlineMath> too high (relative to actual traffic) shifts the minimum of <InlineMath>{`m(n)`}</InlineMath> to a sample size you never reach, so the interval stays wider than necessary throughout the experiment. Setting it too low shifts the minimum to a point you pass quickly, after which the multiplier starts rising earlier than optimal. The formula above calibrates <InlineMath>{`\\nu`}</InlineMath> so the multiplier is near its minimum around <InlineMath>{`n^*`}</InlineMath> — the point where you expect to make a decision. Being off by a factor of two is fine; being off by a factor of ten matters.
+            Setting <InlineMath>{`\\nu`}</InlineMath> too high shifts the minimum to a point late in or past the experiment, so the interval narrows throughout without giving much early-stopping power. Setting it too low shifts the minimum very early, after which the multiplier rises steeply and the interval is wide again by <InlineMath>{`n^*`}</InlineMath>. The formula above places the minimum at roughly 40% of <InlineMath>{`n^*`}</InlineMath>, balancing early-stopping power against the multiplier at the planned end date. Being off by a factor of two is fine; being off by a factor of ten matters.
           </p>
 
           {/* Step 4 */}
@@ -249,16 +249,16 @@ export function Act2() {
           </p>
           <BlockMath>{`\\Pr\\!\\left(u \\in \\mathrm{CI}_n\\ \\text{for all } n\\ge1\\right)\\ge 1-\\alpha`}</BlockMath>
           <ul className="mb-4 text-sm text-neutral-600 space-y-1 ml-4 list-disc">
-            <li><InlineMath>{`u`}</InlineMath> — the true (unknown) relative uplift of the treatment compared to control</li>
-            <li><InlineMath>{`\\mathrm{CI}_n`}</InlineMath> — the sequential confidence interval computed at sample size <InlineMath>{`n`}</InlineMath></li>
-            <li><InlineMath>{`\\Pr(\\cdot)`}</InlineMath> — probability over repeated experiments</li>
-            <li><InlineMath>{`\\alpha`}</InlineMath> — target Type I error level; the guarantee holds with probability at least <InlineMath>{`1 - \\alpha`}</InlineMath></li>
+            <li><InlineMath>{`u`}</InlineMath>: the true (unknown) relative uplift of the treatment compared to control</li>
+            <li><InlineMath>{`\\mathrm{CI}_n`}</InlineMath>: the sequential confidence interval computed at sample size <InlineMath>{`n`}</InlineMath></li>
+            <li><InlineMath>{`\\Pr(\\cdot)`}</InlineMath>: probability over repeated experiments</li>
+            <li><InlineMath>{`\\alpha`}</InlineMath>: target Type I error level; the guarantee holds with probability at least <InlineMath>{`1 - \\alpha`}</InlineMath></li>
           </ul>
           <p className="mb-2 text-neutral-800">
             So unlike fixed-horizon confidence intervals, the guarantee still holds under continuous monitoring.
           </p>
           <p className="text-neutral-800">
-            As <InlineMath>{`n`}</InlineMath> increases, the multiplier <InlineMath>{`m(n)`}</InlineMath> first decreases and then slowly rises — so the confidence interval narrows through most of the experiment and widens slightly if the experiment runs past the planned sample size.
+            As <InlineMath>{`n`}</InlineMath> increases, the multiplier <InlineMath>{`m(n)`}</InlineMath> first decreases and then slowly rises, so the confidence interval is at its narrowest around 40% of the way through the experiment, and has widened somewhat by the planned end date.
           </p>
         </div>
       </DisplayMathBox>

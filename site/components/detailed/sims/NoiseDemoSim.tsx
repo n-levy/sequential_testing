@@ -129,7 +129,7 @@ export function NoiseDemoSim() {
           <div className="flex-1">
             <h4 className="font-bold text-neutral-900 mb-1">Signal vs Noise</h4>
             <p className="text-sm text-neutral-600">
-              Blue = control, green = treatment. Try increasing noise — the distributions overlap 
+              Blue = control, green = treatment. Try increasing noise:the distributions overlap 
               and the signal disappears.
             </p>
           </div>
@@ -193,7 +193,7 @@ export function NoiseDemoSim() {
         <p className="text-sm text-blue-800">
           <strong>The core problem:</strong> In real A/B tests, the true effect is tiny (e.g. +2%)
           while user-level noise is enormous (σ ≈ 200%). This is why experiments need thousands of
-          users and why variance reduction (Act 11) is so valuable — it narrows the distributions,
+          users and why variance reduction (Act 11) is so valuable:it narrows the distributions,
           making the signal visible sooner.
         </p>
       </div>

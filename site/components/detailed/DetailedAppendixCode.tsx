@@ -441,8 +441,8 @@ export function MartingaleSim() {
 
       <div className="bg-purple-50 border border-purple-200 rounded-lg p-4">
         <p className="text-sm text-purple-800">
-          <strong>What you&apos;re seeing:</strong> Left: a single gambler&apos;s profit/loss over time — a random walk
-          re-labelled as money. Right: the doubling strategy histogram — many small winners, a few
+          <strong>What you&apos;re seeing:</strong> Left: a single gambler&apos;s profit/loss over time, a random walk
+          re-labelled as money. Right: the doubling strategy histogram, showing many small winners and a few
           catastrophic losers. The average profit converges to €0 (martingale property). No strategy
           can beat a fair game.
         </p>
@@ -1525,7 +1525,7 @@ export function MixtureSPRTSim() {
         <p className="text-sm text-purple-800">
           <strong>Key insight:</strong> When the true effect size differs from the SPRT&apos;s assumed δ,
           the SPRT can be slow or erratic. The mSPRT hedges across many effect sizes via the
-          mixture, making it robust. Both are anytime-valid — the difference is power and speed.
+          mixture, making it robust. Both are anytime-valid; the difference is power and speed.
         </p>
       </div>
     </div>
@@ -1710,7 +1710,7 @@ export function ConfidenceSequenceSim() {
           <div className="flex-1">
             <h4 className="font-bold text-neutral-900 mb-1">Confidence Sequence vs Fixed CI</h4>
             <p className="text-sm text-neutral-600">
-              The CS (purple) is wider than the fixed CI (blue) — the &ldquo;price of peeking&rdquo; —
+              The CS (purple) is wider than the fixed CI (blue), the &ldquo;price of peeking,&rdquo;
               but valid at all times simultaneously.
             </p>
           </div>
@@ -1897,7 +1897,7 @@ export function NoiseDemoSim() {
           <div className="flex-1">
             <h4 className="font-bold text-neutral-900 mb-1">Signal vs Noise</h4>
             <p className="text-sm text-neutral-600">
-              Blue = control, green = treatment. Try increasing noise — the distributions overlap 
+              Blue = control, green = treatment. Try increasing noise: the distributions overlap
               and the signal disappears.
             </p>
           </div>
@@ -1961,7 +1961,7 @@ export function NoiseDemoSim() {
         <p className="text-sm text-blue-800">
           <strong>The core problem:</strong> In real A/B tests, the true effect is tiny (e.g. +2%)
           while user-level noise is enormous (σ ≈ 200%). This is why experiments need thousands of
-          users and why variance reduction (Act 11) is so valuable — it narrows the distributions,
+          users and why variance reduction (Act 11) is so valuable: it narrows the distributions,
           making the signal visible sooner.
         </p>
       </div>
@@ -2699,7 +2699,7 @@ export function SequentialMultiplierSim() {
 
     g.append('text').attr('x', width / 2).attr('y', height + 42)
       .attr('text-anchor', 'middle').attr('font-size', '12px').attr('fill', '#6b7280')
-      .text('Sample size (n) — log scale')
+      .text('Sample size (n), log scale')
     g.append('text').attr('transform', 'rotate(-90)')
       .attr('x', -height / 2).attr('y', -45)
       .attr('text-anchor', 'middle').attr('font-size', '12px').attr('fill', '#6b7280')
@@ -2739,8 +2739,8 @@ export function SequentialMultiplierSim() {
           <div className="flex-1">
             <h4 className="font-bold text-neutral-900 mb-1">Sequential Multiplier m(n)</h4>
             <p className="text-sm text-neutral-600">
-              The purple curve shows how the sequential CI multiplier approaches — but 
-              never reaches — the classical 1.96. The shaded area is the &ldquo;price of peeking.&rdquo;
+              The purple curve shows how the sequential CI multiplier approaches, but
+              never reaches, the classical 1.96. The shaded area is the &ldquo;price of peeking.&rdquo;
             </p>
           </div>
         </div>
@@ -2769,7 +2769,7 @@ export function SequentialMultiplierSim() {
             <div key={n} className="bg-purple-50 border border-purple-200 rounded-lg p-3 text-center">
               <div className="text-sm font-bold text-purple-700">{exampleMults[i].toFixed(2)}</div>
               <div className="text-xs text-purple-600">
-                m({n.toLocaleString()}) — {((exampleMults[i] / 1.96 - 1) * 100).toFixed(0)}% wider than classical
+                m({n.toLocaleString()}): {((exampleMults[i] / 1.96 - 1) * 100).toFixed(0)}% wider than classical
               </div>
             </div>
           ))}
@@ -3244,19 +3244,19 @@ export function DetailedAppendixCode() {
           Each simulation on this page is a self-contained React/TypeScript component using D3.js.
           Click any button below to reveal its source.
         </p>
-        <CodeBlock label="Act 2 — RandomWalkSim.tsx" code={CODE_RandomWalkSim} />
-        <CodeBlock label="Act 3 — MartingaleSim.tsx" code={CODE_MartingaleSim} />
-        <CodeBlock label="Act 4 — LikelihoodRatioSim.tsx" code={CODE_LikelihoodRatioSim} />
-        <CodeBlock label="Act 5 — LRMartingaleSim.tsx" code={CODE_LRMartingaleSim} />
-        <CodeBlock label="Act 6 — VilleInequalitySim.tsx" code={CODE_VilleInequalitySim} />
-        <CodeBlock label="Act 7 — SPRTSim.tsx" code={CODE_SPRTSim} />
-        <CodeBlock label="Act 8 — MixtureSPRTSim.tsx" code={CODE_MixtureSPRTSim} />
-        <CodeBlock label="Act 9 — ConfidenceSequenceSim.tsx" code={CODE_ConfidenceSequenceSim} />
-        <CodeBlock label="Act 10 — NoiseDemoSim.tsx" code={CODE_NoiseDemoSim} />
-        <CodeBlock label="Act 11 — EppoPipelineSim.tsx" code={CODE_EppoPipelineSim} />
-        <CodeBlock label="Act 12 — VarianceReductionSim.tsx" code={CODE_VarianceReductionSim} />
-        <CodeBlock label="Act 13 — SequentialMultiplierSim.tsx" code={CODE_SequentialMultiplierSim} />
-        <CodeBlock label="Act 14 — ComparisonSim.tsx" code={CODE_ComparisonSim} />
+        <CodeBlock label="Act 2: RandomWalkSim.tsx" code={CODE_RandomWalkSim} />
+        <CodeBlock label="Act 3: MartingaleSim.tsx" code={CODE_MartingaleSim} />
+        <CodeBlock label="Act 4: LikelihoodRatioSim.tsx" code={CODE_LikelihoodRatioSim} />
+        <CodeBlock label="Act 5: LRMartingaleSim.tsx" code={CODE_LRMartingaleSim} />
+        <CodeBlock label="Act 6: VilleInequalitySim.tsx" code={CODE_VilleInequalitySim} />
+        <CodeBlock label="Act 7: SPRTSim.tsx" code={CODE_SPRTSim} />
+        <CodeBlock label="Act 8: MixtureSPRTSim.tsx" code={CODE_MixtureSPRTSim} />
+        <CodeBlock label="Act 9: ConfidenceSequenceSim.tsx" code={CODE_ConfidenceSequenceSim} />
+        <CodeBlock label="Act 10: NoiseDemoSim.tsx" code={CODE_NoiseDemoSim} />
+        <CodeBlock label="Act 11: EppoPipelineSim.tsx" code={CODE_EppoPipelineSim} />
+        <CodeBlock label="Act 12: VarianceReductionSim.tsx" code={CODE_VarianceReductionSim} />
+        <CodeBlock label="Act 13: SequentialMultiplierSim.tsx" code={CODE_SequentialMultiplierSim} />
+        <CodeBlock label="Act 14: ComparisonSim.tsx" code={CODE_ComparisonSim} />
       </div>
     </section>
   )

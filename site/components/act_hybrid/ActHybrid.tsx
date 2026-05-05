@@ -10,47 +10,6 @@ function EppoGuidanceSection() {
 
   return (
     <div className="border-t border-neutral-200 pt-6 mb-6">
-      <h3 className="text-lg font-bold mb-3 text-neutral-900">
-        Two one-sided tests, each at α/2
-      </h3>
-      <p className="text-neutral-700 mb-4">
-        The hybrid approach is asymmetric by design: stop early only for degradations, but wait
-        until the pre-planned end date to declare winning variants.
-      </p>
-      <p className="text-neutral-700 mb-4">
-        The inflexibility of the fixed-sample approach is most costly when a test is going
-        poorly. If a variant is significantly degrading metrics, you will want to pull the plug
-        rather than wait. Significant degradations also tend to have large effect sizes, which
-        partially offsets the power loss from sequential monitoring, and point estimates matter
-        less when stopping for harm.
-      </p>
-      <p className="text-neutral-700 mb-4">
-        Conversely, for detecting improvements it is helpful to have additional power and more
-        reliable estimates of the treatment effect — both advantages of the fixed-sample approach.
-      </p>
-      <p className="text-neutral-700 mb-4">
-        With <InlineMath>{`\\alpha = 0.05`}</InlineMath>, split the error budget equally between
-        the two sides:
-      </p>
-      <ul className="list-disc pl-5 space-y-3 text-neutral-700 mb-4">
-        <li>
-          <strong>A sequential test on the degradation tail</strong>, run continuously throughout
-          the experiment at significance level{' '}
-          <InlineMath>{`\\alpha/2 = 2.5\\%`}</InlineMath>. Stop early only if evidence of harm
-          crosses this threshold.
-        </li>
-        <li>
-          <strong>A fixed-sample test on the improvement tail</strong>, evaluated once at the
-          planned end date at significance level{' '}
-          <InlineMath>{`\\alpha/2 = 2.5\\%`}</InlineMath>. Ship only if benefit is confirmed here.
-        </li>
-      </ul>
-      <p className="text-neutral-700 mb-4">
-        Both thresholds correspond to <InlineMath>{`z = 1.96`}</InlineMath> — the same critical
-        value as one tail of a standard 95% confidence interval. The overall false positive rate
-        is at most{' '}
-        <InlineMath>{`2.5\\% + 2.5\\% = 5\\% = \\alpha`}</InlineMath> by a union bound.
-      </p>
       <p className="text-neutral-700 mb-4">
         Eppo (2022) implements this equivalently using a different but mathematically identical
         parameterization.
@@ -83,7 +42,7 @@ function EppoGuidanceSection() {
           <p className="text-neutral-700 mb-3">
             This is identical to the <InlineMath>{`\\alpha = 0.05`}</InlineMath>,{' '}
             <InlineMath>{`\\alpha/2`}</InlineMath> framing above: both give 2.5% per component and{' '}
-            <InlineMath>{`z = 1.96`}</InlineMath>. The difference is purely notational — Eppo
+            <InlineMath>{`z = 1.96`}</InlineMath>. The difference is purely notational. Eppo
             allocates <InlineMath>{`\\alpha/2`}</InlineMath> to each of two two-tailed tests and then
             uses one tail of each, arriving at <InlineMath>{`\\alpha/4`}</InlineMath> per component.
           </p>
@@ -95,7 +54,7 @@ function EppoGuidanceSection() {
               rel="noopener noreferrer"
               className="text-blue-700 underline hover:text-blue-900"
             >
-              Eppo docs — &ldquo;Sequential hybrid as two one-sided tests&rdquo;
+              Eppo docs: &ldquo;Sequential hybrid as two one-sided tests&rdquo;
             </a>
           </p>
         </div>
@@ -107,7 +66,7 @@ function EppoGuidanceSection() {
 export function ActHybrid() {
   return (
     <div id="act3-hybrid" className="max-w-3xl mx-auto px-4">
-      <h2 className="text-2xl font-bold mb-1">Act 3 — The Hybrid Approach</h2>
+      <h2 className="text-2xl font-bold mb-1">Act 3: A Hybrid Approach</h2>
 
       <p className="text-neutral-700 mb-6">
         This act explains a popular &ldquo;hybrid&rdquo; approach to sequential testing. The description and
@@ -122,102 +81,6 @@ export function ActHybrid() {
         </a>
         ).
       </p>
-
-      {/* Core idea */}
-      <div className="bg-neutral-50 border border-neutral-300 rounded-lg p-5 mb-6">
-        <p className="font-bold text-neutral-900 mb-3">
-          The core insight: apply sequential testing where early stopping adds the most value,
-          and fixed-horizon testing where statistical power matters most.
-        </p>
-        <p className="text-neutral-700 mb-3">The hybrid approach partitions metrics into two categories:</p>
-        <ul className="list-disc pl-5 space-y-2 text-neutral-700">
-          <li>
-            <strong>Guardrail KPIs</strong> (revenue, error rate, latency, etc.): monitored
-            continuously with a <strong>sequential confidence interval</strong>. If the interval
-            excludes zero on the harmful side at any point during the experiment, abort immediately.
-          </li>
-          <li>
-            <strong>Primary KPI</strong> (the metric the experiment is designed to move): analysed
-            with a <strong>standard fixed-horizon confidence interval</strong> at the pre-planned end
-            date. No sequential correction applied.
-          </li>
-        </ul>
-      </div>
-
-      {/* Alpha allocation */}
-      <div className="bg-blue-50 border border-blue-200 rounded-lg p-5 mb-6">
-        <h4 className="font-semibold text-neutral-900 mb-2">How the error budget is allocated</h4>
-        <p className="text-neutral-700 mb-3">
-          The hybrid approach splits the significance budget <InlineMath>{`\\alpha`}</InlineMath> between
-          the two parts of the design:
-        </p>
-        <ul className="list-disc pl-5 space-y-2 text-neutral-700 mb-3">
-          <li>
-            <strong>Guardrail monitoring (sequential, throughout the experiment):</strong> uses{' '}
-            <InlineMath>{`\\alpha/2`}</InlineMath> per guardrail. Abort early only if harm is
-            detected at this threshold.
-          </li>
-          <li>
-            <strong>Primary KPI analysis (fixed-horizon, at the planned end date):</strong> uses{' '}
-            the full <InlineMath>{`\\alpha`}</InlineMath>. Because this analysis happens only once,
-            no sequential correction is needed — full statistical power is retained.
-          </li>
-        </ul>
-        <p className="text-neutral-700">
-          By a union bound, the probability of any false positive across both tests is at most{' '}
-          <InlineMath>{`\\alpha/2 + 0 = \\alpha/2`}</InlineMath> for guardrail errors, plus{' '}
-          <InlineMath>{`\\alpha`}</InlineMath> for the primary KPI — but because each part addresses
-          a different metric, the overall Type I error on each metric is controlled separately at its
-          own budget. The primary KPI retains its full <InlineMath>{`\\alpha`}</InlineMath> budget and
-          full power.
-        </p>
-      </div>
-
-      {/* Pros */}
-      <h4 className="font-semibold mb-2 text-neutral-900">Advantages</h4>
-      <ul className="list-disc pl-5 space-y-2 text-neutral-700 mb-5">
-        <li>
-          <strong>Full statistical power on the primary KPI.</strong> Because the primary KPI uses a
-          standard confidence interval at the planned end date, there is no sequential correction and
-          no power penalty.
-        </li>
-        <li>
-          <strong>Continuous guardrail protection.</strong> Sequential monitoring of guardrail KPIs
-          lets you abort the experiment the moment a harmful effect is detected, without waiting for
-          the planned end date.
-        </li>
-        <li>
-          <strong>Simpler to explain and implement</strong> than a fully sequential design. Most
-          decisions are still made at a single planned analysis; only guardrails require continuous
-          monitoring.
-        </li>
-        <li>
-          <strong>Accounting for weekday effects.</strong> In many cases, tests are designed to run
-          for a round number of weeks (e.g. 2 weeks), so that the treatment and control groups are
-          exposed to the same day-of-week distribution. In these cases, stopping early may create
-          bias by giving some weekdays more weight than others.
-        </li>
-      </ul>
-
-      {/* Cons */}
-      <h4 className="font-semibold mb-2 text-neutral-900">Limitations</h4>
-      <ul className="list-disc pl-5 space-y-2 text-neutral-700 mb-4">
-        <li>
-          <strong>No early stopping for success on the primary KPI.</strong> If the treatment effect
-          is very large, you must still wait until the planned end date to declare success. This could
-          have a considerable effect on experiments that were designed to run for a long time, in
-          which the treatment has a larger effect than expected.
-        </li>
-      </ul>
-
-      <div className="bg-neutral-50 border border-neutral-300 rounded-lg p-4 mb-6 text-sm text-neutral-700">
-        <strong>Note:</strong> Usually some of the guardrail metrics are also outcome metrics. That
-        is, we do not only wish to monitor them for harm during the experiment. We also wish to
-        estimate the effect on them at the end of the experiment. During the experiment their
-        sequential confidence intervals will be wider than the standard one; at the planned end date
-        it will narrow abruptly. This can be confusing to stakeholders following results in real
-        time.
-      </div>
 
       {/* What you gain table */}
       <h4 className="font-semibold mb-3 text-neutral-900">What you gain compared to full sequential</h4>
@@ -282,18 +145,52 @@ export function ActHybrid() {
       {/* Sub-section: One-tailed decisions */}
       <EppoGuidanceSection />
 
+      {/* Pros */}
+      <h4 className="font-semibold mb-2 text-neutral-900">Advantages</h4>
+      <ul className="list-disc pl-5 space-y-2 text-neutral-700 mb-5">
+        <li>
+          <strong>Full statistical power on the primary KPI.</strong> Because the primary KPI uses a
+          standard confidence interval at the planned end date, there is no sequential correction and
+          no power penalty.
+        </li>
+        <li>
+          <strong>Continuous guardrail protection.</strong> Sequential monitoring of guardrail KPIs
+          lets you abort the experiment the moment a harmful effect is detected, without waiting for
+          the planned end date.
+        </li>
+        <li>
+          <strong>Simpler to explain and implement</strong> than a fully sequential design. Most
+          decisions are still made at a single planned analysis; only guardrails require continuous
+          monitoring.
+        </li>
+        <li>
+          <strong>Accounting for weekday effects.</strong> In many cases, tests are designed to run
+          for a round number of weeks (e.g. 2 weeks), so that the treatment and control groups are
+          exposed to the same day-of-week distribution. In these cases, stopping early may create
+          bias by giving some weekdays more weight than others.
+        </li>
+      </ul>
+
+      {/* Cons */}
+      <h4 className="font-semibold mb-2 text-neutral-900">Limitations</h4>
+      <ul className="list-disc pl-5 space-y-2 text-neutral-700 mb-6">
+        <li>
+          <strong>No early stopping for success on the primary KPI.</strong> If the treatment effect
+          is very large, you must still wait until the planned end date to declare success. This could
+          have a considerable effect on experiments that were designed to run for a long time, in
+          which the treatment has a larger effect than expected.
+        </li>
+      </ul>
+
       {/* Sub-section: What if primary KPI is also a guardrail? */}
       <div className="border-t border-neutral-200 pt-6 mb-6">
         <h3 className="text-lg font-bold mb-3 text-neutral-900">
           What if the primary KPI is also a guardrail?
         </h3>
         <p className="text-neutral-700 mb-4">
-          In some experiments, the primary outcome metric must also be protected against severe harm —
-          for example, a revenue metric where a large negative effect would require immediate action.
-          In this case, waiting until the planned end date for the primary KPI is not acceptable.
-        </p>
-        <p className="text-neutral-700 mb-4">
-          In this case, the same approach described above applies — the significance budget is split
+          In some experiments, the primary outcome metric must also be protected against severe harm,
+          for example a revenue metric where a large negative effect would require immediate action.
+          In this case, the same approach described above applies: the significance budget is split
           between two tests:
         </p>
         <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-4">
@@ -311,56 +208,15 @@ export function ActHybrid() {
           </ul>
         </div>
         <p className="text-neutral-700 mb-4">
-          By a union bound (Bonferroni), the probability of any false positive across both tests is
-          at most <em>α/2 + α/2 = α</em>, so the overall Type I error is controlled. The tradeoff is
-          that each individual test is slightly more conservative than if it alone used the full{' '}
-          <em>α</em> budget.
+          As mentioned above, by a union bound (Bonferroni), the probability of any false positive
+          across both tests is at most <em>α/2 + α/2 = α</em>, so the overall Type I error is
+          controlled.
         </p>
-        <div className="overflow-x-auto mb-2">
-          <table className="w-full min-w-[480px] text-sm border-collapse border border-neutral-300">
-            <thead>
-              <tr className="bg-neutral-100">
-                <th className="border border-neutral-300 p-3 text-left font-semibold"></th>
-                <th className="border border-neutral-300 p-3 text-left font-semibold">Standard hybrid</th>
-                <th className="border border-neutral-300 p-3 text-left font-semibold">Hybrid sequential (Eppo, 2022)</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td className="border border-neutral-300 p-3">Primary KPI monitored during experiment?</td>
-                <td className="border border-neutral-300 p-3">No</td>
-                <td className="border border-neutral-300 p-3">Yes (at α/2)</td>
-              </tr>
-              <tr className="bg-neutral-50">
-                <td className="border border-neutral-300 p-3">Primary KPI analysed at end?</td>
-                <td className="border border-neutral-300 p-3">Yes (at α)</td>
-                <td className="border border-neutral-300 p-3">Yes (at α/2)</td>
-              </tr>
-              <tr>
-                <td className="border border-neutral-300 p-3">Power at end of experiment</td>
-                <td className="border border-neutral-300 p-3">Full (α)</td>
-                <td className="border border-neutral-300 p-3">Near-full (α/2, slightly lower)*</td>
-              </tr>
-              <tr className="bg-neutral-50">
-                <td className="border border-neutral-300 p-3">Early stopping for harm on primary KPI?</td>
-                <td className="border border-neutral-300 p-3">No</td>
-                <td className="border border-neutral-300 p-3">Yes</td>
-              </tr>
-              <tr>
-                <td className="border border-neutral-300 p-3">Overall Type I error controlled at α?</td>
-                <td className="border border-neutral-300 p-3">Yes</td>
-                <td className="border border-neutral-300 p-3">Yes (by union bound)</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-        <p className="text-xs text-neutral-500 mt-2">
-          * The final analysis uses a one-sided test at <InlineMath>{`\\alpha/2 = 2.5\\%`}</InlineMath>,
-          giving <InlineMath>{`z = 1.96`}</InlineMath> — the same critical value as a standard
-          two-sided test at <InlineMath>{`\\alpha = 5\\%`}</InlineMath>. Power is marginally lower than
-          "full" only because the Bonferroni union bound is conservative (actual combined error is
-          slightly below <InlineMath>{`\\alpha`}</InlineMath>); in practice the difference is
-          negligible.
+        <p className="text-neutral-700">
+          Note that guardrail metrics that are also tracked as outcome metrics will show wider
+          sequential confidence intervals throughout the experiment, narrowing to standard width
+          only at the planned end date. This can be confusing to stakeholders following results in
+          real time.
         </p>
       </div>
 
@@ -375,14 +231,14 @@ export function ActHybrid() {
             </p>
             <BlockMath>{`\\mathrm{CI}_{\\text{seq}}(n) = \\hat{\\tau}(n) \\;\\pm\\; \\widehat{\\mathrm{SE}}(n) \\cdot \\underbrace{\\sqrt{\\frac{n+\\nu}{n}\\log\\!\\frac{n+\\nu}{\\nu\\,\\alpha_g}}}_{m(n,\\,\\alpha_g)}`}</BlockMath>
             <ul className="text-sm text-neutral-600 space-y-1 ml-4 list-disc mt-2">
-              <li><InlineMath>{`\\hat{\\tau}(n)`}</InlineMath> — estimated treatment effect at sample size <InlineMath>{`n`}</InlineMath></li>
-              <li><InlineMath>{`\\widehat{\\mathrm{SE}}(n)`}</InlineMath> — estimated standard error at sample size <InlineMath>{`n`}</InlineMath></li>
-              <li><InlineMath>{`m(n, \\alpha_g)`}</InlineMath> — time-varying multiplier (Howard et al., 2021); always <InlineMath>{`> 1.96`}</InlineMath></li>
-              <li><InlineMath>{`\\nu`}</InlineMath> — tuning parameter calibrated to the planned sample size <InlineMath>{`n^*`}</InlineMath></li>
-              <li><InlineMath>{`\\alpha_g`}</InlineMath> — per-guardrail significance level (see below for multiple guardrails)</li>
+              <li><InlineMath>{`\\hat{\\tau}(n)`}</InlineMath>: estimated treatment effect at sample size <InlineMath>{`n`}</InlineMath></li>
+              <li><InlineMath>{`\\widehat{\\mathrm{SE}}(n)`}</InlineMath>: estimated standard error at sample size <InlineMath>{`n`}</InlineMath></li>
+              <li><InlineMath>{`m(n, \\alpha_g)`}</InlineMath>: time-varying multiplier (Howard et al., 2021); always <InlineMath>{`> 1.96`}</InlineMath></li>
+              <li><InlineMath>{`\\nu`}</InlineMath>: tuning parameter calibrated to the planned sample size <InlineMath>{`n^*`}</InlineMath></li>
+              <li><InlineMath>{`\\alpha_g`}</InlineMath>: per-guardrail significance level (see below for multiple guardrails)</li>
             </ul>
             <p className="mt-2 text-sm text-neutral-700">
-              This interval is <strong>anytime-valid</strong>: the probability of it ever excluding zero under the null is at most <InlineMath>{`\\alpha_g`}</InlineMath>, no matter how many times you peek. For the standard hybrid, the sequential CI monitors the degradation tail only, so <InlineMath>{`\\alpha_g = \\alpha/2`}</InlineMath> (with <InlineMath>{`\\alpha = 0.05`}</InlineMath>), giving <InlineMath>{`z = 1.96`}</InlineMath> — the same critical value as one tail of a standard 95% confidence interval.
+              This interval is <strong>anytime-valid</strong>: the probability of it ever excluding zero under the null is at most <InlineMath>{`\\alpha_g`}</InlineMath>, no matter how many times you peek. For the standard hybrid, the sequential CI monitors the degradation tail only, so <InlineMath>{`\\alpha_g = \\alpha/2`}</InlineMath> (with <InlineMath>{`\\alpha = 0.05`}</InlineMath>), giving <InlineMath>{`z = 1.96`}</InlineMath>, the same critical value as one tail of a standard 95% confidence interval.
             </p>
           </div>
 
@@ -393,8 +249,8 @@ export function ActHybrid() {
             </p>
             <BlockMath>{`\\mathrm{CI}_{\\text{std}}(n^*) = \\hat{\\tau}(n^*) \\;\\pm\\; z_{\\alpha/2} \\cdot \\widehat{\\mathrm{SE}}(n^*)`}</BlockMath>
             <ul className="text-sm text-neutral-600 space-y-1 ml-4 list-disc mt-2">
-              <li><InlineMath>{`z_{\\alpha/2} = \\Phi^{-1}(1 - \\alpha/2)`}</InlineMath> — the one-sided critical value for the improvement tail; at <InlineMath>{`\\alpha = 0.05`}</InlineMath>, <InlineMath>{`z_{0.025} = 1.96`}</InlineMath></li>
-              <li>Because the primary KPI is tested only once (improvement tail only), no sequential correction is needed — full statistical power is retained</li>
+              <li><InlineMath>{`z_{\\alpha/2} = \\Phi^{-1}(1 - \\alpha/2)`}</InlineMath>: the one-sided critical value for the improvement tail; at <InlineMath>{`\\alpha = 0.05`}</InlineMath>, <InlineMath>{`z_{0.025} = 1.96`}</InlineMath></li>
+              <li>Because the primary KPI is tested only once (improvement tail only), no sequential correction is needed, so full statistical power is retained</li>
             </ul>
           </div>
 
@@ -422,11 +278,11 @@ export function ActHybrid() {
               The two tests use:
             </p>
             <ul className="text-sm text-neutral-600 space-y-1 ml-4 list-disc mt-1">
-              <li>Sequential: <InlineMath>{`\\mathrm{CI}_{\\text{seq}}(n)`}</InlineMath> with <InlineMath>{`\\alpha_s = \\alpha/2`}</InlineMath> — wider multiplier <InlineMath>{`m(n, \\alpha/2)`}</InlineMath></li>
+              <li>Sequential: <InlineMath>{`\\mathrm{CI}_{\\text{seq}}(n)`}</InlineMath> with <InlineMath>{`\\alpha_s = \\alpha/2`}</InlineMath>, using wider multiplier <InlineMath>{`m(n, \\alpha/2)`}</InlineMath></li>
               <li>Final: one-tailed test at <InlineMath>{`\\alpha/2`}</InlineMath> using <InlineMath>{`z_{\\alpha/2} = \\Phi^{-1}(1 - \\alpha/2) = 1.96`}</InlineMath> for <InlineMath>{`\\alpha = 0.05`}</InlineMath></li>
             </ul>
             <p className="mt-2 text-sm text-neutral-700">
-              The final test uses <InlineMath>{`z_{\\alpha/2} = 1.96`}</InlineMath> — exactly the same critical value as the benefit side of a classic two-tailed test at <InlineMath>{`\\alpha`}</InlineMath>. There is no extra cost at the end of the experiment: a one-tailed test at <InlineMath>{`\\alpha/2`}</InlineMath> occupies exactly the same region of the normal distribution as one tail of a classic two-tailed test at <InlineMath>{`\\alpha`}</InlineMath>. The only cost of the hybrid sequential variant is the wider sequential confidence interval <em>during</em> the experiment.
+              The final test uses <InlineMath>{`z_{\\alpha/2} = 1.96`}</InlineMath>, exactly the same critical value as the benefit side of a classic two-tailed test at <InlineMath>{`\\alpha`}</InlineMath>. There is no extra cost at the end of the experiment: a one-tailed test at <InlineMath>{`\\alpha/2`}</InlineMath> occupies exactly the same region of the normal distribution as one tail of a classic two-tailed test at <InlineMath>{`\\alpha`}</InlineMath>. The only cost of the hybrid sequential variant is the wider sequential confidence interval <em>during</em> the experiment.
             </p>
           </div>
 

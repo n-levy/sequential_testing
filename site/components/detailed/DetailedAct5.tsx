@@ -59,9 +59,9 @@ export function DetailedAct5() {
             We must show: <InlineMath>{`\\EE[\\Lambda_n \\given \\Lambda_0, \\ldots, \\Lambda_{n-1}] = \\Lambda_{n-1}`}</InlineMath>.
           </p>
           <ul className="mb-3 text-sm text-neutral-600 space-y-1 ml-4 list-disc">
-            <li><InlineMath>{`\\Lambda_n`}</InlineMath> — the likelihood ratio after <InlineMath>{`n`}</InlineMath> observations (how much more likely the data are under <InlineMath>{`H_1`}</InlineMath> vs. <InlineMath>{`H_0`}</InlineMath>)</li>
-            <li><InlineMath>{`\\EE[\\cdot \\given \\Lambda_0, \\ldots, \\Lambda_{n-1}]`}</InlineMath> — the expected value conditional on knowing all previous values of the likelihood ratio (i.e. conditioning on "the past")</li>
-            <li>A <strong>martingale</strong> is a process where the expected next value, given everything seen so far, equals the current value — it has no predictable upward or downward trend</li>
+            <li><InlineMath>{`\\Lambda_n`}</InlineMath>:the likelihood ratio after <InlineMath>{`n`}</InlineMath> observations (how much more likely the data are under <InlineMath>{`H_1`}</InlineMath> vs. <InlineMath>{`H_0`}</InlineMath>)</li>
+            <li><InlineMath>{`\\EE[\\cdot \\given \\Lambda_0, \\ldots, \\Lambda_{n-1}]`}</InlineMath>:the expected value conditional on knowing all previous values of the likelihood ratio (i.e. conditioning on "the past")</li>
+            <li>A <strong>martingale</strong> is a process where the expected next value, given everything seen so far, equals the current value:it has no predictable upward or downward trend</li>
           </ul>
           <p>
             From Act 4, <InlineMath>{`\\Lambda_n = \\Lambda_{n-1} \\times \\frac{f_1(x_n)}{f_0(x_n)}`}</InlineMath>.
@@ -87,9 +87,9 @@ export function DetailedAct5() {
 &= 1 \\quad \\text{(}f_1\\text{ is a probability distribution)}
 \\end{aligned}`}</BlockMath>
           <ul className="mb-3 text-sm text-neutral-600 space-y-1 ml-4 list-disc">
-            <li><InlineMath>{`f_0(x)`}</InlineMath> — probability of outcome <InlineMath>{`x`}</InlineMath> under the null hypothesis (fair coin); used here as the distribution we're averaging over</li>
-            <li><InlineMath>{`f_1(x)`}</InlineMath> — probability of outcome <InlineMath>{`x`}</InlineMath> under the alternative hypothesis (biased coin)</li>
-            <li><InlineMath>{`\\sum_x f_1(x) = 1`}</InlineMath> — any valid probability distribution must sum to 1 over all possible outcomes; this is the key reason the expectation equals 1</li>
+            <li><InlineMath>{`f_0(x)`}</InlineMath>:probability of outcome <InlineMath>{`x`}</InlineMath> under the null hypothesis (fair coin); used here as the distribution we're averaging over</li>
+            <li><InlineMath>{`f_1(x)`}</InlineMath>:probability of outcome <InlineMath>{`x`}</InlineMath> under the alternative hypothesis (biased coin)</li>
+            <li><InlineMath>{`\\sum_x f_1(x) = 1`}</InlineMath>:any valid probability distribution must sum to 1 over all possible outcomes; this is the key reason the expectation equals 1</li>
           </ul>
 
           <p>Therefore:</p>
@@ -177,8 +177,8 @@ export function DetailedAct5() {
           <p>When the coin really is biased:</p>
           <BlockMath>{`\\EE\\!\\left[\\frac{f_1(x_n)}{f_0(x_n)}\\right]_{H_1} = \\sum_x f_1(x) \\cdot \\frac{f_1(x)}{f_0(x)} > 1`}</BlockMath>
           <ul className="mb-3 text-sm text-neutral-600 space-y-1 ml-4 list-disc">
-            <li><InlineMath>{`\\EE[\\cdot]_{H_1}`}</InlineMath> — expected value computed under <InlineMath>{`H_1`}</InlineMath>: this time we average using <InlineMath>{`f_1`}</InlineMath> (biased coin probabilities) because the coin really is biased</li>
-            <li><InlineMath>{`\\sum_x f_1(x) \\cdot f_1(x)/f_0(x) > 1`}</InlineMath> — this sum is greater than 1 whenever <InlineMath>{`f_1 \\neq f_0`}</InlineMath>, meaning the expected likelihood ratio grows over time when the alternative is true</li>
+            <li><InlineMath>{`\\EE[\\cdot]_{H_1}`}</InlineMath>:expected value computed under <InlineMath>{`H_1`}</InlineMath>: this time we average using <InlineMath>{`f_1`}</InlineMath> (biased coin probabilities) because the coin really is biased</li>
+            <li><InlineMath>{`\\sum_x f_1(x) \\cdot f_1(x)/f_0(x) > 1`}</InlineMath>:this sum is greater than 1 whenever <InlineMath>{`f_1 \\neq f_0`}</InlineMath>, meaning the expected likelihood ratio grows over time when the alternative is true</li>
           </ul>
           <p>
             So <InlineMath>{`\\Lambda_n`}</InlineMath> tends to grow &mdash; this upward drift is

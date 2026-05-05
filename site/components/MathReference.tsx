@@ -33,7 +33,7 @@ export function MathReference() {
                 ['n_0(t),\\ n_1(t)', 'Number of users in control / treatment at time t', 'Throughout'],
                 ['n', 'Total observations: n_0(t) + n_1(t)', 'Act 2, Step 6'],
                 ['\\alpha', 'Significance level (typically 0.05)', 'Throughout'],
-                ['\\nu', 'Tuning parameter — calibrated to planned sample size', 'Act 2, Step 6 (sequential confidence interval)'],
+                ['\\nu', 'Tuning parameter calibrated to the planned sample size', 'Act 2, Step 6 (sequential confidence interval)'],
                 ['M', 'Expected total sample size', 'Act 2, Step 6'],
                 ['K', 'Number of pre-planned analysis times (peeks)', 'Act 3'],
                 ['k', 'Current peek number (1 to K)', 'Act 3'],
@@ -70,13 +70,13 @@ export function MathReference() {
           <div className="bg-white border border-neutral-300 rounded-lg p-5">
             <h4 className="font-bold text-neutral-900 mb-2">Sequential Confidence Interval (Howard et al., 2021)</h4>
             <BlockMath>{`\\text{CI}(t) = \\hat{\\tau}(t) \\;\\pm\\; \\hat{\\sigma}_{\\hat{\\tau}}(t) \\cdot \\sqrt{\\frac{n + \\nu}{n} \\cdot \\log\\!\\frac{n + \\nu}{\\nu \\alpha}}`}</BlockMath>
-            <p className="text-sm text-neutral-600 mt-2">Valid at <em>all times simultaneously</em>. The sequential multiplier first decreases — reaching a minimum before <InlineMath>{`n^*`}</InlineMath> — then slowly rises. It always stays above 1.96.</p>
+            <p className="text-sm text-neutral-600 mt-2">Valid at <em>all times simultaneously</em>. The sequential multiplier first decreases, reaching a minimum before <InlineMath>{`n^*`}</InlineMath>, then slowly rises. It always stays above 1.96.</p>
           </div>
 
           <div className="bg-white border border-neutral-300 rounded-lg p-5">
             <h4 className="font-bold text-neutral-900 mb-2">CUPED Variance Reduction</h4>
             <BlockMath>{`Y^*_i = Y_i - \\hat{f}_g(X_i) \\qquad \\Var(Y^*) = \\Var(Y)(1 - \\rho^2)`}</BlockMath>
-            <p className="text-sm text-neutral-600 mt-2">At <InlineMath>{`\\rho = 0.7`}</InlineMath>, <InlineMath>{`1 - 0.7^2 = 0.51`}</InlineMath> — about 49% of the variance is eliminated.</p>
+            <p className="text-sm text-neutral-600 mt-2">At <InlineMath>{`\\rho = 0.7`}</InlineMath>, <InlineMath>{`1 - 0.7^2 = 0.51`}</InlineMath>, so about 49% of the variance is eliminated.</p>
           </div>
 
           <div className="bg-white border border-neutral-300 rounded-lg p-5">

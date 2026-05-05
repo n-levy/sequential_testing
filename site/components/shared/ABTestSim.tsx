@@ -224,7 +224,7 @@ export function ABTestSim({
           if (layer === 'fixed-ci') {
             w = denom !== 0 ? 100 * Z_975 * t.ses[i] / denom : 0;
           } else if (layer === 'sequential-ci') {
-            const nu = n * 0.25;
+            const nu = n / (Math.log(n / alpha) - 1);
             const t_i = i + 1;
             const logTerm = Math.log((t_i + nu) / (nu * alpha));
             w = denom !== 0 ? 100 * t.ses[i] * Math.sqrt((t_i + nu) / t_i * logTerm) / denom : 0;
@@ -317,7 +317,8 @@ export function ABTestSim({
     approxTicks.forEach(t => tickSet.add(t))
     tickSet.add(14) // always show 2-week mark
     tickSet.add(daysTotal) // always show last day
-    const tickValues = Array.from(tickSet).filter(t => t >= 0 && t <= daysTotal).sort((a, b) => a - b)
+    tickSet.add(daysTotal + 1) // one tick past end
+    const tickValues = Array.from(tickSet).filter(t => t >= 0 && t <= daysTotal + 1).sort((a, b) => a - b)
 
     g.append('g')
       .attr('transform', `translate(0,${xAxisY})`)
@@ -371,7 +372,7 @@ export function ABTestSim({
         .x((_d, i) => x(dayOf(i)))
         .y0((_d, i) => {
           const denom = traj.meansA[i]
-          const nu = n * 0.25
+          const nu = n / (Math.log(n / alpha) - 1)
           const t_i = i + 1
           const logTerm = Math.log((t_i + nu) / (nu * alpha))
           const w = denom !== 0
@@ -381,7 +382,7 @@ export function ABTestSim({
         })
         .y1((_d, i) => {
           const denom = traj.meansA[i]
-          const nu = n * 0.25
+          const nu = n / (Math.log(n / alpha) - 1)
           const t_i = i + 1
           const logTerm = Math.log((t_i + nu) / (nu * alpha))
           const w = denom !== 0
@@ -799,7 +800,7 @@ export function ABTestSim({
                   <li>In reality, the number of unique users entering each day may decrease over time as repeat visitors are excluded. This simplification does not affect the key insights the simulation aims to illustrate.</li>
                   <li>Independent users/events within and across arms (no clustering or interference).</li>
                   <li>No missing data, no delayed outcomes, and no sample-ratio mismatch.</li>
-                  <li>Two-sided significance check at each look: confidence interval crossing zero is treated as significant. Exception: the guardrail harm detection method is one-sided — it only triggers when the confidence interval lies entirely below zero.</li>
+                  <li>Two-sided significance check at each look: confidence interval crossing zero is treated as significant. Exception: the guardrail harm detection method is one-sided; it only triggers when the confidence interval lies entirely below zero.</li>
                   <li>Peeks occur at exactly K equal time intervals over the test duration.</li>
                 </ul>
               </div>

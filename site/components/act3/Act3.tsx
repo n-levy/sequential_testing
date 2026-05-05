@@ -46,10 +46,10 @@ export function Act4() {
 
   return (
     <div id="act4" className="max-w-3xl mx-auto px-4">
-      <h2 className="text-2xl font-bold mb-1">Act 4 — Alternative Methods</h2>
+      <h2 className="text-2xl font-bold mb-1">Act 4: Alternative Methods</h2>
       <p className="text-neutral-700 mb-6">
         Three group sequential methods for controlling false positives under interim analyses,
-        plus a one-sided guardrail harm detection rule — for teams implementing sequential
+        plus a one-sided guardrail harm detection rule, for teams implementing sequential
         monitoring without a dedicated platform.
       </p>
 
@@ -118,7 +118,7 @@ export function Act4() {
               <strong>Bonferroni:</strong> most conservative among the formal methods (lowest crossing share).<br />
               <strong>Pocock:</strong> less conservative than Bonferroni; calibrated to the joint distribution across K analyses.<br />
               <strong>O&apos;Brien&ndash;Fleming:</strong> very strict early, close to classical at the final analysis.<br />
-              <strong>Harm detection:</strong> one-sided — only fires when the effect is strongly negative. Under a null with no true harm, it rarely triggers regardless of K.<br />
+              <strong>Harm detection:</strong> one-sided, only fires when the effect is strongly negative. Under a null with no true harm, it rarely triggers regardless of K.<br />
               <strong>Sequential confidence interval (Eppo, 2022):</strong> anytime-valid and typically close to 5% under continuous monitoring.
             </>}
           />

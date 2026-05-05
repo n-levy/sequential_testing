@@ -37,18 +37,18 @@ export function DetailedAct13() {
             <BlockMath>{`\\text{CI}(t) = \\hat{\\tau}(t) \\pm \\hat{\\sigma}_{\\hat{\\tau}}(t) \\cdot \\underbrace{\\sqrt{\\frac{n + \\nu}{n} \\cdot \\log\\!\\frac{n + \\nu}{\\nu \\alpha}}}_{\\text{sequential multiplier}}`}</BlockMath>
           </div>
           <ul className="mb-3 text-sm text-neutral-600 space-y-1 ml-4 list-disc">
-            <li><InlineMath>{`\\text{CI}(t)`}</InlineMath> — the sequential (anytime-valid) confidence interval at time <InlineMath>{`t`}</InlineMath></li>
-            <li><InlineMath>{`\\hat{\\tau}(t)`}</InlineMath> — the estimated treatment effect at time <InlineMath>{`t`}</InlineMath> (the centre of the interval)</li>
-            <li><InlineMath>{`\\hat{\\sigma}_{\\hat{\\tau}}(t)`}</InlineMath> — the estimated standard error of <InlineMath>{`\\hat{\\tau}(t)`}</InlineMath></li>
-            <li><InlineMath>{`n`}</InlineMath> — the total number of users observed at time <InlineMath>{`t`}</InlineMath></li>
-            <li><InlineMath>{`\\nu`}</InlineMath> — the tuning parameter set as <InlineMath>{`\\nu = M \\cdot \\hat{\\sigma}^2`}</InlineMath>, where <InlineMath>{`M`}</InlineMath> is the planned total sample size; calibrates the interval to be tightest near the planned end date</li>
-            <li><InlineMath>{`\\alpha`}</InlineMath> — the significance level (e.g. 0.05 for 95% confidence)</li>
-            <li>the sequential multiplier — replaces the fixed 1.96 of a classical CI; starts larger and decreases as <InlineMath>{`n`}</InlineMath> grows, approaching 1.96 asymptotically</li>
+            <li><InlineMath>{`\\text{CI}(t)`}</InlineMath>:the sequential (anytime-valid) confidence interval at time <InlineMath>{`t`}</InlineMath></li>
+            <li><InlineMath>{`\\hat{\\tau}(t)`}</InlineMath>:the estimated treatment effect at time <InlineMath>{`t`}</InlineMath> (the centre of the interval)</li>
+            <li><InlineMath>{`\\hat{\\sigma}_{\\hat{\\tau}}(t)`}</InlineMath>:the estimated standard error of <InlineMath>{`\\hat{\\tau}(t)`}</InlineMath></li>
+            <li><InlineMath>{`n`}</InlineMath>:the total number of users observed at time <InlineMath>{`t`}</InlineMath></li>
+            <li><InlineMath>{`\\nu`}</InlineMath>:the tuning parameter set as <InlineMath>{`\\nu = M \\cdot \\hat{\\sigma}^2`}</InlineMath>, where <InlineMath>{`M`}</InlineMath> is the planned total sample size; calibrates the interval to be tightest near the planned end date</li>
+            <li><InlineMath>{`\\alpha`}</InlineMath>:the significance level (e.g. 0.05 for 95% confidence)</li>
+            <li>the sequential multiplier:replaces the fixed 1.96 of a classical CI; starts larger and decreases as <InlineMath>{`n`}</InlineMath> grows, approaching 1.96 asymptotically</li>
           </ul>
           <p>Compare with a standard CI:</p>
           <BlockMath>{`\\text{CI}_{\\text{classical}}(t) = \\hat{\\tau}(t) \\pm \\hat{\\sigma}_{\\hat{\\tau}}(t) \\cdot \\underbrace{z_{\\alpha/2}}_{\\approx 1.96}`}</BlockMath>
           <ul className="mb-3 text-sm text-neutral-600 space-y-1 ml-4 list-disc">
-            <li><InlineMath>{`z_{\\alpha/2}`}</InlineMath> — the critical value from the standard Normal distribution; equals 1.96 for a 95% confidence interval (<InlineMath>{`\\alpha = 0.05`}</InlineMath>)</li>
+            <li><InlineMath>{`z_{\\alpha/2}`}</InlineMath>:the critical value from the standard Normal distribution; equals 1.96 for a 95% confidence interval (<InlineMath>{`\\alpha = 0.05`}</InlineMath>)</li>
           </ul>
           <p>
             The only difference is the <strong>sequential multiplier</strong> replacing the

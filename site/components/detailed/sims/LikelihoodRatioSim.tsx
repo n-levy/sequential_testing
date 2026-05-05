@@ -99,7 +99,7 @@ export function LikelihoodRatioSim() {
     // Title
     g.append('text').attr('x', width / 2).attr('y', -8)
       .attr('text-anchor', 'middle').attr('font-size', '13px').attr('font-weight', 'bold').attr('fill', '#374151')
-      .text(`δ = ${delta.toFixed(2)} — Biased coin (p = ${(0.5 + delta).toFixed(2)})`)
+      .text(`δ = ${delta.toFixed(2)}:Biased coin (p = ${(0.5 + delta).toFixed(2)})`)
   }, [data, nFlips, delta])
 
   const finalLR = data ? data.lr[data.lr.length - 1] : 0

@@ -209,7 +209,7 @@ export function RandomWalkSim() {
             <strong>Simulation takeaway:</strong> Each path is a cumulative sum of ±1 coin flips.
             {prob === 0.5
               ? <> With a fair coin (p = 0.5), the expected sum of flips is zero. About 68% of the time the walk stays within <InlineMath>{`\\pm\\sqrt{n}`}</InlineMath> of zero, and about 95% within <InlineMath>{`\\pm 2\\sqrt{n}`}</InlineMath>.</>
-              : ` With p = ${prob.toFixed(2)}, paths drift ${prob > 0.5 ? 'upward' : 'downward'} — the expected position after n steps is ${((2 * prob - 1)).toFixed(2)}n.`}
+              : ` With p = ${prob.toFixed(2)}, paths drift ${prob > 0.5 ? 'upward' : 'downward'}:the expected position after n steps is ${((2 * prob - 1)).toFixed(2)}n.`}
           </p>
         </div>
       )}

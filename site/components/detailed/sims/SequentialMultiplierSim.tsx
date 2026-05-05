@@ -113,7 +113,7 @@ export function SequentialMultiplierSim() {
 
     g.append('text').attr('x', width / 2).attr('y', height + 42)
       .attr('text-anchor', 'middle').attr('font-size', '12px').attr('fill', '#6b7280')
-      .text('Sample size (n) — log scale')
+      .text('Sample size (n), log scale')
     g.append('text').attr('transform', 'rotate(-90)')
       .attr('x', -height / 2).attr('y', -45)
       .attr('text-anchor', 'middle').attr('font-size', '12px').attr('fill', '#6b7280')
@@ -153,8 +153,8 @@ export function SequentialMultiplierSim() {
           <div className="flex-1">
             <h4 className="font-bold text-neutral-900 mb-1">Sequential Multiplier m(n)</h4>
             <p className="text-sm text-neutral-600">
-              The blue curve shows how the sequential CI multiplier approaches — but 
-              never reaches — the classical 1.96. The shaded area is the &ldquo;price of peeking.&rdquo;
+              The blue curve shows how the sequential CI multiplier approaches, but
+              never reaches, the classical 1.96. The shaded area is the &ldquo;price of peeking.&rdquo;
             </p>
           </div>
         </div>
@@ -183,7 +183,7 @@ export function SequentialMultiplierSim() {
             <div key={n} className="bg-blue-50 border border-blue-200 rounded-lg p-3 text-center">
               <div className="text-sm font-bold text-blue-700">{exampleMults[i].toFixed(2)}</div>
               <div className="text-xs text-blue-600">
-                m({n.toLocaleString()}) — {((exampleMults[i] / 1.96 - 1) * 100).toFixed(0)}% wider than classical
+                m({n.toLocaleString()}):{((exampleMults[i] / 1.96 - 1) * 100).toFixed(0)}% wider than classical
               </div>
             </div>
           ))}

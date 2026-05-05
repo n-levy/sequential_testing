@@ -39,7 +39,7 @@ function DisplayMathBox({ children }: { children: React.ReactNode }) {
 export function Act1() {
   return (
     <div id="act1" className="max-w-3xl mx-auto px-4">
-      <h2 className="text-2xl font-bold mb-1">Act 1 — The Peeking Problem</h2>
+      <h2 className="text-2xl font-bold mb-1">Act 1: The Peeking Problem</h2>
 
       {/* Simulation intro */}
       <div className="mb-6">
@@ -136,10 +136,10 @@ export function Act1() {
             <InlineMath>{`\\hat{u}_n = \\frac{\\bar{X}_{B,n} - \\bar{X}_{A,n}}{\\bar{X}_{A,n}}`}</InlineMath>
           </p>
           <ul className="mb-3 text-sm text-neutral-600 space-y-1 ml-4 list-disc">
-            <li><InlineMath>{`\\hat{u}_n`}</InlineMath> — estimated relative uplift (in %) after <InlineMath>{`n`}</InlineMath> observations per group</li>
-            <li><InlineMath>{`\\bar{X}_{B,n}`}</InlineMath> — running mean outcome in the <strong>treatment</strong> group after <InlineMath>{`n`}</InlineMath> observations</li>
-            <li><InlineMath>{`\\bar{X}_{A,n}`}</InlineMath> — running mean outcome in the <strong>control</strong> group after <InlineMath>{`n`}</InlineMath> observations</li>
-            <li><InlineMath>{`n`}</InlineMath> — number of observations (e.g. users) in each group so far</li>
+            <li><InlineMath>{`\\hat{u}_n`}</InlineMath>:estimated relative uplift (in %) after <InlineMath>{`n`}</InlineMath> observations per group</li>
+            <li><InlineMath>{`\\bar{X}_{B,n}`}</InlineMath>:running mean outcome in the <strong>treatment</strong> group after <InlineMath>{`n`}</InlineMath> observations</li>
+            <li><InlineMath>{`\\bar{X}_{A,n}`}</InlineMath>:running mean outcome in the <strong>control</strong> group after <InlineMath>{`n`}</InlineMath> observations</li>
+            <li><InlineMath>{`n`}</InlineMath>:number of observations (e.g. users) in each group so far</li>
           </ul>
           <p className="mb-3 text-neutral-800">
             We test <InlineMath>{`H_0: u = 0`}</InlineMath> (no relative uplift). A standard 95% confidence interval for the estimated relative uplift, valid at one pre-specified look, is:
@@ -148,9 +148,9 @@ export function Act1() {
             <InlineMath>{`\\hat{u}_n \\pm \\frac{\\widehat{\\mathrm{SE}}_n}{\\bar{X}_{A,n}} \\cdot 1.96`}</InlineMath>
           </p>
           <ul className="mb-3 text-sm text-neutral-600 space-y-1 ml-4 list-disc">
-            <li><InlineMath>{`1.96`}</InlineMath> — the critical value for a 95% confidence interval. For a two-sided test at level <InlineMath>{`\\alpha = 0.05`}</InlineMath>, we reject when the test statistic falls in either tail of the standard Normal distribution. We want to leave 2.5% probability in each tail, so we need the 97.5th percentile: <InlineMath>{`\\Phi^{-1}(0.975) = 1.96`}</InlineMath>. In other words, 95% of the standard Normal distribution lies between <InlineMath>{`{-1.96}`}</InlineMath> and <InlineMath>{`{+1.96}`}</InlineMath>.</li>
-            <li><InlineMath>{`\\widehat{\\mathrm{SE}}_n`}</InlineMath> — estimated standard error of the <em>absolute</em> difference in means <InlineMath>{`(\\bar{X}_{B,n} - \\bar{X}_{A,n})`}</InlineMath>, equal to <InlineMath>{`\\sqrt{(\\hat{\\sigma}_A^2 + \\hat{\\sigma}_B^2)/n}`}</InlineMath>; dividing by <InlineMath>{`\\bar{X}_{A,n}`}</InlineMath> converts this to the SE of the relative uplift (delta method — first-order approximation treating the control mean as approximately fixed at its expected value)</li>
-            <li><InlineMath>{`\\hat{\\sigma}_A^2,\\, \\hat{\\sigma}_B^2`}</InlineMath> — estimated variance of outcomes in the control and treatment groups</li>
+            <li><InlineMath>{`1.96`}</InlineMath>:the critical value for a 95% confidence interval. For a two-sided test at level <InlineMath>{`\\alpha = 0.05`}</InlineMath>, we reject when the test statistic falls in either tail of the standard Normal distribution. We want to leave 2.5% probability in each tail, so we need the 97.5th percentile: <InlineMath>{`\\Phi^{-1}(0.975) = 1.96`}</InlineMath>. In other words, 95% of the standard Normal distribution lies between <InlineMath>{`{-1.96}`}</InlineMath> and <InlineMath>{`{+1.96}`}</InlineMath>.</li>
+            <li><InlineMath>{`\\widehat{\\mathrm{SE}}_n`}</InlineMath>:estimated standard error of the <em>absolute</em> difference in means <InlineMath>{`(\\bar{X}_{B,n} - \\bar{X}_{A,n})`}</InlineMath>, equal to <InlineMath>{`\\sqrt{(\\hat{\\sigma}_A^2 + \\hat{\\sigma}_B^2)/n}`}</InlineMath>; dividing by <InlineMath>{`\\bar{X}_{A,n}`}</InlineMath> converts this to the SE of the relative uplift (delta method:first-order approximation treating the control mean as approximately fixed at its expected value)</li>
+            <li><InlineMath>{`\\hat{\\sigma}_A^2,\\, \\hat{\\sigma}_B^2`}</InlineMath>:estimated variance of outcomes in the control and treatment groups</li>
           </ul>
           <p className="mb-3 text-neutral-800">
             The false positive rate at a single planned look is:
@@ -159,10 +159,10 @@ export function Act1() {
             <InlineMath>{`\\Pr(\\text{reject }H_0\\text{ at one look}) = \\alpha = 0.05`}</InlineMath>
           </p>
           <ul className="mb-3 text-sm text-neutral-600 space-y-1 ml-4 list-disc">
-            <li><InlineMath>{`\\alpha`}</InlineMath> — the significance level; the maximum acceptable probability of a false positive (here 5%)</li>
+            <li><InlineMath>{`\\alpha`}</InlineMath>:the significance level; the maximum acceptable probability of a false positive (here 5%)</li>
           </ul>
           <p className="text-neutral-800">
-            Real interim looks are positively correlated. Even so, repeated peeking still substantially inflates the Type I error above <InlineMath>{`\\alpha`}</InlineMath> — that is why peeking with standard confidence intervals is problematic.
+            Real interim looks are positively correlated. Even so, repeated peeking still substantially inflates the Type I error above <InlineMath>{`\\alpha`}</InlineMath>:that is why peeking with standard confidence intervals is problematic.
           </p>
         </div>
       </DisplayMathBox>

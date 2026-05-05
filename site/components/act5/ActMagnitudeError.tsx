@@ -5,12 +5,12 @@ import { ABTestSim } from '../shared/ABTestSim'
 export function ActMagnitudeError() {
   return (
     <div id="act5" className="max-w-3xl mx-auto px-4">
-      <h2 className="text-2xl font-bold mb-1">Act 5 — Caution: Magnitude Error</h2>
+      <h2 className="text-2xl font-bold mb-1">Act 5:Caution: Magnitude Error</h2>
 
       <p className="text-neutral-700 mb-6">
         Sequential testing provides valid error control: the probability of a false positive stays
         below the target level no matter when you stop. However, there is a separate issue that
-        valid error control does not address — the <strong>magnitude of the estimated effect</strong>{' '}
+        valid error control does not address:the <strong>magnitude of the estimated effect</strong>{' '}
         when you stop early.
       </p>
 
@@ -20,7 +20,7 @@ export function ActMagnitudeError() {
         <p className="text-neutral-700 mb-3">
           When an A/B test stops early and declares a statistically significant result, the
           measured effect tends to be larger than the true effect. This happens because we
-          only stop when the data happen to show a strong signal — and strong signals are
+          only stop when the data happen to show a strong signal:and strong signals are
           partly due to real effects and partly due to random noise pushing the estimate in
           the same direction. The result is a systematic overestimate of the true effect size.
         </p>
@@ -47,7 +47,7 @@ export function ActMagnitudeError() {
           The result is significant (the confidence interval excludes zero).
         </li>
         <li>
-          The result became significant at an <em>early</em> time point — meaning the effect
+          The result became significant at an <em>early</em> time point:meaning the effect
           estimate crossed a wide threshold while the sample size was still small.
         </li>
       </ol>
@@ -74,7 +74,7 @@ export function ActMagnitudeError() {
       <div className="bg-blue-50 border border-blue-300 rounded-lg p-5 mb-8">
         <h4 className="font-semibold mb-2 text-blue-900">Another reason to prefer the hybrid approach</h4>
         <p className="text-neutral-700 mb-2">
-          In the hybrid approach (Act 3), the primary KPI is <em>never</em> stopped early — it is
+          In the hybrid approach (Act 3), the primary KPI is <em>never</em> stopped early:it is
           always analysed at the planned end date with a standard confidence interval. This means:
         </p>
         <ul className="list-disc pl-5 space-y-1 text-neutral-700">
@@ -83,7 +83,7 @@ export function ActMagnitudeError() {
           <li>Business decisions that depend on the magnitude of the effect (projections, ROI, prioritisation) can be made with confidence.</li>
         </ul>
         <p className="text-neutral-700 mt-3">
-          Only guardrail KPIs may be stopped early — and for those, you typically care about
+          Only guardrail KPIs may be stopped early:and for those, you typically care about
           whether harm occurred, not the precise magnitude of the harm.
         </p>
       </div>
@@ -94,13 +94,13 @@ export function ActMagnitudeError() {
         The table below shows the mean absolute effect measured at the time of stopping (for the
         simulations that crossed the threshold) versus the mean absolute effect measured at the
         end of the experiment in the same simulations. A large gap between the two numbers
-        indicates that early stopping was associated with an inflated estimate — the value
+        indicates that early stopping was associated with an inflated estimate:the value
         observed when stopping was higher than the value at the end of the same experiment.
       </p>
       <p className="text-neutral-700 mb-4">
         Compare the standard confidence interval (which stops at a fixed planned end date) to
         the sequential confidence interval (which can stop at any point). Try setting a positive
-        effect size (e.g. +10%) and clicking &ldquo;Run 1000 repetitions&rdquo; — you will see
+        effect size (e.g. +10%) and clicking &ldquo;Run 1000 repetitions&rdquo;:you will see
         that the sequential CI, when it stops early, systematically shows a larger estimate at
         the time of stopping than at the end of the test. The standard CI also shows some
         winner&rsquo;s curse (only significant results are included in the mean), but the gap
@@ -109,7 +109,7 @@ export function ActMagnitudeError() {
 
       <div className="mb-2 max-w-2xl mx-auto">
         <p className="text-xs text-neutral-500 mb-2">
-          The 1000-repetition table uses the same settings (n, α, effect size, K, baseline rate) as the trajectory chart — they are part of the same simulation. Adjust any slider above the chart and click &ldquo;Run 1000 repetitions&rdquo; to re-run with the updated parameters.
+          The 1000-repetition table uses the same settings (n, α, effect size, K, baseline rate) as the trajectory chart:they are part of the same simulation. Adjust any slider above the chart and click &ldquo;Run 1000 repetitions&rdquo; to re-run with the updated parameters.
         </p>
       </div>
       <div className="mb-8 max-w-2xl mx-auto">
@@ -118,7 +118,7 @@ export function ActMagnitudeError() {
           showPeekStats={true}
           showMeanEffects={true}
           showDecision={false}
-          simulationTitle="Simulation 5: magnitude error — mean effect at stopping vs. at end of test."
+          simulationTitle="Simulation 5: magnitude error:mean effect at stopping vs. at end of test."
           defaultEffect={0.1}
         />
       </div>
@@ -131,7 +131,7 @@ export function ActMagnitudeError() {
             Sequential testing controls the <em>probability</em> of a false positive, but not
             the <em>magnitude</em> of the estimated effect when you stop early. Early stopping
             in sequential tests tends to coincide with atypically large observed effects due to
-            random noise — a stronger version of the winner&rsquo;s curse.
+            random noise:a stronger version of the winner&rsquo;s curse.
           </p>
           <p>
             <strong>What to do:</strong>

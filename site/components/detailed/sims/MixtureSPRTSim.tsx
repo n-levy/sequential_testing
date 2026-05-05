@@ -204,7 +204,7 @@ export function MixtureSPRTSim() {
         <p className="text-sm text-blue-800">
           <strong>Key insight:</strong> When the true effect size differs from the SPRT&apos;s assumed δ,
           the SPRT can be slow or erratic. The mSPRT hedges across many effect sizes via the
-          mixture, making it robust. Both are anytime-valid — the difference is power and speed.
+          mixture, making it robust. Both are anytime-valid:the difference is power and speed.
         </p>
       </div>
     </div>

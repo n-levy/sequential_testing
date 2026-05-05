@@ -40,11 +40,11 @@ export function DetailedAct12() {
           <p>Recall CUPED (<a href="#ref-deng-2013" className="text-blue-600 hover:text-blue-800">Deng et al., 2013</a>):</p>
           <BlockMath>{`Y^* = Y - \\theta(X - \\EE[X])`}</BlockMath>
           <ul className="mb-3 text-sm text-neutral-600 space-y-1 ml-4 list-disc">
-            <li><InlineMath>{`Y^*`}</InlineMath> — the CUPED-adjusted outcome; a lower-variance version of the raw outcome <InlineMath>{`Y`}</InlineMath></li>
-            <li><InlineMath>{`Y`}</InlineMath> — the raw outcome metric during the experiment (e.g. purchases, clicks)</li>
-            <li><InlineMath>{`X`}</InlineMath> — the pre-experiment covariate (the same metric measured before the experiment started)</li>
-            <li><InlineMath>{`\\EE[X]`}</InlineMath> — the mean of the pre-experiment covariate (subtracting this centres <InlineMath>{`X`}</InlineMath> at zero so the adjustment doesn't change the overall mean)</li>
-            <li><InlineMath>{`\\theta`}</InlineMath> — the adjustment coefficient; optimally set to <InlineMath>{`\\Cov(Y,X)/\\Var(X)`}</InlineMath> to minimise the variance of <InlineMath>{`Y^*`}</InlineMath></li>
+            <li><InlineMath>{`Y^*`}</InlineMath>:the CUPED-adjusted outcome; a lower-variance version of the raw outcome <InlineMath>{`Y`}</InlineMath></li>
+            <li><InlineMath>{`Y`}</InlineMath>:the raw outcome metric during the experiment (e.g. purchases, clicks)</li>
+            <li><InlineMath>{`X`}</InlineMath>:the pre-experiment covariate (the same metric measured before the experiment started)</li>
+            <li><InlineMath>{`\\EE[X]`}</InlineMath>:the mean of the pre-experiment covariate (subtracting this centres <InlineMath>{`X`}</InlineMath> at zero so the adjustment doesn't change the overall mean)</li>
+            <li><InlineMath>{`\\theta`}</InlineMath>:the adjustment coefficient; optimally set to <InlineMath>{`\\Cov(Y,X)/\\Var(X)`}</InlineMath> to minimise the variance of <InlineMath>{`Y^*`}</InlineMath></li>
           </ul>
           <p>
             with optimal <InlineMath>{`\\theta = \\Cov(Y,X)/\\Var(X)`}</InlineMath> and variance
@@ -73,11 +73,11 @@ export function DetailedAct12() {
         <div className="text-neutral-700 space-y-3 mb-6">
           <BlockMath>{`\\Var(Y^*) = \\Var(Y - \\hat{f}(X)) = \\Var(Y)(1 - R^2)`}</BlockMath>
           <ul className="mb-3 text-sm text-neutral-600 space-y-1 ml-4 list-disc">
-            <li><InlineMath>{`\\Var(Y^*)`}</InlineMath> — variance of the adjusted outcome; this is the noise that enters the standard error and confidence interval</li>
-            <li><InlineMath>{`\\Var(Y)`}</InlineMath> — variance of the raw outcome before adjustment</li>
-            <li><InlineMath>{`\\hat{f}(X)`}</InlineMath> — the regression model's prediction of <InlineMath>{`Y`}</InlineMath> from the pre-experiment covariate <InlineMath>{`X`}</InlineMath></li>
-            <li><InlineMath>{`R^2`}</InlineMath> — the coefficient of determination: the fraction of the raw variance in <InlineMath>{`Y`}</InlineMath> that is explained (and removed) by the regression adjustment; ranges from 0 (no improvement) to 1 (perfect prediction)</li>
-            <li><InlineMath>{`1 - R^2`}</InlineMath> — the fraction of variance remaining after adjustment; the smaller this is, the tighter the confidence intervals</li>
+            <li><InlineMath>{`\\Var(Y^*)`}</InlineMath>:variance of the adjusted outcome; this is the noise that enters the standard error and confidence interval</li>
+            <li><InlineMath>{`\\Var(Y)`}</InlineMath>:variance of the raw outcome before adjustment</li>
+            <li><InlineMath>{`\\hat{f}(X)`}</InlineMath>:the regression model's prediction of <InlineMath>{`Y`}</InlineMath> from the pre-experiment covariate <InlineMath>{`X`}</InlineMath></li>
+            <li><InlineMath>{`R^2`}</InlineMath>:the coefficient of determination: the fraction of the raw variance in <InlineMath>{`Y`}</InlineMath> that is explained (and removed) by the regression adjustment; ranges from 0 (no improvement) to 1 (perfect prediction)</li>
+            <li><InlineMath>{`1 - R^2`}</InlineMath>:the fraction of variance remaining after adjustment; the smaller this is, the tighter the confidence intervals</li>
           </ul>
           <p>
             where <InlineMath>{`R^2`}</InlineMath> is the coefficient of determination &mdash;

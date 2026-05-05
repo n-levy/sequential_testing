@@ -62,11 +62,11 @@ export function DetailedAct7() {
             <BlockMath>{`B = \\frac{1 - \\beta}{\\alpha}, \\quad A = \\frac{\\beta}{1 - \\alpha}`}</BlockMath>
           </div>
           <ul className="mb-3 text-sm text-neutral-600 space-y-1 ml-4 list-disc">
-            <li><InlineMath>{`B`}</InlineMath> — upper threshold: if <InlineMath>{`\\Lambda_n \\geq B`}</InlineMath>, stop and declare the coin biased (reject <InlineMath>{`H_0`}</InlineMath>)</li>
-            <li><InlineMath>{`A`}</InlineMath> — lower threshold: if <InlineMath>{`\\Lambda_n \\leq A`}</InlineMath>, stop and declare the coin fair (accept <InlineMath>{`H_0`}</InlineMath>)</li>
-            <li><InlineMath>{`\\alpha`}</InlineMath> — the false positive rate: the maximum acceptable probability of declaring the coin biased when it is actually fair</li>
-            <li><InlineMath>{`\\beta`}</InlineMath> — the false negative rate: the maximum acceptable probability of declaring the coin fair when it is actually biased</li>
-            <li><InlineMath>{`1 - \\beta`}</InlineMath> — statistical power: the probability of correctly detecting a true bias</li>
+            <li><InlineMath>{`B`}</InlineMath>:upper threshold: if <InlineMath>{`\\Lambda_n \\geq B`}</InlineMath>, stop and declare the coin biased (reject <InlineMath>{`H_0`}</InlineMath>)</li>
+            <li><InlineMath>{`A`}</InlineMath>:lower threshold: if <InlineMath>{`\\Lambda_n \\leq A`}</InlineMath>, stop and declare the coin fair (accept <InlineMath>{`H_0`}</InlineMath>)</li>
+            <li><InlineMath>{`\\alpha`}</InlineMath>:the false positive rate: the maximum acceptable probability of declaring the coin biased when it is actually fair</li>
+            <li><InlineMath>{`\\beta`}</InlineMath>:the false negative rate: the maximum acceptable probability of declaring the coin fair when it is actually biased</li>
+            <li><InlineMath>{`1 - \\beta`}</InlineMath>:statistical power: the probability of correctly detecting a true bias</li>
           </ul>
           <p>
             <strong>Example</strong> (<InlineMath>{`\\alpha = 0.05`}</InlineMath>,{' '}

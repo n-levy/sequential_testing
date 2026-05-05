@@ -175,7 +175,7 @@ export function ConfidenceSequenceSim() {
           <div className="flex-1">
             <h4 className="font-bold text-neutral-900 mb-1">Confidence Sequence vs Fixed CI</h4>
             <p className="text-sm text-neutral-600">
-              The CS (blue) is wider than the fixed CI (blue) — the &ldquo;price of peeking&rdquo; —
+              The CS (blue) is wider than the fixed CI (blue), the &ldquo;price of peeking,&rdquo;
               but valid at all times simultaneously.
             </p>
           </div>

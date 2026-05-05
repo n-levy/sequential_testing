@@ -65,11 +65,11 @@ export function DetailedAct9() {
               <BlockMath>{`\\PP\\!\\bigl(\\mu \\in C_t \\text{ for all } t \\geq 1\\bigr) \\geq 1 - \\alpha`}</BlockMath>
             </div>
             <ul className="mt-3 text-sm text-neutral-600 space-y-1 ml-4 list-disc">
-              <li><InlineMath>{`C_t`}</InlineMath> — the confidence interval computed at time <InlineMath>{`t`}</InlineMath> (after <InlineMath>{`t`}</InlineMath> observations); together the <InlineMath>{`C_t`}</InlineMath>'s form a "confidence sequence"</li>
-              <li><InlineMath>{`\\mu`}</InlineMath> — the true (unknown) parameter we are estimating (e.g. the true mean outcome, or the true treatment effect)</li>
-              <li><InlineMath>{`t`}</InlineMath> — the current number of observations</li>
-              <li><InlineMath>{`\\PP(\\mu \\in C_t \\text{ for all } t \\geq 1)`}</InlineMath> — the probability that <em>every single interval in the sequence</em> contains the true parameter simultaneously</li>
-              <li><InlineMath>{`1 - \\alpha`}</InlineMath> — the coverage level (e.g. 0.95 for a 95% confidence sequence)</li>
+              <li><InlineMath>{`C_t`}</InlineMath>:the confidence interval computed at time <InlineMath>{`t`}</InlineMath> (after <InlineMath>{`t`}</InlineMath> observations); together the <InlineMath>{`C_t`}</InlineMath>'s form a "confidence sequence"</li>
+              <li><InlineMath>{`\\mu`}</InlineMath>:the true (unknown) parameter we are estimating (e.g. the true mean outcome, or the true treatment effect)</li>
+              <li><InlineMath>{`t`}</InlineMath>:the current number of observations</li>
+              <li><InlineMath>{`\\PP(\\mu \\in C_t \\text{ for all } t \\geq 1)`}</InlineMath>:the probability that <em>every single interval in the sequence</em> contains the true parameter simultaneously</li>
+              <li><InlineMath>{`1 - \\alpha`}</InlineMath>:the coverage level (e.g. 0.95 for a 95% confidence sequence)</li>
             </ul>
           </div>
         </div>
@@ -99,10 +99,10 @@ export function DetailedAct9() {
           </p>
           <BlockMath>{`C_t = \\left(\\bar{x}_t - \\frac{u(v_t)}{t},\\; \\bar{x}_t + \\frac{u(v_t)}{t}\\right)`}</BlockMath>
           <ul className="mb-3 text-sm text-neutral-600 space-y-1 ml-4 list-disc">
-            <li><InlineMath>{`\\bar{x}_t`}</InlineMath> — the sample mean (running average of outcomes) after <InlineMath>{`t`}</InlineMath> observations</li>
-            <li><InlineMath>{`u(v_t)`}</InlineMath> — the boundary function evaluated at the current intrinsic time <InlineMath>{`v_t`}</InlineMath>; this replaces the fixed 1.96 of a standard CI</li>
-            <li><InlineMath>{`v_t = \\sum_{i=1}^t \\sigma_i^2`}</InlineMath> — the cumulative variance (intrinsic time): the sum of individual observation variances up to step <InlineMath>{`t`}</InlineMath></li>
-            <li><InlineMath>{`u(v_t)/t`}</InlineMath> — the half-width of the confidence interval at time <InlineMath>{`t`}</InlineMath>: as <InlineMath>{`t`}</InlineMath> grows, this shrinks, so the interval narrows</li>
+            <li><InlineMath>{`\\bar{x}_t`}</InlineMath>:the sample mean (running average of outcomes) after <InlineMath>{`t`}</InlineMath> observations</li>
+            <li><InlineMath>{`u(v_t)`}</InlineMath>:the boundary function evaluated at the current intrinsic time <InlineMath>{`v_t`}</InlineMath>; this replaces the fixed 1.96 of a standard CI</li>
+            <li><InlineMath>{`v_t = \\sum_{i=1}^t \\sigma_i^2`}</InlineMath>:the cumulative variance (intrinsic time): the sum of individual observation variances up to step <InlineMath>{`t`}</InlineMath></li>
+            <li><InlineMath>{`u(v_t)/t`}</InlineMath>:the half-width of the confidence interval at time <InlineMath>{`t`}</InlineMath>: as <InlineMath>{`t`}</InlineMath> grows, this shrinks, so the interval narrows</li>
           </ul>
         </div>
 

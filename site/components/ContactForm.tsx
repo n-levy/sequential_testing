@@ -49,7 +49,7 @@ export function ContactForm() {
 
         {status === 'sent' ? (
           <div className="bg-green-50 border border-green-200 rounded-lg p-4 text-green-800">
-            Thank you — your message has been sent.
+            Thank you. Your message has been sent.
           </div>
         ) : (
           <form onSubmit={handleSubmit} className="space-y-4">

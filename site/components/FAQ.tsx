@@ -46,7 +46,7 @@ export function FAQ() {
           <p>
             This is expected behaviour, not a flaw. The sequential confidence interval is designed
             to remain valid at <em>every</em> possible stopping time, including very late ones.
-            To guarantee coverage for all future times, the threshold must eventually grow — which
+            To guarantee coverage for all future times, the threshold must eventually grow, which
             causes the Type I error fraction to rise slightly. Importantly, the result is{' '}
             <strong>robust to misspecifying <InlineMath>{`n^*`}</InlineMath></strong>: being off by
             a factor of two has minimal impact on the behaviour of the interval. See Howard et
@@ -63,13 +63,13 @@ export function FAQ() {
           <ol className="list-decimal list-inside space-y-2 ml-2">
             <li>
               <strong>More data narrows the interval.</strong> The standard error shrinks as{' '}
-              <InlineMath>{`1/\\sqrt{n}`}</InlineMath>, so the interval tightens — just as with a
+              <InlineMath>{`1/\\sqrt{n}`}</InlineMath>, so the interval tightens, just as with a
               fixed-horizon interval.
             </li>
             <li>
               <strong>More data means more peeks.</strong> Continuous monitoring accumulates more
               chances to cross the threshold by luck. To keep the overall false positive rate
-              controlled, the sequential multiplier must account for this — and it does so by
+              controlled, the sequential multiplier accounts for this by
               growing slowly with <InlineMath>{`n`}</InlineMath>.
             </li>
           </ol>
@@ -77,7 +77,7 @@ export function FAQ() {
             In the early and middle stages, the first force (data narrowing the interval) dominates:
             the interval gets tighter. Eventually, the second force (the multiplier growing to
             correct for more peeks) starts to dominate, and the interval widens slightly. This
-            slight widening is what causes the Type I error fraction to creep up — the threshold
+            slight widening is what causes the Type I error fraction to creep up: the threshold
             is being raised just fast enough to maintain the time-uniform coverage guarantee.
           </p>
         </div>
@@ -119,23 +119,23 @@ export function FAQ() {
             Three stages of the combined multiplier <InlineMath>{`m(n)`}</InlineMath>:
           </p>
           <ol className="list-decimal list-inside space-y-1 ml-2">
-            <li><strong>Early (<InlineMath>{`n`}</InlineMath> small):</strong> A(n) dominates — m(n) is large, so the interval is wide.</li>
-            <li><strong>Middle:</strong> A(n) decreases faster than B(n) grows — m(n) decreases, so the interval narrows toward its minimum.</li>
-            <li><strong>Late (<InlineMath>{`n`}</InlineMath> large):</strong> B(n) grows like <InlineMath>{`\\log(n)`}</InlineMath>, which eventually dominates — m(n) rises, so the interval widens slightly.</li>
+            <li><strong>Early (<InlineMath>{`n`}</InlineMath> small):</strong> A(n) dominates, so m(n) is large and the interval is wide.</li>
+            <li><strong>Middle:</strong> A(n) decreases faster than B(n) grows, so m(n) decreases and the interval narrows toward its minimum.</li>
+            <li><strong>Late (<InlineMath>{`n`}</InlineMath> large):</strong> B(n) grows like <InlineMath>{`\\log(n)`}</InlineMath>, which eventually dominates, so m(n) rises and the interval widens slightly.</li>
           </ol>
           <p className="mt-3">
             The combined interval width (proportional to{' '}
             <InlineMath>{`(1/\\sqrt{n}) \\times m(n)`}</InlineMath>):
           </p>
           <ol className="list-decimal list-inside space-y-1 ml-2 mt-2">
-            <li><strong>Early:</strong> <InlineMath>{`1/\\sqrt{n}`}</InlineMath> shrinks quickly — interval narrows.</li>
-            <li><strong>Middle:</strong> both forces help — interval is at its tightest.</li>
+            <li><strong>Early:</strong> <InlineMath>{`1/\\sqrt{n}`}</InlineMath> shrinks quickly, so the interval narrows.</li>
+            <li><strong>Middle:</strong> both forces help, so the interval is at its tightest.</li>
             <li><strong>Late:</strong> <InlineMath>{`\\log(n)`}</InlineMath> growth in B(n) outpaces{' '}
-            <InlineMath>{`1/\\sqrt{n}`}</InlineMath> shrinkage — interval widens slightly, and
+            <InlineMath>{`1/\\sqrt{n}`}</InlineMath> shrinkage, so the interval widens slightly and
             the Type I error fraction rises slowly from below the nominal level.</li>
           </ol>
           <p className="mt-3 text-sm text-neutral-600">
-            This late-stage widening is not a problem — it is the mathematical price of the
+            This late-stage widening is not a problem: it is the mathematical price of the
             time-uniform coverage guarantee. The sequential interval must remain valid for all
             possible stopping times, including very late ones, and{' '}
             <InlineMath>{`\\log(n)`}</InlineMath> growth is the minimal cost of this guarantee.

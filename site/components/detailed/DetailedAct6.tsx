@@ -39,13 +39,13 @@ export function DetailedAct6() {
           <h4 className="font-bold text-blue-900 mb-3">Simulation</h4>
           <div className="text-neutral-800 space-y-3">
             <p>
-              <strong>Panel 1 &mdash; Markov (single time):</strong> 10,000 fair-coin paths of <InlineMath>{`\\Lambda_n`}</InlineMath>. Threshold at <InlineMath>{`\\Lambda = 1/\\alpha = 20`}</InlineMath>. How many are above the threshold at step 200? Fraction <InlineMath>{`\\leq 5\\%`}</InlineMath>.
+              <strong>Panel 1: Markov (single time):</strong> 10,000 fair-coin paths of <InlineMath>{`\\Lambda_n`}</InlineMath>. Threshold at <InlineMath>{`\\Lambda = 1/\\alpha = 20`}</InlineMath>. How many are above the threshold at step 200? Fraction <InlineMath>{`\\leq 5\\%`}</InlineMath>.
             </p>
             <p>
-              <strong>Panel 2 &mdash; Ville (any time):</strong> Same paths. How many ever cross the threshold at any step? Also <InlineMath>{`\\leq 5\\%`}</InlineMath>—but this needs a stronger theorem.
+              <strong>Panel 2: Ville (any time):</strong> Same paths. How many ever cross the threshold at any step? Also <InlineMath>{`\\leq 5\\%`}</InlineMath>—but this needs a stronger theorem.
             </p>
             <p>
-              <strong>Panel 3 &mdash; Comparison:</strong> Standard <InlineMath>{`z`}</InlineMath>-score checked at every step. How many ever show significance? Much higher than 5%—the peeking problem.
+              <strong>Panel 3: Comparison:</strong> Standard <InlineMath>{`z`}</InlineMath>-score checked at every step. How many ever show significance? Much higher than 5%—the peeking problem.
             </p>
           </div>
         </div>
@@ -76,10 +76,10 @@ export function DetailedAct6() {
               <BlockMath>{`\\PP(X \\geq c) \\leq \\frac{\\EE[X]}{c}`}</BlockMath>
             </div>
             <ul className="mt-3 text-sm text-neutral-600 space-y-1 ml-4 list-disc">
-              <li><InlineMath>{`X`}</InlineMath> — any non-negative random variable (a quantity that is always ≥ 0)</li>
-              <li><InlineMath>{`\\EE[X]`}</InlineMath> — the expected value (long-run average) of <InlineMath>{`X`}</InlineMath></li>
-              <li><InlineMath>{`c`}</InlineMath> — a threshold value (must be positive)</li>
-              <li><InlineMath>{`\\PP(X \\geq c)`}</InlineMath> — the probability that <InlineMath>{`X`}</InlineMath> is at least as large as the threshold</li>
+              <li><InlineMath>{`X`}</InlineMath>:any non-negative random variable (a quantity that is always ≥ 0)</li>
+              <li><InlineMath>{`\\EE[X]`}</InlineMath>:the expected value (long-run average) of <InlineMath>{`X`}</InlineMath></li>
+              <li><InlineMath>{`c`}</InlineMath>:a threshold value (must be positive)</li>
+              <li><InlineMath>{`\\PP(X \\geq c)`}</InlineMath>:the probability that <InlineMath>{`X`}</InlineMath> is at least as large as the threshold</li>
             </ul>
           </div>
         </div>
@@ -112,10 +112,10 @@ export function DetailedAct6() {
           </p>
           <BlockMath>{`\\PP\\!\\left(\\Lambda_n \\geq \\frac{1}{\\alpha}\\right) \\leq \\frac{\\EE[\\Lambda_n]}{1/\\alpha} = 1 \\cdot \\alpha = \\alpha`}</BlockMath>
           <ul className="mb-3 text-sm text-neutral-600 space-y-1 ml-4 list-disc">
-            <li><InlineMath>{`\\Lambda_n`}</InlineMath> — the likelihood ratio at step <InlineMath>{`n`}</InlineMath> (the test statistic)</li>
-            <li><InlineMath>{`1/\\alpha`}</InlineMath> — the rejection threshold (e.g. 20 when <InlineMath>{`\\alpha = 0.05`}</InlineMath>); we reject <InlineMath>{`H_0`}</InlineMath> when the likelihood ratio exceeds this</li>
-            <li><InlineMath>{`\\EE[\\Lambda_n] = 1`}</InlineMath> — since <InlineMath>{`\\Lambda_n`}</InlineMath> is a martingale starting at 1, its expected value stays at 1 under <InlineMath>{`H_0`}</InlineMath></li>
-            <li><InlineMath>{`\\alpha`}</InlineMath> — the false positive rate; the probability of a false alarm at this single look is at most <InlineMath>{`\\alpha`}</InlineMath></li>
+            <li><InlineMath>{`\\Lambda_n`}</InlineMath>:the likelihood ratio at step <InlineMath>{`n`}</InlineMath> (the test statistic)</li>
+            <li><InlineMath>{`1/\\alpha`}</InlineMath>:the rejection threshold (e.g. 20 when <InlineMath>{`\\alpha = 0.05`}</InlineMath>); we reject <InlineMath>{`H_0`}</InlineMath> when the likelihood ratio exceeds this</li>
+            <li><InlineMath>{`\\EE[\\Lambda_n] = 1`}</InlineMath>:since <InlineMath>{`\\Lambda_n`}</InlineMath> is a martingale starting at 1, its expected value stays at 1 under <InlineMath>{`H_0`}</InlineMath></li>
+            <li><InlineMath>{`\\alpha`}</InlineMath>:the false positive rate; the probability of a false alarm at this single look is at most <InlineMath>{`\\alpha`}</InlineMath></li>
           </ul>
           <div className="bg-white border border-neutral-200 rounded-lg p-4 text-neutral-600">
             <p>
@@ -141,11 +141,11 @@ export function DetailedAct6() {
               <BlockMath>{`\\PP\\!\\left(\\sup_{n \\geq 0}\\, M_n \\geq c\\right) \\leq \\frac{m_0}{c}`}</BlockMath>
             </div>
             <ul className="mt-3 text-sm text-neutral-600 space-y-1 ml-4 list-disc">
-              <li><InlineMath>{`M_n`}</InlineMath> — a non-negative martingale (e.g. the likelihood ratio <InlineMath>{`\\Lambda_n`}</InlineMath>): a process where the expected future value always equals the current value</li>
-              <li><InlineMath>{`m_0`}</InlineMath> — the starting value of the martingale (for our likelihood ratio, <InlineMath>{`m_0 = \\Lambda_0 = 1`}</InlineMath>)</li>
-              <li><InlineMath>{`c`}</InlineMath> — the threshold we want to avoid crossing (e.g. <InlineMath>{`c = 1/\\alpha = 20`}</InlineMath> for a 5% false positive rate)</li>
-              <li><InlineMath>{`\\sup_{n \\geq 0} M_n`}</InlineMath> — the supremum (highest value ever reached) of <InlineMath>{`M_n`}</InlineMath> across all time steps</li>
-              <li><InlineMath>{`\\PP(\\sup M_n \\geq c)`}</InlineMath> — the probability that the process <em>ever</em> crosses the threshold at any point during the experiment</li>
+              <li><InlineMath>{`M_n`}</InlineMath>:a non-negative martingale (e.g. the likelihood ratio <InlineMath>{`\\Lambda_n`}</InlineMath>): a process where the expected future value always equals the current value</li>
+              <li><InlineMath>{`m_0`}</InlineMath>:the starting value of the martingale (for our likelihood ratio, <InlineMath>{`m_0 = \\Lambda_0 = 1`}</InlineMath>)</li>
+              <li><InlineMath>{`c`}</InlineMath>:the threshold we want to avoid crossing (e.g. <InlineMath>{`c = 1/\\alpha = 20`}</InlineMath> for a 5% false positive rate)</li>
+              <li><InlineMath>{`\\sup_{n \\geq 0} M_n`}</InlineMath>:the supremum (highest value ever reached) of <InlineMath>{`M_n`}</InlineMath> across all time steps</li>
+              <li><InlineMath>{`\\PP(\\sup M_n \\geq c)`}</InlineMath>:the probability that the process <em>ever</em> crosses the threshold at any point during the experiment</li>
             </ul>
             <p className="mt-2">
               where <InlineMath>{`\\sup_{n \\geq 0} M_n`}</InlineMath> is the highest value{' '}

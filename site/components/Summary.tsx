@@ -17,9 +17,9 @@ export function Summary() {
               </tr>
             </thead>
             <tbody>
-              <tr><td className="border border-neutral-300 p-3 text-center font-bold">1</td><td className="border border-neutral-300 p-3">Peeking inflates false positives. You need a test that is valid every time you check — not just at the planned end date.</td></tr>
+              <tr><td className="border border-neutral-300 p-3 text-center font-bold">1</td><td className="border border-neutral-300 p-3">Peeking inflates false positives. You need a test that is valid every time you check, not just at the planned end date.</td></tr>
               <tr className="bg-neutral-50"><td className="border border-neutral-300 p-3 text-center font-bold">2</td><td className="border border-neutral-300 p-3">Sequential confidence intervals (Eppo, 2022) remain valid under continuous monitoring by using a time-varying multiplier instead of the fixed 1.96.</td></tr>
-              <tr><td className="border border-neutral-300 p-3 text-center font-bold">3</td><td className="border border-neutral-300 p-3">The hybrid approach: monitor guardrail KPIs sequentially for early abort, and analyse the primary KPI with a standard confidence interval at the planned end date — preserving full statistical power.</td></tr>
+              <tr><td className="border border-neutral-300 p-3 text-center font-bold">3</td><td className="border border-neutral-300 p-3">A hybrid approach: monitor guardrail KPIs sequentially for early abort, and analyse the primary KPI with a standard confidence interval at the planned end date, preserving full statistical power.</td></tr>
               <tr className="bg-neutral-50"><td className="border border-neutral-300 p-3 text-center font-bold">4</td><td className="border border-neutral-300 p-3">DIY alternatives: Bonferroni, Pocock, O&apos;Brien–Fleming for two-sided control; plus a one-sided guardrail harm detection rule (z = 3.0).</td></tr>
               <tr><td className="border border-neutral-300 p-3 text-center font-bold">5</td><td className="border border-neutral-300 p-3">Early stopping in sequential tests inflates estimated effect sizes (magnitude error). Treat point estimates from early-stopped tests with caution; prefer the hybrid approach to avoid this for the primary KPI.</td></tr>
             </tbody>

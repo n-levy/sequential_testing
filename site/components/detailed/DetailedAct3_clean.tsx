@@ -81,7 +81,7 @@ export function DetailedAct3() {
 						<li><InlineMath>{`\\EE[\\tau] < \\infty`}</InlineMath> and certain integrability conditions (finite expected stopping time).</li>
 					</ol>
 					<p>
-						When <em>none</em> hold — as with the doubling strategy — the guarantee
+						When <em>none</em> hold (as with the doubling strategy), the guarantee
 						breaks down.
 					</p>
 				</div>
@@ -106,8 +106,8 @@ export function DetailedAct3() {
 					<p>
 						The martingale concept reappears in every subsequent act. The likelihood
 						ratio (Act 5) is a martingale. The mixture likelihood ratio (Act 8) is a
-						martingale. The reason sequential tests control false positives — even
-						with peeking — is that they exploit the same structure:{' '}
+						martingale. The reason sequential tests control false positives, even
+						with peeking, is that they exploit the same structure:{' '}
 						<strong>a fair game cannot be beaten by choosing when to stop.</strong>
 					</p>
 				</div>
@@ -127,7 +127,7 @@ export function DetailedAct3() {
 					<h4 className="font-semibold text-neutral-700 mb-3">Historical Note</h4>
 					<p className="text-neutral-700">
 						<a href="#ref-doob-1953" className="text-blue-600 hover:text-blue-800">Joseph L. Doob</a> formalised martingale theory in his 1953 monograph{' '}
-						<em>Stochastic Processes</em>. The name "martingale" comes from a French term for a type of betting strategy — the very doubling strategy we just debunked.
+						<em>Stochastic Processes</em>. The name "martingale" comes from a French term for a type of betting strategy: the very doubling strategy we just debunked.
 					</p>
 				</div>
 			</div>
