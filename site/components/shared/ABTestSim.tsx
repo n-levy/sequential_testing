@@ -224,7 +224,7 @@ export function ABTestSim({
           if (layer === 'fixed-ci') {
             w = denom !== 0 ? 100 * Z_975 * t.ses[i] / denom : 0;
           } else if (layer === 'sequential-ci') {
-            const nu = n / (Math.log(n / alpha) - 1);
+            const nu = n * 0.25;
             const t_i = i + 1;
             const logTerm = Math.log((t_i + nu) / (nu * alpha));
             w = denom !== 0 ? 100 * t.ses[i] * Math.sqrt((t_i + nu) / t_i * logTerm) / denom : 0;
@@ -372,7 +372,7 @@ export function ABTestSim({
         .x((_d, i) => x(dayOf(i)))
         .y0((_d, i) => {
           const denom = traj.meansA[i]
-          const nu = n / (Math.log(n / alpha) - 1)
+          const nu = n * 0.25
           const t_i = i + 1
           const logTerm = Math.log((t_i + nu) / (nu * alpha))
           const w = denom !== 0
@@ -382,7 +382,7 @@ export function ABTestSim({
         })
         .y1((_d, i) => {
           const denom = traj.meansA[i]
-          const nu = n / (Math.log(n / alpha) - 1)
+          const nu = n * 0.25
           const t_i = i + 1
           const logTerm = Math.log((t_i + nu) / (nu * alpha))
           const w = denom !== 0
