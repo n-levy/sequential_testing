@@ -161,7 +161,7 @@ export function Act2() {
           The net result: if your team monitors the experiment and is willing to act on interim
           results, the sequential CI can match or beat the fixed-horizon design in expected sample
           size. If you monitor but never stop early, you pay the full power penalty at{' '}
-          <InlineMath>{`n^*`}</InlineMath> without gaining anything. This is why the hybrid approach
+          <InlineMath>{`n^*`}</InlineMath> without gaining anything. This is why the hybrid split-sided approach
           in Act 3 (sequential monitoring for guardrails only, fixed-horizon for the primary KPI)
           is often the better practical choice.
         </p>

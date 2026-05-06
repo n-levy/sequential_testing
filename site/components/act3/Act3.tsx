@@ -240,11 +240,11 @@ export function Act4() {
 
         {/* ── Hybrid Without Eppo (2022) ── */}
         <h3 id="act4-hybrid-impl" className="text-2xl font-bold text-neutral-900 mb-4">
-          Implementing the Hybrid Approach Without Eppo (2022)
+          Implementing the Hybrid Split-Sided Approach Without Eppo (2022)
         </h3>
 
         <p className="mb-4 text-neutral-700">
-          Act 3 introduced the hybrid approach: sequential confidence interval on guardrail KPIs for early
+          Act 3 introduced the hybrid split-sided approach: sequential confidence interval on guardrail KPIs for early
           abort, standard confidence interval on the primary KPI at the planned end date. Below is how to
           implement it using any of the three correction methods above.
         </p>
@@ -310,7 +310,7 @@ export function Act4() {
         <div className="bg-blue-100 border border-blue-500 rounded-lg p-6 mb-8">
           <h4 className="font-bold text-blue-900 mb-3">Key Takeaway</h4>
           <div className="text-neutral-800 space-y-2">
-            <p><strong>The hybrid approach without Eppo (2022):</strong></p>
+            <p><strong>The hybrid split-sided approach without Eppo (2022):</strong></p>
             <ul className="list-disc list-inside ml-4 space-y-1">
               <li>Apply Bonferroni across your <InlineMath>{`G`}</InlineMath> guardrail KPIs: <InlineMath>{`\\alpha_g = \\alpha / G`}</InlineMath>.</li>
               <li>Within each guardrail, use O&apos;Brien&ndash;Fleming (best) or Bonferroni (simplest).</li>

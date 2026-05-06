@@ -34,7 +34,7 @@ const FOCUSED_ITEMS = [
     ],
   },
   {
-    id: 'act3-hybrid', label: 'Act 3 – Hybrid Approach',
+    id: 'act3-hybrid', label: 'Act 3 – Hybrid Split-Sided Approach',
     children: [
       { id: 'act3-sim', label: 'Simulation' },
       { id: 'act3-adv', label: 'Advantages & Limitations' },

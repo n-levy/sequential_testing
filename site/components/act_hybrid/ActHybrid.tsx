@@ -66,10 +66,10 @@ function EppoGuidanceSection() {
 export function ActHybrid() {
   return (
     <div id="act3-hybrid" className="max-w-3xl mx-auto px-4">
-      <h2 className="text-2xl font-bold mb-1">Act 3: A Hybrid Approach</h2>
+      <h2 className="text-2xl font-bold mb-1">Act 3: A Hybrid Split-Sided Approach</h2>
 
       <p className="text-neutral-700 mb-6">
-        This act explains a popular &ldquo;hybrid&rdquo; approach to sequential testing. The description and
+        This act explains the hybrid split-sided approach to sequential testing. The description and
         the simulation below follow the approach described by Eppo. (See &ldquo;Hybrid sequential tests&rdquo;{' '}
         <a
           href="https://www.geteppo.com/blog/comparing-frequentist-vs-bayesian-approaches"
@@ -191,7 +191,7 @@ export function ActHybrid() {
             <tr className="bg-neutral-100">
               <th className="border border-neutral-300 p-3 text-left font-semibold"></th>
               <th className="border border-neutral-300 p-3 text-left font-semibold">Full sequential</th>
-              <th className="border border-neutral-300 p-3 text-left font-semibold">Hybrid</th>
+              <th className="border border-neutral-300 p-3 text-left font-semibold">Hybrid split-sided</th>
             </tr>
           </thead>
           <tbody>
@@ -276,7 +276,7 @@ export function ActHybrid() {
           </div>
 
           <div>
-            <h5 className="font-semibold text-neutral-900 mb-2">4. The union bound (hybrid sequential variant)</h5>
+            <h5 className="font-semibold text-neutral-900 mb-2">4. The union bound (hybrid split-sided variant)</h5>
             <p className="mb-2">
               When the primary KPI also needs interim protection against harm, the significance budget is split equally: a sequential test at <InlineMath>{`\\alpha/2`}</InlineMath> during the experiment, and a standard test at <InlineMath>{`\\alpha/2`}</InlineMath> at the end.
             </p>
@@ -292,7 +292,7 @@ export function ActHybrid() {
               <li>Final: one-tailed test at <InlineMath>{`\\alpha/2`}</InlineMath> using <InlineMath>{`z_{\\alpha/2} = \\Phi^{-1}(1 - \\alpha/2) = 1.96`}</InlineMath> for <InlineMath>{`\\alpha = 0.05`}</InlineMath></li>
             </ul>
             <p className="mt-2 text-sm text-neutral-700">
-              The final test uses <InlineMath>{`z_{\\alpha/2} = 1.96`}</InlineMath>, exactly the same critical value as the benefit side of a classic two-tailed test at <InlineMath>{`\\alpha`}</InlineMath>. There is no extra cost at the end of the experiment: a one-tailed test at <InlineMath>{`\\alpha/2`}</InlineMath> occupies exactly the same region of the normal distribution as one tail of a classic two-tailed test at <InlineMath>{`\\alpha`}</InlineMath>. The only cost of the hybrid sequential variant is the wider sequential confidence interval <em>during</em> the experiment.
+              The final test uses <InlineMath>{`z_{\\alpha/2} = 1.96`}</InlineMath>, exactly the same critical value as the benefit side of a classic two-tailed test at <InlineMath>{`\\alpha`}</InlineMath>. There is no extra cost at the end of the experiment: a one-tailed test at <InlineMath>{`\\alpha/2`}</InlineMath> occupies exactly the same region of the normal distribution as one tail of a classic two-tailed test at <InlineMath>{`\\alpha`}</InlineMath>. The only cost of the hybrid split-sided variant is the wider sequential confidence interval <em>during</em> the experiment.
             </p>
           </div>
 
@@ -315,7 +315,7 @@ export function ActHybrid() {
             identical to one tail of a standard 95% confidence interval.
           </p>
           <p>
-            When the primary KPI must also be protected against harm, use the hybrid sequential
+            When the primary KPI must also be protected against harm, use the hybrid split-sided
             variant: run both a sequential test (at α/2) during the experiment and a standard test
             (at α/2) at the end, keeping the overall Type I error at α.
           </p>

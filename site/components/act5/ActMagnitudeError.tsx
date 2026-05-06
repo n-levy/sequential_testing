@@ -72,9 +72,9 @@ export function ActMagnitudeError() {
 
       {/* Why hybrid helps */}
       <div className="bg-blue-50 border border-blue-300 rounded-lg p-5 mb-8">
-        <h4 className="font-semibold mb-2 text-blue-900">Another reason to prefer the hybrid approach</h4>
+        <h4 className="font-semibold mb-2 text-blue-900">Another reason to prefer the hybrid split-sided approach</h4>
         <p className="text-neutral-700 mb-2">
-          In the hybrid approach (Act 3), the primary KPI is <em>never</em> stopped early:it is
+          In the hybrid split-sided approach (Act 3), the primary KPI is <em>never</em> stopped early:it is
           always analysed at the planned end date with a standard confidence interval. This means:
         </p>
         <ul className="list-disc pl-5 space-y-1 text-neutral-700">
@@ -137,7 +137,7 @@ export function ActMagnitudeError() {
             <strong>What to do:</strong>
           </p>
           <ul className="list-disc pl-5 space-y-1">
-            <li>Prefer the hybrid approach to avoid early stopping on the primary KPI altogether.</li>
+            <li>Prefer the hybrid split-sided approach to avoid early stopping on the primary KPI altogether.</li>
             <li>If you do stop early, acknowledge that the point estimate is likely an overestimate.</li>
             <li>Use the measured effect for the yes/no decision (is there an effect?) but not
             for magnitude-dependent decisions (how large is the effect?) without applying a

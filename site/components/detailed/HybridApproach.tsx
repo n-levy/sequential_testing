@@ -6,10 +6,10 @@ export function HybridApproach() {
       <div className="max-w-4xl mx-auto px-4">
         <div className="text-center mb-10">
           <h2 className="text-3xl font-bold text-neutral-900 mb-3">
-            The Hybrid Approach
+            The Hybrid Split-Sided Approach
           </h2>
           <p className="text-neutral-600">
-            How to combine the best of fixed-horizon and sequential testing in practice.
+            Sequential monitoring for guardrail KPIs; fixed-horizon analysis for the primary KPI.
           </p>
         </div>
 
@@ -21,15 +21,16 @@ export function HybridApproach() {
             second&rdquo;) is the best default.
           </p>
           <p>
-            The <strong>hybrid approach</strong> uses sequential testing for{' '}
-            <em>monitoring</em> and falls back on a fixed-horizon analysis at a planned
-            stopping date for the <em>final decision</em>. It gives you safe early
-            stopping <em>and</em> avoids the pitfalls of stopping at an unrepresentative
-            moment.
+            The <strong>hybrid split-sided approach</strong> assigns each metric to a
+            different analysis regime. <strong>Guardrail KPIs</strong> are monitored with
+            a sequential confidence interval throughout the experiment, allowing early
+            stopping the moment harm is detected. The <strong>primary KPI</strong> is
+            analysed exactly once at the planned end date using a standard fixed-horizon
+            interval, preserving full statistical power.
           </p>
         </div>
 
-        <h3 className="text-2xl font-bold text-neutral-900 mb-4">Why hybrid?</h3>
+        <h3 className="text-2xl font-bold text-neutral-900 mb-4">Why hybrid split-sided?</h3>
 
         <ul className="list-disc ml-6 space-y-2 text-neutral-700 mb-8">
           <li>
@@ -111,8 +112,7 @@ export function HybridApproach() {
         <div className="bg-blue-100 border border-blue-500 rounded-lg p-6 mb-4">
           <h4 className="font-bold text-blue-900 mb-3">Takeaway</h4>
           <p className="text-neutral-800">
-            For most short-to-medium-length tests, the hybrid works well: <strong>sequential CI for monitoring, fixed CI at a
-            planned horizon for decisions</strong>. For long-running tests where the horizon is uncertain, relying on the sequential CI alone is the more appropriate choice.
+            For most short-to-medium-length tests, the hybrid split-sided approach works well: <strong>sequential CI for guardrail monitoring, standard fixed CI at the planned end date for the primary KPI decision</strong>. For long-running tests where the horizon is uncertain, relying on the sequential CI alone is the more appropriate choice.
           </p>
         </div>
       </div>
