@@ -88,7 +88,7 @@ export function ActHybrid() {
         >
           here
         </a>
-        .) It is presented in two parts: first the hybrid concept, then the split-sided design.
+        .) It is presented in two parts: first the hybrid approach in general, then the hybrid approach with a split-sided design.
       </p>
 
       {/* ════ PART 1: THE HYBRID APPROACH ════ */}
