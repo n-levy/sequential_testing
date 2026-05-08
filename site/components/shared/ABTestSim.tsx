@@ -81,7 +81,7 @@ const LAYER_STYLE: Record<SimLayer, { color: string; label: string }> = {
   'pocock':        { color: '#f59e0b', label: 'Pocock' },
   'obf':           { color: '#1d4ed8', label: "O'Brien–Fleming" },
   'bonferroni':    { color: '#0d9488', label: 'Bonferroni' },
-  'harm-detect':   { color: '#7c3aed', label: 'Guardrail harm detection (3 SD)' },
+  'harm-detect':   { color: '#7c3aed', label: 'Three Standard Deviations (one-sided)' },
 }
 
 function mulberry32(seed: number) {
@@ -352,20 +352,22 @@ export function ABTestSim({
     // Helper: convert user index i to x-day coordinate
     const dayOf = (i: number) => n > 0 ? (i + 1) * daysTotal / n : 0
 
-    // CI band for fixed-ci (always rendered as base layer)
-    const area = d3.area<number>()
-      .x((_d, i) => x(dayOf(i)))
-      .y0((_d, i) => y(effectPct[i] - ciHalfWidthPct[i]))
-      .y1((_d, i) => y(effectPct[i] + ciHalfWidthPct[i]))
-      .defined((_d, i) => i >= 5 && Number.isFinite(ciHalfWidthPct[i]))
-    g.append('path')
-      .datum(Array.from({ length: nExt }, (_, i) => i))
-      .attr('fill', LAYER_STYLE['fixed-ci'].color)
-      .attr('fill-opacity', 0.12)
-      .attr('stroke', LAYER_STYLE['fixed-ci'].color)
-      .attr('stroke-width', 1.2)
-      .attr('stroke-opacity', 0.7)
-      .attr('d', area as d3.Area<number>)
+    // CI band for fixed-ci
+    if (layers.includes('fixed-ci')) {
+      const area = d3.area<number>()
+        .x((_d, i) => x(dayOf(i)))
+        .y0((_d, i) => y(effectPct[i] - ciHalfWidthPct[i]))
+        .y1((_d, i) => y(effectPct[i] + ciHalfWidthPct[i]))
+        .defined((_d, i) => i >= 5 && Number.isFinite(ciHalfWidthPct[i]))
+      g.append('path')
+        .datum(Array.from({ length: nExt }, (_, i) => i))
+        .attr('fill', LAYER_STYLE['fixed-ci'].color)
+        .attr('fill-opacity', 0.12)
+        .attr('stroke', LAYER_STYLE['fixed-ci'].color)
+        .attr('stroke-width', 1.2)
+        .attr('stroke-opacity', 0.7)
+        .attr('d', area as d3.Area<number>)
+    }
 
     if (layers.includes('sequential-ci')) {
       const seqArea = d3.area<number>()
@@ -800,7 +802,7 @@ export function ABTestSim({
                   <li>In reality, the number of unique users entering each day may decrease over time as repeat visitors are excluded. This simplification does not affect the key insights the simulation aims to illustrate.</li>
                   <li>Independent users/events within and across arms (no clustering or interference).</li>
                   <li>No missing data, no delayed outcomes, and no sample-ratio mismatch.</li>
-                  <li>Two-sided significance check at each look: confidence interval crossing zero is treated as significant. Exception: the guardrail harm detection method is one-sided; it only triggers when the confidence interval lies entirely below zero.</li>
+                  <li>Two-sided significance check at each look: confidence interval crossing zero is treated as significant. Exception: the Three Standard Deviations method is one-sided; it only triggers when the confidence interval lies entirely below zero.</li>
                   <li>Peeks occur at exactly K equal time intervals over the test duration.</li>
                 </ul>
               </div>

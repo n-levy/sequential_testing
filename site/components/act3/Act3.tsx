@@ -9,7 +9,7 @@ export type SimLayer =
   | 'pocock'         // Pocock group-sequential boundary
   | 'obf'            // O'Brien–Fleming group-sequential boundary
   | 'bonferroni'     // Bonferroni correction (alpha/K per look)
-  | 'harm-detect'    // Guardrail harm detection (one-sided, z = 3.0)
+  | 'harm-detect'    // Three Standard Deviations (one-sided, z = 3.0)
 
 // Legend labels and colours for each layer:
 const LAYER_STYLE = {
@@ -18,7 +18,7 @@ const LAYER_STYLE = {
   'pocock':        { color: '#f59e0b', label: 'Pocock' },
   'obf':           { color: '#1d4ed8', label: "O'Brien–Fleming" },
   'bonferroni':    { color: '#0d9488', label: 'Bonferroni' },
-  'harm-detect':   { color: '#dc2626', label: 'Guardrail harm detection (3 SD)' },
+  'harm-detect':   { color: '#dc2626', label: 'Three Standard Deviations (one-sided)' },
 }
 
 // Harm-detect stopping is one-sided: only fires when the CI upper bound is below zero.
@@ -42,7 +42,7 @@ const LAYER_META: Record<SimLayer, { label: string; color: string }> = {
   'pocock':        { label: 'Pocock',                               color: '#f59e0b' },
   'obf':           { label: "O'Brien–Fleming",                      color: '#1d4ed8' },
   'bonferroni':    { label: 'Bonferroni',                           color: '#0d9488' },
-  'harm-detect':   { label: 'Harm detection (3 SD)',                color: '#7c3aed' },
+  'harm-detect':   { label: 'Three SD',                            color: '#7c3aed' },
 }
 
 export function Act4() {
@@ -70,8 +70,8 @@ export function Act4() {
       <h2 className="text-2xl font-bold mb-1">Act 4: Alternative Methods</h2>
       <p className="text-neutral-700 mb-6">
         Three group sequential methods for controlling false positives under interim analyses,
-        plus a one-sided guardrail harm detection rule, for teams implementing sequential
-        monitoring without a dedicated platform.
+        plus the Three Standard Deviations one-sided guardrail rule, for teams implementing
+        sequential monitoring without a dedicated platform.
       </p>
 
         {/* ── Intuition ── */}
@@ -93,7 +93,7 @@ export function Act4() {
               <li><strong>Bonferroni:</strong> equal allocation, <InlineMath>{`\\alpha/K`}</InlineMath> per analysis. Conservative because it ignores correlation across analyses.</li>
               <li><strong>Pocock:</strong> constant critical value calibrated to the joint distribution of the test statistics across analyses. Tighter than Bonferroni.</li>
               <li><strong>O&apos;Brien&ndash;Fleming:</strong> front-loaded allocation. Very strict early, nearly standard at the final analysis.</li>
-              <li><strong>Harm detection (3 SD):</strong> a one-sided guardrail rule using a fixed critical value of <InlineMath>{`z = 3.0`}</InlineMath>. Stops only when the effect is more than 3 SDs in the harmful direction. Does not formally control the family-wise error rate, but is very conservative in practice.</li>
+              <li><strong>Three Standard Deviations:</strong> a one-sided guardrail rule using a fixed critical value of <InlineMath>{`z = 3.0`}</InlineMath>. Stops only when the effect is more than 3 SDs in the harmful direction. Does not formally control the family-wise error rate, but is very conservative in practice.</li>
             </ul>
             <p>
               Eppo&apos;s (2022) approach (Act 2) does not require pre-specifying <InlineMath>{`K`}</InlineMath> &mdash;
@@ -124,7 +124,7 @@ export function Act4() {
           <h3 className="text-xl font-semibold mb-2">Simulation</h3>
           <p className="text-neutral-700 mb-3">
             This extends the Act 1/2 simulation by adding Bonferroni, Pocock, O&apos;Brien&ndash;Fleming,
-            and the 3 SD rule confidence intervals, so you can compare all methods under the same settings.
+            and the Three Standard Deviations rule, so you can compare all methods under the same settings.
           </p>
         </div>
 
@@ -163,7 +163,7 @@ export function Act4() {
               <strong>Bonferroni:</strong> most conservative among the formal methods (lowest crossing share).<br />
               <strong>Pocock:</strong> less conservative than Bonferroni; calibrated to the joint distribution across K analyses.<br />
               <strong>O&apos;Brien&ndash;Fleming:</strong> very strict early, close to classical at the final analysis.<br />
-              <strong>Harm detection (3 SD rule):</strong> one-sided, only fires when the effect is strongly negative (z &lt; −3.0). Under a null with no true harm, it rarely triggers regardless of K.<br />
+              <strong>Three Standard Deviations:</strong> one-sided, only fires when the effect is strongly negative (z &lt; −3.0). Under a null with no true harm, it rarely triggers regardless of K.<br />
               <strong>Sequential CI (Eppo, 2022):</strong> anytime-valid; guaranteed ≤5% false positive rate for two-sided tests under continuous monitoring.
             </>}
           />
@@ -182,7 +182,7 @@ export function Act4() {
                 <th className="border border-neutral-300 p-3 font-semibold text-neutral-900">Bonferroni</th>
                 <th className="border border-neutral-300 p-3 font-semibold text-neutral-900">Pocock</th>
                 <th className="border border-neutral-300 p-3 font-semibold text-neutral-900">OBF</th>
-                <th className="border border-neutral-300 p-3 font-semibold text-neutral-900">Harm detection</th>
+                <th className="border border-neutral-300 p-3 font-semibold text-neutral-900">Three SD</th>
                 <th className="border border-neutral-300 p-3 font-semibold text-neutral-900">Eppo (2022)</th>
               </tr>
             </thead>
@@ -272,7 +272,7 @@ export function Act4() {
               <li><strong>Closest to Eppo (2022) in these simulations:</strong> in the conditions of this simulation, Pocock seems like the most reasonable choice among the alternative methods.</li>
               <li><strong>Avoid over-correction:</strong> Bonferroni is often too conservative, reducing sensitivity more than needed.</li>
               <li><strong>Avoid early over-triggering:</strong> O&apos;Brien&ndash;Fleming is very conservative early, so early stopping is rare in this setup.</li>
-              <li><strong>Harm detection is not a substitute for a two-sided method:</strong> it is a one-sided guardrail rule only. Because it stops only for harm, it will never flag a beneficial effect as significant. Use it as a safety net alongside a primary analysis, not as the primary analysis itself.</li>
+              <li><strong>Three Standard Deviations is not a substitute for a two-sided method:</strong> it is a one-sided guardrail rule only. Because it stops only for harm, it will never flag a beneficial effect as significant. Use it as a safety net alongside a primary analysis, not as the primary analysis itself.</li>
             </ul>
             <p>
               That said, we recommend running simulations, A/A tests, or analysing historical tests in each domain, using its specific circumstances (i.e. KPIs and their standard deviations) before deciding which alternative method to use in each domain.

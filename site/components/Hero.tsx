@@ -46,7 +46,7 @@ export function Hero() {
           <li><strong>The Peeking Problem</strong> &mdash; Why interim analyses invalidate standard tests.</li>
           <li><strong>Sequential Testing in Eppo (2022)</strong> &mdash; How modern platforms implement sequential confidence intervals.</li>
           <li><strong>A Hybrid Split-Sided Approach</strong> &mdash; Combine sequential guardrail monitoring with standard analysis of the primary KPI.</li>
-          <li><strong>Alternative Methods</strong> &mdash; Bonferroni, Pocock, O&apos;Brien&ndash;Fleming, and guardrail harm detection for teams without a dedicated platform.</li>
+          <li><strong>Alternative Methods</strong> &mdash; Bonferroni, Pocock, O&apos;Brien&ndash;Fleming, and the Three Standard Deviations guardrail rule, for teams without a dedicated platform.</li>
           <li><strong>Caution: Magnitude Error</strong> &mdash; Why early stopping inflates effect size estimates.</li>
         </ol>
         <p>

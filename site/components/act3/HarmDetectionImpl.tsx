@@ -17,7 +17,7 @@ export function HarmDetectionImpl() {
               <p className="text-neutral-700">
                 A simple rule for guardrail monitoring: stop the experiment if the effect on
                 a guardrail metric is more than 3 standard deviations in the <em>harmful</em> direction.
-                Unlike the old two-sided 3 SD rule, this check is <strong>one-sided</strong>:it only
+                This check is <strong>one-sided</strong>: it only
                 triggers when the effect is clearly negative (harmful). A large positive effect on a
                 guardrail is not a reason to abort.
               </p>
@@ -47,7 +47,7 @@ export function HarmDetectionImpl() {
           <h4 className="font-bold text-neutral-900 mb-2">Stopping threshold vs. other methods (K = 4)</h4>
           <p className="text-neutral-700 mb-3">
             The table below compares the z-score threshold applied at each of K&nbsp;=&nbsp;4
-            equally spaced peeks across methods. The 3SE rule uses the same threshold at every peek,
+            equally spaced peeks across methods. The Three Standard Deviations rule uses the same threshold at every peek,
             regardless of how many peeks are planned. OBF starts very strict and relaxes over time;
             Pocock is constant but calibrated to the joint distribution; the classical{' '}
             <InlineMath>{`z_{\\alpha/2} = 1.96`}</InlineMath> applies only at a single planned analysis.
@@ -57,7 +57,7 @@ export function HarmDetectionImpl() {
               <thead>
                 <tr className="bg-neutral-100">
                   <th className="border border-neutral-300 p-2">Peek <InlineMath>{`k`}</InlineMath> (of K=4)</th>
-                  <th className="border border-neutral-300 p-2">Harm detection (z = 3.0, one-sided)</th>
+                  <th className="border border-neutral-300 p-2">Three Standard Deviations (z = 3.0, one-sided)</th>
                   <th className="border border-neutral-300 p-2"><InlineMath>{`c_k^{\\text{OBF}}`}</InlineMath> (OBF)</th>
                   <th className="border border-neutral-300 p-2"><InlineMath>{`c_P`}</InlineMath> (Pocock)</th>
                   <th className="border border-neutral-300 p-2"><InlineMath>{`z_{\\alpha/2}`}</InlineMath> (classical)</th>

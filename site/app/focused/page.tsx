@@ -52,7 +52,7 @@ const FOCUSED_ITEMS = [
       { id: 'act4-bonferroni', label: 'Method 1: Bonferroni' },
       { id: 'act4-pocock', label: 'Method 2: Pocock' },
       { id: 'act4-obf', label: 'Method 3: OBF' },
-      { id: 'act4-harm', label: 'Method 4: Harm Detection' },
+      { id: 'act4-harm', label: 'Method 4: Three SD' },
       { id: 'act4-sim', label: 'Simulation' },
       { id: 'act4-comparison', label: 'Comparison' },
       { id: 'act4-hybrid-impl', label: 'Hybrid without Eppo' },
