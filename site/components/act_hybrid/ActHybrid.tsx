@@ -142,16 +142,6 @@ export function ActHybrid() {
           </li>
         </ul>
 
-        {/* Limitations */}
-        <h4 className="font-semibold mb-2 text-neutral-900">Limitations</h4>
-        <ul className="list-disc pl-5 space-y-2 text-neutral-700 mb-8">
-          <li>
-            <strong>No early stopping for success.</strong> If the treatment effect is very large, you
-            must still wait until the planned end date to declare success. This could have a considerable
-            effect on experiments that were designed to run for a long time and have a larger-than-expected
-            treatment effect.
-          </li>
-        </ul>
       </div>
 
       {/* ════ PART 2: THE SPLIT-SIDED DESIGN ════ */}
@@ -159,6 +149,18 @@ export function ActHybrid() {
         <h3 className="text-xl font-bold mb-3 text-neutral-900 border-b border-neutral-200 pb-2">
           Part 2: The Split-Sided Design
         </h3>
+
+        {/* Limitations */}
+        <h4 className="font-semibold mb-2 text-neutral-900">Limitations</h4>
+        <ul className="list-disc pl-5 space-y-2 text-neutral-700 mb-6">
+          <li>
+            <strong>No early stopping for success.</strong> If the treatment effect is very large, you
+            must still wait until the planned end date to declare success. This could have a considerable
+            effect on experiments that were designed to run for a long time and have a larger-than-expected
+            treatment effect.
+          </li>
+        </ul>
+
         <p className="text-neutral-700 mb-4">
           The hybrid approach becomes most powerful when you apply it <em>asymmetrically</em> across
           metric types. Metrics in an A/B test fall into two categories with opposite concerns:
