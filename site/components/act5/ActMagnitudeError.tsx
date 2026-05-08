@@ -72,7 +72,7 @@ export function ActMagnitudeError() {
       <div className="bg-blue-50 border border-blue-300 rounded-lg p-5 mb-8">
         <h4 className="font-semibold mb-2 text-blue-900">One of the reasons to prefer the hybrid split-sided approach</h4>
         <p className="text-neutral-700 mb-2">
-          In the hybrid split-sided approach (Act 3), the primary KPI is <em>never</em> stopped early: it is
+          In the hybrid split-sided approach (Act 3), the primary KPI is <em>never</em> stopped early because of benefit: it is
           always analysed at the planned end date with a standard confidence interval. This means:
         </p>
         <ul className="list-disc pl-5 space-y-1 text-neutral-700">
