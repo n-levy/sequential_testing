@@ -372,9 +372,10 @@ export function ActHybrid() {
               identical to one tail of a standard 95% confidence interval.
             </p>
             <p>
-              When the primary KPI must also be protected against harm, use the hybrid split-sided
-              variant: run both a sequential test (at α/2) during the experiment and a standard test
-              (at α/2) at the end, keeping the overall Type I error at α.
+              In many cases, the hybrid split-sided approach provides a good balance: continuous
+              sequential monitoring gives you the ability to stop early if the experiment is clearly
+              causing harm, while the standard fixed-horizon analysis at the planned end date preserves
+              full statistical power for identifying beneficial effects.
             </p>
           </div>
         </div>
