@@ -178,17 +178,6 @@ export function ActHybrid() {
           Part 2: The Split-Sided Design
         </h3>
 
-        {/* Limitations */}
-        <h4 className="font-semibold mb-2 text-neutral-900">Limitations</h4>
-        <ul className="list-disc pl-5 space-y-2 text-neutral-700 mb-6">
-          <li>
-            <strong>No early stopping for success.</strong> If the treatment effect is very large, you
-            must still wait until the planned end date to declare success. This could have a considerable
-            effect on experiments that were designed to run for a long time and have a larger-than-expected
-            treatment effect.
-          </li>
-        </ul>
-
         <p className="text-neutral-700 mb-4">
           The hybrid approach becomes most powerful when you apply it <em>asymmetrically</em> across
           metric types. Metrics in an A/B test fall into two categories with opposite concerns:
@@ -257,45 +246,95 @@ export function ActHybrid() {
           </p>
         </div>
 
-        {/* What you gain table */}
-        <h4 className="font-semibold mb-3 text-neutral-900">What you gain compared to full sequential</h4>
+        {/* Benefits */}
+        <h4 className="font-semibold mb-2 text-neutral-900">Benefits of the split-sided design</h4>
+        <p className="text-neutral-700 mb-3">
+          These are the flip side of the limitations of early stopping for benefit described in Part 1:
+        </p>
+        <ul className="list-disc pl-5 space-y-2 text-neutral-700 mb-5">
+          <li>
+            <strong>Full statistical power on the primary KPI.</strong> Because the primary KPI is
+            always analysed at the planned end date with a standard confidence interval, there is no
+            sequential correction and no power penalty — the opposite of the wide CIs that would result
+            from two-sided sequential monitoring.
+          </li>
+          <li>
+            <strong>Unbiased primary KPI estimate.</strong> Since the primary KPI is never stopped
+            early for benefit, the effect estimate at the planned end date is not inflated by early
+            stopping. There is no magnitude error on the metric that matters most for business
+            decisions.
+          </li>
+          <li>
+            <strong>No weekday bias.</strong> The experiment always runs for the planned duration,
+            ensuring both groups are exposed to the same day-of-week distribution, regardless of how
+            the sequential monitoring behaves during the experiment.
+          </li>
+        </ul>
+
+        {/* Limitations */}
+        <h4 className="font-semibold mb-2 text-neutral-900">Limitations</h4>
+        <ul className="list-disc pl-5 space-y-2 text-neutral-700 mb-6">
+          <li>
+            <strong>No early stopping for success.</strong> If the treatment effect is very large, you
+            must still wait until the planned end date to declare success. This could have a considerable
+            effect on experiments that were designed to run for a long time and have a larger-than-expected
+            treatment effect.
+          </li>
+        </ul>
+
+        {/* Comparison table */}
+        <h4 className="font-semibold mb-3 text-neutral-900">Comparison of approaches</h4>
         <div className="overflow-x-auto mb-8">
-          <table className="w-full min-w-[480px] text-sm border-collapse border border-neutral-300">
+          <table className="w-full min-w-[640px] text-sm border-collapse border border-neutral-300">
             <thead>
               <tr className="bg-neutral-100">
                 <th className="border border-neutral-300 p-3 text-left font-semibold"></th>
+                <th className="border border-neutral-300 p-3 text-left font-semibold">Standard</th>
                 <th className="border border-neutral-300 p-3 text-left font-semibold">Full sequential</th>
+                <th className="border border-neutral-300 p-3 text-left font-semibold">Hybrid (harm &amp; success)</th>
                 <th className="border border-neutral-300 p-3 text-left font-semibold">Hybrid split-sided</th>
               </tr>
             </thead>
             <tbody>
               <tr>
-                <td className="border border-neutral-300 p-3">Primary KPI confidence interval width</td>
+                <td className="border border-neutral-300 p-3">Primary KPI CI width</td>
+                <td className="border border-neutral-300 p-3">Standard</td>
                 <td className="border border-neutral-300 p-3">Wider</td>
+                <td className="border border-neutral-300 p-3">Standard at end</td>
                 <td className="border border-neutral-300 p-3">Standard (no penalty)</td>
               </tr>
               <tr className="bg-neutral-50">
                 <td className="border border-neutral-300 p-3">Primary KPI power</td>
+                <td className="border border-neutral-300 p-3">Full</td>
                 <td className="border border-neutral-300 p-3">Reduced</td>
+                <td className="border border-neutral-300 p-3">Full at end</td>
                 <td className="border border-neutral-300 p-3">Full</td>
               </tr>
               <tr>
                 <td className="border border-neutral-300 p-3">Guardrail protection</td>
+                <td className="border border-neutral-300 p-3">None</td>
+                <td className="border border-neutral-300 p-3">Continuous</td>
                 <td className="border border-neutral-300 p-3">Continuous</td>
                 <td className="border border-neutral-300 p-3">Continuous</td>
               </tr>
               <tr className="bg-neutral-50">
                 <td className="border border-neutral-300 p-3">Early stopping for success</td>
+                <td className="border border-neutral-300 p-3">No</td>
                 <td className="border border-neutral-300 p-3">Yes</td>
+                <td className="border border-neutral-300 p-3">Yes (extreme effects only)</td>
                 <td className="border border-neutral-300 p-3">No</td>
               </tr>
               <tr>
                 <td className="border border-neutral-300 p-3">Early stopping for harm</td>
+                <td className="border border-neutral-300 p-3">No</td>
+                <td className="border border-neutral-300 p-3">Yes</td>
                 <td className="border border-neutral-300 p-3">Yes</td>
                 <td className="border border-neutral-300 p-3">Yes</td>
               </tr>
               <tr className="bg-neutral-50">
                 <td className="border border-neutral-300 p-3">Complexity</td>
+                <td className="border border-neutral-300 p-3">Low</td>
+                <td className="border border-neutral-300 p-3">Higher</td>
                 <td className="border border-neutral-300 p-3">Higher</td>
                 <td className="border border-neutral-300 p-3">Lower</td>
               </tr>
