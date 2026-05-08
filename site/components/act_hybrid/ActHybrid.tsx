@@ -66,7 +66,7 @@ function EppoGuidanceSection() {
 export function ActHybrid() {
   return (
     <div id="act3-hybrid" className="max-w-3xl mx-auto px-4">
-      <h2 className="text-2xl font-bold mb-1">Act 3: A Hybrid Split-Sided Approach</h2>
+      <h2 className="text-2xl font-bold mb-1">Act 3: The Hybrid Split-Sided Approach</h2>
 
       <p className="text-neutral-700 mb-8">
         This act explains the hybrid split-sided approach to sequential testing, following the approach
