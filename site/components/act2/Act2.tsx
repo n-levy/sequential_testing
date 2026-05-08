@@ -257,8 +257,27 @@ export function Act2() {
           <p className="mb-2 text-neutral-800">
             So unlike fixed-horizon confidence intervals, the guarantee still holds under continuous monitoring.
           </p>
-          <p className="text-neutral-800">
+          <p className="mb-6 text-neutral-800">
             As <InlineMath>{`n`}</InlineMath> increases, the multiplier <InlineMath>{`m(n)`}</InlineMath> first decreases and then slowly rises, so the confidence interval is at its narrowest around 40% of the way through the experiment, and has widened somewhat by the planned end date.
+          </p>
+
+          {/* Step 5 */}
+          <h5 className="font-semibold mb-2">5. Power reduction when there is a true effect</h5>
+          <p className="mb-2 text-neutral-800">
+            The sequential CI declares a significant result at sample size <InlineMath>{`n`}</InlineMath> when the true effect <InlineMath>{`u`}</InlineMath> is large enough that zero lies outside the interval — that is, when:
+          </p>
+          <BlockMath>{`|\\hat{u}_n| > m(n)\\cdot\\frac{\\widehat{\\mathrm{SE}}_n}{\\bar{X}_{A,n}}`}</BlockMath>
+          <p className="mb-2 text-neutral-800">
+            Because <InlineMath>{`m(n) > 1.96`}</InlineMath> at every <InlineMath>{`n`}</InlineMath>, a larger observed effect is always required than with a fixed-horizon test. At the planned end date <InlineMath>{`n^*`}</InlineMath>, with typical calibration, <InlineMath>{`m(n^*) \\approx 2.4`}</InlineMath>. The reduction in power follows directly: if a fixed-horizon test at <InlineMath>{`n^*`}</InlineMath> is designed for 80% power to detect some effect size <InlineMath>{`\\delta`}</InlineMath>, the sequential CI evaluated at the same <InlineMath>{`n^*`}</InlineMath> achieves approximately:
+          </p>
+          <BlockMath>{`\\text{Power}_{\\text{seq}}(n^*) = \\Phi\\!\\left(\\frac{\\delta}{\\mathrm{SE}(n^*)} - m(n^*)\\right) \\approx \\Phi(2.80 - 2.40) = \\Phi(0.40) \\approx 66\\%`}</BlockMath>
+          <ul className="mb-4 text-sm text-neutral-600 space-y-1 ml-4 list-disc">
+            <li><InlineMath>{`\\delta / \\mathrm{SE}(n^*)`}</InlineMath>: the non-centrality parameter — how many standard errors the true effect is from zero at <InlineMath>{`n^*`}</InlineMath>; equals <InlineMath>{`z_{\\alpha/2} + z_\\beta = 1.96 + 0.84 = 2.80`}</InlineMath> for a test designed for 80% power at <InlineMath>{`\\alpha = 0.05`}</InlineMath></li>
+            <li><InlineMath>{`m(n^*) \\approx 2.40`}</InlineMath>: the sequential multiplier at the planned end date (versus 1.96 for the fixed-horizon test)</li>
+            <li><InlineMath>{`\\Phi`}</InlineMath>: the standard normal CDF</li>
+          </ul>
+          <p className="text-neutral-800">
+            In other words, a sequential test run to <InlineMath>{`n^*`}</InlineMath> without early stopping is roughly equivalent to a fixed-horizon test with about 20% fewer observations. The power is recovered if the experiment stops early (because the effect is large enough to cross the sequential boundary before <InlineMath>{`n^*`}</InlineMath>), but if no early stopping occurs, the final analysis pays a power penalty of this magnitude.
           </p>
         </div>
       </DisplayMathBox>
