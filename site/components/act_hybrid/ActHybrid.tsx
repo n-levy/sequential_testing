@@ -142,6 +142,17 @@ export function ActHybrid() {
           </li>
         </ul>
 
+        {/* Limitations */}
+        <h4 className="font-semibold mb-2 text-neutral-900">Limitations</h4>
+        <ul className="list-disc pl-5 space-y-2 text-neutral-700 mb-8">
+          <li>
+            <strong>Wider confidence intervals during monitoring.</strong> The sequential CI used to
+            watch for harm is wider than a standard CI at the same look, meaning a true effect is less
+            likely to be detected during the experiment. This is the cost of valid error control under
+            repeated checking.
+          </li>
+        </ul>
+
       </div>
 
       {/* ════ PART 2: THE SPLIT-SIDED DESIGN ════ */}
