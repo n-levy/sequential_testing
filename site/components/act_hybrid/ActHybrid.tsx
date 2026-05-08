@@ -207,13 +207,13 @@ export function ActHybrid() {
         {/* What if primary KPI is also a guardrail? */}
         <div id="act3-guardrail" className="border-t border-neutral-200 pt-6 mb-6">
           <h3 className="text-lg font-bold mb-3 text-neutral-900">
-            What if the primary KPI is also a guardrail?
+            Example: the primary KPI as a guardrail
           </h3>
           <p className="text-neutral-700 mb-4">
-            In some experiments, the primary outcome metric must also be protected against severe harm —
-            for example a revenue metric where a large negative effect would require immediate action.
-            In this case, the same approach described above applies: the significance budget is split
-            between two tests:
+            As an example of the hybrid split-sided approach, consider the common case where the primary
+            KPI is also a metric we want to monitor during the experiment and stop early if we are clearly
+            harming it — for example a revenue metric where a large negative effect would require immediate
+            action. In this case, the significance budget is split between two tests:
           </p>
           <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-4">
             <ul className="list-disc pl-5 space-y-2 text-neutral-800">
