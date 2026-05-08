@@ -153,7 +153,7 @@ export function ABTestSim({
   const [n, setN] = useState(defaultN)
   const [alpha, setAlpha] = useState(ALPHA_DEFAULT)
   const [baselineRate, setBaselineRate] = useState(0.1)
-  const [seed, setSeed] = useState(1)
+  const [seed, setSeed] = useState(() => Math.floor(Math.random() * 100000))
   const [kState, setK] = useState(KProp)
   const [durationWeeks, setDurationWeeks] = useState(DURATION_DEFAULT)
   const [peekProbs, setPeekProbs] = useState<Record<string, number> | null>(null)

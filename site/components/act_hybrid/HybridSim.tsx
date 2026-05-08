@@ -71,7 +71,7 @@ export function HybridSim() {
   const [baselineRate, setBaselineRate] = useState(0.1)
   const [effect, setEffect] = useState(0)
   const [durationWeeks, setDurationWeeks] = useState(DURATION_DEFAULT)
-  const [seed, setSeed] = useState(1)
+  const [seed, setSeed] = useState(() => Math.floor(Math.random() * 100000))
   const svgRef = useRef<SVGSVGElement | null>(null)
 
   const daysTotal = durationWeeks * 7
