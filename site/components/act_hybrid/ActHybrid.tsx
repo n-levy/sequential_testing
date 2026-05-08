@@ -135,11 +135,6 @@ export function ActHybrid() {
             decisions are still made at a single planned analysis; continuous monitoring acts as a
             safety net only.
           </li>
-          <li>
-            <strong>Accounting for weekday effects.</strong> Tests are often designed to run for a
-            round number of weeks so that both groups see the same day-of-week distribution. Stopping
-            early only for harm preserves this balance.
-          </li>
         </ul>
 
         {/* Limitations */}
@@ -265,9 +260,9 @@ export function ActHybrid() {
             decisions.
           </li>
           <li>
-            <strong>No weekday bias.</strong> The experiment always runs for the planned duration,
-            ensuring both groups are exposed to the same day-of-week distribution, regardless of how
-            the sequential monitoring behaves during the experiment.
+            <strong>Accounting for weekday effects.</strong> Tests are often designed to run for a
+            round number of weeks so that both groups see the same day-of-week distribution. Stopping
+            early only for harm preserves this balance.
           </li>
         </ul>
 
