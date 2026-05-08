@@ -83,8 +83,17 @@ export function ActMagnitudeError() {
           <li>Business decisions that depend on the magnitude of the effect (projections, ROI, prioritisation) can be made with confidence.</li>
         </ul>
         <p className="text-neutral-700 mt-3">
-          Only guardrail KPIs may be stopped early:and for those, you typically care about
+          Only guardrail KPIs may be stopped early — and for those, you typically care about
           whether harm occurred, not the precise magnitude of the harm.
+        </p>
+        <p className="text-neutral-700 mt-3">
+          <strong>A small caveat:</strong> if the primary KPI is itself also monitored for early
+          stopping (as in the example in Act 3), or if the guardrail KPIs are correlated with the
+          primary KPI, then early stopping can indirectly affect the primary KPI estimate at the
+          planned end date — experiments that stop early are not included in the final analysis, so
+          the observed distribution of final estimates is slightly selected. In practice this effect
+          is negligible: the bias is far smaller than in a fully sequential design, and for most
+          purposes the primary KPI estimate can be treated as unbiased.
         </p>
       </div>
 
