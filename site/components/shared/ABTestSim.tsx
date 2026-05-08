@@ -1,3 +1,12 @@
+// ABTestSim.tsx — Shared simulation component used across multiple acts:
+//   Simulation 1 (Act 1): fixed-horizon CI peeking problem — layers: ['fixed-ci']
+//   Simulation 2 (Act 2): sequential CI valid under continuous monitoring — layers: ['fixed-ci', 'sequential-ci']
+//   Simulation 4 (Act 4): alternative methods comparison — layers: ['fixed-ci', 'sequential-ci', 'pocock', 'obf', 'bonferroni', 'harm-detect']
+//   Simulation 5 (Act 5): magnitude error, early stopping bias — layers: ['fixed-ci', 'sequential-ci'], both peek K times
+//
+// Two-sided sequential CI formula: m(t) = sqrt((t+ν)/t · log((t+ν)/(ν·(α/2))))
+// Uses alpha/2 per tail so that Boole's inequality gives total FP ≤ α (two-sided control).
+// Contrast with HybridSim.tsx which uses alpha for one-sided harm detection.
 "use client"
 
 import { useState, useEffect, useMemo, useRef, type ReactNode } from 'react'
@@ -26,6 +35,7 @@ interface ABTestSimProps {
   showMeanEffects?: boolean // show mean |effect| columns in the 1000-repetitions table
   peekDecisionSuffix?: ReactNode
   showDecision?: boolean
+  finalPeekOnlyLayers?: SimLayer[] // layers that should only evaluate at the final peek (no early stopping)
 }
 
 const Z_975 = 1.959964
@@ -148,6 +158,7 @@ export function ABTestSim({
   showMeanEffects = false,
   peekDecisionSuffix,
   showDecision = true,
+  finalPeekOnlyLayers = [],
 }: ABTestSimProps) {
   const [effect, setEffect] = useState(defaultEffect)
   const [n, setN] = useState(defaultN)
@@ -216,8 +227,11 @@ export function ABTestSim({
         if (peekIndices.length === 0) continue;
         let lookPtr = 0
         const lastLookPtr = peekIndices.length - 1
+        const isFinalPeekOnly = finalPeekOnlyLayers.includes(layer)
         for (let i = 0; i < n && lookPtr <= lastLookPtr; ++i) {
           if ((i + 1) !== peekIndices[lookPtr]) continue;
+          // finalPeekOnlyLayers: skip all intermediate peeks; only evaluate at the last one
+          if (isFinalPeekOnly && lookPtr < lastLookPtr) { lookPtr++; continue; }
           const denom = t.meansA[i];
           const est = denom !== 0 ? 100 * (t.meansB[i] - denom) / denom : 0;
           let w = 0;
@@ -267,7 +281,7 @@ export function ABTestSim({
     setPeekProbs(results);
     setMeanEstWhenSig(meanEstResults);
     setMeanEstAtEndWhenSig(meanEstAtEndResults);
-  }, [showPeekStats, layers, n, clampedEffect, effectiveEffect, clampedBaseline, seed, alpha, kState, runSimulationsTrigger, peekIndices]);
+  }, [showPeekStats, layers, n, clampedEffect, effectiveEffect, clampedBaseline, seed, alpha, kState, runSimulationsTrigger, peekIndices, finalPeekOnlyLayers]);
 
   const traj = useMemo(
     () => simulateABTestTrajectory(nExt, effectiveEffect, clampedBaseline, seed),

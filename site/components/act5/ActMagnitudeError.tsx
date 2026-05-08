@@ -8,10 +8,11 @@ export function ActMagnitudeError() {
       <h2 className="text-2xl font-bold mb-1">Act 5: Caution, Magnitude Error</h2>
 
       <p className="text-neutral-700 mb-6">
-        Sequential testing provides valid error control: the probability of a false positive stays
-        below the target level no matter when you stop. However, there is a separate issue that
-        valid error control does not address:the <strong>magnitude of the estimated effect</strong>{' '}
-        when you stop early.
+        Any test that monitors interim results and stops when significant faces a potential
+        distortion in its effect estimate. This is a concern separate from statistical
+        validity: even a correctly calibrated sequential test controls the false positive rate,
+        but no stopping rule can prevent the <strong>magnitude of the estimated effect</strong>{' '}
+        from being inflated when the test stops early.
       </p>
 
       {/* Core concept */}
@@ -20,61 +21,58 @@ export function ActMagnitudeError() {
         <p className="text-neutral-700 mb-3">
           When an A/B test stops early and declares a statistically significant result, the
           measured effect tends to be larger than the true effect. This happens because we
-          only stop when the data happen to show a strong signal:and strong signals are
+          only stop when the data happen to show a strong signal, and strong signals are
           partly due to real effects and partly due to random noise pushing the estimate in
           the same direction. The result is a systematic overestimate of the true effect size.
         </p>
         <p className="text-neutral-700">
           This upward bias in significant results is called the <strong>winner&rsquo;s curse</strong>{' '}
-          or <strong>magnitude error</strong>. It affects all stopping rules, including
-          fixed-horizon tests (when you only report results that happen to be significant).
-          But early stopping in sequential tests introduces an additional layer of this
-          problem.
+          or <strong>magnitude error</strong>. Early stopping amplifies the problem: the earlier
+          the test stops, the noisier the estimate, and the more inflated it tends to be.
         </p>
       </div>
 
-      {/* Why sequential testing makes it worse */}
+      {/* Why early stopping inflates estimates */}
       <h4 className="font-semibold mb-2 text-neutral-900">
-        Why sequential early stopping amplifies the bias
+        Why early stopping inflates effect estimates
       </h4>
       <p className="text-neutral-700 mb-3">
-        In a fixed-horizon test, you check once at the end. The only conditioning is that the
-        result happened to be significant (a type of winner&rsquo;s curse, but mild). In a
-        sequential test that stops early, you condition on two things simultaneously:
+        When any test stops early at an interim peek, you condition on two things simultaneously:
       </p>
       <ol className="list-decimal list-inside ml-4 space-y-2 text-neutral-700 mb-4">
         <li>
           The result is significant (the confidence interval excludes zero).
         </li>
         <li>
-          The result became significant at an <em>early</em> time point:meaning the effect
-          estimate crossed a wide threshold while the sample size was still small.
+          The result became significant at an <em>early</em> time point — while the sample
+          size was still small and the estimate was noisy.
         </li>
       </ol>
       <p className="text-neutral-700 mb-4">
-        Sequential confidence intervals are deliberately <em>wider</em> than fixed-horizon
-        intervals (that&rsquo;s how they maintain valid coverage under repeated monitoring).
-        For the confidence interval to exclude zero when it is wide, the point estimate must be very far from
-        zero. In other words, a sequential test that stops early requires an especially large
-        observed effect. When this happens, random noise is almost always contributing —
-        meaning the true effect is smaller than what was measured.
+        At any interim look the standard error is larger than at the planned end. For the
+        confidence interval to exclude zero at that stage, the observed effect must be
+        unusually far from zero relative to that larger standard error. This means stopping
+        early selects for trials where random noise happened to push the estimate in the
+        signal direction. The earlier the stop, the more extreme that selection — and the
+        more inflated the reported effect.
       </p>
 
       <div className="bg-white border border-neutral-300 rounded-lg p-5 mb-6">
         <p className="text-neutral-700">
-          <strong>In practice:</strong> if a sequential test stops early, treat the point estimate
-          with caution. Do not use the measured uplift directly for revenue projections, expected
-          ROI calculations, or product roadmap prioritisation. The true effect is likely smaller.
-          Bayesian shrinkage or corrected estimators (see, e.g., Howard et al. 2021) can help
-          produce less biased post-hoc estimates.
+          <strong>In practice:</strong> if a test stops early — whether using a standard
+          confidence interval with peeking or a sequential confidence interval — treat the
+          point estimate with caution. Do not use the measured uplift directly for revenue
+          projections, expected ROI calculations, or product roadmap prioritisation. The
+          true effect is likely smaller. Bayesian shrinkage or corrected estimators (see,
+          e.g., Howard et al. 2021) can help produce less biased post-hoc estimates.
         </p>
       </div>
 
       {/* Why hybrid helps */}
       <div className="bg-blue-50 border border-blue-300 rounded-lg p-5 mb-8">
-        <h4 className="font-semibold mb-2 text-blue-900">Another reason to prefer the hybrid split-sided approach</h4>
+        <h4 className="font-semibold mb-2 text-blue-900">One of the reasons to prefer the hybrid split-sided approach</h4>
         <p className="text-neutral-700 mb-2">
-          In the hybrid split-sided approach (Act 3), the primary KPI is <em>never</em> stopped early:it is
+          In the hybrid split-sided approach (Act 3), the primary KPI is <em>never</em> stopped early: it is
           always analysed at the planned end date with a standard confidence interval. This means:
         </p>
         <ul className="list-disc pl-5 space-y-1 text-neutral-700">
@@ -98,27 +96,34 @@ export function ActMagnitudeError() {
       </div>
 
       {/* Simulation */}
-      <h4 className="font-semibold mb-3 text-neutral-900">Simulation: magnitude error across 1000 repetitions</h4>
+      <h4 className="font-semibold mb-3 text-neutral-900">Simulation: magnitude error across 1,000 repetitions</h4>
       <p className="text-neutral-700 mb-4">
-        The table below shows the mean absolute effect measured at the time of stopping (for the
-        simulations that crossed the threshold) versus the mean absolute effect measured at the
-        end of the experiment in the same simulations. A large gap between the two numbers
-        indicates that early stopping was associated with an inflated estimate:the value
-        observed when stopping was higher than the value at the end of the same experiment.
+        Both the standard CI and the sequential CI are checked at each of K equally-spaced
+        interim looks, stopping as soon as the result is significant. For each simulated
+        experiment that was declared significant, the table shows two numbers:
       </p>
+      <ul className="list-disc pl-5 space-y-1 text-neutral-700 mb-4">
+        <li>
+          <strong>Mean |effect| when significant:</strong> the effect estimate at the moment
+          the test stopped.
+        </li>
+        <li>
+          <strong>Mean |effect| at end of test when significant:</strong> what the effect
+          estimate would have been if the same experiment had continued to the planned end
+          date (for the same simulations that stopped early).
+        </li>
+      </ul>
       <p className="text-neutral-700 mb-4">
-        Compare the standard confidence interval (which stops at a fixed planned end date) to
-        the sequential confidence interval (which can stop at any point). Try setting a positive
-        effect size (e.g. +10%) and clicking &ldquo;Run 1000 repetitions&rdquo;:you will see
-        that the sequential CI, when it stops early, systematically shows a larger estimate at
-        the time of stopping than at the end of the test. The standard CI also shows some
-        winner&rsquo;s curse (only significant results are included in the mean), but the gap
-        is smaller because there is no early stopping.
+        A gap between these two numbers indicates early-stopping inflation: the estimate at
+        the time of stopping was higher than what the data eventually showed at the end. Try
+        setting a positive effect size (e.g. +10%) and clicking &ldquo;Run 1,000
+        repetitions&rdquo; — both rows will show that the estimate at stopping exceeds the
+        estimate at the end of the experiment.
       </p>
 
       <div id="act5-sim" className="mb-2 max-w-2xl mx-auto">
         <p className="text-xs text-neutral-500 mb-2">
-          The 1000-repetition table uses the same settings (n, α, effect size, K, baseline rate) as the trajectory chart:they are part of the same simulation. Adjust any slider above the chart and click &ldquo;Run 1000 repetitions&rdquo; to re-run with the updated parameters.
+          The 1000-repetition table uses the same settings (n, α, effect size, K, baseline rate) as the trajectory chart: they are part of the same simulation. Adjust any slider above the chart and click &ldquo;Run 1000 repetitions&rdquo; to re-run with the updated parameters.
         </p>
       </div>
       <div className="mb-8 max-w-2xl mx-auto">
@@ -127,7 +132,7 @@ export function ActMagnitudeError() {
           showPeekStats={true}
           showMeanEffects={true}
           showDecision={false}
-          simulationTitle="Simulation 5: magnitude error:mean effect at stopping vs. at end of test."
+          simulationTitle="Simulation 5: magnitude error — mean effect at stopping vs. at end of test, across 1,000 repetitions."
           defaultEffect={0.1}
         />
       </div>
@@ -137,10 +142,11 @@ export function ActMagnitudeError() {
         <h4 className="font-bold text-blue-900 mb-3">Key Takeaway</h4>
         <div className="text-neutral-800 space-y-3">
           <p>
-            Sequential testing controls the <em>probability</em> of a false positive, but not
-            the <em>magnitude</em> of the estimated effect when you stop early. Early stopping
-            in sequential tests tends to coincide with atypically large observed effects due to
-            random noise: a stronger version of the winner&rsquo;s curse.
+            Any test that monitors interim results and stops early — whether using a standard
+            confidence interval with peeking or a sequential confidence interval — tends to
+            report an inflated effect estimate at the time of stopping. Early stopping
+            coincides with atypically large observed effects due to random noise: a stronger
+            version of the winner&rsquo;s curse.
           </p>
           <p>
             <strong>What to do:</strong>

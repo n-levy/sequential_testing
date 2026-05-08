@@ -30,7 +30,7 @@ export function HarmDetectionImpl() {
               </p>
               <BlockMath>{`\\hat{\\tau}(t_k) + 3.0 \\cdot \\text{SE}(t_k) < 0`}</BlockMath>
               <p className="text-neutral-700 mb-3">
-                If this holds, the upper bound of the 3-SD interval is below zero:the data
+                If this holds, the upper bound of the 3-SD interval is below zero: the data
                 provide very strong evidence of harm. Abort the experiment.
               </p>
               <p className="text-neutral-700">
@@ -83,7 +83,7 @@ export function HarmDetectionImpl() {
           </div>
           <p className="text-neutral-600 text-sm mt-2">
             The z = 3.0 threshold is the same at every peek. Unlike OBF and Pocock, this is not
-            formally calibrated to the number of peeks:it is a fixed rule chosen for its
+            formally calibrated to the number of peeks: it is a fixed rule chosen for its
             simplicity and conservativeness.
           </p>
         </div>
@@ -110,14 +110,13 @@ export function HarmDetectionImpl() {
               <InlineMath>{`\\text{UB}_k = \\hat{\\tau}(t_k) + 3.0 \\cdot \\text{SE}(t_k)`}</InlineMath>
             </li>
             <li>
-              <strong>Harm check:</strong> If <InlineMath>{`\\text{UB}_k < 0`}</InlineMath>: harm detected
-             :abort the experiment immediately.
+              <strong>Harm check:</strong> If <InlineMath>{`\\text{UB}_k < 0`}</InlineMath>: harm detected — abort the experiment immediately.
             </li>
             <li>
               <strong>Otherwise:</strong> continue. No stopping for positive results.
             </li>
             <li>
-              <strong>No pre-specification of K required</strong>:the threshold does not depend
+              <strong>No pre-specification of K required</strong>: the threshold does not depend
               on the number of planned peeks.
             </li>
           </ol>

@@ -61,7 +61,7 @@ export function DetailedAct5() {
           <ul className="mb-3 text-sm text-neutral-600 space-y-1 ml-4 list-disc">
             <li><InlineMath>{`\\Lambda_n`}</InlineMath>:the likelihood ratio after <InlineMath>{`n`}</InlineMath> observations (how much more likely the data are under <InlineMath>{`H_1`}</InlineMath> vs. <InlineMath>{`H_0`}</InlineMath>)</li>
             <li><InlineMath>{`\\EE[\\cdot \\given \\Lambda_0, \\ldots, \\Lambda_{n-1}]`}</InlineMath>:the expected value conditional on knowing all previous values of the likelihood ratio (i.e. conditioning on "the past")</li>
-            <li>A <strong>martingale</strong> is a process where the expected next value, given everything seen so far, equals the current value:it has no predictable upward or downward trend</li>
+            <li>A <strong>martingale</strong> is a process where the expected next value, given everything seen so far, equals the current value: it has no predictable upward or downward trend</li>
           </ul>
           <p>
             From Act 4, <InlineMath>{`\\Lambda_n = \\Lambda_{n-1} \\times \\frac{f_1(x_n)}{f_0(x_n)}`}</InlineMath>.

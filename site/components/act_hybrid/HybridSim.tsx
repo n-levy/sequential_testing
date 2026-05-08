@@ -1,3 +1,10 @@
+// HybridSim.tsx — Simulation used in Act 3: A Hybrid Split-Sided Approach.
+// Shows one trajectory with two CI bands: a sequential CI for guardrail monitoring
+// (full experiment duration, can stop early for harm) and a standard fixed-horizon CI
+// evaluated only at the planned end date for the primary KPI.
+// The sequential CI uses alpha (not alpha/2) because the harm detection check is
+// ONE-SIDED: it only triggers when the upper bound is below zero (clear harm).
+// P(ever cross lower bound) ≤ α controls the one-sided false positive rate at level α.
 "use client"
 
 import { useState, useMemo, useRef, useEffect } from 'react'
@@ -151,7 +158,7 @@ export function HybridSim() {
         const denom = traj.meansA[i]
         const nu = n * 0.25
         const t_i = i + 1
-        const logTerm = Math.log((t_i + nu) / (nu * alpha))
+        const logTerm = Math.log((t_i + nu) / (nu * alpha)) // one-sided: uses alpha (not alpha/2)
         const w = denom !== 0 ? 100 * traj.ses[i] * Math.sqrt((t_i + nu) / t_i * logTerm) / denom : 0
         return y(effectPct[i] - w)
       })
@@ -159,7 +166,7 @@ export function HybridSim() {
         const denom = traj.meansA[i]
         const nu = n * 0.25
         const t_i = i + 1
-        const logTerm = Math.log((t_i + nu) / (nu * alpha))
+        const logTerm = Math.log((t_i + nu) / (nu * alpha)) // one-sided: uses alpha (not alpha/2)
         const w = denom !== 0 ? 100 * traj.ses[i] * Math.sqrt((t_i + nu) / t_i * logTerm) / denom : 0
         return y(effectPct[i] + w)
       })

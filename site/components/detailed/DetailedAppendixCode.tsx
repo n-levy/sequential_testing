@@ -3257,8 +3257,8 @@ export function DetailedAppendixCode({ abTestSimCode, hybridSimCode }: { abTestS
         <CodeBlock label="Act 12: VarianceReductionSim.tsx" code={CODE_VarianceReductionSim} />
         <CodeBlock label="Act 13: SequentialMultiplierSim.tsx" code={CODE_SequentialMultiplierSim} />
         <CodeBlock label="Act 14: ComparisonSim.tsx" code={CODE_ComparisonSim} />
-        {abTestSimCode && <CodeBlock label="ABTestSim.tsx (shared: Acts 1, 2, 4, 14)" code={abTestSimCode} />}
-        {hybridSimCode && <CodeBlock label="HybridSim.tsx (shared: hybrid approach)" code={hybridSimCode} />}
+        {abTestSimCode && <CodeBlock label="ABTestSim.tsx — shared component: Simulations 1 (peeking problem), 2 (sequential CI), 4 (alternative methods), 5 (magnitude error). Uses alpha/2 for two-sided sequential CI." code={abTestSimCode} />}
+        {hybridSimCode && <CodeBlock label="HybridSim.tsx — shared component: Simulation 3 (hybrid split-sided approach). Uses alpha (not alpha/2) for one-sided harm detection." code={hybridSimCode} />}
       </div>
     </section>
   )
