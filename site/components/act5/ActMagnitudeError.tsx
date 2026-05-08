@@ -140,13 +140,13 @@ export function ActMagnitudeError() {
             Sequential testing controls the <em>probability</em> of a false positive, but not
             the <em>magnitude</em> of the estimated effect when you stop early. Early stopping
             in sequential tests tends to coincide with atypically large observed effects due to
-            random noise:a stronger version of the winner&rsquo;s curse.
+            random noise: a stronger version of the winner&rsquo;s curse.
           </p>
           <p>
             <strong>What to do:</strong>
           </p>
           <ul className="list-disc pl-5 space-y-1">
-            <li>Prefer the hybrid split-sided approach to avoid early stopping on the primary KPI altogether.</li>
+            <li>If estimating the magnitude of the effect is important, prefer the hybrid split-sided approach.</li>
             <li>If you do stop early, acknowledge that the point estimate is likely an overestimate.</li>
             <li>Use the measured effect for the yes/no decision (is there an effect?) but not
             for magnitude-dependent decisions (how large is the effect?) without applying a
