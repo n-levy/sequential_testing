@@ -119,7 +119,7 @@ export function Act2() {
             <tr>
               <td className="border border-neutral-300 p-3">Very frequent checks (50 looks)</td>
               <td className="border border-neutral-300 p-3"><InlineMath>{`\\sim 33\\%`}</InlineMath></td>
-              <td className="border border-neutral-300 p-3"><InlineMath>{`\\sim 6\\%`}</InlineMath></td>
+              <td className="border border-neutral-300 p-3"><InlineMath>{`\\sim 5\\%`}</InlineMath></td>
             </tr>
           </tbody>
         </table>

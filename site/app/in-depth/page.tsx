@@ -19,7 +19,7 @@ import { HybridApproach } from '../../components/detailed/HybridApproach'
 import { AppendixDivider } from '../../components/detailed/AppendixDivider'
 import { DetailedSummary } from '../../components/detailed/DetailedSummary'
 import { DetailedReferences } from '../../components/detailed/DetailedReferences'
-import { DetailedAppendixCode } from '../../components/detailed/DetailedAppendixCode'
+import { DetailedAppendixCodeWrapper } from '../../components/detailed/DetailedAppendixCodeWrapper'
 import { Comments } from '../../components/Comments'
 import { ContactForm } from '../../components/ContactForm'
 import { ShowAllButton } from '../../components/shared/ShowAllButton'
@@ -43,6 +43,7 @@ const IN_DEPTH_ITEMS = [
   { id: 'summary', label: 'Summary' },
   { id: 'references', label: 'References' },
   { id: 'appendix', label: 'Appendix' },
+  { id: 'simulation-code', label: 'Simulation source code' },
   { id: 'act-10', label: 'A1 – Problem Eppo Solves' },
   { id: 'act-12', label: 'A2 – Variance Reduction' },
   { id: 'comments', label: 'Comments' },
@@ -74,7 +75,7 @@ export default function InDepthVersion() {
         <DetailedSummary />
         <DetailedReferences />
         <AppendixDivider />
-        <DetailedAppendixCode />
+        <DetailedAppendixCodeWrapper />
         <ShowAllButton />
         <Comments />
         <ContactForm />

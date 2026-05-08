@@ -3235,9 +3235,9 @@ function CodeBlock({ label, code }: { label: string; code: string }) {
   )
 }
 
-export function DetailedAppendixCode() {
+export function DetailedAppendixCode({ abTestSimCode, hybridSimCode }: { abTestSimCode?: string; hybridSimCode?: string } = {}) {
   return (
-    <section className="py-12 bg-white">
+    <section id="simulation-code" className="py-12 bg-white">
       <div className="max-w-4xl mx-auto px-4">
         <h3 className="text-xl font-bold text-neutral-900 mb-2">Simulation source code</h3>
         <p className="text-neutral-600 text-sm mb-6">
@@ -3257,6 +3257,8 @@ export function DetailedAppendixCode() {
         <CodeBlock label="Act 12: VarianceReductionSim.tsx" code={CODE_VarianceReductionSim} />
         <CodeBlock label="Act 13: SequentialMultiplierSim.tsx" code={CODE_SequentialMultiplierSim} />
         <CodeBlock label="Act 14: ComparisonSim.tsx" code={CODE_ComparisonSim} />
+        {abTestSimCode && <CodeBlock label="ABTestSim.tsx (shared: Acts 1, 2, 4, 14)" code={abTestSimCode} />}
+        {hybridSimCode && <CodeBlock label="HybridSim.tsx (shared: hybrid approach)" code={hybridSimCode} />}
       </div>
     </section>
   )

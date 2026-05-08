@@ -9,6 +9,7 @@ import { ActMagnitudeError } from '../../components/act5/ActMagnitudeError'
 import { FAQ } from '../../components/FAQ'
 import { Summary } from '../../components/Summary'
 import { MathReference } from '../../components/MathReference'
+import { SimulationCode } from '../../components/SimulationCode'
 import { References } from '../../components/References'
 import { Comments } from '../../components/Comments'
 import { ContactForm } from '../../components/ContactForm'
@@ -68,6 +69,7 @@ const FOCUSED_ITEMS = [
   { id: 'faq', label: 'FAQ' },
   { id: 'summary', label: 'Summary' },
   { id: 'math-reference', label: 'Math Reference' },
+  { id: 'simulation-code', label: 'Simulation source code' },
   { id: 'references', label: 'References' },
   { id: 'comments', label: 'Comments' },
   { id: 'contact', label: 'Contact us' },
@@ -88,6 +90,7 @@ export default function FocusedVersion() {
         <FAQ />
         <Summary />
         <MathReference />
+        <SimulationCode />
         <References />
         <ShowAllButton />
         <Comments />
