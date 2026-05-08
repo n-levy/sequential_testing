@@ -29,7 +29,7 @@ interface ABTestSimProps {
 }
 
 const Z_975 = 1.959964
-const PEEK_N_SIMS = 10000
+const PEEK_N_SIMS = 1000
 const ALPHA_MIN = 0.01
 const ALPHA_MAX = 0.1
 const ALPHA_DEFAULT = 0.05
@@ -226,7 +226,7 @@ export function ABTestSim({
           } else if (layer === 'sequential-ci') {
             const nu = n * 0.25;
             const t_i = i + 1;
-            const logTerm = Math.log((t_i + nu) / (nu * alpha));
+            const logTerm = Math.log((t_i + nu) / (nu * (alpha / 2)))
             w = denom !== 0 ? 100 * t.ses[i] * Math.sqrt((t_i + nu) / t_i * logTerm) / denom : 0;
           } else if (layer === 'pocock') {
             const cP = 2.41;
@@ -374,7 +374,7 @@ export function ABTestSim({
           const denom = traj.meansA[i]
           const nu = n * 0.25
           const t_i = i + 1
-          const logTerm = Math.log((t_i + nu) / (nu * alpha))
+          const logTerm = Math.log((t_i + nu) / (nu * (alpha / 2)))
           const w = denom !== 0
             ? 100 * traj.ses[i] * Math.sqrt((t_i + nu) / t_i * logTerm) / denom
             : 0
@@ -384,7 +384,7 @@ export function ABTestSim({
           const denom = traj.meansA[i]
           const nu = n * 0.25
           const t_i = i + 1
-          const logTerm = Math.log((t_i + nu) / (nu * alpha))
+          const logTerm = Math.log((t_i + nu) / (nu * (alpha / 2)))
           const w = denom !== 0
             ? 100 * traj.ses[i] * Math.sqrt((t_i + nu) / t_i * logTerm) / denom
             : 0
@@ -718,7 +718,7 @@ export function ABTestSim({
             <div className="flex flex-col items-center gap-2">
               <span className="text-blue-900 font-semibold">
                 Share of simulations in which peeking {kState} times at equal time intervals during the test would show at least one statistically significant result<br />
-                (true effect: {effectiveEffect >= 0 ? '+' : ''}{Math.round(effectiveEffect * 100)}%), across 10,000 repetitions:
+                (true effect: {effectiveEffect >= 0 ? '+' : ''}{Math.round(effectiveEffect * 100)}%), across 1,000 repetitions:
               </span>
               <button
                 type="button"
@@ -730,7 +730,7 @@ export function ABTestSim({
                 }}
                 className="px-3 py-1.5 text-sm bg-blue-600 text-white rounded hover:bg-blue-700"
               >
-                Run 10,000 repetitions
+                Run 1,000 repetitions
               </button>
             </div>
             {peekProbs === null ? (
@@ -807,7 +807,7 @@ export function ABTestSim({
               <div>
                 <h5 className="font-semibold text-neutral-900 mb-2">Notes</h5>
                 <ul className="list-disc list-inside space-y-2">
-                  <li>The Monte Carlo estimate uses 10,000 repetitions, so displayed rates are close to the true values.</li>
+                  <li>The Monte Carlo estimate uses 1,000 repetitions, so displayed rates include simulation noise of roughly ±1–2 percentage points.</li>
                   <li>Example: baseline 10% with +4% relative lift gives treatment 10.4%.</li>
                   <li>Estimated power is shown as <InlineMath>{`\\approx 100\\%`}</InlineMath> when extremely close to 1, rather than exactly 100%.</li>
                 </ul>

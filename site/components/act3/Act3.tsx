@@ -33,10 +33,31 @@ import { BonferroniImpl } from './BonferroniImpl'
 import { PocockImpl } from './PocockImpl'
 import { ObfImpl } from './ObfImpl'
 import { HarmDetectionImpl } from './HarmDetectionImpl'
-import { ABTestSim } from '../shared/ABTestSim'
+import { ABTestSim, type SimLayer } from '../shared/ABTestSim'
+
+const ALL_LAYERS: SimLayer[] = ['fixed-ci', 'sequential-ci', 'pocock', 'obf', 'bonferroni', 'harm-detect']
+const LAYER_META: Record<SimLayer, { label: string; color: string }> = {
+  'fixed-ci':      { label: 'Standard CI (fixed-horizon)',          color: '#ef4444' },
+  'sequential-ci': { label: 'Sequential CI (Eppo, 2022)',           color: '#2563eb' },
+  'pocock':        { label: 'Pocock',                               color: '#f59e0b' },
+  'obf':           { label: "O'Brien–Fleming",                      color: '#1d4ed8' },
+  'bonferroni':    { label: 'Bonferroni',                           color: '#0d9488' },
+  'harm-detect':   { label: 'Harm detection (3 SD)',                color: '#7c3aed' },
+}
 
 export function Act4() {
   const [showSimCode, setShowSimCode] = useState(false)
+  const [selectedLayers, setSelectedLayers] = useState<Set<SimLayer>>(new Set(ALL_LAYERS))
+
+  const toggleLayer = (layer: SimLayer) => {
+    setSelectedLayers(prev => {
+      const next = new Set(prev)
+      if (next.has(layer)) { next.delete(layer) } else { next.add(layer) }
+      return next
+    })
+  }
+
+  const activeLayers = ALL_LAYERS.filter(l => selectedLayers.has(l))
 
   useEffect(() => {
     const handler = () => setShowSimCode(true)
@@ -99,27 +120,51 @@ export function Act4() {
 
 
         {/* ── Simulation: Share crossing each threshold ── */}
-        <div id="act4-sim" className="mb-6">
+        <div id="act4-sim" className="mb-4">
           <h3 className="text-xl font-semibold mb-2">Simulation</h3>
           <p className="text-neutral-700 mb-3">
             This extends the Act 1/2 simulation by adding Bonferroni, Pocock, O&apos;Brien&ndash;Fleming,
             and the 3 SD rule confidence intervals, so you can compare all methods under the same settings.
           </p>
         </div>
+
+        {/* Method checkboxes */}
+        <div className="bg-white border border-neutral-300 rounded-lg p-4 mb-4">
+          <p className="text-sm font-semibold text-neutral-700 mb-2">Methods to include:</p>
+          <div className="flex flex-wrap gap-x-5 gap-y-2">
+            {ALL_LAYERS.map(layer => (
+              <label key={layer} className="flex items-center gap-1.5 cursor-pointer select-none text-sm text-neutral-700">
+                <input
+                  type="checkbox"
+                  checked={selectedLayers.has(layer)}
+                  onChange={() => toggleLayer(layer)}
+                  className="w-4 h-4 rounded"
+                  style={{ accentColor: LAYER_META[layer].color }}
+                />
+                <span
+                  className="inline-block w-2.5 h-2.5 rounded-sm flex-shrink-0"
+                  style={{ backgroundColor: LAYER_META[layer].color }}
+                />
+                {LAYER_META[layer].label}
+              </label>
+            ))}
+          </div>
+        </div>
+
         <div className="mb-10">
           <ABTestSim
-            layers={['fixed-ci', 'sequential-ci', 'pocock', 'obf', 'bonferroni', 'harm-detect']}
+            layers={activeLayers.length > 0 ? activeLayers : ['fixed-ci']}
             showPeekStats
             showDecision={false}
-            simulationTitle="Simulation 4: fixed-horizon, Eppo (2022), three group-sequential methods, and guardrail harm detection."
+            simulationTitle="Simulation 4: false positive rate across methods under the current settings."
             defaultEffect={0}
             takeaway={<>
-              <strong>Result interpretation:</strong> click &ldquo;Run 1000 repetitions&rdquo; to estimate how often each method crosses the threshold under the current settings.<br /><br />
+              <strong>Result interpretation:</strong> click &ldquo;Run 1,000 repetitions&rdquo; to estimate how often each method crosses the threshold under the current settings.<br /><br />
               <strong>Bonferroni:</strong> most conservative among the formal methods (lowest crossing share).<br />
               <strong>Pocock:</strong> less conservative than Bonferroni; calibrated to the joint distribution across K analyses.<br />
               <strong>O&apos;Brien&ndash;Fleming:</strong> very strict early, close to classical at the final analysis.<br />
-              <strong>Harm detection (3SE rule):</strong> one-sided, only fires when the effect is strongly negative (z &lt; −3.0). Under a null with no true harm, it rarely triggers regardless of K.<br />
-              <strong>Sequential confidence interval (Eppo, 2022):</strong> anytime-valid and typically close to 5% under continuous monitoring.
+              <strong>Harm detection (3 SD rule):</strong> one-sided, only fires when the effect is strongly negative (z &lt; −3.0). Under a null with no true harm, it rarely triggers regardless of K.<br />
+              <strong>Sequential CI (Eppo, 2022):</strong> anytime-valid; guaranteed ≤5% false positive rate for two-sided tests under continuous monitoring.
             </>}
           />
         </div>
