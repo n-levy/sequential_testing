@@ -120,7 +120,7 @@ export function Act1() {
         <h4 className="font-bold text-blue-900 mb-3">Key Takeaway</h4>
         <div className="text-neutral-800 space-y-3">
           <p>
-            Sequential methods control the probability of ever making a false positive, no matter when we stop. They use stricter or time-dependent thresholds to account for repeated checking. This way, we can monitor results as often as we like, and the error rate stays controlled.
+            Checking results repeatedly inflates the false positive rate well above the nominal level. With standard confidence intervals, frequent peeking can push a 5% error rate to 20&ndash;30%, making the test unreliable.
           </p>
         </div>
       </div>
