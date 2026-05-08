@@ -170,7 +170,7 @@ export function ActHybrid() {
       {/* ════ PART 2: THE SPLIT-SIDED DESIGN ════ */}
       <div id="act3-part2" className="border-t-2 border-neutral-300 pt-6">
         <h3 className="text-xl font-bold mb-3 text-neutral-900 border-b border-neutral-200 pb-2">
-          Part 2: The Split-Sided Design
+          Part 2: The Hybrid Split-Sided Design
         </h3>
 
         <p className="text-neutral-700 mb-4">
