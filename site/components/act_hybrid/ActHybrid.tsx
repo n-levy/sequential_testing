@@ -143,13 +143,30 @@ export function ActHybrid() {
         </ul>
 
         {/* Limitations */}
-        <h4 className="font-semibold mb-2 text-neutral-900">Limitations</h4>
+        <h4 className="font-semibold mb-2 text-neutral-900">Limitations of early stopping for benefit</h4>
+        <p className="text-neutral-700 mb-3">
+          The hybrid approach allows early stopping only for harm, not for benefit. Adding early
+          stopping for benefit creates several problems:
+        </p>
         <ul className="list-disc pl-5 space-y-2 text-neutral-700 mb-8">
           <li>
-            <strong>Wider confidence intervals during monitoring.</strong> The sequential CI used to
-            watch for harm is wider than a standard CI at the same look, meaning a true effect is less
-            likely to be detected during the experiment. This is the cost of valid error control under
-            repeated checking.
+            <strong>Very wide sequential confidence intervals.</strong> To monitor for both harm and
+            benefit with the sequential CI while still reserving α/2 for a final test, the two-sided
+            sequential budget is α/2, meaning each tail gets only α/4 = 1.25%. This makes the
+            sequential multiplier larger and the CI substantially wider — so only very extreme effects
+            would trigger early stopping in either direction.
+          </li>
+          <li>
+            <strong>Magnitude error.</strong> When an experiment stops early because a benefit is
+            detected, the observed effect is systematically inflated (winner&rsquo;s curse). Business
+            decisions based on that estimate would overstate the true effect size. This is explained
+            in detail in Act 5.
+          </li>
+          <li>
+            <strong>Weekday bias.</strong> Experiments are often designed to run for a round number
+            of weeks so that both groups see the same day-of-week distribution. Stopping early for a
+            positive result may mean the two groups were exposed to an unequal mix of weekdays,
+            biasing the effect estimate.
           </li>
         </ul>
 
