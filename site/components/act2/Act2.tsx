@@ -78,7 +78,7 @@ export function Act2() {
           a time-dependent boundary, so the guarantee is valid no matter when or how often you peek.
         </p>
         <p className="text-neutral-700">
-          Tradeoff: at any single look, the interval is wider; benefit: no hidden inflation from repeated checks.
+          Tradeoff: the interval is wider at any single look, which means a true effect is less likely to be detected — you need a larger or clearer effect to cross the significance threshold. Benefit: no hidden inflation from repeated checks.
         </p>
       </div>
 
@@ -172,7 +172,7 @@ export function Act2() {
         <h4 className="font-bold text-blue-900 mb-3">Key Takeaway</h4>
         <div className="text-neutral-800 space-y-3">
           <p>
-            Sequential intervals trade narrowness at a single look for validity across all looks.
+            Sequential intervals are valid no matter when or how often you peek — but the interval is wider at any single look, so a true effect is less likely to be detected. You need a larger or clearer effect to cross the significance threshold than you would with a standard fixed-horizon test.
           </p>
         </div>
       </div>
