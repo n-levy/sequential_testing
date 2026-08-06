@@ -451,6 +451,67 @@ export function ABTestSim({
         .attr('d', seqArea as d3.Area<number>)
     }
 
+    if (layers.includes('hybrid-split')) {
+      // Draws the sequential CI band for the split-sided hybrid guardrail channel.
+      // Uses the same formula as `sequential-ci` (α/2 in the log term), because the
+      // upper edge of a two-sided sequential CI at α equals the one-sided harm
+      // threshold at α/2 — which is exactly the hybrid split-sided guardrail check.
+      const hybArea = d3.area<number>()
+        .x((_d, i) => x(dayOf(i)))
+        .y0((_d, i) => {
+          const denom = traj.meansA[i]
+          const nu = n * 0.25
+          const t_i = i + 1
+          const logTerm = Math.log((t_i + nu) / (nu * (alpha / 2)))
+          const w = denom !== 0
+            ? 100 * traj.ses[i] * Math.sqrt((t_i + nu) / t_i * logTerm) / denom
+            : 0
+          return y(effectPct[i] - w)
+        })
+        .y1((_d, i) => {
+          const denom = traj.meansA[i]
+          const nu = n * 0.25
+          const t_i = i + 1
+          const logTerm = Math.log((t_i + nu) / (nu * (alpha / 2)))
+          const w = denom !== 0
+            ? 100 * traj.ses[i] * Math.sqrt((t_i + nu) / t_i * logTerm) / denom
+            : 0
+          return y(effectPct[i] + w)
+        })
+      g.append('path')
+        .datum(Array.from({ length: nExt }, (_, i) => i))
+        .attr('fill', LAYER_STYLE['hybrid-split'].color)
+        .attr('fill-opacity', 0.15)
+        .attr('stroke', LAYER_STYLE['hybrid-split'].color)
+        .attr('stroke-width', 1.2)
+        .attr('stroke-opacity', 0.85)
+        .attr('d', hybArea as d3.Area<number>)
+
+      // Mark the final-peek two-sided fixed CI at α/2 as an error bar at the last day.
+      const iEnd = n - 1
+      if (iEnd >= 0 && traj.meansA[iEnd] > 0) {
+        const denomEnd = traj.meansA[iEnd]
+        const zFinal = normInv(1 - alpha / 4) // per-tail α/4 => two-sided at α/2
+        const wEnd = 100 * traj.ses[iEnd] * zFinal / denomEnd
+        const xEnd = x(daysTotal)
+        const yLo = y(effectPct[iEnd] - wEnd)
+        const yHi = y(effectPct[iEnd] + wEnd)
+        const color = LAYER_STYLE['hybrid-split'].color
+        g.append('line')
+          .attr('x1', xEnd).attr('x2', xEnd)
+          .attr('y1', yLo).attr('y2', yHi)
+          .attr('stroke', color).attr('stroke-width', 2.5)
+        g.append('line')
+          .attr('x1', xEnd - 5).attr('x2', xEnd + 5)
+          .attr('y1', yLo).attr('y2', yLo)
+          .attr('stroke', color).attr('stroke-width', 2.5)
+        g.append('line')
+          .attr('x1', xEnd - 5).attr('x2', xEnd + 5)
+          .attr('y1', yHi).attr('y2', yHi)
+          .attr('stroke', color).attr('stroke-width', 2.5)
+      }
+    }
+
     if (layers.includes('pocock')) {
       const cP = 2.41
       const pocockArea = d3.area<number>()
