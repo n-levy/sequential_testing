@@ -4,6 +4,7 @@ import { useState } from 'react'
 import { HybridSim } from './HybridSim'
 import { DisplayMathBox } from '../ui/DisplayMathBox'
 import { InlineMath, BlockMath } from '../ui/Math'
+import { ABTestSim } from '../shared/ABTestSim'
 
 function EppoGuidanceSection() {
   const [showEppo, setShowEppo] = useState(false)
@@ -406,6 +407,39 @@ export function ActHybrid() {
 
           </div>
         </DisplayMathBox>
+        </div>
+
+        {/* Power to detect harm — simulation */}
+        <div id="act3-harm-power" className="mb-8">
+          <h4 className="font-semibold mb-2 text-neutral-900">Simulation: power to detect harm</h4>
+          <p className="text-neutral-700 mb-4">
+            A question that often comes up: <em>how likely is the hybrid split-sided design to detect
+            harm, if there is any?</em> The simulation below reports the share of 1,000 repetitions
+            in which the design flags a harmful effect — either during the experiment (one-sided
+            sequential CI at <InlineMath>{`\\alpha/2`}</InlineMath> on the guardrail) or at the planned
+            end date (two-sided standard CI at <InlineMath>{`\\alpha/2`}</InlineMath>). Compare it to a
+            single fixed-horizon test at <InlineMath>{`\\alpha`}</InlineMath> run only at the planned
+            end (no interim monitoring at all).
+          </p>
+          <ABTestSim
+            layers={['hybrid-split', 'fixed-ci']}
+            finalPeekOnlyLayers={['fixed-ci']}
+            showPeekStats
+            simulationTitle="Simulation: power to detect harm under the hybrid split-sided design."
+            defaultEffect={-0.05}
+            defaultN={10000}
+            showPowerControl={false}
+            showDecision={false}
+            takeaway={
+              <span>
+                Set a negative effect size (a truly harmful treatment) and run the 1,000 repetitions.
+                For the hybrid split-sided design, the &ldquo;share crossing&rdquo; is its power to
+                detect harm at that magnitude. For the fixed-horizon comparison row, it is the power
+                of a single end-of-experiment test at <InlineMath>{`\\alpha`}</InlineMath>. Try
+                different harm magnitudes and sample sizes to see how the two compare.
+              </span>
+            }
+          />
         </div>
 
         {/* Key Takeaway */}

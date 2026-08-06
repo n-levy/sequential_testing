@@ -43,6 +43,7 @@ const LAYER_META: Record<SimLayer, { label: string; color: string }> = {
   'obf':           { label: "O'Brien–Fleming",                      color: '#1d4ed8' },
   'bonferroni':    { label: 'Bonferroni',                           color: '#0d9488' },
   'harm-detect':   { label: 'Three SD',                            color: '#7c3aed' },
+  'hybrid-split':  { label: 'Hybrid split-sided',                   color: '#0369a1' },
 }
 
 export function Act4() {

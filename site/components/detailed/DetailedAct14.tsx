@@ -2,6 +2,7 @@
 
 import { InlineMath, BlockMath } from '../ui/Math'
 import { ABTestSim } from '../shared/ABTestSim'
+import { HarmPowerCurve } from './sims/HarmPowerCurve'
 
 export function DetailedAct14() {
   return (
@@ -334,6 +335,55 @@ export function DetailedAct14() {
             </ul>
           </div>
         </div>
+
+        {/* Power to detect harm — curve across harm magnitudes */}
+        <h3 className="text-2xl font-bold text-neutral-900 mb-4 mt-10">Power to Detect Harm</h3>
+        <div className="text-neutral-700 space-y-3 mb-4">
+          <p>
+            The methods above control the <em>Type I error</em> under repeated peeking. A natural
+            follow-up question is <em>power</em>: if the treatment truly causes harm of magnitude{' '}
+            <InlineMath>{`\\Delta < 0`}</InlineMath>, how likely is each procedure to detect it
+            before the end of the experiment?
+          </p>
+          <p>
+            The simulation below sweeps the true harm magnitude across a grid from{' '}
+            <InlineMath>{`0\\%`}</InlineMath> to <InlineMath>{`-50\\%`}</InlineMath> and reports the
+            share of runs in which each procedure flags harm. Three procedures are compared under
+            identical sample size and peek schedule:
+          </p>
+          <ul className="list-disc list-inside ml-4 space-y-1">
+            <li>
+              <strong>Hybrid split-sided design</strong> &mdash; one-sided sequential CI at{' '}
+              <InlineMath>{`\\alpha/2`}</InlineMath> during the experiment, plus a two-sided fixed CI
+              at <InlineMath>{`\\alpha/2`}</InlineMath> at the end. Detection fires if either channel
+              triggers.
+            </li>
+            <li>
+              <strong>Fixed CI at end date</strong> &mdash; a single two-sided test at{' '}
+              <InlineMath>{`\\alpha`}</InlineMath> at the planned end. No interim monitoring. This is
+              the &ldquo;do nothing during the experiment&rdquo; baseline.
+            </li>
+            <li>
+              <strong>Three-SD rule</strong> &mdash; a one-sided guardrail heuristic at{' '}
+              <InlineMath>{`z = 3.0`}</InlineMath>, evaluated at every peek.
+            </li>
+          </ul>
+          <p>
+            The Monte Carlo uses <InlineMath>{`\\alpha = 0.05`}</InlineMath>, a Bernoulli outcome
+            with the specified baseline conversion rate, and equal-time peeks. Reading the plot: at
+            harm <InlineMath>{`= 0`}</InlineMath> the curves show empirical Type I error; at more
+            negative harm values they show the probability of detecting harm by the end of the
+            experiment.
+          </p>
+        </div>
+        <HarmPowerCurve />
+        <p className="text-sm text-neutral-500 mt-3 mb-8">
+          Note: the hybrid split-sided design gives up some power relative to the &ldquo;fixed CI at
+          end at <InlineMath>{`\\alpha`}</InlineMath>&rdquo; baseline (because the sequential channel
+          runs at <InlineMath>{`\\alpha/2`}</InlineMath> and its CI is wider), but it detects harm
+          <em> earlier</em> whenever the guardrail sequential channel fires before the planned end.
+          The Three-SD rule triggers only for very large harm.
+        </p>
 
         {/* Historical Note */}
         <div className="bg-neutral-100 border border-neutral-300 rounded-lg p-6 mb-8">

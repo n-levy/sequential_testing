@@ -20,6 +20,16 @@ export type SimLayer =
   | 'obf'
   | 'bonferroni'
   | 'harm-detect'
+  | 'hybrid-split'
+  // Combined detection channel for the hybrid split-sided design.
+  // Fires if EITHER (a) the one-sided sequential CI at α/2 signals harm at any peek
+  //                  (upper bound < 0, using the same multiplier as `sequential-ci`),
+  //                  OR
+  //                (b) at the final peek only, a two-sided fixed CI at α/2 excludes zero
+  //                    (critical value z_{α/4} instead of z_{α/2}).
+  // Represents the total power of the hybrid split-sided design to reject H0
+  // (in either direction, though under a truly harmful effect harm-side detection dominates).
+  // Not drawn on the trajectory chart — used only for the 1,000-repetition table.
 
 type KProp = number;
 interface ABTestSimProps {
@@ -92,6 +102,7 @@ const LAYER_STYLE: Record<SimLayer, { color: string; label: string }> = {
   'obf':           { color: '#1d4ed8', label: "O'Brien–Fleming" },
   'bonferroni':    { color: '#0d9488', label: 'Bonferroni' },
   'harm-detect':   { color: '#7c3aed', label: 'Three Standard Deviations (one-sided)' },
+  'hybrid-split':  { color: '#0369a1', label: 'Hybrid split-sided design' },
 }
 
 function mulberry32(seed: number) {
@@ -254,11 +265,35 @@ export function ABTestSim({
             w = denom !== 0 ? 100 * t.ses[i] * z / denom : 0;
           } else if (layer === 'harm-detect') {
             w = denom !== 0 ? 100 * t.ses[i] * 3.0 / denom : 0;
+          } else if (layer === 'hybrid-split') {
+            // Sequential CI at α/2 (matches existing sequential-ci layer's upper bound).
+            // We compute w for the sequential channel here; the final-peek two-sided
+            // fixed-CI-at-α/2 check is added below as a separate condition.
+            const nu = n * 0.25;
+            const t_i = i + 1;
+            const logTerm = Math.log((t_i + nu) / (nu * (alpha / 2)))
+            w = denom !== 0 ? 100 * t.ses[i] * Math.sqrt((t_i + nu) / t_i * logTerm) / denom : 0;
           }
-          // harm-detect: one-sided — only cross if CI upper bound is below zero (harm detected)
-          const isCross = layer === 'harm-detect'
-            ? (est + w < 0)
-            : (est - w > 0 || est + w < 0);
+          // Detection rule per layer:
+          //   harm-detect  : one-sided upper bound < 0  (harm only)
+          //   hybrid-split : one-sided sequential upper bound < 0 at any peek (harm),
+          //                  OR at final peek only, |est| exceeds z_{α/4} · SE (two-sided at α/2)
+          //   all others   : two-sided crossing (either bound excludes 0)
+          let isCross: boolean
+          if (layer === 'harm-detect') {
+            isCross = (est + w < 0)
+          } else if (layer === 'hybrid-split') {
+            const isInterimHarm = (est + w < 0)
+            let isFinalCrossing = false
+            if (lookPtr === lastLookPtr) {
+              const zFinal = normInv(1 - alpha / 4) // two-sided at α/2 ⇒ per-tail α/4
+              const wFinal = denom !== 0 ? 100 * t.ses[i] * zFinal / denom : 0
+              isFinalCrossing = (est - wFinal > 0) || (est + wFinal < 0)
+            }
+            isCross = isInterimHarm || isFinalCrossing
+          } else {
+            isCross = (est - w > 0 || est + w < 0)
+          }
           if (isCross) {
             crossed = true;
             estAtCrossing = est;
