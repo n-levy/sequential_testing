@@ -430,6 +430,19 @@ export function ActHybrid() {
             defaultN={10000}
             showPowerControl={false}
             showDecision={false}
+            peekStatsTitle={
+              <>
+                Share of 1,000 simulations detecting harm (at the true effect selected above),
+                comparing:
+                <br />
+                <span className="text-red-700">Fixed horizon</span> &mdash; a single test at the
+                planned end date (<InlineMath>{`\\alpha`}</InlineMath>, no interim monitoring).
+                <br />
+                <span className="text-blue-800">Hybrid split-sided</span> &mdash; continuous monitoring
+                that stops as soon as the guardrail sequential CI signals harm, plus a final test at
+                the planned end date (each at <InlineMath>{`\\alpha/2`}</InlineMath>).
+              </>
+            }
             takeaway={
               <span>
                 Set a negative effect size (a truly harmful treatment) and run the 1,000 repetitions.

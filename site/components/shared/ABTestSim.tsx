@@ -46,6 +46,7 @@ interface ABTestSimProps {
   peekDecisionSuffix?: ReactNode
   showDecision?: boolean
   finalPeekOnlyLayers?: SimLayer[] // layers that should only evaluate at the final peek (no early stopping)
+  peekStatsTitle?: ReactNode // overrides the built-in "Share of simulations in which peeking K times..." text
 }
 
 const Z_975 = 1.959964
@@ -170,6 +171,7 @@ export function ABTestSim({
   peekDecisionSuffix,
   showDecision = true,
   finalPeekOnlyLayers = [],
+  peekStatsTitle,
 }: ABTestSimProps) {
   const [effect, setEffect] = useState(defaultEffect)
   const [n, setN] = useState(defaultN)
@@ -829,8 +831,12 @@ export function ABTestSim({
           <div className="bg-white border border-blue-400 rounded-lg p-5 text-center">
             <div className="flex flex-col items-center gap-2">
               <span className="text-blue-900 font-semibold">
-                Share of simulations in which peeking {kState} times at equal time intervals during the test would show at least one statistically significant result<br />
-                (true effect: {effectiveEffect >= 0 ? '+' : ''}{Math.round(effectiveEffect * 100)}%), across 1,000 repetitions:
+                {peekStatsTitle ?? (
+                  <>
+                    Share of simulations in which peeking {kState} times at equal time intervals during the test would show at least one statistically significant result<br />
+                    (true effect: {effectiveEffect >= 0 ? '+' : ''}{Math.round(effectiveEffect * 100)}%), across 1,000 repetitions:
+                  </>
+                )}
               </span>
               <button
                 type="button"
