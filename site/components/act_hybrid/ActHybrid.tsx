@@ -415,19 +415,21 @@ export function ActHybrid() {
           <p className="text-neutral-700 mb-4">
             A question that often comes up: <em>how likely is the hybrid split-sided design to detect
             harm, if there is any?</em> The simulation below reports the share of 1,000 repetitions
-            in which the design flags a harmful effect — either during the experiment (one-sided
-            sequential CI at <InlineMath>{`\\alpha/2`}</InlineMath> on the guardrail) or at the planned
-            end date (two-sided standard CI at <InlineMath>{`\\alpha/2`}</InlineMath>). Compare it to a
-            single fixed-horizon test at <InlineMath>{`\\alpha`}</InlineMath> run only at the planned
-            end (no interim monitoring at all).
+            in which each approach flags a harmful effect. The hybrid split-sided design detects harm
+            either during the experiment (one-sided sequential CI at{' '}
+            <InlineMath>{`\\alpha/2`}</InlineMath> on the guardrail) or at the planned end date
+            (two-sided standard CI at <InlineMath>{`\\alpha/2`}</InlineMath>). Compare it to the naïve
+            fixed-horizon approach, which peeks {14} times at equal time intervals during the test using an
+            uncorrected standard <InlineMath>{`\\alpha`}</InlineMath> confidence interval at each look
+            (no correction for multiple testing).
           </p>
           <ABTestSim
             layers={['hybrid-split', 'fixed-ci']}
-            finalPeekOnlyLayers={['fixed-ci']}
             showPeekStats
             simulationTitle="Simulation: power to detect harm under the hybrid split-sided design."
             defaultEffect={-0.05}
             defaultN={10000}
+            K={14}
             showPowerControl={false}
             showDecision={false}
             peekStatsTitle={
@@ -435,8 +437,9 @@ export function ActHybrid() {
                 Share of 1,000 simulations detecting harm (at the true effect selected above),
                 comparing:
                 <br />
-                <span className="text-red-700">Fixed horizon</span> &mdash; a single test at the
-                planned end date (<InlineMath>{`\\alpha`}</InlineMath>, no interim monitoring).
+                <span className="text-red-700">Fixed horizon (naïve peeking)</span> &mdash; peeking{' '}
+                {14} times at equal time intervals during the test using an uncorrected standard{' '}
+                <InlineMath>{`\\alpha = 0.05`}</InlineMath> confidence interval at each look.
                 <br />
                 <span className="text-blue-800">Hybrid split-sided</span> &mdash; continuous monitoring
                 that stops as soon as the guardrail sequential CI signals harm, plus a final test at
@@ -446,10 +449,10 @@ export function ActHybrid() {
             takeaway={
               <span>
                 Set a negative effect size (a truly harmful treatment) and run the 1,000 repetitions.
-                For the hybrid split-sided design, the &ldquo;share crossing&rdquo; is its power to
-                detect harm at that magnitude. For the fixed-horizon comparison row, it is the power
-                of a single end-of-experiment test at <InlineMath>{`\\alpha`}</InlineMath>. Try
-                different harm magnitudes and sample sizes to see how the two compare.
+                The share crossing for each row is the power of that approach to detect harm at the
+                selected magnitude. Note that under the null (effect = 0), the naïve fixed-horizon row
+                also shows its inflated Type I error &mdash; the peeking problem from Act 1. Try
+                different harm magnitudes and sample sizes to see how the two approaches compare.
               </span>
             }
           />

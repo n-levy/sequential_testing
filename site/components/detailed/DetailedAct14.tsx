@@ -359,9 +359,11 @@ export function DetailedAct14() {
               triggers.
             </li>
             <li>
-              <strong>Fixed CI at end date</strong> &mdash; a single two-sided test at{' '}
-              <InlineMath>{`\\alpha`}</InlineMath> at the planned end. No interim monitoring. This is
-              the &ldquo;do nothing during the experiment&rdquo; baseline.
+              <strong>Fixed horizon (naïve peeking)</strong> &mdash; an uncorrected standard{' '}
+              <InlineMath>{`\\alpha`}</InlineMath> confidence interval evaluated at every peek. This
+              is what a team without a proper sequential method would do in practice &mdash; and it
+              also serves as a reminder of the peeking problem (Act 1), because its curve at{' '}
+              <InlineMath>{`\\Delta = 0`}</InlineMath> shows the inflated Type I error.
             </li>
             <li>
               <strong>Three-SD rule</strong> &mdash; a one-sided guardrail heuristic at{' '}
@@ -371,18 +373,18 @@ export function DetailedAct14() {
           <p>
             The Monte Carlo uses <InlineMath>{`\\alpha = 0.05`}</InlineMath>, a Bernoulli outcome
             with the specified baseline conversion rate, and equal-time peeks. Reading the plot: at
-            harm <InlineMath>{`= 0`}</InlineMath> the curves show empirical Type I error; at more
-            negative harm values they show the probability of detecting harm by the end of the
-            experiment.
+            harm <InlineMath>{`= 0`}</InlineMath> the curves show empirical Type I error (note the
+            inflated false-positive rate of naïve peeking); at more negative harm values they show
+            the probability of detecting harm by the end of the experiment.
           </p>
         </div>
         <HarmPowerCurve />
         <p className="text-sm text-neutral-500 mt-3 mb-8">
-          Note: the hybrid split-sided design gives up some power relative to the &ldquo;fixed CI at
-          end at <InlineMath>{`\\alpha`}</InlineMath>&rdquo; baseline (because the sequential channel
-          runs at <InlineMath>{`\\alpha/2`}</InlineMath> and its CI is wider), but it detects harm
-          <em> earlier</em> whenever the guardrail sequential channel fires before the planned end.
-          The Three-SD rule triggers only for very large harm.
+          Note: naïve peeking with an uncorrected fixed CI has higher raw detection probability, but
+          this is inflated by its uncontrolled Type I error &mdash; you are also more likely to
+          &ldquo;detect harm&rdquo; when there is none (see the curve at{' '}
+          <InlineMath>{`\\Delta = 0`}</InlineMath>). The hybrid split-sided design maintains valid
+          Type I control while still detecting genuine harm early.
         </p>
 
         {/* Historical Note */}

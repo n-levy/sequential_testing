@@ -71,7 +71,7 @@ function runOneTrial(
   alpha: number,
   peekIndices: number[],
   seed: number
-): { hybrid: boolean; fixedEnd: boolean; threeSD: boolean } {
+): { hybrid: boolean; naivePeek: boolean; threeSD: boolean } {
   const rand = mulberry32(seed)
   const pA = clampProbability(controlRate)
   const pB = clampProbability(pA * (1 + relativeLift))
@@ -79,11 +79,12 @@ function runOneTrial(
   let sumB = 0
   let hybrid = false
   let threeSD = false
-  let fixedEnd = false
+  let naivePeek = false
   let lookPtr = 0
   const lastLookPtr = peekIndices.length - 1
   const nu = n * 0.25
-  const zFinal = normInv(1 - alpha / 4) // two-sided at α/2 ⇒ per-tail α/4
+  const zAlpha = normInv(1 - alpha / 2)   // per-tail α/2 => z = 1.96 when α = 0.05
+  const zFinal = normInv(1 - alpha / 4)   // per-tail α/4 => z ≈ 2.24 when α = 0.05
 
   for (let i = 0; i < n && lookPtr <= lastLookPtr; i++) {
     sumA += rand() < pA ? 1 : 0
@@ -113,12 +114,13 @@ function runOneTrial(
       if (est + w3 < 0) threeSD = true
     }
 
-    if (lookPtr === lastLookPtr) {
-      // Fixed CI at end date, two-sided at α (=> per-tail α/2 => z = 1.96 when α = 0.05)
-      const zAlpha = normInv(1 - alpha / 2)
-      const wEnd = seRel * zAlpha
-      if (est - wEnd > 0 || est + wEnd < 0) fixedEnd = true
+    // Naïve fixed-horizon peeking: uncorrected standard CI at α, checked at every peek
+    if (!naivePeek) {
+      const wFix = seRel * zAlpha
+      if (est - wFix > 0 || est + wFix < 0) naivePeek = true
+    }
 
+    if (lookPtr === lastLookPtr) {
       // Hybrid final channel: two-sided at α/2 (=> per-tail α/4 => z ≈ 2.24 when α = 0.05)
       if (!hybrid) {
         const wFinal = seRel * zFinal
@@ -128,10 +130,10 @@ function runOneTrial(
 
     lookPtr++
   }
-  return { hybrid, fixedEnd, threeSD }
+  return { hybrid, naivePeek, threeSD }
 }
 
-interface PowerRow { harm: number; hybrid: number; fixedEnd: number; threeSD: number }
+interface PowerRow { harm: number; hybrid: number; naivePeek: number; threeSD: number }
 
 export function HarmPowerCurve() {
   const [n, setN] = useState(10000)
@@ -151,19 +153,19 @@ export function HarmPowerCurve() {
       const peekIndices = getPeekIndices(n, K)
       const rows: PowerRow[] = HARM_GRID.map(harm => {
         let hyCount = 0
-        let fxCount = 0
+        let npCount = 0
         let sdCount = 0
         for (let r = 0; r < reps; r++) {
           const s = seed + Math.floor((harm + 1) * 10007) + r * 31 + 1
-          const { hybrid, fixedEnd, threeSD } = runOneTrial(n, harm, baseline, alpha, peekIndices, s)
+          const { hybrid, naivePeek, threeSD } = runOneTrial(n, harm, baseline, alpha, peekIndices, s)
           if (hybrid) hyCount++
-          if (fixedEnd) fxCount++
+          if (naivePeek) npCount++
           if (threeSD) sdCount++
         }
         return {
           harm,
           hybrid: hyCount / reps,
-          fixedEnd: fxCount / reps,
+          naivePeek: npCount / reps,
           threeSD: sdCount / reps,
         }
       })
@@ -221,7 +223,7 @@ export function HarmPowerCurve() {
     type Series = { key: keyof PowerRow; color: string; label: string }
     const series: Series[] = [
       { key: 'hybrid',    color: '#0369a1', label: 'Hybrid split-sided' },
-      { key: 'fixedEnd',  color: '#ef4444', label: 'Fixed CI at end (α)' },
+      { key: 'naivePeek', color: '#ef4444', label: `Fixed horizon (naïve peeking, K=${K})` },
       { key: 'threeSD',   color: '#7c3aed', label: 'Three SD rule' },
     ]
 
@@ -357,7 +359,7 @@ export function HarmPowerCurve() {
               <tr className="bg-neutral-100 text-neutral-800">
                 <th className="border border-neutral-300 px-3 py-1.5 text-left">True harm</th>
                 <th className="border border-neutral-300 px-3 py-1.5 text-right">Hybrid split-sided</th>
-                <th className="border border-neutral-300 px-3 py-1.5 text-right">Fixed CI at end</th>
+                <th className="border border-neutral-300 px-3 py-1.5 text-right">Fixed horizon (naïve peeking)</th>
                 <th className="border border-neutral-300 px-3 py-1.5 text-right">Three SD</th>
               </tr>
             </thead>
@@ -371,7 +373,7 @@ export function HarmPowerCurve() {
                     {(r.hybrid * 100).toFixed(1)}%
                   </td>
                   <td className="border border-neutral-300 px-3 py-1 text-right font-mono text-red-700">
-                    {(r.fixedEnd * 100).toFixed(1)}%
+                    {(r.naivePeek * 100).toFixed(1)}%
                   </td>
                   <td className="border border-neutral-300 px-3 py-1 text-right font-mono text-purple-700">
                     {(r.threeSD * 100).toFixed(1)}%
