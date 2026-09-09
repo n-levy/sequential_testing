@@ -131,6 +131,12 @@ export function HybridHarmCurve() {
     }, 0)
   }
 
+  // Auto-run once on mount so the chart is visible without user interaction.
+  useEffect(() => {
+    runCurve()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
+
   useEffect(() => {
     if (!svgRef.current || !results) return
     const svg = d3.select(svgRef.current)
