@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import { HybridSim } from './HybridSim'
+import { HybridHarmCurve } from './HybridHarmCurve'
 import { DisplayMathBox } from '../ui/DisplayMathBox'
 import { InlineMath, BlockMath } from '../ui/Math'
 import { ABTestSim } from '../shared/ABTestSim'
@@ -456,6 +457,19 @@ export function ActHybrid() {
               </span>
             }
           />
+
+          <div className="mt-6">
+            <h5 className="font-semibold mb-2 text-neutral-900">Power curve across a range of true effects</h5>
+            <p className="text-neutral-700 mb-4">
+              To see the whole picture at once, the plot below sweeps the true effect from{' '}
+              <InlineMath>{`0\\%`}</InlineMath> to <InlineMath>{`-25\\%`}</InlineMath> and reports
+              the share of simulations that flag as significant under each approach.
+              At <InlineMath>{`0\\%`}</InlineMath> the curves show empirical false-positive rates
+              (the naïve line reveals the peeking problem); at larger harm magnitudes they show power
+              to detect harm.
+            </p>
+            <HybridHarmCurve />
+          </div>
         </div>
 
         {/* Key Takeaway */}
