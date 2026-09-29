@@ -45,11 +45,11 @@ export function ConfidenceSequenceSim() {
       const se = sigma / Math.sqrt(i)
       const ciHalf = z * se
 
-      // Confidence Sequence (Normal mixture boundary from Howard et al.)
-      // u(v) = sqrt((v + ν) * log((v + ν) / (ν * α)))
+      // Confidence Sequence (Normal mixture boundary from Howard et al. / Schmit & Miller)
+      // u(v) = sqrt((v + ν) * log((v + ν) / (ν * α²)))
       // Half-width = u(v) / n where v = n * σ²
       const v = i * sigma * sigma
-      const uVal = Math.sqrt((v + nu) * Math.log((v + nu) / (nu * alpha)))
+      const uVal = Math.sqrt((v + nu) * Math.log((v + nu) / (nu * alpha * alpha)))
       const csHalf = uVal / i
 
       means.push(mean)

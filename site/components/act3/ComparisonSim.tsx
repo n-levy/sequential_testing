@@ -60,9 +60,10 @@ function obfZ(k: number): number {
 
 function seqCSMultiplier(n: number, maxN: number): number {
   const totalN = 2 * n
-  const nu = maxN * 2
-  const logTerm = Math.log((totalN + nu) / (nu * ALPHA * ALPHA))
-  return Math.sqrt(((totalN + nu) / totalN) * logTerm)
+  const totalMax = 2 * maxN
+  const rho = totalMax / (Math.log(Math.log(Math.E / (ALPHA * ALPHA))) - 2 * Math.log(ALPHA))
+  const logTerm = Math.log((totalN + rho) / (rho * ALPHA * ALPHA))
+  return Math.sqrt(((totalN + rho) / totalN) * logTerm)
 }
 
 /* ── types ── */

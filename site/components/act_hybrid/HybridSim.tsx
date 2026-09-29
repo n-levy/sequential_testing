@@ -1,10 +1,11 @@
-// HybridSim.tsx — Simulation used in Act 3: A Hybrid Split-Sided Approach.
+// HybridSim.tsx — Simulation used in Act 3: Hybrid Design with Harm-Only Interim Monitoring.
 // Shows one trajectory with two CI bands: a sequential CI for guardrail monitoring
 // (full experiment duration, can stop early for harm) and a standard fixed-horizon CI
 // evaluated only at the planned end date for the primary KPI.
-// The sequential CI uses alpha (not alpha/2) because the harm detection check is
-// ONE-SIDED: it only triggers when the upper bound is below zero (clear harm).
-// P(ever cross lower bound) ≤ α controls the one-sided false positive rate at level α.
+// The `alpha` slider is the one-sided harm-tail budget for the guardrail check (it only
+// triggers when the upper bound is below zero, i.e. clear harm). The Schmit & Miller
+// (2022) multiplier is parameterized by the TWO-SIDED level `a`; we use a = 2*alpha so
+// the one-sided harm-tail error is controlled at approximately `alpha`.
 "use client"
 
 import { useState, useMemo, useRef, useEffect } from 'react'
@@ -19,6 +20,19 @@ const ALPHA_MAX = 0.1
 
 function clampProbability(p: number): number {
   return Math.max(1e-6, Math.min(1 - 1e-6, p))
+}
+
+// rho tuning parameter (Schmit & Miller 2022): a is the two-sided level of the sequential test.
+function seqRho(nPlan: number, a: number): number {
+  return nPlan / (Math.log(Math.log(Math.E / (a * a))) - 2 * Math.log(a))
+}
+
+// Always-valid CI multiplier m(n): half-width = m(n) * SE. `alphaOneSided` is the
+// one-sided (harm-tail) budget; the underlying two-sided level is a = 2 * alphaOneSided.
+function seqMultiplierOneSided(n: number, nPlan: number, alphaOneSided: number): number {
+  const a = 2 * alphaOneSided
+  const rho = seqRho(nPlan, a)
+  return Math.sqrt((n + rho) / n * Math.log((n + rho) / (rho * a * a)))
 }
 
 function mulberry32(seed: number) {
@@ -156,18 +170,14 @@ export function HybridSim() {
       .x((_d, i) => x(dayOf(i)))
       .y0((_d, i) => {
         const denom = traj.meansA[i]
-        const nu = n * 0.25
         const t_i = i + 1
-        const logTerm = Math.log((t_i + nu) / (nu * alpha)) // one-sided: uses alpha (not alpha/2)
-        const w = denom !== 0 ? 100 * traj.ses[i] * Math.sqrt((t_i + nu) / t_i * logTerm) / denom : 0
+        const w = denom !== 0 ? 100 * traj.ses[i] * seqMultiplierOneSided(t_i, n, alpha) / denom : 0
         return y(effectPct[i] - w)
       })
       .y1((_d, i) => {
         const denom = traj.meansA[i]
-        const nu = n * 0.25
         const t_i = i + 1
-        const logTerm = Math.log((t_i + nu) / (nu * alpha)) // one-sided: uses alpha (not alpha/2)
-        const w = denom !== 0 ? 100 * traj.ses[i] * Math.sqrt((t_i + nu) / t_i * logTerm) / denom : 0
+        const w = denom !== 0 ? 100 * traj.ses[i] * seqMultiplierOneSided(t_i, n, alpha) / denom : 0
         return y(effectPct[i] + w)
       })
       .defined((_d, i) => i >= 5)

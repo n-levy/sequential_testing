@@ -92,7 +92,7 @@ export function Act2() {
             <tr className="bg-neutral-100">
               <th className="border border-neutral-300 p-3 text-left font-semibold">Checking schedule</th>
               <th className="border border-neutral-300 p-3 text-left font-semibold">Standard 95% confidence interval</th>
-              <th className="border border-neutral-300 p-3 text-left font-semibold">Sequential confidence interval (Eppo, 2022)</th>
+              <th className="border border-neutral-300 p-3 text-left font-semibold">Sequential confidence interval (Eppo)</th>
             </tr>
           </thead>
           <tbody>
@@ -133,10 +133,12 @@ export function Act2() {
           Under repeated peeking, the standard confidence interval inflates false positives substantially, while the sequential confidence interval stays close to the target error level.
         </p>
         <p className="text-neutral-600 text-sm mt-2">
-          Note: the sequential CI shows ~2% at a single look, below the nominal 5%, because the sequential multiplier is calibrated for continuous monitoring and is intentionally conservative at any fixed look.
+          Note: the sequential CI's false harm-alarm rate stays well under its nominal budget when checked repeatedly:
+          about 0.5% over 14 equally spaced peeks in this example (with a nominal one-sided budget of 2.5%), because the
+          boundary is built to remain valid for any number of peeks and even beyond the planned end date.
         </p>
         <p className="text-neutral-600 text-sm mt-2">
-          Note on sample size: the false positive rates are approximately but not exactly independent of <InlineMath>{`n`}</InlineMath>. With the Eppo (2022) formula <InlineMath>{`\\nu = n^*/({\\log(n^*/\\alpha)-1})`}</InlineMath>, the ratio <InlineMath>{`\\nu/n^*`}</InlineMath> decreases slowly as <InlineMath>{`n^*`}</InlineMath> grows, so the sequential multiplier at each fractional look shifts slightly with <InlineMath>{`n`}</InlineMath>. In typical operating ranges the effect is small. What changes most visibly with <InlineMath>{`n`}</InlineMath> is the absolute CI width (narrower for larger <InlineMath>{`n`}</InlineMath>).
+          Note on sample size: the false positive rates are approximately but not exactly independent of <InlineMath>{`n`}</InlineMath>. With the Schmit &amp; Miller (2022) formula <InlineMath>{`\\rho = M/(\\log\\log(e/a^2)-2\\log a)`}</InlineMath>, the ratio <InlineMath>{`\\rho/M`}</InlineMath> is a constant (≈ 0.126 for <InlineMath>{`a=0.05`}</InlineMath>) that does not depend on <InlineMath>{`M`}</InlineMath>, so the sequential multiplier's shape as a fraction of the planned sample size is essentially the same regardless of <InlineMath>{`M`}</InlineMath>. What changes with <InlineMath>{`n`}</InlineMath> is the absolute CI width (narrower for larger <InlineMath>{`n`}</InlineMath>).
         </p>
       </div>
 
@@ -146,10 +148,12 @@ export function Act2() {
         <p className="text-neutral-700 mb-3">
           Error control is not free. Because the sequential CI must remain valid across all possible
           stopping times, its multiplier at the planned end date is larger than 1.96, approximately
-          2.45 at the default settings (<InlineMath>{`n^* = 10{,}000`}</InlineMath>, <InlineMath>{`\\alpha = 0.05`}</InlineMath>).
-          This means that if a real effect exists, you need it to be about 25% larger to reach
-          significance at <InlineMath>{`n^*`}</InlineMath>, or equivalently you need roughly 56% more
-          users to achieve the same power as a standard fixed-horizon test at the same <InlineMath>{`\\alpha`}</InlineMath>.
+          3.04 at the default settings (<InlineMath>{`n^* = 10{,}000`}</InlineMath>, <InlineMath>{`a = 0.05`}</InlineMath>).
+          This means that if a real effect exists, you need it to be about 55% larger to reach
+          significance at <InlineMath>{`n^*`}</InlineMath> (the CI is <InlineMath>{`3.04/1.96 \\approx 1.55\\times`}</InlineMath> as wide), or
+          equivalently roughly 1.8&ndash;1.9&times; as many users to achieve the same 80% power as a standard fixed-horizon test
+          in this example (the lower value counts detections at any of the 14 peeks, the higher one only at the end; this
+          ratio is not a general property of sequential testing).
         </p>
         <p className="text-neutral-700 mb-3">
           However, the sequential CI also gives you the opportunity to stop <em>early</em> when the
@@ -161,8 +165,8 @@ export function Act2() {
           The net result: if your team monitors the experiment and is willing to act on interim
           results, the sequential CI can match or beat the fixed-horizon design in expected sample
           size. If you monitor but never stop early, you pay the full power penalty at{' '}
-          <InlineMath>{`n^*`}</InlineMath> without gaining anything. This is why the hybrid split-sided approach
-          in Act 3 (sequential monitoring for guardrails only, fixed-horizon for the primary KPI)
+          <InlineMath>{`n^*`}</InlineMath> without gaining anything. This is why the hybrid design with harm-only interim
+          monitoring in Act 3 (sequential monitoring for guardrails only, fixed-horizon for the primary KPI)
           is often the better practical choice.
         </p>
       </div>
@@ -180,6 +184,12 @@ export function Act2() {
       {/* Math section with DisplayMathBox */}
       <DisplayMathBox>
         <div>
+          <p className="mb-4 text-sm text-neutral-600 italic">
+            The description of Eppo&apos;s sequential CI below follows Schmit &amp; Miller (2022); it has not been
+            verified against Eppo&apos;s current code, which may differ in details (for example relative lift and
+            regression adjustment). The guarantee also relies on an estimated variance and can be poor in very
+            small samples or for heavy-tailed KPIs such as revenue.
+          </p>
 
           {/* Step 1 */}
           <h5 className="font-semibold mb-2">1. Fixed-horizon confidence interval (from Act 1)</h5>
@@ -198,48 +208,48 @@ export function Act2() {
           </ul>
 
           {/* Step 2 */}
-          <h5 className="font-semibold mb-2">2. Sequential confidence interval (Eppo, 2022)</h5>
+          <h5 className="font-semibold mb-2">2. Sequential confidence interval (Eppo)</h5>
           <p className="mb-2 text-neutral-800">
-            Eppo's (2022) sequential confidence interval replaces the fixed multiplier 1.96 with one that depends on the number of observations:
+            Eppo's sequential confidence interval replaces the fixed multiplier 1.96 with one that depends on the number of observations:
           </p>
-          <BlockMath>{`\\hat{u}_n \\pm \\frac{\\widehat{\\mathrm{SE}}_n}{\\bar{X}_{A,n}}\\,\\sqrt{\\frac{n+\\nu}{n}\\log\\!\\left(\\frac{n+\\nu}{\\nu\\,\\alpha}\\right)}`}</BlockMath>
+          <BlockMath>{`\\hat{u}_n \\pm \\frac{\\widehat{\\mathrm{SE}}_n}{\\bar{X}_{A,n}}\\,\\sqrt{\\frac{n+\\rho}{n}\\log\\!\\left(\\frac{n+\\rho}{\\rho\\,a^2}\\right)}`}</BlockMath>
           <ul className="mb-6 text-sm text-neutral-600 space-y-1 ml-4 list-disc">
             <li><InlineMath>{`\\hat{u}_n`}</InlineMath>: estimated relative uplift (in %) after <InlineMath>{`n`}</InlineMath> users per group</li>
             <li><InlineMath>{`\\widehat{\\mathrm{SE}}_n`}</InlineMath>: estimated standard error of the difference in means at the current sample size</li>
             <li><InlineMath>{`\\bar{X}_{A,n}`}</InlineMath>: running mean outcome in the control group (used to convert absolute SE to relative %)</li>
             <li><InlineMath>{`n`}</InlineMath>: current number of users in each group</li>
-            <li><InlineMath>{`\\nu`}</InlineMath>: tuning parameter that controls the width–power tradeoff, calibrated to the planned sample size. See the formula below.</li>
-            <li><InlineMath>{`\\alpha`}</InlineMath>: target Type I error level (e.g. 0.05 for a 5% false-positive rate)</li>
+            <li><InlineMath>{`\\rho`}</InlineMath>: tuning parameter that controls the width–power tradeoff, calibrated to the planned sample size. See the formula below.</li>
+            <li><InlineMath>{`a`}</InlineMath>: two-sided target Type I error level of the sequential test (e.g. 0.05)</li>
             <li><InlineMath>{`\\log`}</InlineMath>: natural logarithm</li>
           </ul>
 
           {/* Step 3 */}
           <h5 className="font-semibold mb-2">3. The multiplier</h5>
           <p className="mb-2 text-neutral-800">
-            The key difference between the two formulas is the multiplier of the standard error. In the fixed-horizon case it is the constant 1.96. In Eppo's (2022) sequential implementation it is:
+            The key difference between the two formulas is the multiplier of the standard error. In the fixed-horizon case it is the constant 1.96. In Eppo's sequential implementation it is:
           </p>
-          <BlockMath>{`m(n) = \\sqrt{\\frac{n+\\nu}{n}\\log\\!\\left(\\frac{n+\\nu}{\\nu\\,\\alpha}\\right)}`}</BlockMath>
+          <BlockMath>{`m(n) = \\sqrt{\\frac{n+\\rho}{n}\\log\\!\\left(\\frac{n+\\rho}{\\rho\\,a^2}\\right)}`}</BlockMath>
           <ul className="mb-4 text-sm text-neutral-600 space-y-1 ml-4 list-disc">
             <li><InlineMath>{`m(n)`}</InlineMath>: the time-varying multiplier applied to the standard error (replaces 1.96 from the fixed-horizon formula)</li>
             <li><InlineMath>{`n`}</InlineMath>: current number of users in each group</li>
-            <li><InlineMath>{`\\nu`}</InlineMath>: tuning parameter (explained below)</li>
-            <li><InlineMath>{`\\alpha`}</InlineMath>: target Type I error level (e.g. 0.05)</li>
+            <li><InlineMath>{`\\rho`}</InlineMath>: tuning parameter (explained below)</li>
+            <li><InlineMath>{`a`}</InlineMath>: two-sided target Type I error level of the sequential test (e.g. 0.05)</li>
             <li><InlineMath>{`\\log`}</InlineMath>: natural logarithm</li>
           </ul>
           <p className="mb-6 text-neutral-800">
-            This multiplier is larger than 1.96, which is what keeps the Type I error controlled under continuous monitoring. The multiplier is especially high when <InlineMath>{`n`}</InlineMath> is small. As <InlineMath>{`n`}</InlineMath> grows, <InlineMath>{`m(n)`}</InlineMath> first decreases, reaching its minimum at roughly 40% of <InlineMath>{`n^*`}</InlineMath>, and then slowly increases again. The confidence interval is therefore widest early in the experiment, narrowest around 40% of the way through, and has widened somewhat again by the planned end date <InlineMath>{`n^*`}</InlineMath>. It always remains above 1.96.
+            This multiplier is larger than 1.96, which is what keeps the Type I error controlled under continuous monitoring. The multiplier is especially high when <InlineMath>{`n`}</InlineMath> is small. As <InlineMath>{`n`}</InlineMath> grows, <InlineMath>{`m(n)`}</InlineMath> first decreases, reaching its minimum near the planned sample size (at roughly <InlineMath>{`1.03 \\times n^*`}</InlineMath>), and then slowly increases again. The confidence interval is therefore widest early in the experiment and narrowest close to the planned end date <InlineMath>{`n^*`}</InlineMath>, where it has a value of about 3.04 at the default settings. It always remains above 1.96.
           </p>
           <p className="mb-6 text-neutral-800">
-            The tuning parameter <InlineMath>{`\\nu`}</InlineMath> controls this trade-off between early-stopping power and long-run width. Eppo (2022) sets it as:
+            The tuning parameter <InlineMath>{`\\rho`}</InlineMath> controls this trade-off between early-stopping power and long-run width, and is chosen so the interval is tightest near the planned sample size. Following Schmit &amp; Miller (2022), the basis of Eppo's implementation:
           </p>
-          <BlockMath>{`\\nu = \\frac{n^*}{\\log(n^*/\\alpha) - 1}`}</BlockMath>
+          <BlockMath>{`\\rho = \\frac{M}{\\log\\log(e/a^2) - 2\\log a}`}</BlockMath>
           <ul className="mb-4 text-sm text-neutral-600 space-y-1 ml-4 list-disc">
-            <li><InlineMath>{`\\nu`}</InlineMath>: tuning parameter that balances the interval width at early looks versus the planned end date</li>
-            <li><InlineMath>{`n^*`}</InlineMath>: the planned (maximum) sample size per group, the horizon at which the experiment is expected to end</li>
-            <li><InlineMath>{`\\alpha`}</InlineMath>: target Type I error level</li>
+            <li><InlineMath>{`\\rho`}</InlineMath>: tuning parameter that balances the interval width at early looks versus the planned end date. For <InlineMath>{`a=0.05`}</InlineMath>, <InlineMath>{`\\rho \\approx 0.126 \\times M`}</InlineMath>.</li>
+            <li><InlineMath>{`M`}</InlineMath>: the planned (maximum) sample size per group, the horizon at which the experiment is expected to end (<InlineMath>{`M = n^*`}</InlineMath>)</li>
+            <li><InlineMath>{`a`}</InlineMath>: two-sided target Type I error level of the sequential test</li>
           </ul>
           <p className="mb-6 text-neutral-800">
-            Setting <InlineMath>{`\\nu`}</InlineMath> too high shifts the minimum to a point late in or past the experiment, so the interval narrows throughout without giving much early-stopping power. Setting it too low shifts the minimum very early, after which the multiplier rises steeply and the interval is wide again by <InlineMath>{`n^*`}</InlineMath>. The formula above places the minimum at roughly 40% of <InlineMath>{`n^*`}</InlineMath>, balancing early-stopping power against the multiplier at the planned end date. Being off by a factor of two is fine; being off by a factor of ten matters.
+            The formula above places the minimum near <InlineMath>{`n^*`}</InlineMath> itself (about <InlineMath>{`1.03 \\times n^*`}</InlineMath>), balancing early-stopping power against the multiplier at the planned end date.
           </p>
 
           {/* Step 4 */}
@@ -258,7 +268,7 @@ export function Act2() {
             So unlike fixed-horizon confidence intervals, the guarantee still holds under continuous monitoring.
           </p>
           <p className="mb-6 text-neutral-800">
-            As <InlineMath>{`n`}</InlineMath> increases, the multiplier <InlineMath>{`m(n)`}</InlineMath> first decreases and then slowly rises, so the confidence interval is at its narrowest around 40% of the way through the experiment, and has widened somewhat by the planned end date.
+            As <InlineMath>{`n`}</InlineMath> increases, the multiplier <InlineMath>{`m(n)`}</InlineMath> first decreases and then slowly rises, so the confidence interval is at its narrowest close to the planned end date (about <InlineMath>{`1.03\\times n^*`}</InlineMath>) rather than early in the experiment.
           </p>
 
           {/* Step 5 */}
@@ -268,16 +278,16 @@ export function Act2() {
           </p>
           <BlockMath>{`|\\hat{u}_n| > m(n)\\cdot\\frac{\\widehat{\\mathrm{SE}}_n}{\\bar{X}_{A,n}}`}</BlockMath>
           <p className="mb-2 text-neutral-800">
-            Because <InlineMath>{`m(n) > 1.96`}</InlineMath> at every <InlineMath>{`n`}</InlineMath>, a larger observed effect is always required than with a fixed-horizon test. At the planned end date <InlineMath>{`n^*`}</InlineMath>, with typical calibration, <InlineMath>{`m(n^*) \\approx 2.4`}</InlineMath>. The reduction in power follows directly: if a fixed-horizon test at <InlineMath>{`n^*`}</InlineMath> is designed for 80% power to detect some effect size <InlineMath>{`\\delta`}</InlineMath>, the sequential CI evaluated at the same <InlineMath>{`n^*`}</InlineMath> achieves approximately:
+            Because <InlineMath>{`m(n) > 1.96`}</InlineMath> at every <InlineMath>{`n`}</InlineMath>, a larger observed effect is always required than with a fixed-horizon test. At the planned end date <InlineMath>{`n^*`}</InlineMath>, with the default settings, <InlineMath>{`m(n^*) \\approx 3.04`}</InlineMath>. The reduction in power follows directly: if a fixed-horizon test at <InlineMath>{`n^*`}</InlineMath> is designed for 80% power to detect some effect size <InlineMath>{`\\delta`}</InlineMath>, the sequential CI evaluated at the same <InlineMath>{`n^*`}</InlineMath> achieves approximately:
           </p>
-          <BlockMath>{`\\text{Power}_{\\text{seq}}(n^*) = \\Phi\\!\\left(\\frac{\\delta}{\\mathrm{SE}(n^*)} - m(n^*)\\right) \\approx \\Phi(2.80 - 2.40) = \\Phi(0.40) \\approx 66\\%`}</BlockMath>
+          <BlockMath>{`\\text{Power}_{\\text{seq}}(n^*) = \\Phi\\!\\left(\\frac{\\delta}{\\mathrm{SE}(n^*)} - m(n^*)\\right) \\approx \\Phi(2.80 - 3.04) = \\Phi(-0.24) \\approx 41\\%`}</BlockMath>
           <ul className="mb-4 text-sm text-neutral-600 space-y-1 ml-4 list-disc">
             <li><InlineMath>{`\\delta / \\mathrm{SE}(n^*)`}</InlineMath>: the non-centrality parameter — how many standard errors the true effect is from zero at <InlineMath>{`n^*`}</InlineMath>; equals <InlineMath>{`z_{\\alpha/2} + z_\\beta = 1.96 + 0.84 = 2.80`}</InlineMath> for a test designed for 80% power at <InlineMath>{`\\alpha = 0.05`}</InlineMath></li>
-            <li><InlineMath>{`m(n^*) \\approx 2.40`}</InlineMath>: the sequential multiplier at the planned end date (versus 1.96 for the fixed-horizon test)</li>
+            <li><InlineMath>{`m(n^*) \\approx 3.04`}</InlineMath>: the sequential multiplier at the planned end date (versus 1.96 for the fixed-horizon test)</li>
             <li><InlineMath>{`\\Phi`}</InlineMath>: the standard normal CDF</li>
           </ul>
           <p className="text-neutral-800">
-            In other words, a sequential test run to <InlineMath>{`n^*`}</InlineMath> without early stopping is roughly equivalent to a fixed-horizon test with about 20% fewer observations. The power is recovered if the experiment stops early (because the effect is large enough to cross the sequential boundary before <InlineMath>{`n^*`}</InlineMath>), but if no early stopping occurs, the final analysis pays a power penalty of this magnitude.
+            In other words, a sequential test run to <InlineMath>{`n^*`}</InlineMath> without early stopping has substantially lower power than a fixed-horizon test at the same <InlineMath>{`n^*`}</InlineMath> (about 41% instead of 80% in this example) — consistent with needing roughly 1.8–1.9&times; the sample size to match 80% power (see &ldquo;The power tradeoff&rdquo; above). The power is recovered if the experiment stops early, because the effect is large enough to cross the sequential boundary before <InlineMath>{`n^*`}</InlineMath>; if no early stopping occurs, the final analysis pays the full power penalty shown here.
           </p>
         </div>
       </DisplayMathBox>

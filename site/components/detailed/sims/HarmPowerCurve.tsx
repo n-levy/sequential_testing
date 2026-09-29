@@ -5,7 +5,7 @@
 // Runs a client-side Monte Carlo across a grid of true harm magnitudes (0% to -50%)
 // and plots the probability of detecting harm under three procedures:
 //
-//   1. Hybrid split-sided design (recommended)
+//   1. Hybrid design with harm-only interim monitoring (recommended)
 //        - Interim: one-sided sequential CI at α/2 on the guardrail (upper bound < 0)
 //        - Final:   two-sided fixed CI at α/2 at the planned end date
 //        Total detection = union of the two channels.
@@ -82,9 +82,9 @@ function runOneTrial(
   let naivePeek = false
   let lookPtr = 0
   const lastLookPtr = peekIndices.length - 1
-  const nu = n * 0.25
+  const rho = n / (Math.log(Math.log(Math.E / (alpha * alpha))) - 2 * Math.log(alpha))
   const zAlpha = normInv(1 - alpha / 2)   // per-tail α/2 => z = 1.96 when α = 0.05
-  const zFinal = normInv(1 - alpha / 4)   // per-tail α/4 => z ≈ 2.24 when α = 0.05
+  const zFinal = normInv(1 - alpha / 2)   // standard fixed-horizon CI at level α
 
   for (let i = 0; i < n && lookPtr <= lastLookPtr; i++) {
     sumA += rand() < pA ? 1 : 0
@@ -101,10 +101,10 @@ function runOneTrial(
     const est = denom !== 0 ? (meanB - denom) / denom : 0
     const seRel = denom !== 0 ? se / denom : 0
 
-    // Hybrid: sequential CI at α/2, one-sided upper bound < 0
+    // Hybrid: sequential CI at two-sided level alpha, one-sided upper bound < 0
     if (!hybrid) {
-      const logTerm = Math.log((k + nu) / (nu * (alpha / 2)))
-      const wSeq = seRel * Math.sqrt((k + nu) / k * logTerm)
+      const logTerm = Math.log((k + rho) / (rho * (alpha * alpha)))
+      const wSeq = seRel * Math.sqrt((k + rho) / k * logTerm)
       if (est + wSeq < 0) hybrid = true
     }
 
@@ -222,7 +222,7 @@ export function HarmPowerCurve() {
 
     type Series = { key: keyof PowerRow; color: string; label: string }
     const series: Series[] = [
-      { key: 'hybrid',    color: '#0369a1', label: 'Hybrid split-sided' },
+      { key: 'hybrid',    color: '#0369a1', label: 'Hybrid (harm-only interim monitoring)' },
       { key: 'naivePeek', color: '#ef4444', label: `Fixed horizon (naïve peeking, K=${K})` },
       { key: 'threeSD',   color: '#7c3aed', label: 'Three SD rule' },
     ]
@@ -358,7 +358,7 @@ export function HarmPowerCurve() {
             <thead>
               <tr className="bg-neutral-100 text-neutral-800">
                 <th className="border border-neutral-300 px-3 py-1.5 text-left">True harm</th>
-                <th className="border border-neutral-300 px-3 py-1.5 text-right">Hybrid split-sided</th>
+                <th className="border border-neutral-300 px-3 py-1.5 text-right">Hybrid (harm-only interim monitoring)</th>
                 <th className="border border-neutral-300 px-3 py-1.5 text-right">Fixed horizon (naïve peeking)</th>
                 <th className="border border-neutral-300 px-3 py-1.5 text-right">Three SD</th>
               </tr>

@@ -35,12 +35,12 @@ const FOCUSED_ITEMS = [
     ],
   },
   {
-    id: 'act3-hybrid', label: 'Act 3 – Hybrid Split-Sided Approach',
+    id: 'act3-hybrid', label: 'Act 3 – Hybrid: Harm-Only Interim Monitoring',
     children: [
       { id: 'act3-part1', label: 'Part 1: Hybrid Approach' },
       { id: 'act3-sim', label: 'Simulation' },
       { id: 'act3-adv', label: 'Advantages & Limitations' },
-      { id: 'act3-part2', label: 'Part 2: Split-Sided Design' },
+      { id: 'act3-part2', label: 'Part 2: Harm-Only Interim Monitoring' },
       { id: 'act3-guardrail', label: 'Example: primary KPI as guardrail' },
       { id: 'act3-math', label: 'Show the math' },
       { id: 'act3-takeaway', label: 'Key Takeaway' },

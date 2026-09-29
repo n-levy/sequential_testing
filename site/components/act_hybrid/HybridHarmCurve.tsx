@@ -1,7 +1,7 @@
 'use client'
 
 // Focused-track power curve: sweeps true effect from 0% to -25% and compares
-// naïve peeking (uncorrected fixed CI at every look) against the hybrid split-sided
+// naïve peeking (uncorrected fixed CI at every look) against the hybrid design with harm-only interim monitoring
 // design. Two-curve, smaller-grid counterpart to detailed/sims/HarmPowerCurve.
 
 import { useState, useRef, useEffect } from 'react'
@@ -59,9 +59,9 @@ function runOneTrial(
   let naivePeek = false
   let lookPtr = 0
   const lastLookPtr = peekIndices.length - 1
-  const nu = n * 0.25
+  const rho = n / (Math.log(Math.log(Math.E / (ALPHA * ALPHA))) - 2 * Math.log(ALPHA))
   const zAlpha = normInv(1 - ALPHA / 2)
-  const zFinal = normInv(1 - ALPHA / 4)
+  const zFinal = normInv(1 - ALPHA / 2)
 
   for (let i = 0; i < n && lookPtr <= lastLookPtr; i++) {
     sumA += rand() < pA ? 1 : 0
@@ -79,8 +79,8 @@ function runOneTrial(
     const seRel = denom !== 0 ? se / denom : 0
 
     if (!hybrid) {
-      const logTerm = Math.log((k + nu) / (nu * (ALPHA / 2)))
-      const wSeq = seRel * Math.sqrt((k + nu) / k * logTerm)
+      const logTerm = Math.log((k + rho) / (rho * (ALPHA * ALPHA)))
+      const wSeq = seRel * Math.sqrt((k + rho) / k * logTerm)
       if (est + wSeq < 0) hybrid = true
     }
 
@@ -173,7 +173,7 @@ export function HybridHarmCurve() {
 
     const series: { key: 'hybrid' | 'naivePeek'; color: string; label: string }[] = [
       { key: 'naivePeek', color: '#ef4444', label: `Fixed horizon (naïve peeking, K=${K})` },
-      { key: 'hybrid',    color: '#0369a1', label: 'Hybrid split-sided' },
+      { key: 'hybrid',    color: '#0369a1', label: 'Hybrid (harm-only interim monitoring)' },
     ]
 
     const mkLine = (k: 'hybrid' | 'naivePeek') => d3.line<Row>()
@@ -294,7 +294,7 @@ export function HybridHarmCurve() {
               <tr className="bg-neutral-100 text-neutral-800">
                 <th className="border border-neutral-300 px-3 py-1.5 text-left">True effect</th>
                 <th className="border border-neutral-300 px-3 py-1.5 text-right">Fixed horizon (naïve peeking)</th>
-                <th className="border border-neutral-300 px-3 py-1.5 text-right">Hybrid split-sided</th>
+                <th className="border border-neutral-300 px-3 py-1.5 text-right">Hybrid (harm-only interim monitoring)</th>
               </tr>
             </thead>
             <tbody>

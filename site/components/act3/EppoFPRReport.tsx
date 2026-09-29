@@ -4,9 +4,13 @@ import { useEffect, useState } from 'react'
 export function EppoFPRReport({ n = 500, alpha = 0.05, seed = 1234 }: { n?: number; alpha?: number; seed?: number }) {
   const [fpr, setFpr] = useState<number | null>(null)
   useEffect(() => {
-    // Use the same mixture CI as in CoinFlipMeanSim
-    function sequentialHalfWidth(k: number, se: number, alpha: number, nu: number) {
-      return se * Math.sqrt(((k + nu) / k) * Math.log((k + nu) / (nu * alpha)))
+    // Use the corrected Schmit & Miller (2022) sequential-CI multiplier
+    function seqRho(nPlan: number, a: number): number {
+      return nPlan / (Math.log(Math.log(Math.E / (a * a))) - 2 * Math.log(a))
+    }
+    function sequentialHalfWidth(k: number, se: number, a: number, nPlan: number) {
+      const rho = seqRho(nPlan, a)
+      return se * Math.sqrt(((k + rho) / k) * Math.log((k + rho) / (rho * a * a)))
     }
     function mulberry32(seed: number) {
       return function () {

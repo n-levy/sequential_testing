@@ -1580,11 +1580,11 @@ export function ConfidenceSequenceSim() {
       const se = sigma / Math.sqrt(i)
       const ciHalf = z * se
 
-      // Confidence Sequence (Normal mixture boundary from Howard et al.)
-      // u(v) = sqrt((v + ν) * log((v + ν) / (ν * α)))
+      // Confidence Sequence (Normal mixture boundary from Howard et al. / Schmit & Miller)
+      // u(v) = sqrt((v + ν) * log((v + ν) / (ν * α²)))
       // Half-width = u(v) / n where v = n * σ²
       const v = i * sigma * sigma
-      const uVal = Math.sqrt((v + nu) * Math.log((v + nu) / (nu * alpha)))
+      const uVal = Math.sqrt((v + nu) * Math.log((v + nu) / (nu * alpha * alpha)))
       const csHalf = uVal / i
 
       means.push(mean)
@@ -2842,9 +2842,10 @@ function obfZ(k: number): number {
 
 function seqCSMultiplier(n: number, maxN: number): number {
   const totalN = 2 * n
-  const nu = maxN * 2
-  const logTerm = Math.log((totalN + nu) / (nu * ALPHA * ALPHA))
-  return Math.sqrt(((totalN + nu) / totalN) * logTerm)
+  const totalMax = 2 * maxN
+  const rho = totalMax / (Math.log(Math.log(Math.E / (ALPHA * ALPHA))) - 2 * Math.log(ALPHA))
+  const logTerm = Math.log((totalN + rho) / (rho * ALPHA * ALPHA))
+  return Math.sqrt(((totalN + rho) / totalN) * logTerm)
 }
 
 /* ── types ── */
@@ -3258,7 +3259,7 @@ export function DetailedAppendixCode({ abTestSimCode, hybridSimCode }: { abTestS
         <CodeBlock label="Act 13: SequentialMultiplierSim.tsx" code={CODE_SequentialMultiplierSim} />
         <CodeBlock label="Act 14: ComparisonSim.tsx" code={CODE_ComparisonSim} />
         {abTestSimCode && <CodeBlock label="ABTestSim.tsx — shared component: Simulations 1 (peeking problem), 2 (sequential CI), 4 (alternative methods), 5 (magnitude error). Uses alpha/2 for two-sided sequential CI." code={abTestSimCode} />}
-        {hybridSimCode && <CodeBlock label="HybridSim.tsx — shared component: Simulation 3 (hybrid split-sided approach). Uses alpha (not alpha/2) for one-sided harm detection." code={hybridSimCode} />}
+        {hybridSimCode && <CodeBlock label="HybridSim.tsx — shared component: Simulation 3 (hybrid design with harm-only interim monitoring). Uses the sequential test's own two-sided level for one-sided harm detection." code={hybridSimCode} />}
       </div>
     </section>
   )

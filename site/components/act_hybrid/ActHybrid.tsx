@@ -68,10 +68,10 @@ function EppoGuidanceSection() {
 export function ActHybrid() {
   return (
     <div id="act3-hybrid" className="max-w-3xl mx-auto px-4">
-      <h2 className="text-2xl font-bold mb-1">Act 3: The Hybrid Split-Sided Approach</h2>
+      <h2 className="text-2xl font-bold mb-1">Act 3: The Hybrid Design with Harm-Only Interim Monitoring</h2>
 
       <p className="text-neutral-700 mb-8">
-        This act explains the hybrid split-sided approach to sequential testing, following the approach
+        This act explains the hybrid design with harm-only interim monitoring, following the approach
         described by Eppo. (See &ldquo;Hybrid sequential tests&rdquo;{' '}
         <a
           href="https://www.geteppo.com/blog/comparing-frequentist-vs-bayesian-approaches"
@@ -90,7 +90,7 @@ export function ActHybrid() {
         >
           here
         </a>
-        .) It is presented in two parts: first the hybrid approach in general, then the hybrid approach with a split-sided design.
+        .) It is presented in two parts: first the hybrid approach in general, then the version with harm-only interim monitoring.
       </p>
 
       {/* ════ PART 1: THE HYBRID APPROACH ════ */}
@@ -169,10 +169,10 @@ export function ActHybrid() {
 
       </div>
 
-      {/* ════ PART 2: THE SPLIT-SIDED DESIGN ════ */}
+      {/* ════ PART 2: HARM-ONLY INTERIM MONITORING ════ */}
       <div id="act3-part2" className="border-t-2 border-neutral-300 pt-6">
         <h3 className="text-xl font-bold mb-3 text-neutral-900 border-b border-neutral-200 pb-2">
-          Part 2: The Hybrid Split-Sided Design
+          Part 2: Harm-Only Interim Monitoring
         </h3>
 
         <p className="text-neutral-700 mb-4">
@@ -213,7 +213,7 @@ export function ActHybrid() {
             Example: the primary KPI as a guardrail
           </h3>
           <p className="text-neutral-700 mb-4">
-            As an example of the hybrid split-sided approach, consider the common case where the primary
+            As an example of harm-only interim monitoring, consider the common case where the primary
             KPI is also a metric we want to monitor during the experiment and stop early if we are clearly
             harming it — for example a revenue metric where a large negative effect would require immediate
             action. In this case, the significance budget is split between two tests:
@@ -244,7 +244,7 @@ export function ActHybrid() {
         </div>
 
         {/* Benefits */}
-        <h4 className="font-semibold mb-2 text-neutral-900">Benefits of the split-sided design</h4>
+        <h4 className="font-semibold mb-2 text-neutral-900">Benefits of harm-only interim monitoring</h4>
         <p className="text-neutral-700 mb-3">
           These are the flip side of the limitations of early stopping for benefit described in Part 1:
         </p>
@@ -289,7 +289,7 @@ export function ActHybrid() {
                 <th className="border border-neutral-300 p-3 text-left font-semibold">Standard</th>
                 <th className="border border-neutral-300 p-3 text-left font-semibold">Full sequential</th>
                 <th className="border border-neutral-300 p-3 text-left font-semibold">Hybrid (harm &amp; success)</th>
-                <th className="border border-neutral-300 p-3 text-left font-semibold">Hybrid split-sided</th>
+                <th className="border border-neutral-300 p-3 text-left font-semibold">Hybrid (harm-only interim monitoring)</th>
               </tr>
             </thead>
             <tbody>
@@ -349,16 +349,16 @@ export function ActHybrid() {
               <p className="mb-2">
                 During the experiment, each guardrail KPI is monitored with a sequential confidence interval. At any time <InlineMath>{`n`}</InlineMath>, the interval is:
               </p>
-              <BlockMath>{`\\mathrm{CI}_{\\text{seq}}(n) = \\hat{\\tau}(n) \\;\\pm\\; \\widehat{\\mathrm{SE}}(n) \\cdot \\underbrace{\\sqrt{\\frac{n+\\nu}{n}\\log\\!\\frac{n+\\nu}{\\nu\\,\\alpha_g}}}_{m(n,\\,\\alpha_g)}`}</BlockMath>
+              <BlockMath>{`\\mathrm{CI}_{\\text{seq}}(n) = \\hat{\\tau}(n) \\;\\pm\\; \\widehat{\\mathrm{SE}}(n) \\cdot \\underbrace{\\sqrt{\\frac{n+\\rho}{n}\\log\\!\\frac{n+\\rho}{\\rho\\,a_g^2}}}_{m(n,\\,a_g)}`}</BlockMath>
               <ul className="text-sm text-neutral-600 space-y-1 ml-4 list-disc mt-2">
                 <li><InlineMath>{`\\hat{\\tau}(n)`}</InlineMath>: estimated treatment effect at sample size <InlineMath>{`n`}</InlineMath></li>
                 <li><InlineMath>{`\\widehat{\\mathrm{SE}}(n)`}</InlineMath>: estimated standard error at sample size <InlineMath>{`n`}</InlineMath></li>
-                <li><InlineMath>{`m(n, \\alpha_g)`}</InlineMath>: time-varying multiplier (Howard et al., 2021); always <InlineMath>{`> 1.96`}</InlineMath></li>
-                <li><InlineMath>{`\\nu`}</InlineMath>: tuning parameter calibrated to the planned sample size <InlineMath>{`n^*`}</InlineMath></li>
-                <li><InlineMath>{`\\alpha_g`}</InlineMath>: per-guardrail significance level (see below for multiple guardrails)</li>
+                <li><InlineMath>{`m(n, a_g)`}</InlineMath>: time-varying multiplier (Schmit &amp; Miller, 2022 / Howard et al., 2021); always <InlineMath>{`> 1.96`}</InlineMath></li>
+                <li><InlineMath>{`\\rho`}</InlineMath>: tuning parameter calibrated to the planned sample size <InlineMath>{`n^*`}</InlineMath> (<InlineMath>{`\\rho \\approx 0.126\\times n^*`}</InlineMath> for <InlineMath>{`a_g=0.05`}</InlineMath>)</li>
+                <li><InlineMath>{`a_g`}</InlineMath>: two-sided significance level of this guardrail&apos;s sequential test</li>
               </ul>
               <p className="mt-2 text-sm text-neutral-700">
-                This interval is <strong>anytime-valid</strong>: the probability of it ever excluding zero under the null is at most <InlineMath>{`\\alpha_g`}</InlineMath>, no matter how many times you peek. For the standard hybrid, the sequential CI monitors the degradation tail only, so <InlineMath>{`\\alpha_g = \\alpha/2`}</InlineMath> (with <InlineMath>{`\\alpha = 0.05`}</InlineMath>), giving <InlineMath>{`z = 1.96`}</InlineMath>, the same critical value as one tail of a standard 95% confidence interval.
+                This interval is <strong>anytime-valid</strong>: the probability of it ever excluding zero under the null is at most <InlineMath>{`a_g/2`}</InlineMath> on the harm tail, no matter how many times you peek. For the recommended design, the sequential CI monitors the degradation tail only, so <InlineMath>{`a_g = \\alpha/2`}</InlineMath> (with <InlineMath>{`\\alpha = 0.05`}</InlineMath>), giving a harm-tail budget of <InlineMath>{`\\alpha/4 = 0.025`}</InlineMath> and a multiplier of about 3.04 at the planned end date &mdash; the same operating point as Eppo set to a 90% confidence level.
               </p>
             </div>
 
@@ -375,18 +375,25 @@ export function ActHybrid() {
             </div>
 
             <div>
-              <h5 className="font-semibold text-neutral-900 mb-2">3. Multiple guardrail KPIs: Bonferroni correction</h5>
+              <h5 className="font-semibold text-neutral-900 mb-2">3. Multiple guardrail KPIs: choose a low number</h5>
               <p className="mb-2">
-                If there are <InlineMath>{`G`}</InlineMath> guardrail KPIs, apply a Bonferroni correction to keep the family-wise false positive rate at <InlineMath>{`\\alpha`}</InlineMath>:
+                Every guardrail KPI monitored for harm is another opportunity for a false harm alarm. With{' '}
+                <InlineMath>{`J`}</InlineMath> guardrail KPIs, each monitored with its own harm-tail budget (say 2.5%), the
+                chance of at least one false alarm across the whole experiment is at most:
               </p>
-              <BlockMath>{`\\alpha_g = \\frac{\\alpha}{G}`}</BlockMath>
+              <BlockMath>{`\\Pr(\\text{any false harm alarm}) \\leq J \\times 2.5\\%`}</BlockMath>
               <p className="mt-1 text-sm text-neutral-700">
-                For example, with <InlineMath>{`G = 3`}</InlineMath> guardrails and <InlineMath>{`\\alpha = 0.05`}</InlineMath>, set <InlineMath>{`\\alpha_g = 0.0167`}</InlineMath> for each.
+                whatever the dependence between the KPIs (Boole&apos;s inequality), and <InlineMath>{`1 - 0.975^J`}</InlineMath>{' '}
+                when they are independent. This is a per-KPI budget, not a single experiment-wide rate. We do not recommend
+                a specific multiple-testing correction (such as splitting <InlineMath>{`\\alpha`}</InlineMath> equally across
+                guardrails) or a specific number of KPIs &mdash; instead, choose a low number of guardrail KPIs that capture
+                distinct kinds of harm, and decide which KPIs will be used for the early-stopping decision before the test
+                begins.
               </p>
             </div>
 
             <div>
-              <h5 className="font-semibold text-neutral-900 mb-2">4. The union bound (hybrid split-sided variant)</h5>
+              <h5 className="font-semibold text-neutral-900 mb-2">4. The union bound (harm-only interim monitoring)</h5>
               <p className="mb-2">
                 When the primary KPI also needs interim protection against harm, the significance budget is split equally: a sequential test at <InlineMath>{`\\alpha/2`}</InlineMath> during the experiment, and a standard test at <InlineMath>{`\\alpha/2`}</InlineMath> at the end.
               </p>
@@ -402,7 +409,7 @@ export function ActHybrid() {
                 <li>Final: one-tailed test at <InlineMath>{`\\alpha/2`}</InlineMath> using <InlineMath>{`z_{\\alpha/2} = \\Phi^{-1}(1 - \\alpha/2) = 1.96`}</InlineMath> for <InlineMath>{`\\alpha = 0.05`}</InlineMath></li>
               </ul>
               <p className="mt-2 text-sm text-neutral-700">
-                The final test uses <InlineMath>{`z_{\\alpha/2} = 1.96`}</InlineMath>, exactly the same critical value as the benefit side of a classic two-tailed test at <InlineMath>{`\\alpha`}</InlineMath>. There is no extra cost at the end of the experiment: a one-tailed test at <InlineMath>{`\\alpha/2`}</InlineMath> occupies exactly the same region of the normal distribution as one tail of a classic two-tailed test at <InlineMath>{`\\alpha`}</InlineMath>. The only cost of the hybrid split-sided variant is the wider sequential confidence interval <em>during</em> the experiment.
+                The final test uses <InlineMath>{`z_{\\alpha/2} = 1.96`}</InlineMath>, exactly the same critical value as the benefit side of a classic two-tailed test at <InlineMath>{`\\alpha`}</InlineMath>. There is no extra cost at the end of the experiment: a one-tailed test at <InlineMath>{`\\alpha/2`}</InlineMath> occupies exactly the same region of the normal distribution as one tail of a classic two-tailed test at <InlineMath>{`\\alpha`}</InlineMath>. The only cost of harm-only interim monitoring is the wider sequential confidence interval <em>during</em> the experiment.
               </p>
             </div>
 
@@ -414,9 +421,9 @@ export function ActHybrid() {
         <div id="act3-harm-power" className="mb-8">
           <h4 className="font-semibold mb-2 text-neutral-900">Simulation: power to detect harm</h4>
           <p className="text-neutral-700 mb-4">
-            A question that often comes up: <em>how likely is the hybrid split-sided design to detect
+            A question that often comes up: <em>how likely is harm-only interim monitoring to detect
             harm, if there is any?</em> The simulation below reports the share of 1,000 repetitions
-            in which each approach flags a harmful effect. The hybrid split-sided design detects harm
+            in which each approach flags a harmful effect. Harm-only interim monitoring detects harm
             either during the experiment (one-sided sequential CI at{' '}
             <InlineMath>{`\\alpha/2`}</InlineMath> on the guardrail) or at the planned end date
             (two-sided standard CI at <InlineMath>{`\\alpha/2`}</InlineMath>). Compare it to the naïve
@@ -427,7 +434,7 @@ export function ActHybrid() {
           <ABTestSim
             layers={['hybrid-split', 'fixed-ci']}
             showPeekStats
-            simulationTitle="Simulation: power to detect harm under the hybrid split-sided design."
+            simulationTitle="Simulation: power to detect harm under harm-only interim monitoring."
             defaultEffect={-0.05}
             defaultN={10000}
             K={14}
@@ -442,7 +449,7 @@ export function ActHybrid() {
                 {14} times at equal time intervals during the test using an uncorrected standard{' '}
                 <InlineMath>{`\\alpha = 0.05`}</InlineMath> confidence interval at each look.
                 <br />
-                <span className="text-blue-800">Hybrid split-sided</span> &mdash; continuous monitoring
+                <span className="text-blue-800">Hybrid (harm-only interim monitoring)</span> &mdash; continuous monitoring
                 that stops as soon as the guardrail sequential CI signals harm, plus a final test at
                 the planned end date (each at <InlineMath>{`\\alpha/2`}</InlineMath>).
               </>
@@ -487,7 +494,7 @@ export function ActHybrid() {
               identical to one tail of a standard 95% confidence interval.
             </p>
             <p>
-              In many cases, the hybrid split-sided approach provides a good balance: continuous
+              In many cases, the hybrid design with harm-only interim monitoring provides a good balance: continuous
               sequential monitoring gives you the ability to stop early if the experiment is clearly
               causing harm, while the standard fixed-horizon analysis at the planned end date preserves
               full statistical power for identifying beneficial effects.

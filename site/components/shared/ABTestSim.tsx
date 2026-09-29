@@ -4,8 +4,10 @@
 //   Simulation 4 (Act 4): alternative methods comparison — layers: ['fixed-ci', 'sequential-ci', 'pocock', 'obf', 'bonferroni', 'harm-detect']
 //   Simulation 5 (Act 5): magnitude error, early stopping bias — layers: ['fixed-ci', 'sequential-ci'], both peek K times
 //
-// Two-sided sequential CI formula: m(t) = sqrt((t+ν)/t · log((t+ν)/(ν·(α/2))))
-// Uses alpha/2 per tail so that Boole's inequality gives total FP ≤ α (two-sided control).
+// Two-sided sequential CI formula (Schmit & Miller 2022 / Howard et al. 2021, eq. 14):
+//   m(n) = sqrt((n+ρ)/n · log((n+ρ)/(ρ·a²))),  ρ = M / (log(log(e/a²)) − 2·log(a))
+// `a` is the two-sided level of the sequential test (the `alpha` slider below) and M is
+// the planned per-arm sample size. Each tail then has error of at most about a/2.
 // Contrast with HybridSim.tsx which uses alpha for one-sided harm detection.
 "use client"
 
@@ -21,13 +23,13 @@ export type SimLayer =
   | 'bonferroni'
   | 'harm-detect'
   | 'hybrid-split'
-  // Combined detection channel for the hybrid split-sided design.
+  // Combined detection channel for the hybrid design with harm-only interim monitoring.
   // Fires if EITHER (a) the one-sided sequential CI at α/2 signals harm at any peek
   //                  (upper bound < 0, using the same multiplier as `sequential-ci`),
   //                  OR
   //                (b) at the final peek only, a two-sided fixed CI at α/2 excludes zero
   //                    (critical value z_{α/4} instead of z_{α/2}).
-  // Represents the total power of the hybrid split-sided design to reject H0
+  // Represents the total power of the hybrid design (harm-only interim monitoring) to reject H0
   // (in either direction, though under a truly harmful effect harm-side detection dominates).
   // Not drawn on the trajectory chart — used only for the 1,000-repetition table.
 
@@ -98,13 +100,33 @@ function clampProbability(p: number): number {
 
 const LAYER_STYLE: Record<SimLayer, { color: string; label: string }> = {
   'fixed-ci':      { color: '#ef4444', label: 'Standard 95% confidence interval' },
-  'sequential-ci': { color: '#2563eb', label: 'Sequential confidence interval (Eppo, 2022)' },
+  'sequential-ci': { color: '#2563eb', label: "Sequential confidence interval (Eppo)" },
   'pocock':        { color: '#f59e0b', label: 'Pocock' },
   'obf':           { color: '#1d4ed8', label: "O'Brien–Fleming" },
   'bonferroni':    { color: '#0d9488', label: 'Bonferroni' },
   'harm-detect':   { color: '#7c3aed', label: 'Three Standard Deviations (one-sided)' },
-  'hybrid-split':  { color: '#0369a1', label: 'Hybrid split-sided design' },
+  'hybrid-split':  { color: '#0369a1', label: 'Hybrid with harm-only interim monitoring' },
 }
+
+// ρ tuning parameter (Schmit & Miller 2022): makes the sequential CI tightest near
+// the planned sample size nPlan. `a` is the two-sided level of the sequential test.
+function seqRho(nPlan: number, a: number): number {
+  return nPlan / (Math.log(Math.log(Math.E / (a * a))) - 2 * Math.log(a))
+}
+
+// Always-valid CI multiplier m(n): half-width = m(n) * SE.
+function seqMultiplier(n: number, nPlan: number, a: number): number {
+  const rho = seqRho(nPlan, a)
+  return Math.sqrt((n + rho) / n * Math.log((n + rho) / (rho * a * a)))
+}
+
+// Pocock (1977) and O'Brien-Fleming (1979) harm-tail boundaries, calibrated offline by
+// 2,000,000 simulated Gaussian paths at K=14 equally spaced peeks to a harm-tail error
+// rate of 2.5% (see the companion repository, code/utils.py:calibrate_constant). These
+// constants are specific to K=14; changing the peeks slider does not recalibrate them.
+const POCOCK_C = 2.62
+const OBF_C = 2.11
+const OBF_CALIBRATED_K = 14
 
 function mulberry32(seed: number) {
   return function () {
@@ -251,16 +273,13 @@ export function ABTestSim({
           if (layer === 'fixed-ci') {
             w = denom !== 0 ? 100 * Z_975 * t.ses[i] / denom : 0;
           } else if (layer === 'sequential-ci') {
-            const nu = n * 0.25;
             const t_i = i + 1;
-            const logTerm = Math.log((t_i + nu) / (nu * (alpha / 2)))
-            w = denom !== 0 ? 100 * t.ses[i] * Math.sqrt((t_i + nu) / t_i * logTerm) / denom : 0;
+            w = denom !== 0 ? 100 * t.ses[i] * seqMultiplier(t_i, n, alpha) / denom : 0;
           } else if (layer === 'pocock') {
-            const cP = 2.41;
-            w = denom !== 0 ? 100 * t.ses[i] * cP / denom : 0;
+            w = denom !== 0 ? 100 * t.ses[i] * POCOCK_C / denom : 0;
           } else if (layer === 'obf') {
             const k = Math.max(1, Math.round((i + 1) / n * kState));
-            const z = normInv(1 - alpha / (2 * kState / k));
+            const z = OBF_C * Math.sqrt(OBF_CALIBRATED_K / k);
             w = denom !== 0 ? 100 * t.ses[i] * z / denom : 0;
           } else if (layer === 'bonferroni') {
             const z = normInv(1 - alpha / (2 * kState));
@@ -268,13 +287,10 @@ export function ABTestSim({
           } else if (layer === 'harm-detect') {
             w = denom !== 0 ? 100 * t.ses[i] * 3.0 / denom : 0;
           } else if (layer === 'hybrid-split') {
-            // Sequential CI at α/2 (matches existing sequential-ci layer's upper bound).
-            // We compute w for the sequential channel here; the final-peek two-sided
-            // fixed-CI-at-α/2 check is added below as a separate condition.
-            const nu = n * 0.25;
+            // Sequential CI at two-sided level `alpha` (matches existing sequential-ci
+            // layer's upper bound); the final-peek fixed CI at alpha is added below.
             const t_i = i + 1;
-            const logTerm = Math.log((t_i + nu) / (nu * (alpha / 2)))
-            w = denom !== 0 ? 100 * t.ses[i] * Math.sqrt((t_i + nu) / t_i * logTerm) / denom : 0;
+            w = denom !== 0 ? 100 * t.ses[i] * seqMultiplier(t_i, n, alpha) / denom : 0;
           }
           // Detection rule per layer:
           //   harm-detect  : one-sided upper bound < 0  (harm only)
@@ -288,7 +304,7 @@ export function ABTestSim({
             const isInterimHarm = (est + w < 0)
             let isFinalCrossing = false
             if (lookPtr === lastLookPtr) {
-              const zFinal = normInv(1 - alpha / 4) // two-sided at α/2 ⇒ per-tail α/4
+              const zFinal = normInv(1 - alpha / 2) // standard fixed-horizon CI at level alpha
               const wFinal = denom !== 0 ? 100 * t.ses[i] * zFinal / denom : 0
               isFinalCrossing = (est - wFinal > 0) || (est + wFinal < 0)
             }
@@ -425,21 +441,17 @@ export function ABTestSim({
         .x((_d, i) => x(dayOf(i)))
         .y0((_d, i) => {
           const denom = traj.meansA[i]
-          const nu = n * 0.25
           const t_i = i + 1
-          const logTerm = Math.log((t_i + nu) / (nu * (alpha / 2)))
           const w = denom !== 0
-            ? 100 * traj.ses[i] * Math.sqrt((t_i + nu) / t_i * logTerm) / denom
+            ? 100 * traj.ses[i] * seqMultiplier(t_i, n, alpha) / denom
             : 0
           return y(effectPct[i] - w)
         })
         .y1((_d, i) => {
           const denom = traj.meansA[i]
-          const nu = n * 0.25
           const t_i = i + 1
-          const logTerm = Math.log((t_i + nu) / (nu * (alpha / 2)))
           const w = denom !== 0
-            ? 100 * traj.ses[i] * Math.sqrt((t_i + nu) / t_i * logTerm) / denom
+            ? 100 * traj.ses[i] * seqMultiplier(t_i, n, alpha) / denom
             : 0
           return y(effectPct[i] + w)
         })
@@ -454,29 +466,24 @@ export function ABTestSim({
     }
 
     if (layers.includes('hybrid-split')) {
-      // Draws the sequential CI band for the split-sided hybrid guardrail channel.
-      // Uses the same formula as `sequential-ci` (α/2 in the log term), because the
-      // upper edge of a two-sided sequential CI at α equals the one-sided harm
-      // threshold at α/2 — which is exactly the hybrid split-sided guardrail check.
+      // Draws the sequential CI band for the harm-only interim-monitoring channel.
+      // Uses the same formula as `sequential-ci` (two-sided level `alpha`), because the
+      // upper edge of that CI is exactly the harm-only guardrail check.
       const hybArea = d3.area<number>()
         .x((_d, i) => x(dayOf(i)))
         .y0((_d, i) => {
           const denom = traj.meansA[i]
-          const nu = n * 0.25
           const t_i = i + 1
-          const logTerm = Math.log((t_i + nu) / (nu * (alpha / 2)))
           const w = denom !== 0
-            ? 100 * traj.ses[i] * Math.sqrt((t_i + nu) / t_i * logTerm) / denom
+            ? 100 * traj.ses[i] * seqMultiplier(t_i, n, alpha) / denom
             : 0
           return y(effectPct[i] - w)
         })
         .y1((_d, i) => {
           const denom = traj.meansA[i]
-          const nu = n * 0.25
           const t_i = i + 1
-          const logTerm = Math.log((t_i + nu) / (nu * (alpha / 2)))
           const w = denom !== 0
-            ? 100 * traj.ses[i] * Math.sqrt((t_i + nu) / t_i * logTerm) / denom
+            ? 100 * traj.ses[i] * seqMultiplier(t_i, n, alpha) / denom
             : 0
           return y(effectPct[i] + w)
         })
@@ -489,11 +496,11 @@ export function ABTestSim({
         .attr('stroke-opacity', 0.85)
         .attr('d', hybArea as d3.Area<number>)
 
-      // Mark the final-peek two-sided fixed CI at α/2 as an error bar at the last day.
+      // Mark the final-peek standard fixed CI at level alpha as an error bar at the last day.
       const iEnd = n - 1
       if (iEnd >= 0 && traj.meansA[iEnd] > 0) {
         const denomEnd = traj.meansA[iEnd]
-        const zFinal = normInv(1 - alpha / 4) // per-tail α/4 => two-sided at α/2
+        const zFinal = normInv(1 - alpha / 2) // standard fixed-horizon CI at level alpha
         const wEnd = 100 * traj.ses[iEnd] * zFinal / denomEnd
         const xEnd = x(daysTotal)
         const yLo = y(effectPct[iEnd] - wEnd)
@@ -515,7 +522,7 @@ export function ABTestSim({
     }
 
     if (layers.includes('pocock')) {
-      const cP = 2.41
+      const cP = POCOCK_C
       const pocockArea = d3.area<number>()
         .x((_d, i) => x(dayOf(i)))
         .y0((_d, i) => {
@@ -544,14 +551,14 @@ export function ABTestSim({
         .y0((_d, i) => {
           const denom = traj.meansA[i]
           const k = Math.max(1, Math.round((i + 1) / n * kState))
-          const z = normInv(1 - alpha / (2 * kState / k))
+          const z = OBF_C * Math.sqrt(OBF_CALIBRATED_K / k)
           const w = denom !== 0 ? 100 * traj.ses[i] * z / denom : 0
           return y(effectPct[i] - w)
         })
         .y1((_d, i) => {
           const denom = traj.meansA[i]
           const k = Math.max(1, Math.round((i + 1) / n * kState))
-          const z = normInv(1 - alpha / (2 * kState / k))
+          const z = OBF_C * Math.sqrt(OBF_CALIBRATED_K / k)
           const w = denom !== 0 ? 100 * traj.ses[i] * z / denom : 0
           return y(effectPct[i] + w)
         })

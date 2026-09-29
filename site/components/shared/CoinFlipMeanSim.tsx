@@ -66,9 +66,13 @@ function simulateTrajectory(n: number, pHeads: number, seed: number) {
   return { means, ses }
 }
 
-/** Half-width of the Eppo (2022) / Howard normal-mixture sequential CI. */
-function sequentialHalfWidth(k: number, se: number, alpha: number, nu: number) {
-  return se * Math.sqrt(((k + nu) / k) * Math.log((k + nu) / (nu * alpha)))
+/** Half-width of the Eppo / Schmit & Miller (2022) normal-mixture sequential CI. */
+function seqRho(nPlan: number, a: number): number {
+  return nPlan / (Math.log(Math.log(Math.E / (a * a))) - 2 * Math.log(a))
+}
+function sequentialHalfWidth(k: number, se: number, a: number, nPlan: number) {
+  const rho = seqRho(nPlan, a)
+  return se * Math.sqrt(((k + rho) / k) * Math.log((k + rho) / (rho * a * a)))
 }
 
 /**

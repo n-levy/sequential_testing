@@ -39,7 +39,7 @@ const IN_DEPTH_ITEMS = [
   { id: 'act-11', label: 'Act 10 – Eppo Pipeline' },
   { id: 'act-13', label: 'Act 11 – Sequential CI' },
   { id: 'act-14', label: 'Act 12 – Alternative Methods' },
-  { id: 'hybrid', label: 'Hybrid Split-Sided Approach' },
+  { id: 'hybrid', label: 'Hybrid: Harm-Only Interim Monitoring' },
   { id: 'summary', label: 'Summary' },
   { id: 'references', label: 'References' },
   { id: 'appendix', label: 'Appendix' },

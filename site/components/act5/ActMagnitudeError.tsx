@@ -28,7 +28,27 @@ export function ActMagnitudeError() {
         <p className="text-neutral-700">
           This upward bias in significant results is called the <strong>winner&rsquo;s curse</strong>{' '}
           or <strong>magnitude error</strong>. Early stopping amplifies the problem: the earlier
-          the test stops, the noisier the estimate, and the more inflated it tends to be.
+          the test stops, the noisier the estimate, and the more inflated it tends to be. The same
+          bias applies on the harm side: a test stopped early for harm overstates the harm, which
+          matters if the estimate is used later, for example in a post-mortem.
+        </p>
+      </div>
+
+      <div className="bg-neutral-50 border border-neutral-300 rounded-lg p-5 mb-6">
+        <h5 className="font-semibold mb-2 text-neutral-900">How much inflation, in this example</h5>
+        <p className="text-neutral-700 mb-2">
+          At a true effect of −10% (n = 10,000 per arm, 10% baseline, K = 14 daily peeks), tests
+          stopped early for harm by Eppo&apos;s sequential CI reported on average <strong>1.87×</strong> the
+          true effect. For comparison:
+        </p>
+        <ul className="list-disc pl-5 space-y-1 text-neutral-700">
+          <li>Significant results of a single test at the planned end (no early stopping): <strong>1.23×</strong></li>
+          <li>All end-of-test estimates (significant or not): <strong>1.01×</strong></li>
+          <li>O&apos;Brien&ndash;Fleming early stops: <strong>1.47×</strong></li>
+        </ul>
+        <p className="text-neutral-700 mt-2">
+          Most of the exaggeration after an early stop is therefore due to stopping early, not due to
+          which rule was used to stop.
         </p>
       </div>
 
@@ -70,9 +90,9 @@ export function ActMagnitudeError() {
 
       {/* Why hybrid helps */}
       <div className="bg-blue-50 border border-blue-300 rounded-lg p-5 mb-8">
-        <h4 className="font-semibold mb-2 text-blue-900">One of the reasons to prefer the hybrid split-sided approach</h4>
+        <h4 className="font-semibold mb-2 text-blue-900">One of the reasons to prefer harm-only interim monitoring</h4>
         <p className="text-neutral-700 mb-2">
-          In the hybrid split-sided approach (Act 3), the primary KPI is <em>never</em> stopped early because of benefit: it is
+          In the hybrid design with harm-only interim monitoring (Act 3), the primary KPI is <em>never</em> stopped early because of benefit: it is
           always analysed at the planned end date with a standard confidence interval. This means:
         </p>
         <ul className="list-disc pl-5 space-y-1 text-neutral-700">
@@ -132,6 +152,7 @@ export function ActMagnitudeError() {
           showPeekStats={true}
           showMeanEffects={true}
           showDecision={false}
+          K={14}
           simulationTitle="Simulation 5: magnitude error — mean effect at stopping vs. at end of test, across 1,000 repetitions."
           defaultEffect={0.1}
         />
@@ -152,7 +173,7 @@ export function ActMagnitudeError() {
             <strong>What to do:</strong>
           </p>
           <ul className="list-disc pl-5 space-y-1">
-            <li>If estimating the magnitude of the effect is important, prefer the hybrid split-sided approach.</li>
+            <li>If estimating the magnitude of the effect is important, prefer the hybrid design with harm-only interim monitoring.</li>
             <li>If you do stop early, acknowledge that the point estimate is likely an overestimate.</li>
             <li>Use the measured effect for the yes/no decision (is there an effect?) but not
             for magnitude-dependent decisions (how large is the effect?) without applying a

@@ -255,15 +255,15 @@ export function DetailedAct14() {
           </div>
         </div>
 
-        {/* Implementing hybrid without Eppo (2022) */}
+        {/* Implementing harm-only interim monitoring without Eppo */}
         <h3 className="text-2xl font-bold text-neutral-900 mb-4">
-          Implementing the Hybrid Split-Sided Approach Without Eppo (2022)
+          Implementing Harm-Only Interim Monitoring Without Eppo
         </h3>
 
         <p className="mb-4 text-neutral-700">
-          Act 13 introduced the hybrid split-sided approach: sequential confidence interval on guardrail KPIs for early
-          abort, standard confidence interval on the primary KPI at the planned end date. Below is how to
-          implement it using any of the three correction methods above.
+          Act 13 introduced the hybrid design with harm-only interim monitoring: sequential confidence interval on
+          guardrail KPIs for early abort, standard confidence interval on the primary KPI at the planned end date.
+          Below is how to implement it using any of the three group-sequential methods above.
         </p>
 
         <h4 className="text-lg font-bold text-neutral-900 mb-3">Step 1: Classify your metrics</h4>
@@ -291,20 +291,18 @@ export function DetailedAct14() {
           </table>
         </div>
 
-        <h4 className="text-lg font-bold text-neutral-900 mb-3">Step 2: Set guardrail significance levels</h4>
+        <h4 className="text-lg font-bold text-neutral-900 mb-3">Step 2: Choose a low number of guardrail KPIs</h4>
         <p className="mb-2 text-neutral-700">
-          If you have <InlineMath>{`G`}</InlineMath> guardrail KPIs, set{' '}
-          <InlineMath>{`\\alpha_{\\text{guardrail}} = \\alpha / G`}</InlineMath> for each one.
+          Every guardrail KPI monitored for harm is another opportunity for a false harm alarm. With{' '}
+          <InlineMath>{`J`}</InlineMath> guardrail KPIs, each monitored with its own per-KPI error budget (say 2.5%),
+          the chance of at least one false alarm across the whole experiment is at most{' '}
+          <InlineMath>{`J \times 2.5\%`}</InlineMath> whatever the dependence between them (Boole&apos;s inequality),
+          and <InlineMath>{`1 - 0.975^J`}</InlineMath> when they are independent. We do not recommend a specific
+          multiple-testing correction (such as splitting <InlineMath>{`\\alpha`}</InlineMath> equally across
+          guardrails) or a specific number of KPIs. Instead: choose a low number of guardrail KPIs that capture
+          distinct kinds of harm, and decide which KPIs will be used for the early-stopping decision before the
+          test begins.
         </p>
-        <p className="mb-2 text-neutral-700">
-          <strong>Example:</strong> 3 guardrails (<InlineMath>{`G = 3`}</InlineMath>),{' '}
-          <InlineMath>{`\\alpha = 0.05`}</InlineMath>, 4 weekly peeks (<InlineMath>{`K = 4`}</InlineMath>):
-        </p>
-        <BlockMath>{`\\alpha_{\\text{per guardrail}} = \\frac{0.05}{3} \\approx 0.0167`}</BlockMath>
-        <p className="mb-2 text-neutral-700">
-          Then apply Bonferroni within each guardrail:
-        </p>
-        <BlockMath>{`z^* = \\Phi^{-1}\\!\\bigl(1 - \\tfrac{0.0167}{2 \\times 4}\\bigr) = \\Phi^{-1}(0.9979) \\approx 2.86`}</BlockMath>
 
         <h4 className="text-lg font-bold text-neutral-900 mb-3 mt-6">Step 3: Run the experiment</h4>
         <p className="mb-2 text-neutral-700">At each scheduled peek:</p>
@@ -327,10 +325,10 @@ export function DetailedAct14() {
         <div className="bg-blue-100 border border-blue-500 rounded-lg p-6 mb-8">
           <h4 className="font-bold text-blue-900 mb-3">Key Takeaway</h4>
           <div className="text-neutral-800 space-y-2">
-            <p><strong>The hybrid split-sided approach without Eppo (2022):</strong></p>
+            <p><strong>Harm-only interim monitoring without Eppo:</strong></p>
             <ul className="list-disc list-inside ml-4 space-y-1">
-              <li>Apply Bonferroni across your <InlineMath>{`G`}</InlineMath> guardrail KPIs: <InlineMath>{`\\alpha_g = \\alpha / G`}</InlineMath>.</li>
-              <li>Within each guardrail, use O&apos;Brien&ndash;Fleming (best) or Bonferroni (simplest).</li>
+              <li>Choose a low number of guardrail KPIs that capture distinct kinds of harm (Step 2 above).</li>
+              <li>Within each guardrail, use O&apos;Brien&ndash;Fleming (best power) or Bonferroni (simplest).</li>
               <li>Test the primary KPI once at the end with a standard confidence interval &mdash; no correction needed.</li>
             </ul>
           </div>
@@ -353,7 +351,7 @@ export function DetailedAct14() {
           </p>
           <ul className="list-disc list-inside ml-4 space-y-1">
             <li>
-              <strong>Hybrid split-sided design</strong> &mdash; one-sided sequential CI at{' '}
+              <strong>Hybrid (harm-only interim monitoring)</strong> &mdash; one-sided sequential CI at{' '}
               <InlineMath>{`\\alpha/2`}</InlineMath> during the experiment, plus a two-sided fixed CI
               at <InlineMath>{`\\alpha/2`}</InlineMath> at the end. Detection fires if either channel
               triggers.
@@ -383,7 +381,7 @@ export function DetailedAct14() {
           Note: naïve peeking with an uncorrected fixed CI has higher raw detection probability, but
           this is inflated by its uncontrolled Type I error &mdash; you are also more likely to
           &ldquo;detect harm&rdquo; when there is none (see the curve at{' '}
-          <InlineMath>{`\\Delta = 0`}</InlineMath>). The hybrid split-sided design maintains valid
+          <InlineMath>{`\\Delta = 0`}</InlineMath>). The hybrid design with harm-only interim monitoring maintains valid
           Type I control while still detecting genuine harm early.
         </p>
 

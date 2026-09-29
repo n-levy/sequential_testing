@@ -6,7 +6,7 @@ export function HybridApproach() {
       <div className="max-w-4xl mx-auto px-4">
         <div className="text-center mb-10">
           <h2 className="text-3xl font-bold text-neutral-900 mb-3">
-            The Hybrid Split-Sided Approach
+            Hybrid: Harm-Only Interim Monitoring
           </h2>
           <p className="text-neutral-600">
             Sequential monitoring for guardrail KPIs; fixed-horizon analysis for the primary KPI.
@@ -21,7 +21,7 @@ export function HybridApproach() {
             second&rdquo;) is the best default.
           </p>
           <p>
-            The <strong>hybrid split-sided approach</strong> assigns each metric to a
+            The <strong>hybrid design with harm-only interim monitoring</strong> assigns each metric to a
             different analysis regime. <strong>Guardrail KPIs</strong> are monitored with
             a sequential confidence interval throughout the experiment, allowing early
             stopping the moment harm is detected. The <strong>primary KPI</strong> is
@@ -30,7 +30,7 @@ export function HybridApproach() {
           </p>
         </div>
 
-        <h3 className="text-2xl font-bold text-neutral-900 mb-4">Why hybrid split-sided?</h3>
+        <h3 className="text-2xl font-bold text-neutral-900 mb-4">Why harm-only interim monitoring?</h3>
 
         <ul className="list-disc ml-6 space-y-2 text-neutral-700 mb-8">
           <li>
@@ -112,7 +112,7 @@ export function HybridApproach() {
         <div className="bg-blue-100 border border-blue-500 rounded-lg p-6 mb-4">
           <h4 className="font-bold text-blue-900 mb-3">Takeaway</h4>
           <p className="text-neutral-800">
-            For most short-to-medium-length tests, the hybrid split-sided approach works well: <strong>sequential CI for guardrail monitoring, standard fixed CI at the planned end date for the primary KPI decision</strong>. For long-running tests where the horizon is uncertain, relying on the sequential CI alone is the more appropriate choice.
+            For most short-to-medium-length tests, the hybrid design with harm-only interim monitoring works well: <strong>sequential CI for guardrail monitoring, standard fixed CI at the planned end date for the primary KPI decision</strong>. For long-running tests where the horizon is uncertain, relying on the sequential CI alone is the more appropriate choice.
           </p>
         </div>
       </div>

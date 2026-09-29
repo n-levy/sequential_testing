@@ -33,8 +33,9 @@ export function MathReference() {
                 ['n_0(t),\\ n_1(t)', 'Number of users in control / treatment at time t', 'Throughout'],
                 ['n', 'Total observations: n_0(t) + n_1(t)', 'Act 2, Step 6'],
                 ['\\alpha', 'Significance level (typically 0.05)', 'Throughout'],
-                ['\\nu', 'Tuning parameter calibrated to the planned sample size', 'Act 2, Step 6 (sequential confidence interval)'],
-                ['M', 'Expected total sample size', 'Act 2, Step 6'],
+                ['a', 'Two-sided significance level of the sequential test', 'Act 2, Step 6 (sequential confidence interval)'],
+                ['\rho', 'Tuning parameter calibrated to the planned sample size (Schmit & Miller, 2022): \rho = M/(\log\log(e/a^2) - 2\log a)', 'Act 2, Step 6 (sequential confidence interval)'],
+                ['M', 'Planned (maximum) sample size per group', 'Act 2, Step 6'],
                 ['K', 'Number of pre-planned analysis times (peeks)', 'Act 3'],
                 ['k', 'Current peek number (1 to K)', 'Act 3'],
                 ['t_k', 'Information fraction at peek k: k/K', 'Act 3 (OBF)'],
@@ -44,7 +45,7 @@ export function MathReference() {
                 ['c_P', 'Pocock constant critical value', 'Act 3 (Pocock)'],
                 ['c_k^{\\text{OBF}}', 'O\'Brien\u2013Fleming critical value at peek k', 'Act 3 (OBF)'],
                 ['\\Phi^{-1}', 'Inverse standard Normal CDF (quantile function)', 'Act 3'],
-                ['\\rho', 'Correlation between pre-experiment and experiment metrics', 'Act 2, Step 3'],
+                ['\rho', 'Correlation between pre-experiment and experiment metrics (CUPED); distinct from the sequential tuning parameter above', 'Act 2, Step 3'],
                 ['G', 'Number of guardrail KPIs', 'Act 3 (Hybrid)'],
               ].map(([sym, meaning, where], i) => (
                 <tr key={i} className={i % 2 === 1 ? 'bg-neutral-50' : ''}>
@@ -68,9 +69,9 @@ export function MathReference() {
           </div>
 
           <div className="bg-white border border-neutral-300 rounded-lg p-5">
-            <h4 className="font-bold text-neutral-900 mb-2">Sequential Confidence Interval (Howard et al., 2021)</h4>
-            <BlockMath>{`\\text{CI}(t) = \\hat{\\tau}(t) \\;\\pm\\; \\hat{\\sigma}_{\\hat{\\tau}}(t) \\cdot \\sqrt{\\frac{n + \\nu}{n} \\cdot \\log\\!\\frac{n + \\nu}{\\nu \\alpha}}`}</BlockMath>
-            <p className="text-sm text-neutral-600 mt-2">Valid at <em>all times simultaneously</em>. The sequential multiplier first decreases, reaching a minimum before <InlineMath>{`n^*`}</InlineMath>, then slowly rises. It always stays above 1.96.</p>
+            <h4 className="font-bold text-neutral-900 mb-2">Sequential Confidence Interval (Schmit &amp; Miller, 2022 / Howard et al., 2021)</h4>
+            <BlockMath>{`\\text{CI}(t) = \\hat{\\tau}(t) \\;\\pm\\; \\hat{\\sigma}_{\\hat{\\tau}}(t) \\cdot \\sqrt{\\frac{n + \\rho}{n} \\cdot \\log\\!\\frac{n + \\rho}{\\rho\\, a^2}}`}</BlockMath>
+            <p className="text-sm text-neutral-600 mt-2">Valid at <em>all times simultaneously</em>. The sequential multiplier first decreases, reaching a minimum near the planned sample size <InlineMath>{`n^*`}</InlineMath> (about <InlineMath>{`1.03\times n^*`}</InlineMath>), then slowly rises. It always stays above 1.96.</p>
           </div>
 
           <div className="bg-white border border-neutral-300 rounded-lg p-5">
