@@ -43,7 +43,7 @@ export function DetailedAct2() {
             <p>
               Individual paths can wander far from zero, but the distribution of{' '}
               <InlineMath>{`S_n`}</InlineMath> across many realisations is centred at zero
-              with standard deviation <InlineMath>{`\sqrt{n}`}</InlineMath>. This spreading
+              with standard deviation <InlineMath>{`\\sqrt{n}`}</InlineMath>. This spreading
               has a precise characterisation via the Central Limit Theorem.
             </p>
           </div>

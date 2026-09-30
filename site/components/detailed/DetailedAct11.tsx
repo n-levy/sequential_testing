@@ -11,14 +11,14 @@ export function DetailedAct11() {
       <div className="max-w-4xl mx-auto px-4">
         <div className="text-center mb-12">
           <h2 className="text-3xl font-bold text-neutral-900 mb-4">
-            Act 11 &mdash; The Eppo (2022) Pipeline, Step by Step
+            Act 11 &mdash; The Eppo Pipeline, Step by Step
           </h2>
         </div>
 
-        {/* Intuition: How does Eppo (2022) put it all together? */}
+        {/* Intuition: How does Eppo put it all together? */}
         <div className="bg-blue-50 border border-blue-400 rounded-lg p-6 mb-8">
           <p className="text-neutral-800">
-            Eppo's (2022) pipeline takes raw data, removes predictable noise, and produces an anytime-valid confidence interval for the treatment effect. Each step builds on the previous acts.
+            Eppo&apos;s pipeline takes raw data, removes predictable noise, and produces an anytime-valid confidence interval for the treatment effect. Each step builds on the previous acts.
           </p>
         </div>
 
@@ -64,7 +64,7 @@ export function DetailedAct11() {
         {/* Step 3 */}
         <h3 className="text-xl font-bold text-neutral-900 mb-3">Step 3: Regression adjustment (noise removal)</h3>
         <div className="text-neutral-700 space-y-3 mb-8">
-          <p>This is where Eppo (2022) <em>generalises</em> the CUPED idea from <a href="#ref-deng-2013" className="text-blue-600 hover:text-blue-800">Deng et al. (2013)</a>.</p>
+          <p>This is where Eppo <em>generalises</em> the CUPED idea from <a href="#ref-deng-2013" className="text-blue-600 hover:text-blue-800">Deng et al. (2013)</a>.</p>
           <p>For each group <strong>separately</strong>:</p>
           <ol className="list-decimal ml-6 space-y-1">
             <li>Fit a regression model predicting <InlineMath>{`Y`}</InlineMath> from the pre-experiment covariates <InlineMath>{`X`}</InlineMath>.</li>
@@ -144,23 +144,23 @@ export function DetailedAct11() {
         <div className="text-neutral-700 space-y-3 mb-8">
           <p>
             Plug the estimated treatment effect and its standard error into the Normal
-            mixture boundary from Act 9:
+            mixture boundary from Act 9, using the <a href="#ref-schmit-miller-2024" className="text-blue-600 hover:text-blue-800">Schmit &amp; Miller (2022)</a> reparameterisation:
           </p>
           <div className="bg-white border-2 border-green-200 rounded-lg p-4">
-            <BlockMath>{`\\text{CI}(t) = \\hat{\\tau}(t) \\pm \\hat{\\sigma}_{\\hat{\\tau}}(t) \\cdot \\sqrt{\\frac{n + \\nu}{n} \\cdot \\log\\!\\frac{n + \\nu}{\\nu \\alpha}}`}</BlockMath>
+            <BlockMath>{`\\text{CI}(t) = \\hat{\\tau}(t) \\pm \\hat{\\sigma}_{\\hat{\\tau}}(t) \\cdot \\sqrt{\\frac{n + \\rho}{n} \\cdot \\log\\!\\frac{n + \\rho}{\\rho\\, a^2}}`}</BlockMath>
           </div>
           <ul className="mb-3 text-sm text-neutral-600 space-y-1 ml-4 list-disc">
             <li><InlineMath>{`\\text{CI}(t)`}</InlineMath>:the sequential confidence interval for the treatment effect at time <InlineMath>{`t`}</InlineMath>; valid regardless of when you look</li>
             <li><InlineMath>{`\\hat{\\tau}(t)`}</InlineMath>:the estimated treatment effect (centre of the interval)</li>
             <li><InlineMath>{`\\hat{\\sigma}_{\\hat{\\tau}}(t)`}</InlineMath>:the estimated standard error of <InlineMath>{`\\hat{\\tau}(t)`}</InlineMath> (square root of the variance from Step 5)</li>
             <li><InlineMath>{`n = n_0(t) + n_1(t)`}</InlineMath>:the total number of users across both groups at time <InlineMath>{`t`}</InlineMath></li>
-            <li><InlineMath>{`\\nu`}</InlineMath>:the tuning parameter, set as <InlineMath>{`\\nu = M \\cdot \\hat{\\sigma}^2`}</InlineMath> where <InlineMath>{`M`}</InlineMath> is the planned total sample size; calibrates the multiplier to be close to 1.96 at the planned end of the experiment</li>
-            <li><InlineMath>{`\\alpha`}</InlineMath>:the significance level (e.g. 0.05 for 95% sequential confidence intervals)</li>
-            <li><InlineMath>{`\\sqrt{(n+\\nu)/n \\cdot \\log((n+\\nu)/\\nu\\alpha)}`}</InlineMath>:the time-varying multiplier: larger than 1.96 throughout the experiment; decreases to a minimum before <InlineMath>{`n^*`}</InlineMath>, then slowly rises, never reaching 1.96</li>
+            <li><InlineMath>{`a`}</InlineMath>:the two-sided level of the sequential test (e.g. 0.05 for a 95% sequential CI, 0.10 for the Eppo default)</li>
+            <li><InlineMath>{`\\rho`}</InlineMath>:the tuning parameter, set as <InlineMath>{`\\rho = M / \\bigl(\\log\\log(e/a^2) - 2\\log a\\bigr)`}</InlineMath> where <InlineMath>{`M`}</InlineMath> is the planned total sample size; at <InlineMath>{`a = 0.05`}</InlineMath> this gives <InlineMath>{`\\rho \\approx 0.126\\,M`}</InlineMath> and puts the multiplier&apos;s minimum at (or very near) <InlineMath>{`n = M`}</InlineMath></li>
+            <li><InlineMath>{`\\sqrt{(n+\\rho)/n \\cdot \\log((n+\\rho)/(\\rho\\, a^2))}`}</InlineMath>:the time-varying multiplier: always larger than 1.96; falls to its minimum at (or very near) <InlineMath>{`n = M`}</InlineMath>, then drifts up very slowly, never reaching 1.96</li>
           </ul>
           <p className="mt-2">
             where <InlineMath>{`n = n_0(t) + n_1(t)`}</InlineMath> is the total sample size and{' '}
-            <InlineMath>{`\\nu = M \\cdot \\hat{\\sigma}^2`}</InlineMath> is the tuning parameter.
+            <InlineMath>{`\\rho = M / (\\log\\log(e/a^2) - 2\\log a)`}</InlineMath> is the tuning parameter. Act 13 unpacks the multiplier&apos;s behaviour in detail.
           </p>
         </div>
 
@@ -205,7 +205,7 @@ export function DetailedAct11() {
           <h4 className="font-bold text-blue-900 mb-3">Key Takeaway</h4>
           <div className="text-neutral-800">
             <p>
-              <strong>The Eppo (2022) pipeline in one sentence:</strong> Randomise &rarr; collect{' '}
+              <strong>The Eppo pipeline in one sentence:</strong> Randomise &rarr; collect{' '}
               <InlineMath>{`Y`}</InlineMath> and covariates <InlineMath>{`X`}</InlineMath> &rarr;
               regression-adjust (remove predictable noise) &rarr; estimate lift and variance
               &rarr; wrap in a sequential CI &rarr; decide when CI excludes zero.

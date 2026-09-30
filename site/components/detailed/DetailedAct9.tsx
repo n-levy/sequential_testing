@@ -139,6 +139,20 @@ export function DetailedAct9() {
           </p>
         </div>
 
+        {/* Notation bridge to Acts 11 and 13 */}
+        <div className="bg-amber-50 border border-amber-300 rounded-lg p-4 mb-6 text-neutral-700">
+          <p className="font-semibold text-amber-900 mb-2">Notation bridge to Acts 11 and 13</p>
+          <p>
+            Acts 11 and 13 present the same boundary in the reparameterisation used by <a href="#ref-schmit-miller-2024" className="text-blue-600 hover:text-blue-800">Schmit &amp; Miller (2022)</a>:
+            they write the tuning parameter as <InlineMath>{`\\rho`}</InlineMath> and the level as <InlineMath>{`a`}</InlineMath>, giving{' '}
+            <InlineMath>{`m(n) = \\sqrt{(n+\\rho)/n \\cdot \\log((n+\\rho)/(\\rho\\, a^2))}`}</InlineMath>. The two forms describe the same
+            multiplier: identify the intrinsic-time parameter <InlineMath>{`\\nu`}</InlineMath> above with{' '}
+            <InlineMath>{`\\rho\\hat{\\sigma}^2`}</InlineMath>, and set <InlineMath>{`\\alpha = a^2`}</InlineMath> inside the logarithm.
+            Schmit &amp; Miller pick <InlineMath>{`\\rho = M/(\\log\\log(e/a^2) - 2\\log a)`}</InlineMath> so that the multiplier reaches its
+            minimum at (or very near) the planned sample size <InlineMath>{`n = M`}</InlineMath>.
+          </p>
+        </div>
+
         {/* Connection to Robbins and mSPRT */}
         <h4 className="text-lg font-semibold text-neutral-800 mb-3">Connection to Robbins and the mSPRT</h4>
 
@@ -180,8 +194,8 @@ export function DetailedAct9() {
           </p>
         </div>
 
-        {/* Why Eppo (2022) chose this */}
-        <h4 className="text-lg font-semibold text-neutral-800 mb-3">Why Eppo (2022) chose this framework</h4>
+        {/* Why Eppo chose this */}
+        <h4 className="text-lg font-semibold text-neutral-800 mb-3">Why Eppo chose this framework</h4>
 
         <div className="text-neutral-700 space-y-3 mb-6">
           <ol className="list-decimal ml-6 space-y-2">
@@ -207,8 +221,8 @@ export function DetailedAct9() {
               nonparametric validity, the <InlineMath>{`\\sqrt{\\log n}`}</InlineMath> &ldquo;price of peeking.&rdquo;
             </p>
             <p>
-              <strong>This is the framework Eppo (2022) uses.</strong> The boundary formula from this act
-              is the engine inside Eppo&apos;s (2022) confidence interval.
+              <strong>This is the framework Eppo uses.</strong> The boundary formula from this act
+              is the engine inside Eppo&apos;s confidence interval.
             </p>
           </div>
         </div>

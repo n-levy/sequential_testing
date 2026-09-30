@@ -68,7 +68,7 @@ export function HybridApproach() {
               <tr>
                 <td className="border border-neutral-300 p-3">1. Plan a horizon</td>
                 <td className="border border-neutral-300 p-3">
-                  Pick a target sample size <InlineMath>{`\\nu`}</InlineMath> covering at
+                  Pick a target sample size <InlineMath>{`M`}</InlineMath> covering at
                   least one full weekly cycle (typically 1&ndash;4 weeks).
                 </td>
                 <td className="border border-neutral-300 p-3">Avoids weekday bias; gives the sequential CI its tightest calibration point.</td>
@@ -92,7 +92,7 @@ export function HybridApproach() {
               <tr className="bg-neutral-50">
                 <td className="border border-neutral-300 p-3">4. Decide at the planned horizon</td>
                 <td className="border border-neutral-300 p-3">
-                  At <InlineMath>{`n = \\nu`}</InlineMath>, run a single fixed-horizon
+                  At <InlineMath>{`n = M`}</InlineMath>, run a single fixed-horizon
                   analysis and use the standard CI to make the ship/no-ship decision.
                 </td>
                 <td className="border border-neutral-300 p-3">Tightest possible interval; one clean look at a full cycle of data.</td>

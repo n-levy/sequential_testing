@@ -5,7 +5,8 @@ import * as d3 from 'd3'
 
 export function SequentialMultiplierSim() {
   const [alpha] = useState(0.05)
-  const [nuFactor, setNuFactor] = useState(1.0) // ν = nuFactor * maxN * σ²
+  // rho = rhoFactor * maxN; Schmit & Miller (2022) default at a=0.05 is rhoFactor ≈ 0.126
+  const [rhoFactor, setRhoFactor] = useState(0.126)
   const [maxN, setMaxN] = useState(10000)
   const svgRef = useRef<SVGSVGElement | null>(null)
 
@@ -20,7 +21,7 @@ export function SequentialMultiplierSim() {
     const g = svg.append('g').attr('transform', `translate(${margin.left},${margin.top})`)
 
     const sigma2 = 1 // unit variance for simplicity
-    const nu = nuFactor * maxN * sigma2
+    const rho = rhoFactor * maxN
 
     // Generate multiplier values at log-spaced n values
     const nValues: number[] = []
@@ -36,8 +37,8 @@ export function SequentialMultiplierSim() {
     const fixedMult = 1.96
     for (const n of nValues) {
       const v = n * sigma2
-      const logTerm = Math.log((v + nu) / (nu * alpha * alpha))
-      const m = Math.sqrt(((v + nu) / v) * logTerm)
+      const logTerm = Math.log((v + rho) / (rho * alpha * alpha))
+      const m = Math.sqrt(((v + rho) / v) * logTerm)
       seqMults.push(m)
     }
 
@@ -72,19 +73,21 @@ export function SequentialMultiplierSim() {
     g.append('path').datum(seqMults)
       .attr('d', area).attr('fill', '#1d4ed8').attr('opacity', 0.08)
 
-    // Mark where ν is tuned (n = nuFactor * maxN)
-    const nuN = nuFactor * maxN
-    if (nuN >= 10 && nuN <= maxN) {
-      const nuV = nuN * sigma2
-      const nuLogTerm = Math.log((nuV + nu) / (nu * alpha * alpha))
-      const nuM = Math.sqrt(((nuV + nu) / nuV) * nuLogTerm)
-      g.append('line').attr('x1', x(nuN)).attr('x2', x(nuN))
+    // Mark the minimum of the multiplier curve
+    let minIdx = 0
+    for (let i = 1; i < seqMults.length; i++) {
+      if (seqMults[i] < seqMults[minIdx]) minIdx = i
+    }
+    const minN = nValues[minIdx]
+    const minM = seqMults[minIdx]
+    if (minN >= 10 && minN <= maxN) {
+      g.append('line').attr('x1', x(minN)).attr('x2', x(minN))
         .attr('y1', 0).attr('y2', height)
         .attr('stroke', '#f59e0b').attr('stroke-dasharray', '4,3').attr('stroke-width', 1.5)
-      g.append('circle').attr('cx', x(nuN)).attr('cy', y(nuM)).attr('r', 5)
+      g.append('circle').attr('cx', x(minN)).attr('cy', y(minM)).attr('r', 5)
         .attr('fill', '#f59e0b').attr('stroke', '#fff').attr('stroke-width', 2)
-      g.append('text').attr('x', x(nuN) + 8).attr('y', y(nuM) - 8)
-        .text(`ν tuned here (${nuM.toFixed(2)})`).attr('fill', '#f59e0b').attr('font-size', '10px')
+      g.append('text').attr('x', x(minN) + 8).attr('y', y(minM) - 8)
+        .text(`min at n \u2248 ${minN.toLocaleString()} (m = ${minM.toFixed(2)})`).attr('fill', '#f59e0b').attr('font-size', '10px')
     }
 
     // Price of peeking annotation at several points
@@ -124,7 +127,7 @@ export function SequentialMultiplierSim() {
     const items = [
       { label: 'Sequential multiplier m(n)', color: '#1d4ed8', dash: '' },
       { label: 'Classical z = 1.96', color: '#3b82f6', dash: '6,4' },
-      { label: 'ν tuning point', color: '#f59e0b', dash: '4,3' },
+      { label: 'Minimum of m(n)', color: '#f59e0b', dash: '4,3' },
     ]
     items.forEach((item, i) => {
       const row = leg.append('g').attr('transform', `translate(0, ${i * 18})`)
@@ -134,16 +137,16 @@ export function SequentialMultiplierSim() {
       row.append('text').attr('x', 24).attr('y', 4)
         .text(item.label).attr('font-size', '10px').attr('fill', '#374151')
     })
-  }, [alpha, nuFactor, maxN])
+  }, [alpha, rhoFactor, maxN])
 
   // Compute example values
   const sigma2 = 1
-  const nu = nuFactor * maxN * sigma2
+  const rho = rhoFactor * maxN * sigma2
   const exampleNs = [100, 1000, maxN]
   const exampleMults = exampleNs.map(n => {
     const v = n * sigma2
-    const logTerm = Math.log((v + nu) / (nu * alpha * alpha))
-    return Math.sqrt(((v + nu) / v) * logTerm)
+    const logTerm = Math.log((v + rho) / (rho * alpha * alpha))
+    return Math.sqrt(((v + rho) / v) * logTerm)
   })
 
   return (
@@ -155,6 +158,7 @@ export function SequentialMultiplierSim() {
             <p className="text-sm text-neutral-600">
               The blue curve shows how the sequential CI multiplier approaches, but
               never reaches, the classical 1.96. The shaded area is the &ldquo;price of peeking.&rdquo;
+              Schmit &amp; Miller (2022) pick <span className="font-mono">ρ ≈ 0.126 · M</span> at <span className="font-mono">a = 0.05</span>, which puts the minimum at (or very near) <span className="font-mono">n = M</span>.
             </p>
           </div>
         </div>
@@ -162,14 +166,14 @@ export function SequentialMultiplierSim() {
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
           <div>
             <label className="block text-sm font-medium text-neutral-700 mb-1">
-              ν tuning: {nuFactor.toFixed(1)}× planned N → tightest at n = {Math.round(nuFactor * maxN).toLocaleString()}
+              ρ / M ratio: {rhoFactor.toFixed(3)} (Schmit &amp; Miller default: 0.126)
             </label>
-            <input type="range" min={0.1} max={3.0} step={0.1} value={nuFactor}
-              onChange={e => setNuFactor(+e.target.value)} className="w-full accent-blue-600" />
+            <input type="range" min={0.05} max={2.0} step={0.005} value={rhoFactor}
+              onChange={e => setRhoFactor(+e.target.value)} className="w-full accent-blue-600" />
           </div>
           <div>
             <label className="block text-sm font-medium text-neutral-700 mb-1">
-              Max sample size: {maxN.toLocaleString()}
+              Planned sample size M: {maxN.toLocaleString()}
             </label>
             <input type="range" min={1000} max={1000000} step={1000} value={maxN}
               onChange={e => setMaxN(+e.target.value)} className="w-full accent-blue-600" />

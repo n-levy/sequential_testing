@@ -11,15 +11,15 @@ export function DetailedAct13() {
       <div className="max-w-4xl mx-auto px-4">
         <div className="text-center mb-12">
           <h2 className="text-3xl font-bold text-neutral-900 mb-4">
-            Act 13 &mdash; Sequential Confidence Intervals in Eppo (2022)
+            Act 13 &mdash; Sequential Confidence Intervals in Eppo
           </h2>
         </div>
 
-        {/* Intuition: How does Eppo (2022) report results you can trust? */}
+        {/* Intuition: How does Eppo report results you can trust? */}
         <div className="bg-blue-50 border border-blue-400 rounded-lg p-6 mb-8">
           <div className="text-neutral-800 space-y-3">
             <p>
-              Eppo's (2022) confidence interval is valid at every time you check, not just one. This lets you monitor continuously and make decisions as soon as the evidence is clear.
+              Eppo&apos;s confidence interval is valid at every time you check, not just one. This lets you monitor continuously and make decisions as soon as the evidence is clear.
             </p>
             <p>
               <strong>Key point:</strong> The interval is a bit wider than a classical CI, but you can stop at any time and the guarantee still holds.
@@ -34,16 +34,16 @@ export function DetailedAct13() {
         <div className="text-neutral-700 space-y-3 mb-6">
           <p>From the pipeline (Act 11, Step 6):</p>
           <div className="bg-white border-2 border-green-200 rounded-lg p-4">
-            <BlockMath>{`\\text{CI}(t) = \\hat{\\tau}(t) \\pm \\hat{\\sigma}_{\\hat{\\tau}}(t) \\cdot \\underbrace{\\sqrt{\\frac{n + \\nu}{n} \\cdot \\log\\!\\frac{n + \\nu}{\\nu \\alpha}}}_{\\text{sequential multiplier}}`}</BlockMath>
+            <BlockMath>{`\\text{CI}(t) = \\hat{\\tau}(t) \\pm \\hat{\\sigma}_{\\hat{\\tau}}(t) \\cdot \\underbrace{\\sqrt{\\frac{n + \\rho}{n} \\cdot \\log\\!\\frac{n + \\rho}{\\rho\\, a^2}}}_{\\text{sequential multiplier}}`}</BlockMath>
           </div>
           <ul className="mb-3 text-sm text-neutral-600 space-y-1 ml-4 list-disc">
             <li><InlineMath>{`\\text{CI}(t)`}</InlineMath>:the sequential (anytime-valid) confidence interval at time <InlineMath>{`t`}</InlineMath></li>
             <li><InlineMath>{`\\hat{\\tau}(t)`}</InlineMath>:the estimated treatment effect at time <InlineMath>{`t`}</InlineMath> (the centre of the interval)</li>
             <li><InlineMath>{`\\hat{\\sigma}_{\\hat{\\tau}}(t)`}</InlineMath>:the estimated standard error of <InlineMath>{`\\hat{\\tau}(t)`}</InlineMath></li>
             <li><InlineMath>{`n`}</InlineMath>:the total number of users observed at time <InlineMath>{`t`}</InlineMath></li>
-            <li><InlineMath>{`\\nu`}</InlineMath>:the tuning parameter set as <InlineMath>{`\\nu = M \\cdot \\hat{\\sigma}^2`}</InlineMath>, where <InlineMath>{`M`}</InlineMath> is the planned total sample size; calibrates the interval to be tightest near the planned end date</li>
-            <li><InlineMath>{`\\alpha`}</InlineMath>:the significance level (e.g. 0.05 for 95% confidence)</li>
-            <li>the sequential multiplier:replaces the fixed 1.96 of a classical CI; starts larger and decreases as <InlineMath>{`n`}</InlineMath> grows, approaching 1.96 asymptotically</li>
+            <li><InlineMath>{`a`}</InlineMath>:the two-sided level of the sequential test (e.g. 0.05 for a 95% sequential CI, 0.10 for the Eppo default)</li>
+            <li><InlineMath>{`\\rho`}</InlineMath>:the tuning parameter, set by <a href="#ref-schmit-miller-2024" className="text-blue-600 hover:text-blue-800">Schmit &amp; Miller (2022)</a> as <InlineMath>{`\\rho = M / \\bigl(\\log\\log(e/a^2) - 2\\log a\\bigr)`}</InlineMath>, where <InlineMath>{`M`}</InlineMath> is the planned total sample size; at <InlineMath>{`a = 0.05`}</InlineMath>, <InlineMath>{`\\rho \\approx 0.126\\,M`}</InlineMath></li>
+            <li>the sequential multiplier:replaces the fixed 1.96 of a classical CI; starts large, reaches its minimum at (or very near) <InlineMath>{`n = M`}</InlineMath>, then rises very slowly, and never dips below 1.96</li>
           </ul>
           <p>Compare with a standard CI:</p>
           <BlockMath>{`\\text{CI}_{\\text{classical}}(t) = \\hat{\\tau}(t) \\pm \\hat{\\sigma}_{\\hat{\\tau}}(t) \\cdot \\underbrace{z_{\\alpha/2}}_{\\approx 1.96}`}</BlockMath>
@@ -60,7 +60,7 @@ export function DetailedAct13() {
         <h4 className="text-lg font-semibold text-neutral-800 mb-3">How the sequential multiplier behaves</h4>
 
         <p className="text-xs text-neutral-500 mb-2">
-          Values below use the default calibration (<InlineMath>{`n^* = 10{,}000,\\ \\alpha = 0.05`}</InlineMath>, giving <InlineMath>{`\\nu \\approx 892`}</InlineMath>).
+          Values below use the default calibration (<InlineMath>{`M = 10{,}000,\\ a = 0.05`}</InlineMath>, giving <InlineMath>{`\\rho \\approx 1260`}</InlineMath>).
         </p>
 
         <div className="overflow-x-auto mb-6">
@@ -74,20 +74,19 @@ export function DetailedAct13() {
               </tr>
             </thead>
             <tbody>
-              <tr><td className="border border-neutral-300 p-3">100</td><td className="border border-neutral-300 p-3"><InlineMath>{`\\approx 5.5`}</InlineMath></td><td className="border border-neutral-300 p-3">1.96</td><td className="border border-neutral-300 p-3">Very early: CI is ~2.8&times; wider than classical</td></tr>
-              <tr className="bg-neutral-50"><td className="border border-neutral-300 p-3">1,000</td><td className="border border-neutral-300 p-3"><InlineMath>{`\\approx 2.7`}</InlineMath></td><td className="border border-neutral-300 p-3">1.96</td><td className="border border-neutral-300 p-3">Decreasing toward minimum</td></tr>
-              <tr><td className="border border-neutral-300 p-3">4,000</td><td className="border border-neutral-300 p-3"><InlineMath>{`\\approx 2.4`}</InlineMath></td><td className="border border-neutral-300 p-3">1.96</td><td className="border border-neutral-300 p-3">Near minimum (before <InlineMath>{`n^*`}</InlineMath>): ~23% wider</td></tr>
-              <tr className="bg-neutral-50"><td className="border border-neutral-300 p-3">10,000</td><td className="border border-neutral-300 p-3"><InlineMath>{`\\approx 2.45`}</InlineMath></td><td className="border border-neutral-300 p-3">1.96</td><td className="border border-neutral-300 p-3">At <InlineMath>{`n^*`}</InlineMath>: multiplier already rising slightly</td></tr>
-              <tr><td className="border border-neutral-300 p-3">100,000</td><td className="border border-neutral-300 p-3"><InlineMath>{`\\approx 2.8`}</InlineMath></td><td className="border border-neutral-300 p-3">1.96</td><td className="border border-neutral-300 p-3">Well past <InlineMath>{`n^*`}</InlineMath>: multiplier rising, CI widening</td></tr>
+              <tr><td className="border border-neutral-300 p-3">100</td><td className="border border-neutral-300 p-3"><InlineMath>{`9.084`}</InlineMath></td><td className="border border-neutral-300 p-3">1.96</td><td className="border border-neutral-300 p-3">Very early: CI is ~4.6&times; wider than classical</td></tr>
+              <tr className="bg-neutral-50"><td className="border border-neutral-300 p-3">1,000</td><td className="border border-neutral-300 p-3"><InlineMath>{`3.855`}</InlineMath></td><td className="border border-neutral-300 p-3">1.96</td><td className="border border-neutral-300 p-3">Decreasing toward the minimum</td></tr>
+              <tr><td className="border border-neutral-300 p-3">5,000</td><td className="border border-neutral-300 p-3"><InlineMath>{`3.084`}</InlineMath></td><td className="border border-neutral-300 p-3">1.96</td><td className="border border-neutral-300 p-3">Approaching the minimum</td></tr>
+              <tr className="bg-neutral-50"><td className="border border-neutral-300 p-3">10,000</td><td className="border border-neutral-300 p-3"><InlineMath>{`3.035`}</InlineMath></td><td className="border border-neutral-300 p-3">1.96</td><td className="border border-neutral-300 p-3">At <InlineMath>{`n = M`}</InlineMath>: minimum (~55% wider than classical)</td></tr>
+              <tr><td className="border border-neutral-300 p-3">100,000</td><td className="border border-neutral-300 p-3"><InlineMath>{`3.242`}</InlineMath></td><td className="border border-neutral-300 p-3">1.96</td><td className="border border-neutral-300 p-3">Well past <InlineMath>{`M`}</InlineMath>: multiplier drifting up very slowly</td></tr>
             </tbody>
           </table>
         </div>
 
         <div className="bg-white border border-neutral-200 rounded-lg p-4 mb-6 text-neutral-600">
           <p>
-            The sequential multiplier starts high, decreases to a minimum somewhere before <InlineMath>{`n^*`}</InlineMath>, then slowly rises.
-            The gap from 1.96 &mdash; the &ldquo;price of peeking&rdquo; &mdash; is largest early on and smallest near the planned sample size.
-            It never fully closes; m(n) always stays above 1.96.
+            The sequential multiplier starts high, decreases to its minimum <em>at (or very close to)</em> the planned sample size <InlineMath>{`M`}</InlineMath>, then rises very slowly.
+            The gap from 1.96 &mdash; the &ldquo;price of peeking&rdquo; &mdash; is largest early on and smallest at the planned end. Even at the minimum, the multiplier is still ~55% larger than 1.96; it never closes to <InlineMath>{`z_{\\alpha/2}`}</InlineMath>.
           </p>
         </div>
 
@@ -96,14 +95,18 @@ export function DetailedAct13() {
         {/* Interactive Simulation */}
         <SequentialMultiplierSim />
 
-        {/* Role of nu */}
+        {/* Role of rho */}
         <h4 className="text-lg font-semibold text-neutral-800 mb-3 mt-8">
-          The role of <InlineMath>{`\\nu`}</InlineMath> and <InlineMath>{`M`}</InlineMath>
+          The role of <InlineMath>{`\\rho`}</InlineMath> and <InlineMath>{`M`}</InlineMath>
         </h4>
         <div className="text-neutral-700 space-y-3 mb-6">
           <p>
-            <a href="#ref-schmit-miller-2024" className="text-blue-600 hover:text-blue-800">Schmit &amp; Miller</a> set <InlineMath>{`\\nu = M \\cdot \\hat{\\sigma}^2`}</InlineMath>,
-            where <InlineMath>{`M`}</InlineMath> is the <strong>expected total sample size</strong>.
+            <a href="#ref-schmit-miller-2024" className="text-blue-600 hover:text-blue-800">Schmit &amp; Miller (2022)</a> set{' '}
+            <InlineMath>{`\\rho = M / \\bigl(\\log\\log(e/a^2) - 2\\log a\\bigr)`}</InlineMath>,
+            where <InlineMath>{`M`}</InlineMath> is the <strong>expected total sample size</strong> and{' '}
+            <InlineMath>{`a`}</InlineMath> is the sequential test level. For <InlineMath>{`a = 0.05`}</InlineMath> this gives{' '}
+            <InlineMath>{`\\rho \\approx 0.126\\,M`}</InlineMath>; the choice minimises the multiplier at (or very near){' '}
+            <InlineMath>{`n = M`}</InlineMath>.
           </p>
           <div className="overflow-x-auto">
             <table className="w-full min-w-[640px] text-sm border-collapse border border-neutral-300">
@@ -114,29 +117,30 @@ export function DetailedAct13() {
                 </tr>
               </thead>
               <tbody>
-                <tr><td className="border border-neutral-300 p-3"><InlineMath>{`M`}</InlineMath> is too small (underestimate traffic)</td><td className="border border-neutral-300 p-3">CI is tight early but wide late</td></tr>
-                <tr className="bg-neutral-50"><td className="border border-neutral-300 p-3"><InlineMath>{`M`}</InlineMath> is too large (overestimate traffic)</td><td className="border border-neutral-300 p-3">CI is wide early but tight late</td></tr>
+                <tr><td className="border border-neutral-300 p-3"><InlineMath>{`M`}</InlineMath> is too small (underestimate traffic)</td><td className="border border-neutral-300 p-3">CI is tighter than necessary early but wider than necessary late</td></tr>
+                <tr className="bg-neutral-50"><td className="border border-neutral-300 p-3"><InlineMath>{`M`}</InlineMath> is too large (overestimate traffic)</td><td className="border border-neutral-300 p-3">CI is wider than necessary early but tighter than necessary late</td></tr>
                 <tr><td className="border border-neutral-300 p-3"><InlineMath>{`M`}</InlineMath> matches actual traffic</td><td className="border border-neutral-300 p-3">CI is tightest around the planned end date</td></tr>
               </tbody>
             </table>
           </div>
           <div className="bg-white border border-neutral-200 rounded-lg p-4 text-neutral-600 mt-2">
             <p>
-              The parameter <InlineMath>{`M`}</InlineMath> controls where the boundary is
-              tightest. Setting <InlineMath>{`M`}</InlineMath> equal to the planned total
-              sample size optimises the CI width around the expected decision point.
+              Only <InlineMath>{`M`}</InlineMath> and <InlineMath>{`a`}</InlineMath> enter the multiplier &mdash; the residual variance{' '}
+              <InlineMath>{`\\hat{\\sigma}^2`}</InlineMath> shows up only in the standard-error factor{' '}
+              <InlineMath>{`\\hat{\\sigma}_{\\hat{\\tau}}(t)`}</InlineMath>, not in the multiplier itself. Setting{' '}
+              <InlineMath>{`M`}</InlineMath> equal to the planned total sample size therefore optimises the CI width around the expected decision point.
             </p>
           </div>
         </div>
 
         {/* Summary box */}
         <div className="bg-blue-50 border border-blue-300 rounded-lg p-6 mb-8">
-          <h4 className="font-bold text-blue-900 mb-3">What Eppo (2022) Actually Uses (Summary)</h4>
+          <h4 className="font-bold text-blue-900 mb-3">What Eppo Actually Uses (Summary)</h4>
           <div className="text-neutral-800 space-y-2">
             <ul className="list-disc ml-6 space-y-1">
               <li><strong>Framework:</strong> <a href="#ref-howard-2021" className="text-blue-600 hover:text-blue-800">Howard et al. (2021)</a> confidence sequences (not the mSPRT of <a href="#ref-johari-2017" className="text-blue-600 hover:text-blue-800">Johari et al. 2017</a>).</li>
-              <li><strong>Boundary:</strong> The Normal mixture boundary <InlineMath>{`u(v) = \\sqrt{(v+\\nu)\\log\\frac{v+\\nu}{\\nu\\alpha}}`}</InlineMath>.</li>
-              <li><strong>Tuning:</strong> <InlineMath>{`\\nu = M\\hat{\\sigma}^2`}</InlineMath>, where <InlineMath>{`M`}</InlineMath> is the expected total sample size.</li>
+              <li><strong>Boundary:</strong> The Normal mixture boundary, reparameterised by <a href="#ref-schmit-miller-2024" className="text-blue-600 hover:text-blue-800">Schmit &amp; Miller (2022)</a> as <InlineMath>{`m(n) = \\sqrt{(n+\\rho)/n \\cdot \\log((n+\\rho)/(\\rho\\, a^2))}`}</InlineMath>.</li>
+              <li><strong>Tuning:</strong> <InlineMath>{`\\rho = M / (\\log\\log(e/a^2) - 2\\log a)`}</InlineMath>, so <InlineMath>{`\\rho \\approx 0.126\\,M`}</InlineMath> at <InlineMath>{`a = 0.05`}</InlineMath>.</li>
               <li><strong>Variance:</strong> Estimated from data (not assumed known).</li>
               <li><strong>Noise reduction:</strong> Generalised CUPED via per-group regression adjustments.</li>
               <li><strong>Estimand:</strong> Relative lift <InlineMath>{`\\mu_1/\\mu_0 - 1`}</InlineMath>.</li>

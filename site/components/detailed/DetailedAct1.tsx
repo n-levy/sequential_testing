@@ -21,7 +21,7 @@ export function DetailedAct1() {
             <p>
               Consider a standard A/B test comparing a control experience against a new
               variant. After a week of data collection, the dashboard reports a desired effect with{' '}
-              <InlineMath>{`p\text{-value} = 0.03`}</InlineMath>. At <InlineMath>{`\alpha = 0.05`}</InlineMath>,
+              <InlineMath>{`p\\text{-value} = 0.03`}</InlineMath>. At <InlineMath>{`\\alpha = 0.05`}</InlineMath>,
               this is statistically significant, so the variant is declared a winner.
             </p>
             <p>
@@ -62,7 +62,7 @@ export function DetailedAct1() {
           <div className="text-neutral-800 space-y-3">
             <p>
               When you run a standard hypothesis test with{' '}
-              <InlineMath>{`\alpha = 0.05`}</InlineMath>, the 5% false positive guarantee
+              <InlineMath>{`\\alpha = 0.05`}</InlineMath>, the 5% false positive guarantee
               holds only if you commit to a fixed sample size and analyse the result once.
             </p>
             <p>

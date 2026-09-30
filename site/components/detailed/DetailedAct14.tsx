@@ -35,7 +35,7 @@ export function DetailedAct14() {
               <li><strong>O&apos;Brien&ndash;Fleming:</strong> front-loaded allocation. Very strict early, nearly standard at the final analysis.</li>
             </ul>
             <p>
-              Eppo&apos;s (2022) approach (Acts 8&ndash;9) does not require pre-specifying <InlineMath>{`K`}</InlineMath> &mdash;
+              Eppo&apos;s approach (Acts 8&ndash;9) does not require pre-specifying <InlineMath>{`K`}</InlineMath> &mdash;
               it provides a continuously valid guarantee.
             </p>
           </div>
@@ -154,14 +154,14 @@ export function DetailedAct14() {
           <ABTestSim
             layers={['fixed-ci', 'sequential-ci', 'pocock', 'obf', 'bonferroni']}
             showPeekStats
-            simulationTitle="Simulation: fixed-horizon, Eppo (2022), and three alternative sequential methods."
+            simulationTitle="Simulation: fixed-horizon, Eppo, and three alternative sequential methods."
             defaultEffect={0}
             takeaway={<>
               <strong>Result interpretation:</strong> click &ldquo;Run 1000 repetitions&rdquo; to estimate how often each method crosses significance under the current settings.<br /><br />
               <strong>Bonferroni:</strong> most conservative among the three methods (lowest crossing share).<br />
               <strong>Pocock:</strong> less conservative than Bonferroni with the same threshold at each look.<br />
               <strong>O&apos;Brien&ndash;Fleming:</strong> very strict early, then close to classical thresholds at later looks.<br />
-              <strong>Sequential confidence interval (Eppo, 2022):</strong> anytime-valid and typically conservative in this setup.
+              <strong>Sequential confidence interval (Eppo):</strong> anytime-valid and typically conservative in this setup.
             </>}
           />
         </div>
@@ -170,7 +170,7 @@ export function DetailedAct14() {
         <h3 className="text-2xl font-bold text-neutral-900 mb-4">Comparison</h3>
         <div className="overflow-x-auto mb-6">
           <p className="text-xs text-neutral-500 mb-2">
-            The confidence interval width rows below are illustrative values for <InlineMath>{`K = 4`}</InlineMath>, independent of the slider above.
+            The confidence interval width rows below are illustrative values for <InlineMath>{`K = 4`}</InlineMath>, independent of the slider above. Eppo values use the Schmit &amp; Miller (2022) calibration with <InlineMath>{`M = 10{,}000`}</InlineMath> and <InlineMath>{`a = 0.05`}</InlineMath>.
           </p>
           <table className="w-full min-w-[640px] text-sm border-collapse border border-neutral-300">
             <thead>
@@ -179,7 +179,7 @@ export function DetailedAct14() {
                 <th className="border border-neutral-300 p-3 font-semibold text-neutral-900">Bonferroni</th>
                 <th className="border border-neutral-300 p-3 font-semibold text-neutral-900">Pocock</th>
                 <th className="border border-neutral-300 p-3 font-semibold text-neutral-900">OBF</th>
-                <th className="border border-neutral-300 p-3 font-semibold text-neutral-900">Eppo (2022)</th>
+                <th className="border border-neutral-300 p-3 font-semibold text-neutral-900">Eppo</th>
               </tr>
             </thead>
             <tbody>
@@ -202,14 +202,14 @@ export function DetailedAct14() {
                 <td className="border border-neutral-300 p-3 text-center"><InlineMath>{`2.50 \\times \\hat{\\sigma}`}</InlineMath></td>
                 <td className="border border-neutral-300 p-3 text-center"><InlineMath>{`2.36 \\times \\hat{\\sigma}`}</InlineMath></td>
                 <td className="border border-neutral-300 p-3 text-center"><InlineMath>{`4.05 \\times \\hat{\\sigma}`}</InlineMath></td>
-                <td className="border border-neutral-300 p-3 text-center"><InlineMath>{`{\\sim}2.7 \\times \\hat{\\sigma}`}</InlineMath></td>
+                <td className="border border-neutral-300 p-3 text-center"><InlineMath>{`3.26 \\times \\hat{\\sigma}`}</InlineMath></td>
               </tr>
               <tr className="bg-neutral-50">
                 <td className="border border-neutral-300 p-3 font-medium">Confidence interval at final analysis (K=4)</td>
                 <td className="border border-neutral-300 p-3 text-center"><InlineMath>{`2.50 \\times \\hat{\\sigma}`}</InlineMath></td>
                 <td className="border border-neutral-300 p-3 text-center"><InlineMath>{`2.36 \\times \\hat{\\sigma}`}</InlineMath></td>
                 <td className="border border-neutral-300 p-3 text-center"><InlineMath>{`2.02 \\times \\hat{\\sigma}`}</InlineMath></td>
-                <td className="border border-neutral-300 p-3 text-center"><InlineMath>{`{\\sim}2.4 \\times \\hat{\\sigma}`}</InlineMath></td>
+                <td className="border border-neutral-300 p-3 text-center"><InlineMath>{`3.04 \\times \\hat{\\sigma}`}</InlineMath></td>
               </tr>
               <tr>
                 <td className="border border-neutral-300 p-3 font-medium">Valid between peeks?</td>
@@ -236,18 +236,56 @@ export function DetailedAct14() {
           </table>
         </div>
 
+        {/* K=14 companion table */}
+        <h4 className="text-lg font-semibold text-neutral-800 mb-3">The same comparison at <InlineMath>{`K = 14`}</InlineMath> (guideline setting)</h4>
+        <p className="text-neutral-700 mb-3">
+          The companion guideline and the focused track use <InlineMath>{`K = 14`}</InlineMath> peeks (roughly one per day of a two-week test). Constants are simulation-calibrated in the accompanying Python repo; see <a href="#appendix-code" className="text-blue-600 hover:text-blue-800">the code appendix</a> for details.
+        </p>
+        <div className="overflow-x-auto mb-6">
+          <table className="w-full min-w-[640px] text-sm border-collapse border border-neutral-300">
+            <thead>
+              <tr className="bg-neutral-100">
+                <th className="border border-neutral-300 p-3 text-left font-semibold"></th>
+                <th className="border border-neutral-300 p-3 font-semibold text-neutral-900">Bonferroni</th>
+                <th className="border border-neutral-300 p-3 font-semibold text-neutral-900">Pocock</th>
+                <th className="border border-neutral-300 p-3 font-semibold text-neutral-900">OBF</th>
+                <th className="border border-neutral-300 p-3 font-semibold text-neutral-900">Three-sigma</th>
+                <th className="border border-neutral-300 p-3 font-semibold text-neutral-900">Eppo</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td className="border border-neutral-300 p-3 font-medium">Multiplier at peek 1 (of 14)</td>
+                <td className="border border-neutral-300 p-3 text-center">2.91</td>
+                <td className="border border-neutral-300 p-3 text-center">2.62</td>
+                <td className="border border-neutral-300 p-3 text-center">7.88</td>
+                <td className="border border-neutral-300 p-3 text-center">3.00</td>
+                <td className="border border-neutral-300 p-3 text-center">4.22</td>
+              </tr>
+              <tr className="bg-neutral-50">
+                <td className="border border-neutral-300 p-3 font-medium">Multiplier at final peek</td>
+                <td className="border border-neutral-300 p-3 text-center">2.91</td>
+                <td className="border border-neutral-300 p-3 text-center">2.62</td>
+                <td className="border border-neutral-300 p-3 text-center">2.11</td>
+                <td className="border border-neutral-300 p-3 text-center">3.00</td>
+                <td className="border border-neutral-300 p-3 text-center">3.04</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
         {/* Key Takeaway */}
         <div className="bg-blue-100 border border-blue-500 rounded-lg p-6 mb-8">
           <h4 className="font-bold text-blue-900 mb-3">Key Takeaway</h4>
           <div className="text-neutral-800 space-y-3">
-            <p><strong>Which method to use:</strong></p>
+            <p><strong>How the alternatives compare:</strong></p>
             <ul className="list-disc list-inside ml-4 space-y-1">
-              <li><strong>Closest to Eppo (2022) in these simulations:</strong> in the conditions of this simulation, Pocock seems like the most reasonable choice among the alternative methods.</li>
-              <li><strong>Avoid over-correction:</strong> Bonferroni is often too conservative, reducing sensitivity more than needed.</li>
-              <li><strong>Avoid early over-triggering:</strong> O&apos;Brien&ndash;Fleming can produce too many early significant crossings in this setup.</li>
+              <li><strong>OBF</strong> is the tightest at the planned end (multiplier only ~7% above 1.96 at <InlineMath>{`K = 14`}</InlineMath>) &mdash; and therefore the strongest harm-detection at the final look among the fixed-schedule rules. The cost is a very strict early boundary.</li>
+              <li><strong>Bonferroni and Pocock</strong> use a constant threshold and sit between OBF and Eppo. They are easier to implement than OBF and easier to reason about than Eppo, at the cost of a slightly wider CI at the planned end.</li>
+              <li><strong>Eppo</strong> has the lowest harm-detection rate among the valid rules here (multiplier 3.04 at the planned end, ~55% above 1.96) &mdash; the price of remaining valid for any number and timing of peeks, without pre-specifying <InlineMath>{`K`}</InlineMath>.</li>
             </ul>
             <p>
-              That said, we recommend running simulations, A/A tests, or analysing historical tests in each domain, using its specific circumstances (i.e. KPIs and their standard deviations) before deciding which alternative method to use in each domain.
+              We recommend running simulations, A/A tests, or analysing historical tests in each domain, using its specific circumstances (KPIs and their standard deviations) before choosing an alternative method for that domain.
             </p>
             <p>
               <strong>Timing insight:</strong> the method choice matters most at the beginning of tests, when monitoring is mostly for implementation issues. As sample size grows, interval widths become more similar across methods.
@@ -296,7 +334,7 @@ export function DetailedAct14() {
           Every guardrail KPI monitored for harm is another opportunity for a false harm alarm. With{' '}
           <InlineMath>{`J`}</InlineMath> guardrail KPIs, each monitored with its own per-KPI error budget (say 2.5%),
           the chance of at least one false alarm across the whole experiment is at most{' '}
-          <InlineMath>{`J \times 2.5\%`}</InlineMath> whatever the dependence between them (Boole&apos;s inequality),
+          <InlineMath>{`J \\times 2.5\\%`}</InlineMath> whatever the dependence between them (Boole&apos;s inequality),
           and <InlineMath>{`1 - 0.975^J`}</InlineMath> when they are independent. We do not recommend a specific
           multiple-testing correction (such as splitting <InlineMath>{`\\alpha`}</InlineMath> equally across
           guardrails) or a specific number of KPIs. Instead: choose a low number of guardrail KPIs that capture
