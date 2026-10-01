@@ -175,11 +175,13 @@ export function Act4() {
         <h3 id="act4-comparison" className="text-2xl font-bold text-neutral-900 mb-4">Comparison</h3>
         <div className="overflow-x-auto mb-6">
           <p className="text-xs text-neutral-500 mb-2">
-            The confidence interval width and harm-detection rows below use the companion guideline&apos;s default settings
+            The confidence interval width and harm-detection rows below use this site&apos;s default simulation settings
             (<InlineMath>{`n=10{,}000`}</InlineMath> per arm, 10% baseline conversion, <InlineMath>{`K = 14`}</InlineMath> equally
             spaced peeks), independent of the slider above. Pocock and O&apos;Brien&ndash;Fleming constants are calibrated
             (by simulation) to a 2.5% harm-tail error rate at exactly these settings; they are not recalibrated if you
-            change K or the sample size elsewhere on this page.
+            change K or the sample size elsewhere on this page. The companion guideline runs the same simulations at a
+            larger <InlineMath>{`n = 100{,}000`}</InlineMath>; see the Python repo linked from the simulation-code
+            section.
           </p>
           <table className="w-full min-w-[640px] text-sm border-collapse border border-neutral-300">
             <thead>
